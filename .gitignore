@@ -143,6 +143,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+venv_EIT2D/ 
 
 # Spyder project settings
 .spyderproject
