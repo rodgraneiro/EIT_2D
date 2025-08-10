@@ -44,7 +44,7 @@ except ValueError:
     
 try:
     fundo = float(input("Escolha a condutividade da base da 'cuba' (Ex: 0.5; 1.0, etc...): "))
-    print(f"Você digitou: {anomalia}")
+    print(f"Você digitou: {fundo}")
 except ValueError:
     print("Valor inválido! Digite um número válido, usando ponto decimal.")
     sys.exit() 
