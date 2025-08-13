@@ -21,61 +21,71 @@ import time
 import sys
 
 from EIT_mesh_2D import files_mesh
-from EIT_functions_2D import plot_mesh
+from EIT_functions_2D import plot_mesh, aplica_cond_contorno
+from EIT_functions_2D import calc_Y_local_triangle, montar_Y_global
 
 ###############################################################################
 ########################## CARREGA MALHA 1D ###################################
 ###############################################################################
 
-#opcao = input('Escolha a malha(71, 100, 200, 300, 1000): ')
-opcao = '1'
-
-#fundo = input('Escolha a condutividade da base (Ex: 0.5; 1.0, etc...): ')
-
-#anomalia = input('Escolha a condutividade da anomalia (Ex: 0.5; 1.0, etc...): ')
+#opcao = input('Escolha a malha(1, 2): ')
+opcao = '2'
 
 
-try:
-    anomalia = float(input("Escolha a condutividade da anomalia (Ex: 0.5; 1.0, etc...): "))
-    print(f"Você digitou: {anomalia}")
-except ValueError:
-    print("Valor inválido! Digite um número válido, usando ponto decimal.")
-    sys.exit() 
-    
-try:
-    fundo = float(input("Escolha a condutividade da base da 'cuba' (Ex: 0.5; 1.0, etc...): "))
-    print(f"Você digitou: {fundo}")
-except ValueError:
-    print("Valor inválido! Digite um número válido, usando ponto decimal.")
-    sys.exit() 
-    
-#fundo = 0.3
-#anomalia = 0.2
 
 
-if opcao not in ['1']: #,'100', '100', '200', '300', '1000']:
+if opcao not in ['1', '2']:             # verifica se existe a opçaõ
     raise ValueError("Opção inválida.")
 
-caminho = files_mesh(opcao)
+caminho, sigma_real, V_imposto, I_matrix, n_eletrodos = files_mesh(opcao)
 
 malha_msh = meshio.read(caminho)                            # Lê o arquivo .msh
 
 matriz_coordenadas = malha_msh.points[:, :2]       # Monta matriz coordenadas
-#matriz_topologia = malha_msh.cells_dict["line"]      # Monta Matriz topologia
 matriz_topologia = malha_msh.cells_dict["triangle"]      # Monta Matriz topologia
-#matriz_topologia = matriz_topologia +1
+
 
 n_nodes = matriz_coordenadas.shape[0]                             # Nr de nós
 n_elements = matriz_topologia.shape[0]                      # Nr de elementos
 
+
 print('n_nodes', n_nodes)
 print('n_elements', n_elements)
-#print('matriz_coordenadas', matriz_coordenadas)
-#print('matriz_topologia', matriz_topologia)
 
-
-# Excolher sigma da base e sigma corpo interno respectivamente 
-sigma_real = np.concatenate([np.full(128, fundo), np.full(18, anomalia)])
 
 plot_mesh(matriz_coordenadas, matriz_topologia, sigma_real)
+
+
+#print('I_matrix', I_matrix)
+
+
+
+# === Resolução do problema direto ===
+nos_contorno = np.arange(n_eletrodos)
+V_medido = []
+
+#for k in range(n_eletrodos):
+for k in range(n_eletrodos):
+    I_vec = np.zeros(n_nodes)
+    I_vec = I_matrix[k]
+    Y_global = montar_Y_global(matriz_coordenadas, matriz_topologia, n_nodes, sigma_real)
+    Y_mod, I_mod = aplica_cond_contorno(I_matrix, Y_global, n_nodes, V_imposto)
+    #V_sol = np.linalg.solve(Y_mod, I_mod)
+    inv_Y_mod = np.linalg.inv(Y_mod)
+    V_sol = np.dot(inv_Y_mod, I_mod)
+    V_medido.append(V_sol)
+
+V_medido = np.array(V_medido[0])
+V_medido = np.array(V_medido[0:n_eletrodos, 0:n_eletrodos])
+
+#V_medido.flatten().tofile("Novo_Vmedido_gerado_por_sigma.txt", sep="\n")
+#print("Novo vetor V_medido salvo como 'Novo_Vmedido_gerado_por_sigma.txt'")
+
+#print('V_medido', V_medido)
+print('V_medido', V_medido.shape)
+#print(np.array2string(V_medido, formatter={'float': '{:0.2e}'.format}))
+
+np.set_printoptions(formatter={'float': '{:0.2e}'.format}, linewidth=300)
+
+print('V_medido \n', V_medido)
 
