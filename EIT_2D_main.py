@@ -29,7 +29,7 @@ from EIT_functions_2D import calc_Y_local_triangle, montar_Y_global
 ###############################################################################
 
 #opcao = input('Escolha a malha(1, 2): ')
-opcao = '2'
+opcao = '1'
 
 
 
