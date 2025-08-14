@@ -47,7 +47,7 @@ Para rodar esse código também são necessários os sequintes arquivos:
 
     
 Nessa etapa, o programa resolve somente o "Problema Direto". 
-O programa plota uma MEFinitos como as condutividade dos elemento e
+O programa plota uma MEFinitos como as condutividade dos elementos e
 imprime as tensões calculadas nos eletrodos para cada padrão de corrente
 
 ---
