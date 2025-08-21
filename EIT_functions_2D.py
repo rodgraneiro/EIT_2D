@@ -8,6 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
 #import meshio
+import gmsh
+import sys
 from matplotlib.collections import LineCollection
 import time
 
@@ -117,4 +119,85 @@ def montar_Y_global(matriz_coordenadas, matriz_topologia, n_nodes, sigma_elem):
             for j in range(3):
                 Y[conn[i], conn[j]] += Y_loc[i, j]
     return Y
+###############################################################################
+
+###############################################################################
+# Esta função cria arquivos .pos (Post-Processing) apara vizulização no Gmsh.
+#  
+###############################################################################
+def criar_arquivo_pos(matriz_coordenadas, matriz_topologia, 
+                      n_eletrodos, V_sol, nome_arquivo):
+    for kk in range(n_eletrodos):
+        #nome_arquivo = 'TesteBanana'
+        
+        
+        # 9) Gerar arquivo POS
+        
+        #nome_arquivo = 'frame_1_5_11.pos'
+        arquivo = open(nome_arquivo + str(kk) + '.pos', 'w+')
+        arquivo.writelines(u'View "A list-based view" { \n')
+        
+        for i in range(0, len(matriz_topologia)):
+        
+            node_l = int(matriz_topologia[i][0]) # pegar dados do dataframe
+            node_m = int(matriz_topologia[i][1])
+            node_n = int(matriz_topologia[i][2])
+        
+            arquivo.writelines(u'ST(')
+          
+            arquivo.writelines([str(matriz_coordenadas[node_l][0]),',', 
+                                str(matriz_coordenadas[node_l][1]),',0,'])
+            arquivo.writelines([str(matriz_coordenadas[node_m][0]),',', 
+                                str(matriz_coordenadas[node_m][1]),',0,'])
+            arquivo.writelines([str(matriz_coordenadas[node_n][0]),',', 
+                                str(matriz_coordenadas[node_n][1]),',0'])
+            
+            arquivo.writelines(u')')
+            arquivo.writelines(u'{')
+            arquivo.writelines([str(V_sol[node_l][kk]),',', 
+                                str(V_sol[node_m][kk]),',', 
+                                str(V_sol[node_n][kk])])
+           
+        
+            arquivo.writelines(u'};')
+            arquivo.writelines(u'\n')
+        arquivo.writelines(u'};')
+        
+        arquivo.close()  
+###############################################################################
+
+
+
+###############################################################################
+# Esta função abre arquivos .pos (Post-Processing), criados pela função
+# 'criar_arquivo_pos'  para vizulização no Gmsh.
+#  
+###############################################################################
+def abrir_Gmsh_pos(nome_arquivo, n_eletrodos):
+    for pos in range(n_eletrodos):
+        # Inicialize o Gmsh
+        gmsh.initialize()
+        
+        # Carregue o arquivo .geo
+        gmsh.open(nome_arquivo + str(pos) + '.pos') #open('TesteBanana0.pos')
+        #gmsh.View[0].IntervalsType = 2;
+        gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
+        gmsh.option.setNumber("View["+str(pos)+"].NbIso", 500)
+        # Obtenha as entidades do modelo
+        #entities = gmsh.model.getEntities()
+        #gmsh.model.geo.synchronize()
+        
+        #gmsh.model.mesh.generate(3)
+        #gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
+        #gmsh.write("poligono_2D_Rho_py.msh")
+        #gmsh.write("poligono_2D_Rho.geo_unrolled")
+        
+        
+        
+        #gmsh.model.mesh.generate(3)
+        # Feche o arquivo .geo
+        
+    if '-nopopup' not in sys.argv:
+        gmsh.fltk.run()
+    gmsh.finalize()
 ###############################################################################
