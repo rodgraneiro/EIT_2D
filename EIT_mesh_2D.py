@@ -13,7 +13,7 @@ def files_mesh(opcao):
     # '100' : r'd:/ParaGitHub/Estudo-EIT/unidimensional_100e_py.msh',
     }
     sigma_reais = {
-        '1': np.concatenate([np.full(128, 0.1), np.full(18, 0.01)]),
+        '1': np.concatenate([np.full(128, 0.1), np.full(18, 0.75)]),
         '2': np.concatenate([np.full(1, 0.1), np.full(2, 1.0), np.full(1, 0.1)]),
     }
     V_imposto = {
