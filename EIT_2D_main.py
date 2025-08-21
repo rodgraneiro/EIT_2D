@@ -23,6 +23,7 @@ import sys
 from EIT_mesh_2D import files_mesh
 from EIT_functions_2D import plot_mesh, aplica_cond_contorno
 from EIT_functions_2D import calc_Y_local_triangle, montar_Y_global
+from EIT_functions_2D import criar_arquivo_pos, abrir_Gmsh_pos
 
 ###############################################################################
 ########################## CARREGA MALHA 1D ###################################
@@ -88,4 +89,10 @@ print('V_medido', V_medido.shape)
 np.set_printoptions(formatter={'float': '{:0.2e}'.format}, linewidth=300)
 
 print('V_medido \n', V_medido)
+
+nome_arquivo = 'Pos_To_Gmsh'
+
+criar_arquivo_pos(matriz_coordenadas, matriz_topologia, n_eletrodos, V_sol, nome_arquivo)
+
+abrir_Gmsh_pos(nome_arquivo, n_eletrodos)
 
