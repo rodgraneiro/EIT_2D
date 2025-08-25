@@ -42,7 +42,7 @@ gmsh.initialize()
 
 gmsh.model.add("poligono")
 
-lc1 = 1e-2
+
 
 # Criar pontos z = 0
 for j in range(0,n_eletrodos):
