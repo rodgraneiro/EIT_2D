@@ -95,4 +95,3 @@ nome_arquivo = 'Pos_To_Gmsh'
 criar_arquivo_pos(matriz_coordenadas, matriz_topologia, n_eletrodos, V_sol, nome_arquivo)
 
 abrir_Gmsh_pos(nome_arquivo, n_eletrodos)
-
