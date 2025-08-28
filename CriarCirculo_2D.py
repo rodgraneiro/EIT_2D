@@ -71,7 +71,7 @@ curva_circulo = gmsh.model.geo.addCurveLoop(linhas_circulo)
 surface_circulo = gmsh.model.geo.addPlaneSurface([curva_circulo])
 
 
-physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo])
+#physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo])
 
 
 
@@ -85,20 +85,24 @@ curva_anomalia = gmsh.model.geo.addCurveLoop(linhas_anomalia)
 surface_anomalia = gmsh.model.geo.addPlaneSurface([curva_anomalia])
 
 
-physycal_anomalia = gmsh.model.addPhysicalGroup(2, [surface_anomalia])
+#physycal_anomalia = gmsh.model.addPhysicalGroup(2, [surface_anomalia])
 
 #gmsh.model.mesh.generate(2)
 #gmsh.option.setNumber("Mesh.SaveAll", 0)
 #gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
 
 
-
+gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
+for idx in range(n_eletrodos):
+    gmsh.model.addPhysicalGroup(0, [pts_circulo[idx]], 10000+idx+1, name=f'electrode_{idx+1}')
+gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000, name='body')
+gmsh.model.addPhysicalGroup(2, [surface_anomalia], 1001, name='anomalia1')
 
 
 gmsh.model.geo.synchronize()
 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_circulo)
 gmsh.model.mesh.generate(2)
-gmsh.option.setNumber("Mesh.SaveAll", 0)
+#gmsh.option.setNumber("Mesh.SaveAll", 0)
 gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
 
 #gmsh.write(nome_arquivo  + '.msh')
@@ -106,11 +110,11 @@ gmsh.option.setNumber("Mesh.MshFileVersion",2.2)
 #os.rename(nome_arquivo  + ".geo_unrolled", nome_arquivo  + ".geo_unrolled")
 #shutil.move(nome_arquivo  + ".geo_unrolled",nome_arquivo  + ".geo")
 
-gmsh.write(os.path.join(".\\malhasMSH\\", nome_arquivo + '.msh'))
-gmsh.write(os.path.join(".\\malhasGEO\\", nome_arquivo + ".geo_unrolled"))
+gmsh.write(os.path.join("malhasMSH", nome_arquivo + '.msh'))
+gmsh.write(os.path.join("malhasGEO", nome_arquivo + ".geo_unrolled"))
 
-shutil.move(os.path.join(".\\malhasGEO\\", nome_arquivo + ".geo_unrolled"), 
-            os.path.join(".\\malhasGEO\\", nome_arquivo + ".geo"))
+shutil.move(os.path.join("malhasGEO", nome_arquivo + ".geo_unrolled"), 
+            os.path.join("malhasGEO", nome_arquivo + ".geo"))
 # Launch the GUI to see the results:
 
 if '-nopopup' not in sys.argv:
