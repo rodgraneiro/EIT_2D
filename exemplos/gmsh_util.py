@@ -135,7 +135,7 @@ def show_mesh_data(name_msh, mostra=2):
                 numNodes = len(nodeTags)
                 print(f'Corpo encontrado. numElem {numElem} e numNodes {numNodes} coords {nodeCoords.shape}')
             else:
-                print(f'physicalTag desconhecida: {physicalTag}')
+                print(f'physicalTag desconhecida: {physicalTags}')
 
     # pega só elementos do corpo:
     print('***** Elementos do corpo *****')
