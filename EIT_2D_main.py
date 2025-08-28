@@ -18,7 +18,7 @@ import sys
 from EIT_functions_2D import plot_mesh, matriz_corrente
 from EIT_functions_2D import plot_mesh, aplica_cond_contorno
 from EIT_functions_2D import calc_Y_local_triangle, montar_Y_global 
-from EIT_functions_2D_LIXO import criar_arquivo_pos, abrir_Gmsh_pos
+from EIT_functions_2D import criar_arquivo_pos, abrir_Gmsh_pos
 
 
 
@@ -27,10 +27,10 @@ from EIT_functions_2D_LIXO import criar_arquivo_pos, abrir_Gmsh_pos
 ###############################################################################
 
 print('\n ##### NOME DA MALHA #####')
-nome_malha = input("Digite o nome da mallha Gmsh (sem .msh): ")
-malha_msh = meshio.read('D:/Estudo_EIT 2D_ForaDoGitHub/NovaAbordagem/' + nome_malha + '.msh')  
+nome_malha = input("Digite o nome da malha Gmsh (sem .msh): ")
+malha_msh = meshio.read('D:/GIT_EIT_2D/EIT_2D/malhasMSH/' + nome_malha + '.msh')  
   
-arquivoConfig = importlib.import_module(nome_malha)
+arquivoConfig = importlib.import_module('Configs.'+ nome_malha)
 
 
 #nome_arquivo = arquivoConfig.nome_arquivo
