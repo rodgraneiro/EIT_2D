@@ -134,7 +134,7 @@ def criar_arquivo_pos(matriz_coordenadas, matriz_topologia,
         # 9) Gerar arquivo POS
         
         #nome_arquivo = 'frame_1_5_11.pos'
-        arquivo = open(nome_arquivo + str(kk) + '.pos', 'w+')
+        arquivo = open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/'+ nome_arquivo + str(kk) + '.pos', 'w+')
         arquivo.writelines(u'View "A list-based view" { \n')
         
         for i in range(0, len(matriz_topologia)):
@@ -179,7 +179,7 @@ def abrir_Gmsh_pos(nome_arquivo, n_eletrodos):
         gmsh.initialize()
         
         # Carregue o arquivo .geo
-        gmsh.open(nome_arquivo + str(pos) + '.pos') #open('TesteBanana0.pos')
+        gmsh.open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/' + nome_arquivo + str(pos) + '.pos') #open('TesteBanana0.pos')
         #gmsh.View[0].IntervalsType = 2;
         gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
         gmsh.option.setNumber("View["+str(pos)+"].NbIso", 500)
@@ -200,4 +200,18 @@ def abrir_Gmsh_pos(nome_arquivo, n_eletrodos):
     if '-nopopup' not in sys.argv:
         gmsh.fltk.run()
     gmsh.finalize()
+###############################################################################
+
+
+###############################################################################
+# Esta função cria a matriz com o padrão de correntes
+# 'criar_arquivo_pos'  para vizulização no Gmsh.
+#  
+###############################################################################
+def matriz_corrente(linhas,colunas, s, I=1e-3):
+    MtrCC = np.zeros((linhas, colunas))
+    k = np.arange(colunas)
+    MtrCC[k, k] = I
+    MtrCC[(k + s) % colunas, k] = -I
+    return MtrCC
 ###############################################################################
