@@ -1,4 +1,7 @@
 *.pos
+*.msh
+*.geo
+*.geo_unrolled
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
