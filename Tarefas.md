@@ -1,4 +1,15 @@
 Trarefas
+#04set25
+Sugestão de ata para reunião PhD Edson 04/09/25.
+
+- Discutir dúvidas sobre Classes em python;
+
+- Discutir dúvida: Como implementar uma malha Gmsh com Hua?
+
+- Apresentar código para criar malhas adaptado para rodar com classes e eletrodo Hua;
+
+- Temas gerais. 
+
 
 #21ago25
 (21/08) Sugestão de tarefas para próximas semanas:
