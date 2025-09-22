@@ -1,5 +1,5 @@
 *.pos
-*.msh
+#*.msh
 *.geo
 *.geo_unrolled
 # Byte-compiled / optimized / DLL files
