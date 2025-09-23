@@ -21,13 +21,11 @@ class MyMesh:
         self.NumberOfNodes = 0
 
         self.Elements = None
-        self.MeshType = 0
         self.dim = 0
 
         self.GndNode = 0
         self.FlagRhoBased = False
         self.KGlobal = None
-        self.KGlobal_Hua = None
 
         self.element_type = ''
 
@@ -86,29 +84,37 @@ class MyMesh:
             tag = self.Elements[idx].PhysicalEntity
             self.Elements[idx].SetSigma(dic[tag])
 
+
     def CalcKGlobal(self):
-        raise NotImplementedError("A função CalcKGlobal() tem que ser implementada na subclasse.")
-        
-    def CalcKGlobal_Hua(self):
-        raise NotImplementedError("A função CalcKGlobal() tem que ser implementada na subclasse.")
+        if self.Elements[0].Rho == 0.0:
+            raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
+            
+        if self.KGlobal is None:
+            self.KGlobal = np.zeros((self.NumberOfNodes, self.NumberOfNodes), dtype=float)
+        else:
+            self.KGlobal.fill(0)
+            
+        for elem in range(self.NumberOfElements): # para cada elemento:
+
+            for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
+                no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
+
+                for j in range(len(self.Elements[elem].Topology)): # para cada j (noh local):
+                    no_j = self.Elements[elem].Topology[j] # pega noh_j (noh global)
+
+                    if self.FlagRhoBased:
+                        valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
+                    else:
+                        valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                    self.KGlobal[no_i, no_j] += valor
+
 
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
-'''
-###############################################################################            
-    def SetSigmaLinePhysicaEntity(self, dic):
-        print("CHAVES recebidas em dic:", sorted(dic.keys()))
-        for idx in range(self.NumberOfElements):
-            tag = self.Elements[idx].PhysicalEntity
-            self.Elements[idx].SetSigma(dic[tag])
-    def SetSigmaLineValue(self, value):
-        for idx in range(self.NumberOfElements):
-            self.Elements[idx].SetSigma(value)
-###############################################################################
-'''
+
+
 
 '''
-Malhas tipo 1:
     Malhas 2D do Edson onde os eletrodos são os primeiros x pontos do msh
     Os elementos são sempre triangulares.
     Não possui modelo de eletrodo.
@@ -120,7 +126,6 @@ class PointElectrodes2DMeshEdson(MyMesh):
     def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1):
         super().__init__(nome_msh)
 
-        self.MeshType = 1
         if type(NumberOfEletrodes) == int:
             self.NumberOfElectrodes = NumberOfEletrodes
         else:
@@ -129,6 +134,12 @@ class PointElectrodes2DMeshEdson(MyMesh):
         self.altura2D = altura2D
     
 
+    '''
+    - O corpo (background) é physical_group 1.
+    - Os objetos são physical_group 2, 3, 4 etc.
+    - os eletrodos são os primeiros (n_elect) pontos do msh
+    - O índice do GND é o ponto = (n_elect) + 1
+    '''
     def ReadMesh(self):
         if self.MshFileName == "":
             raise Exception("PointElectrodes2DMeshEdson(): MshFileName not defined.")
@@ -178,54 +189,33 @@ class PointElectrodes2DMeshEdson(MyMesh):
             self.Elements[idx].CalcKgeo()
 
 
-    def CalcKGlobal(self):
-        if self.Elements[0].Rho == 0.0:
-            raise Exception("PointElectrodes2DMeshEdson:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
-            
-        if self.KGlobal is None:
-            self.KGlobal = np.zeros((self.NumberOfNodes, self.NumberOfNodes), dtype=float)
-        else:
-            self.KGlobal.fill(0)
-            
-        for elem in range(self.NumberOfElements): # para cada elemento:
-
-            for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
-                no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
-
-                for j in range(len(self.Elements[elem].Topology)): # para cada j (noh local):
-                    no_j = self.Elements[elem].Topology[j] # pega noh_j (noh global)
-
-                    if self.FlagRhoBased:
-                        valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
-                    else:
-                        valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
-                    self.KGlobal[no_i, no_j] += valor
-
-        #print(self.KGlobal)
-
 
 '''
-Malhas tipo 2:
-    Malhas 2D do Edson onde os eletrodos são definidos pelos physical groups xxxx
-    Os elementos são sempre triangulares.
-    Usa modelo de eletrodo Hua.
-    O corpo (background) é physical_group 1000.
-    Os objetos são physical_group 2000, 3000 e 4000
-    Os eletrodos são physical_group 5001, 5002, 5003 etc...
+    Malhas 2D do Edson onde os eletrodos são definidos por linhas para implementação do modelo Hua.
+    - Os elementos são sempre triangulares.
+    - Usa modelo de eletrodo Hua.
+    - O corpo (background) é physical_group 1000.
+    - Os objetos são physical_group 1001, 1002, 1003...
+    - Os eletrodos são physical_group 5001, 5002, 5003 etc...
+    - O gnd está o physical_group 10000.
 '''
 class HuaElectrodes2DMeshEdson(MyMesh):
     def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1):
         super().__init__(nome_msh)
 
-        self.MeshType = 2
         if type(NumberOfEletrodes) == int:
             self.NumberOfElectrodes = NumberOfEletrodes
         else:
             raise Exception("HuaElectrodes2DMeshEdson(): Invalid NumberOfEletrodes.")
 
-        #self.parametro_b = 1.
         self.altura2D = altura2D
     
+    '''
+    - O corpo (background) é physical_group 1000 formado por triângulos.
+    - Os objetos são physical_group 1001, 1002, 1003... formados por triângulos.
+    - Os eletrodos linhas identificadas por physical_group 5001, 5002, 5003 etc...
+    - O gnd está o physical_group 10000.
+    '''
     def ReadMesh(self):
         if self.MshFileName == "":
             raise Exception("HuaElectrodes2DMeshEdson(): MshFileName not defined.")
@@ -244,94 +234,79 @@ class HuaElectrodes2DMeshEdson(MyMesh):
                 raise Exception("PointElectrodes2DMeshEdson(): dimension identification error.")
         else:
             raise Exception("PointElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")  
-        if 'line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
-            pass
-        else:
+        
+        # Verifica se tem as linhas dos eletrodos
+        if not ('line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys()):
             raise Exception("HuaElectrodes2DMeshEdson(): Não encontrei as linhas.")    
-            
-            
-        '''    
-        
-        if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
-            if 'line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
-                self.dim = 1 # 2D mesh
-                self.element_type = 'line'
-            else:
-                raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error.")
-        else:
-            raise Exception("HuaElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")  
-        
-        '''
-        
-        
         
         self.Coordinates = self.__mshdata.points
         msh_topology = self.__mshdata.cells_dict[self.element_type]
 
         self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
         self.physical_tags = np.unique(self.msh_physical_groups)
-        print(f"msh_physical_groups found: {self.msh_physical_groups}.")
-        
+        print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
+        print(f"Physical tags found (type {self.element_type}): {self.physical_tags}.")
 
-        
-        print(f"Physical tags found: {self.physical_tags}.")
 
-        
-        self.NumberOfNodes = self.Coordinates.shape[0] # depois temos que incluir os nós virtuais
-        self.NumberOfElements = msh_topology.shape[0] # inclui triângulos com linhas 
+        physical_groups_lines = self.__mshdata.cell_data_dict["gmsh:physical"]['line']
 
-        print(f"{self.NumberOfElements} Elements and {self.NumberOfNodes} Nodes found.")
+        physical_tags_lines = np.unique(physical_groups_lines)
+        physical_tags_points = np.unique(self.__mshdata.cell_data_dict["gmsh:physical"]['vertex'])
 
-        self.ElectrodeNodes = np.arange(self.NumberOfElectrodes, dtype=int) # nessa malha os eletrodos são os últimos nós (virtuais))
-        self.GndNode = self.NumberOfElectrodes # verificar se o nó zero é o terra
+        print(f"Physical tags: lines: {physical_tags_lines}; points: {physical_tags_points}")
+
+        # Verifica se o physical do GND está no arquivo msh
+        if not (10000 in physical_tags_points):
+            raise Exception("HuaElectrodes2DMeshEdson(): GND vertex not found.")  
+
+        n_electrodes = len(physical_tags_lines)
+        print(f"{n_electrodes} electrodes found.")
+
+        n_nohs_msh = self.Coordinates.shape[0]
+        n_elementos_msh = msh_topology.shape[0] 
+        print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
+
+        self.NumberOfNodes = n_nohs_msh + n_electrodes # incluindo os nós virtuais
+        self.ElectrodeNodes = np.arange(n_nohs_msh, n_nohs_msh + n_electrodes, dtype=int) # nessa malha os eletrodos são os últimos nós (virtuais))
 
         print(f"ElectrodeNodes: {self.ElectrodeNodes}")
-        print(f"GndNode: {self.GndNode}")
 
-        self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos
+        electrodes_topology = self.__mshdata.cells_dict['line'] # só linhas dos eletrodos
+        points_topology = self.__mshdata.cells_dict['vertex']   # só pontos (deveria ser só o GND)
 
-        elements.LinearLineHua.Coordinates = self.Coordinates  ##################
-        elements.LinearLineHua.altura2D = self.altura2D #
-        
-        
-        for idx in range(self.NumberOfElements):
-       #     if # verificar se é linha ou triângulo
-            self.Elements[idx] = elements.LinearLineHua()
+        n_elementos_eletrodos = electrodes_topology.shape[0] # só linhas 
+
+        self.NumberOfElements = n_elementos_msh + n_elementos_eletrodos # inclui triângulos  e as linhas dos eletrodos
+
+        print(f"{self.NumberOfElements} Elements and {self.NumberOfNodes} Nodes found on model.")
+
+        self.GndNode = points_topology[0][0] # o primeiro noh do primeiro physical vertex
+        print(f'GndNode: {self.GndNode}')
+
+        self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos (triângulos do meio + elementos dos eletrodos)
+
+
+        elements.LinearTriangle.Coordinates = self.Coordinates
+        elements.LinearTriangle.Altura2D = self.altura2D # define a altura padrão como 1cm
+
+        elements.LinearLineHua.Coordinates = self.Coordinates
+        elements.LinearLineHua.Altura2D = self.altura2D # define a altura padrão como 1cm
+
+        # Pegando elementos triangulares:
+        for idx in range(n_elementos_msh):
+            self.Elements[idx] = elements.LinearTriangle()
             self.Elements[idx].Topology = msh_topology[idx]
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
-        
-
-            #self.Elements[idx].CalcCentroid()
+            self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
-            
-        #for idx in range(self.NumberOfElements):             ##################
-        #    self.Elements[idx] = elements.LinearLineHua()    ##################
-            
-'''         
-    def CalcKGlobal_Hua(self):
-        if self.Elements[0].Rho == 0.0:
-            raise Exception("HuaElectrodes2DMeshEdson:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
-            
-        if self.KGlobal_Hua is None:
-            self.KGlobal_Hua = np.zeros((self.NumberOfNodes, self.NumberOfNodes), dtype=float)
-        else:
-            self.KGlobal_Hua.fill(0)
-            
-        for elem in range(self.NumberOfElements): # para cada elemento:
 
-            for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
-                no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
-
-                for j in range(len(self.Elements[elem].Topology)): # para cada j (noh local):
-                    no_j = self.Elements[elem].Topology[j] # pega noh_j (noh global)
-
-                    if self.FlagRhoBased:
-                        valor = self.Elements[elem].KHua[i, j] / self.Elements[elem].Rho
-                    else:
-                        valor = self.Elements[elem].KHua[i, j] * self.Elements[elem].Sigma
-                    self.KGlobal_Hua[no_i, no_j] += valor
-
-        #print(self.KGlobal_Hua)
-'''
+        # Pegando elementos dos eletrodos:
+        for idy in range(n_elementos_eletrodos): # idy começa em zero
+            idx = idy + n_elementos_msh          # idx continua a partir de n_elementos_msh
+            self.Elements[idx] = elements.LinearLineHua()
+            self.Elements[idx].Topology = electrodes_topology[idy]
+            self.Elements[idx].PhysicalEntity = physical_groups_lines[idy]
+            self.Elements[idx].CalcCentroid()
+            self.Elements[idx].CalcKgeo()
 
     
