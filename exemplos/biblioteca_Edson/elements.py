@@ -10,7 +10,7 @@ import numpy as np
 
 class MyElement:
     Coordinates = None
-    Altura2D = 1.0
+    Altura2D = None
 
     def __init__(self):
         self.Centroid = None
