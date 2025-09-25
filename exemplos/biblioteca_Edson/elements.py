@@ -78,7 +78,7 @@ class LinearTriangle(MyElement):
     ###############################################################################
     # OBS: só parte geométrica (que nunca muda), sem multiplicar por sigma (que muda)
     #def CalcKgeo(self, elem):
-        
+    '''    
     def CalcKgeo(self):
         noh1 = int(self.Topology[0])
         noh2 = int(self.Topology[1])
@@ -138,7 +138,7 @@ class LinearTriangle(MyElement):
                 value = (self.Altura2D / (4.0 * area)) * (coeficientes[0][i] * coeficientes[0][j] + coeficientes[1][i] * coeficientes[1][j])
                 self.KGeo[j][i] = value
                 self.KGeo[i][j] = value
-    '''
+    
 # Equacionamento deduzido na tese do Fernando Moura, Apendice A.2.1
 class LinearLineHua(MyElement):
     
