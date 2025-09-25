@@ -160,7 +160,7 @@ class MyMesh:
     Os objetos são physical_group 2, 3, 4 etc.
 '''
 class PointElectrodes2DMeshEdson(MyMesh):
-    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1):
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, useEdson=False):
         super().__init__(nome_msh)
 
         if type(NumberOfEletrodes) == int:
@@ -169,6 +169,7 @@ class PointElectrodes2DMeshEdson(MyMesh):
             raise Exception("PointElectrodes2DMeshEdson(): Invalid NumberOfEletrodes.")
 
         self.altura2D = altura2D
+        self.useEdson = useEdson
     
 
     '''
@@ -214,10 +215,18 @@ class PointElectrodes2DMeshEdson(MyMesh):
         print(f"GndNode: {self.GndNode}")
 
         self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos
-        elements.LinearTriangle.Coordinates = self.Coordinates
-        elements.LinearTriangle.Altura2D = self.altura2D # define a altura padrão como 1cm
+
+        if self.useEdson:
+            elements.LinearTriangleEdson.Coordinates = self.Coordinates
+            elements.LinearTriangleEdson.Altura2D = self.altura2D # define a altura padrão como 1cm
+        else:
+            elements.LinearTriangle.Coordinates = self.Coordinates
+            elements.LinearTriangle.Altura2D = self.altura2D # define a altura padrão como 1cm
         for idx in range(self.NumberOfElements):
-            self.Elements[idx] = elements.LinearTriangle()
+            if self.useEdson:
+                self.Elements[idx] = elements.LinearTriangleEdson()
+            else:
+                self.Elements[idx] = elements.LinearTriangle()
             self.Elements[idx].Topology = msh_topology[idx]
             self.Elements[idx].PhysicalEntity = msh_physical_groups[idx]
         
