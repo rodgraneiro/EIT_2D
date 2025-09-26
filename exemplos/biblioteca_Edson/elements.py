@@ -142,7 +142,8 @@ class LinearTriangleEdson(MyElement):
         C_12 =  ( y[1]-y[2])*(y[2]-y[0])+(x[2]-x[1])*(x[0]-x[2])          #A_21 = A_12
         C_13 =  ( y[1]-y[2])*(y[0]-y[1])+(x[2]-x[1])*(x[1]-x[0])          #A_31 = A_13
         C_22 =  (y[2]-y[0])**2 + (x[0]-x[2])**2                           #A_32 = A_23
-        C_23 =  (y[2]-y[0])*(y[1]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # Na tese está: (Bt_m*Bt_o)+(Gm_m*Gm_o)+(Dt_m*Dt_o)
+        #C_23 =  (y[2]-y[0])*(y[1]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # Na tese está: (Bt_m*Bt_o)+(Gm_m*Gm_o)+(Dt_m*Dt_o)
+        C_23 =  (y[2]-y[0])*(y[0]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # Na tese está: (Bt_m*Bt_o)+(Gm_m*Gm_o)+(Dt_m*Dt_o)
         C_33 =  (y[0]- y[1])**2 + (x[1]-x[0])**2  
 
         
