@@ -95,7 +95,7 @@ class MyMesh:
             self.KGlobal.fill(0)
             
         for elem in range(self.NumberOfElements): # para cada elemento:
-
+            print(f' elemento_{elem} {self.Elements[elem].Topology}')
             for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
 

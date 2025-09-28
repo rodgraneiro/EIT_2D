@@ -114,7 +114,8 @@ class LinearTriangleEdson(MyElement):
         super().__init__()
 
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
-    # Equacionamento deduzido na tese do Fernando Moura, Apendice A.1.1
+    # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
+    # Seção 6.2.2.
     ###############################################################################
     # Esta função calcula a matriz local de condutividade da malha de elementos
     # finitos
@@ -138,19 +139,19 @@ class LinearTriangleEdson(MyElement):
         triangulo = np.array([ [1, x[0],  y[0]], [1, x[1],  y[1]], [1, x[2],  y[2]]], dtype=np.float64)
         area_triangulo = abs((np.linalg.det(triangulo))/2)
     
-        C_11 =  ( y[1]-y[2])**2 + (x[2]-x[1])**2
-        C_12 =  ( y[1]-y[2])*(y[2]-y[0])+(x[2]-x[1])*(x[0]-x[2])          #C_21 = C_12
-        C_13 =  ( y[1]-y[2])*(y[0]-y[1])+(x[2]-x[1])*(x[1]-x[0])          #C_31 = C_13
-        C_22 =  (y[2]-y[0])**2 + (x[0]-x[2])**2                           #C_32 = C_23
-        #C_23 =  (y[2]-y[0])*(y[1]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # O ERRO ESTAVA AQUI. Onde lê-se "(y[1]- y[1])",
+        Y_11 =  ( y[1]-y[2])**2 + (x[2]-x[1])**2
+        Y_12 =  ( y[1]-y[2])*(y[2]-y[0])+(x[2]-x[1])*(x[0]-x[2])          #Y_21 = Y_12
+        Y_13 =  ( y[1]-y[2])*(y[0]-y[1])+(x[2]-x[1])*(x[1]-x[0])          #Y_31 = Y_13
+        Y_22 =  (y[2]-y[0])**2 + (x[0]-x[2])**2                           #Y_32 = Y_23
+        #Y_23 =  (y[2]-y[0])*(y[1]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # O ERRO ESTAVA AQUI. Onde lê-se "(y[1]- y[1])",
                                                                            # leia-se (y[0]- y[1])
-        C_23 =  (y[2]-y[0])*(y[0]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # 
-        C_33 =  (y[0]- y[1])**2 + (x[1]-x[0])**2  
+        Y_23 =  (y[2]-y[0])*(y[0]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # 
+        Y_33 =  (y[0]- y[1])**2 + (x[1]-x[0])**2  
 
         
-        self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[C_11, C_12, C_13], 
-                                        [C_12, C_22, C_23],      
-                                        [C_13, C_23, C_33]       
+        self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[Y_11, Y_12, Y_13], 
+                                        [Y_12, Y_22, Y_23],      
+                                        [Y_13, Y_23, Y_33]       
                                         ])
 
         print('KGeo1', self.KGeo)
@@ -169,6 +170,7 @@ class LinearLineHua(MyElement):
     def CalcKgeo(self):    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
+        #self.Topology = np.append(self.Topology, (17))
         #self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
         for i in range(2):
             mtrz_lenth_a[i][0] =self.Coordinates[self.Topology[i]][0]
