@@ -354,4 +354,88 @@ class HuaElectrodes2DMeshEdson(MyMesh):
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
 
+####################################################################
+# A seguinte classe PointElectrodes1DMeshEdson() lê uma malha unidimensional
+# - O corpo (background) tem 1 metro dividido em duas regiões com condutividade distintas.
+# - Os primeiros 75 cm pertencem ao physical_group 1, enquanto que, os 25 restantes
+# - pertencem ao physical_group 2
+# - Os eletrodos são os pontos inicial e final respectivamente.
+# - O gnd está no ponto inicial (0, 0, 0).
+###################################################################
+
+class PointElectrodes1DMeshEdson(MyMesh):
     
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura1D = 0.1):
+    
+        super().__init__(nome_msh)
+
+        if type(NumberOfEletrodes) == int:
+            self.NumberOfElectrodes = NumberOfEletrodes
+        else:
+            raise Exception("HuaElectrodes2DMeshEdson(): Invalid NumberOfEletrodes.")
+
+        self.altura1D = altura1D
+        '''
+        - O corpo (background) tem 1 metro dividido em duas regiões com condutividade distintas.
+        - Os primeiros 75 cm pertencem ao physical_group 1, enquanto que, os 25 restantes
+        - pertencem ao physical_group 2
+        - Os eletrodos são os pontos inicial e final respectivamente.
+        - O gnd está no ponto inicial (0, 0, 0).
+        '''
+        
+    def ReadMesh(self):
+        if self.MshFileName == "":
+            raise Exception("PointElectrodes1DMeshEdson(): MshFileName not defined.")
+
+        print(f"Reading {self.MshFileName}.")
+        self.__mshdata = meshio.read(self.MshFileName)
+        
+        # Check msh dimension
+        if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
+            if 'tetra' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                raise Exception("PointElectrodes1DMeshEdson(): dimension identification error. Should be 1D mesh.")
+            elif 'triangle' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                raise Exception("PointElectrodes1DMeshEdson(): dimension identification error. Should be 1D mesh.")
+            elif 'line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                self.dim = 1 # 1D mesh
+                self.element_type = 'line'
+            else:
+                raise Exception("PointElectrodes1DMeshEdson(): dimension identification error.")
+        else:
+            raise Exception("PointElectrodes1DMeshEdson(): invalid mesh (no physical entities found).")  
+        
+        
+        self.Coordinates = self.__mshdata.points
+        msh_topology = self.__mshdata.cells_dict[self.element_type]
+        
+        self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
+        self.physical_tags = np.unique(self.msh_physical_groups)
+        print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
+        print(f"Physical tags found (type {self.element_type}): {self.physical_tags}.")
+        
+        n_electrodes = self.NumberOfElectrodes
+        print(f"{n_electrodes} electrodes found.")
+        
+        n_nohs_msh = self.Coordinates.shape[0]
+        n_elementos_msh = msh_topology.shape[0] 
+        print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
+        
+        self.GndNode = msh_topology[0][0] # o primeiro noh do primeiro physical vertex
+        print(f'GndNode: {self.GndNode}')
+        
+        self.NumberOfElements = n_elementos_msh
+        self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos
+        
+        elements.LinearLineEdson.Coordinates = self.Coordinates
+        elements.LinearLineEdson.Altura1D = self.altura1D # define a altura padrão como 1cm
+        print(f'first five coordinates: {elements.LinearLineEdson.Coordinates[:5]}')
+        print(f'Altura1D: {elements.LinearLineEdson.Altura1D}')
+        
+        # Pegando elementos lineares 'lines':
+        for idx in range(n_elementos_msh):
+            self.Elements[idx] = elements.LinearLineEdson()
+            self.Elements[idx].Topology = msh_topology[idx]
+            #print(f'ElementsTopo1 {self.Elements[idx].Topology}')
+            self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
+            self.Elements[idx].CalcCentroid()
+            #self.Elements[idx].CalcKgeo()
