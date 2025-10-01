@@ -205,3 +205,14 @@ class LinearLineHua(MyElement):
         self.Centroid[0] /= self.Topology.size
         self.Centroid[1] /= self.Topology.size
         self.Centroid[2] /= self.Topology.size
+
+# Elemento linear unidimensional
+# Equacionamento deduzido em ..
+
+class LinearLineEdson(MyElement):
+    
+    def __init__(self):
+        super().__init__()
+        
+    def Calcgeo(self):
+        pass
