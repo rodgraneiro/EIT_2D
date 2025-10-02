@@ -95,7 +95,7 @@ class MyMesh:
             self.KGlobal.fill(0)
             
         for elem in range(self.NumberOfElements): # para cada elemento:
-            print(f' elemento_{elem} {self.Elements[elem].Topology}')
+            #print(f' elemento_{elem} {self.Elements[elem].Topology}')
             for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
 
@@ -423,6 +423,7 @@ class PointElectrodes1DMeshEdson(MyMesh):
         self.GndNode = msh_topology[0][0] # o primeiro noh do primeiro physical vertex
         print(f'GndNode: {self.GndNode}')
         
+        self.NumberOfNodes = n_nohs_msh
         self.NumberOfElements = n_elementos_msh
         self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos
         
@@ -438,4 +439,4 @@ class PointElectrodes1DMeshEdson(MyMesh):
             #print(f'ElementsTopo1 {self.Elements[idx].Topology}')
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
             self.Elements[idx].CalcCentroid()
-            #self.Elements[idx].CalcKgeo()
+            self.Elements[idx].CalcKgeo()
