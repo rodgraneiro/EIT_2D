@@ -11,6 +11,7 @@ import numpy as np
 class MyElement:
     Coordinates = None
     Altura2D = None
+    Altura1D = None
 
     def __init__(self):
         self.Centroid = None
@@ -214,5 +215,41 @@ class LinearLineEdson(MyElement):
     def __init__(self):
         super().__init__()
         
-    def Calcgeo(self):
-        pass
+        
+    def CalcKgeo(self):
+        mtrz_lenth_a = np.zeros((2, 2), dtype=float)
+        coeficientes = np.zeros((2,2), dtype=float)
+                    
+        for i in range(2):
+            mtrz_lenth_a[i][0] =self.Coordinates[self.Topology[i]][0]
+            #print(f'mtrz_lenth_a {mtrz_lenth_a[i][0]}')
+            mtrz_lenth_a[i][1] =self.Coordinates[self.Topology[i]][1]
+            #print(f'mtrz_lenth_a {mtrz_lenth_a[i][1]}')
+            node1 = self.Topology
+            
+            #print(f'node1 {node1}')
+            #print('self.msh_physical_groups ???', self.msh_physical_groups)
+        #print('nodes', node1)
+            #print(f'groups_lines {self.PhysicalEntity[i]}')
+            #n_nohs_msh = self.Coordinates.shape[0] 
+        #print(f'mtrz_lenth_a {mtrz_lenth_a}')
+        
+        # comprimento 'a' sqtr( (x2-x1)^2 + (y2-y1)^2) )
+    
+        lenth_a = np.sqrt((mtrz_lenth_a[1][0] - mtrz_lenth_a[0][0])**2 +(mtrz_lenth_a[1][1] - mtrz_lenth_a[0][1])**2)            
+        #print(f'lenth_a {lenth_a}')
+###############################################################################
+# Esta função calcula a matriz local de condutividade da malha de elementos
+# finitos
+#
+#               A_i                                       
+# Y_local = ------------- * [[1, -1], [-1, 1]]             
+#                L                                             
+###############################################################################        
+        self.KGeo = np.zeros((2, 2), dtype=float)
+        mtz = np.array([[1.0,-1.0],[-1.0,1.0]])
+              
+        
+        # MATRIZ DE RIGIDEZ DO ELEMENTO Hua
+        self.KGeo = ((self.Altura1D/lenth_a))*mtz
+        #print('KGeo \n', self.KGeo)
