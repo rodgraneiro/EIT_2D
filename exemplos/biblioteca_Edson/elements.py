@@ -116,7 +116,7 @@ class LinearTriangleEdson(MyElement):
 
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
     # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
-    # Seção 6.2.2.
+    # Seção 6.2.2. Veja equacionamento  em  "Método Elementos Finitos 2D - Triângulos.pdf"
     ###############################################################################
     # Esta função calcula a matriz local de condutividade da malha de elementos
     # finitos
