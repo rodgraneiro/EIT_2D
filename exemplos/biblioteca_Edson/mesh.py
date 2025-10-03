@@ -440,3 +440,7 @@ class PointElectrodes1DMeshEdson(MyMesh):
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
+        
+        self.corrente = np.zeros(self.NumberOfNodes)                    # Monta vetor de corrente
+        self.corrente[0] = -0.001                            # Nó de saída de corrente
+        self.corrente[self.NumberOfElements] = 0.001                  # Nó de entrada de corrente            
