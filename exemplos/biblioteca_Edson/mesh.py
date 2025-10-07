@@ -112,44 +112,7 @@ class MyMesh:
 
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
-    '''
-    ###############################################################################
-    # Esta função aplica condições de contorno conforme exemplo abaixo:
-    #
-    # [ 1   0          0          0          0        ] [u1]   [u1]    
-    # [ 0  k1+k2+k3    -k3        0         -k2       ] [u2] = [F2 +k1*u1] 
-    # [ 0   -k3      k3+k5+k4     -k5        0        ] [u3]   [F3 +k4*u4] 
-    # [ 0   0          -k5      k2+k6       -k6       ] [u4]   [F4 +k6*u5] 
-    # [ 0   0           0          0         1        ] [u5]   [u5]
-    ###############################################################################  
-    def aplica_cond_contorno(I_CC,
-                            Y,
-                            n_nodes,
-                            V_imposto):           # Aplica condições de contorno
 
-    I_CC_cond_contorno = I_CC[:].copy()
-
-    for [noh_cond_contorno,valor_cond_contorno] in V_imposto:
-        for i in range(0, n_nodes):                    # corrige matriz de corrente
-        I_CC_cond_contorno[i] = (
-            I_CC_cond_contorno[i] - \
-            Y[i][noh_cond_contorno]*valor_cond_contorno
-        )
-
-    for [noh_cond_contorno,valor_cond_contorno] in V_imposto:
-        I_CC_cond_contorno[noh_cond_contorno] = (
-            valor_cond_contorno )            # coloca valor de contorno conhecido
-
-    Y_cond_contorno = Y[:].copy()                        # Criar matriz solução
-    for [noh_cond_contorno,valor_cond_contorno] in V_imposto:
-        for k in range(0, n_nodes):                # laço para zerar linha e coluna
-            Y_cond_contorno[noh_cond_contorno][k] = 0
-            Y_cond_contorno[k][noh_cond_contorno] = 0
-
-        Y_cond_contorno[noh_cond_contorno][noh_cond_contorno] = 1
-    return Y_cond_contorno, I_CC_cond_contorno
-    ###############################################################################
-    '''
 
 
 '''
@@ -439,6 +402,4 @@ class PointElectrodes1DMeshEdson(MyMesh):
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
         
-        #self.corrente = np.zeros(self.NumberOfNodes)                    # Monta vetor de corrente
-        #self.corrente[0] = -0.001                            # Nó de saída de corrente
-        #self.corrente[self.NumberOfElements] = 0.001                  # Nó de entrada de corrente            
+        
