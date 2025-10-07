@@ -15,7 +15,9 @@ import sys
 class forward_problem: 
     def __init__(self, mymesh: "mesh.MyMesh", Pcorrente=None):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
-            raise TypeError("mymesh não tem atributo KGlobal (instancie MyMesh e calcule CalcKGlobal()).")
+            raise TypeError("Parâmetro incorreto: mymesh.")
+        if mymesh.KGlobal is None:
+            raise TypeError("mymesh não tem atributo KGlobal (calcule CalcKGlobal()).")
         if Pcorrente is None:
             raise TypeError("não tem atributo 'Pcorrente' (defina um vetor de correntes).")
 

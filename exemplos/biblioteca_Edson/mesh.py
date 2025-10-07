@@ -357,33 +357,33 @@ class HuaElectrodes2DMeshEdson(MyMesh):
 
 ####################################################################
 # A seguinte classe PointElectrodes1DMeshEdson() lê uma malha unidimensional
-# - O corpo (background) tem 1 metro dividido em duas regiões com condutividade distintas.
-# - Os primeiros 75 cm pertencem ao physical_group 1, enquanto que, os 25 restantes
-# - pertencem ao physical_group 2
-# - Os eletrodos são os pontos inicial e final respectivamente.
-# - O gnd está no ponto inicial (0, 0, 0).
+# - O corpo possui XXX physicals (1, 2, 3, 4 etc)
+# - Pode ter YYY eletrodos (nós de medida ou injeção)
+# - O gnd é sempre o primeiro noh do primeiro physical vertex
 ###################################################################
 
 class PointElectrodes1DMeshEdson(MyMesh):
     
-    def __init__(self, NumberOfEletrodes, nome_msh=None, altura1D = 0.1):
+    def __init__(self, ElectrodeNodes, nome_msh=None, altura1D = 0.1):
     
         super().__init__(nome_msh)
 
-        if type(NumberOfEletrodes) == int:
-            self.NumberOfElectrodes = NumberOfEletrodes
+        if ( type(ElectrodeNodes) == list ) or ( type(ElectrodeNodes) == np.ndarray ):
+            self.NumberOfElectrodes = len(ElectrodeNodes)
+            self.ElectrodeNodes = ElectrodeNodes
         else:
-            raise Exception("HuaElectrodes2DMeshEdson(): Invalid NumberOfEletrodes.")
+            raise Exception("PointElectrodes1DMeshEdson(): Invalid ElectrodeNodes.")
+        
+        print(f'NumberOfElectrodes: {self.NumberOfElectrodes}')
 
         self.altura1D = altura1D
-        '''
-        - O corpo (background) tem 1 metro dividido em duas regiões com condutividade distintas.
-        - Os primeiros 75 cm pertencem ao physical_group 1, enquanto que, os 25 restantes
-        - pertencem ao physical_group 2
-        - Os eletrodos são os pontos inicial e final respectivamente.
-        - O gnd está no ponto inicial (0, 0, 0).
-        '''
-        
+
+
+    '''
+    - O corpo possui XXX physicals (1, 2, 3, 4 etc)
+    - Pode ter YYY eletrodos (nós de medida ou injeção)
+    - O gnd é sempre o primeiro noh do primeiro physical vertex
+    '''
     def ReadMesh(self):
         if self.MshFileName == "":
             raise Exception("PointElectrodes1DMeshEdson(): MshFileName not defined.")
@@ -414,9 +414,6 @@ class PointElectrodes1DMeshEdson(MyMesh):
         print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         print(f"Physical tags found (type {self.element_type}): {self.physical_tags}.")
         
-        n_electrodes = self.NumberOfElectrodes
-        print(f"{n_electrodes} electrodes found.")
-        
         n_nohs_msh = self.Coordinates.shape[0]
         n_elementos_msh = msh_topology.shape[0] 
         print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
@@ -442,6 +439,6 @@ class PointElectrodes1DMeshEdson(MyMesh):
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
         
-        self.corrente = np.zeros(self.NumberOfNodes)                    # Monta vetor de corrente
-        self.corrente[0] = -0.001                            # Nó de saída de corrente
-        self.corrente[self.NumberOfElements] = 0.001                  # Nó de entrada de corrente            
+        #self.corrente = np.zeros(self.NumberOfNodes)                    # Monta vetor de corrente
+        #self.corrente[0] = -0.001                            # Nó de saída de corrente
+        #self.corrente[self.NumberOfElements] = 0.001                  # Nó de entrada de corrente            
