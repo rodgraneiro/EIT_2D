@@ -33,6 +33,7 @@ class MyMesh:
         self.ElectrodeNodes = None
         
         self.msh_physical_groups = None
+        self.msh_topology = None
 
 
     # Ajusta um valor por elemento
@@ -286,7 +287,7 @@ class HuaElectrodes2DMeshEdson(MyMesh):
             raise Exception("HuaElectrodes2DMeshEdson(): Não encontrei as linhas.")    
         
         self.Coordinates = self.__mshdata.points
-        msh_topology = self.__mshdata.cells_dict[self.element_type]   # só dos triângulos
+        self.msh_topology = self.__mshdata.cells_dict[self.element_type]   # só dos triângulos
 
         self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]   # só dos triângulos
         self.physical_tags = np.unique(self.msh_physical_groups)
@@ -307,7 +308,7 @@ class HuaElectrodes2DMeshEdson(MyMesh):
         print(f"{n_electrodes} electrodes found.")
 
         n_nohs_msh = self.Coordinates.shape[0]
-        n_elementos_msh = msh_topology.shape[0] 
+        n_elementos_msh = self.msh_topology.shape[0] 
         print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
 
         self.NumberOfNodes = n_nohs_msh + n_electrodes # incluindo os nós virtuais
@@ -339,7 +340,7 @@ class HuaElectrodes2DMeshEdson(MyMesh):
         # Pegando elementos triangulares:
         for idx in range(n_elementos_msh):
             self.Elements[idx] = elements.LinearTriangle()
-            self.Elements[idx].Topology = msh_topology[idx]                           # só dos triângulos
+            self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
