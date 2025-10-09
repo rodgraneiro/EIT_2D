@@ -13,85 +13,82 @@ import sys
 
 
 class forward_problem: 
-    def __init__(self, mymesh: "mesh.MyMesh", V_imposto, noh_eletrodos, Pcorrente=None):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
-        if mymesh.KGlobal is None:
-            raise TypeError("mymesh não tem atributo KGlobal (calcule CalcKGlobal()).")
-        if Pcorrente is None:
-            raise TypeError("não tem atributo 'Pcorrente' (defina um vetor de correntes).")
 
         self.mymesh = mymesh
-        self.KGlobal = np.asarray(mymesh.KGlobal, dtype=float)
-        self.corrente = Pcorrente
         self.Vmedido = None
-        self.V_imposto = None
-        self.noh_eletrodos = noh_eletrodos
 
-    
-        ###############################################################################
-        # Esta função aplica condições de contorno conforme exemplo abaixo:
-        #
-        # [ 1   0          0          0          0        ] [u1]   [u1]    
-        # [ 0  k1+k2+k3    -k3        0         -k2       ] [u2] = [F2 +k1*u1] 
-        # [ 0   -k3      k3+k5+k4     -k5        0        ] [u3]   [F3 +k4*u4] 
-        # [ 0   0          -k5      k2+k6       -k6       ] [u4]   [F4 +k6*u5] 
-        # [ 0   0           0          0         1        ] [u5]   [u5]
-        ###############################################################################  
-        #def apply_boundary_conditions(self, V_imposto ):
-        
+        if V_imposto is None:
+            V_imposto = [[mymesh.GndNode, 0.0]]
         self.V_imposto = V_imposto
-        #print(f' KGlobal: \n {self.KGlobal}')
+
+        if Pcorrente is None:
+            # ToDo: implementar a matriz de medidas com padrão pula informado (SkipPattern)
+            raise Exception("forward_problem: Pcorrente padrão ainda não implementada.")
+        else:
+            self.corrente = Pcorrente
+
+
+    ###############################################################################
+    # Esta função aplica condições de contorno conforme exemplo abaixo:
+    #
+    # [ 1   0          0          0          0        ] [u1]   [u1]    
+    # [ 0  k1+k2+k3    -k3        0         -k2       ] [u2] = [F2 +k1*u1] 
+    # [ 0   -k3      k3+k5+k4     -k5        0        ] [u3]   [F3 +k4*u4] 
+    # [ 0   0          -k5      k2+k6       -k6       ] [u4]   [F4 +k6*u5] 
+    # [ 0   0           0          0         1        ] [u5]   [u5]
+    ###############################################################################  
+    def apply_boundary_conditions(self):
         self.vetor_corrente_cond_contorno = self.corrente[:].copy()
         print(f'Vetor de corrente: \n {self.vetor_corrente_cond_contorno}')
-          
-        n_nodes = self.vetor_corrente_cond_contorno.shape[0]
-        for [noh_cond_contorno,valor_cond_contorno] in V_imposto:
-          for i in range(0, n_nodes):                    # corrige matriz de corrente
-            self.vetor_corrente_cond_contorno[i] = (
-                self.vetor_corrente_cond_contorno[i] - \
-                self.KGlobal[i][noh_cond_contorno]*valor_cond_contorno
-            )
-        for [noh_cond_contorno_b,valor_cond_contorno] in V_imposto:
-          self.vetor_corrente_cond_contorno[noh_cond_contorno] = (
-              valor_cond_contorno )            # coloca valor de contorno conhecido
-        
-        self.KGlobal_cond_contorno = self.KGlobal[:].copy()                        # Criar matriz solução
-        for [noh_cond_contorno,valor_cond_contorno] in V_imposto:
-          for k in range(0, n_nodes):                # laço para zerar linha e coluna
-              self.KGlobal_cond_contorno[noh_cond_contorno][k] = 0
-              self.KGlobal_cond_contorno[k][noh_cond_contorno] = 0
-        
-        self.KGlobal_cond_contorno[noh_cond_contorno][noh_cond_contorno] = 1
-        #print(f'KGlobal_cond_contorno \n {self.KGlobal_cond_contorno})')
-        #return self.vetor_corrente_cond_contorno, self.KGlobal_cond_contorno
-        #print(f'vetor_corrente_cond_contorno \n {self.vetor_corrente_cond_contorno})')
-        ###############################################################################
-        
-        ###############################################################################
-        # Essa função calcula o valor medido conforme equação abaixo
-        #
-        # { V_medido } = [ Y_cond_contorno ]^(-1) * { C_cond_contorno }          
-        ###############################################################################
-        #def solucao_Vmedido(self, vetor_correnteVM,
-        #                      Y_cond_contorno_VM):        # calc valor observado/medido
-        
-        Yinversa = np.linalg.inv(self.KGlobal_cond_contorno)
-        self.Vmedido = np.dot(Yinversa,
-                           self.vetor_corrente_cond_contorno)
-        print(f' Tensões medidos \n {self.Vmedido})')
-        
-        self.V_eletrodos = self.Vmedido[self.noh_eletrodos]
-        print(f' Tensões no eletrodos \n {self.V_eletrodos})')
-        #return Vmedido                             # retorna valor observado/medido
-###############################################################################
 
-###############################################################################
-# Esta função cria arquivos .pos (Post-Processing) apara vizulização no Gmsh.
-#  
-###############################################################################
+        self.KGlobal = self.mymesh.KGlobal.copy()       # Criar matriz solução
+
+        # atualiza vetor de correntes:
+        for [noh_cond_contorno,valor_cond_contorno] in self.V_imposto:   # Necessário quando valor imposto é diferente de zero
+            for i in range(0, self.mymesh.NumberOfNodes):                    # corrige matriz de corrente
+                self.vetor_corrente_cond_contorno[i] = (
+                    self.vetor_corrente_cond_contorno[i] - \
+                    self.KGlobal[i][noh_cond_contorno]*valor_cond_contorno
+                )
+
+        for [noh_cond_contorno_b,valor_cond_contorno] in self.V_imposto:
+            self.vetor_corrente_cond_contorno[noh_cond_contorno] = valor_cond_contorno  # coloca valor de contorno conhecido
+        
+        # atualiza matriz KGlobal:
+        for [noh_cond_contorno,valor_cond_contorno] in self.V_imposto:
+          for k in range(0, self.mymesh.NumberOfNodes):                # laço para zerar linha e coluna
+              self.KGlobal[noh_cond_contorno][k] = 0
+              self.KGlobal[k][noh_cond_contorno] = 0
+        self.KGlobal[noh_cond_contorno][noh_cond_contorno] = 1
+
+
+    def Solve(self, forceKGolbalCalc=False):
+        if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
+            self.mymesh.CalcKGlobal()
+        
+        self.apply_boundary_conditions()
+
+        Yinversa = np.linalg.inv(self.KGlobal)
+
+        self.Vmedido = np.dot(Yinversa, self.vetor_corrente_cond_contorno)
+        print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
+        
+        self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
+        print(f' Tensões no eletrodos \n {self.Vmedido_eletrodos})')
+
+
+    ###############################################################################
+    # Esta função cria arquivos .pos (Post-Processing) apara vizulização no Gmsh.
+    #  opções: 'rho', 'sigma', 'V', 'I'
+    ###############################################################################
     def criar_arquivo_pos_2D(self, matriz_coordenadas, matriz_topologia, 
                           N_padraoCC, V_sol, nome_arquivo):
+
+        matriz_coordenadas = self.mymesh.Coordinates
+        
         for kk in range(N_padraoCC):
         #for kk in range(1):
 
