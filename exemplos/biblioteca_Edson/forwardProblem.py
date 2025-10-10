@@ -84,50 +84,65 @@ class forward_problem:
     # Esta função cria arquivos .pos (Post-Processing) apara vizulização no Gmsh.
     #  opções: 'rho', 'sigma', 'V', 'I'
     ###############################################################################
-    def criar_arquivo_pos_2D(self, matriz_coordenadas, matriz_topologia, 
-                          N_padraoCC, V_sol, nome_arquivo):
+    #def criar_arquivo_pos_2D(self, matriz_coordenadas, matriz_topologia, N_padraoCC, Post_Processing, nome_arquivo):
+    def criar_arquivo_pos_2D(self, N_padraoCC, Post_Processing, nome_arquivo):
 
         matriz_coordenadas = self.mymesh.Coordinates
+        matriz_topologia = self.mymesh.msh_topology
+        dim = len(matriz_topologia[1])
+        if dim == 3:
+            header = "A list-based view"
+            Sx = "ST"
+        elif dim == 2:
+            header = "V(x) 1D"
+            Sx = "SL"
+        else:
+            raise Exception("3D dimesion not implemented")
         
         for kk in range(N_padraoCC):
-        #for kk in range(1):
 
-            
-            # 9) Gerar arquivo POS
-            
-            #nome_arquivo = 'frame_1_5_11.pos'
-            #arquivo = open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/'+ nome_arquivo + str(kk) + '.pos', 'w+')
             arquivo = open('../../malhasPOS/'+ nome_arquivo + str(kk) + '.pos', 'w+')
-            arquivo.writelines(u'View "A list-based view" { \n')
+            arquivo.writelines('View "' + header + '" { \n')
             
             for i in range(0, len(matriz_topologia)):
             
                 node_l = int(matriz_topologia[i][0]) # pegar dados do dataframe
                 node_m = int(matriz_topologia[i][1])
-                node_n = int(matriz_topologia[i][2])
-            
-                arquivo.writelines(u'ST(')
-              
-                arquivo.writelines([str(matriz_coordenadas[node_l][0]),',', 
-                                    str(matriz_coordenadas[node_l][1]),',0,'])
-                arquivo.writelines([str(matriz_coordenadas[node_m][0]),',', 
-                                    str(matriz_coordenadas[node_m][1]),',0,'])
-                arquivo.writelines([str(matriz_coordenadas[node_n][0]),',', 
-                                    str(matriz_coordenadas[node_n][1]),',0'])
-                
-                arquivo.writelines(u')')
-                arquivo.writelines(u'{')
-                arquivo.writelines([str(V_sol[node_l]),',', 
-                                    str(V_sol[node_m]),',', 
-                                    str(V_sol[node_n])])
-               
+                if dim == 2:
+                    arquivo.writelines(Sx + '(')
+                    
+                    
+                    arquivo.writelines([str(matriz_coordenadas[node_l][0]),',', str(matriz_coordenadas[node_l][1]),',0,'])
+                    arquivo.writelines([str(matriz_coordenadas[node_m][0]),',', str(matriz_coordenadas[node_m][1]),',0'])
+                    
+                    arquivo.writelines(u')')
+                    arquivo.writelines(u'{')
+                    arquivo.writelines([str(Post_Processing[node_l]),',', str(Post_Processing[node_m])])
+                else: 
+                    node_n = int(matriz_topologia[i][2]) 
+                    arquivo.writelines(Sx + '(')
+                    
+                    
+                    arquivo.writelines([str(matriz_coordenadas[node_l][0]),',', 
+                                        str(matriz_coordenadas[node_l][1]),',0,'])
+                    arquivo.writelines([str(matriz_coordenadas[node_m][0]),',', 
+                                        str(matriz_coordenadas[node_m][1]),',0,'])
+                    arquivo.writelines([str(matriz_coordenadas[node_n][0]),',', 
+                                        str(matriz_coordenadas[node_n][1]),',0'])
+                    
+                    arquivo.writelines(u')')
+                    arquivo.writelines(u'{')
+    
+                    arquivo.writelines([str(Post_Processing[node_l]),',', 
+                                        str(Post_Processing[node_m]),',', 
+                                        str(Post_Processing[node_n])])
             
                 arquivo.writelines(u'};')
                 arquivo.writelines(u'\n')
             arquivo.writelines(u'};')
             
             arquivo.close()  
-###############################################################################    
+##############################################################################    
 
 ###############################################################################
 # Esta função abre arquivos .pos (Post-Processing), criados pela função
@@ -145,19 +160,7 @@ class forward_problem:
             #gmsh.View[0].IntervalsType = 2;
             #gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
             #gmsh.option.setNumber("View["+str(pos)+"].NbIso", 500)
-            # Obtenha as entidades do modelo
-            #entities = gmsh.model.getEntities()
-            #gmsh.model.geo.synchronize()
             
-            #gmsh.model.mesh.generate(3)
-            #gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
-            #gmsh.write("poligono_2D_Rho_py.msh")
-            #gmsh.write("poligono_2D_Rho.geo_unrolled")
-            
-            
-            
-            #gmsh.model.mesh.generate(3)
-            # Feche o arquivo .geo
             
         if '-nopopup' not in sys.argv:
             gmsh.fltk.run()
