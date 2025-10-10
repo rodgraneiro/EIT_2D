@@ -101,7 +101,7 @@ class forward_problem:
         
         for kk in range(N_padraoCC):
 
-            arquivo = open('../../malhasPOS/'+ nome_arquivo + str(kk) + '.pos', 'w+')
+            arquivo = open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/'+ nome_arquivo + str(kk) + '.pos', 'w+')
             arquivo.writelines('View "' + header + '" { \n')
             
             for i in range(0, len(matriz_topologia)):
@@ -155,8 +155,8 @@ class forward_problem:
             gmsh.initialize()
             
             # Carregue o arquivo .geo
-            #gmsh.open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
-            gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
+            gmsh.open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
+            #gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
             #gmsh.View[0].IntervalsType = 2;
             #gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
             #gmsh.option.setNumber("View["+str(pos)+"].NbIso", 500)
