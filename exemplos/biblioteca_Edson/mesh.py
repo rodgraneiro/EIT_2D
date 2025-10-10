@@ -370,18 +370,18 @@ class PointElectrodes1DMeshEdson(MyMesh):
         
         
         self.Coordinates = self.__mshdata.points
-        msh_topology = self.__mshdata.cells_dict[self.element_type]
+        self.msh_topology = self.__mshdata.cells_dict[self.element_type]
         
         self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
         self.physical_tags = np.unique(self.msh_physical_groups)
         print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         print(f"Physical tags found (type {self.element_type}): {self.physical_tags}.")
         
-        n_nohs_msh = self.Coordinates.shape[0]
-        n_elementos_msh = msh_topology.shape[0] 
+        n_nohs_msh = self.self.Coordinates.shape[0]
+        n_elementos_msh = self.msh_topology.shape[0] 
         print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
         
-        self.GndNode = msh_topology[0][0] # o primeiro noh do primeiro physical vertex
+        self.GndNode = self.msh_topology[0][0] # o primeiro noh do primeiro physical vertex
         print(f'GndNode: {self.GndNode}')
         
         self.NumberOfNodes = n_nohs_msh
@@ -396,7 +396,7 @@ class PointElectrodes1DMeshEdson(MyMesh):
         # Pegando elementos lineares 'lines':
         for idx in range(n_elementos_msh):
             self.Elements[idx] = elements.LinearLineEdson()
-            self.Elements[idx].Topology = msh_topology[idx]
+            self.Elements[idx].Topology = self.msh_topology[idx]
             #print(f'ElementsTopo1 {self.Elements[idx].Topology}')
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
             self.Elements[idx].CalcCentroid()
