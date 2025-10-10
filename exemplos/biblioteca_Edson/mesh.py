@@ -377,7 +377,7 @@ class PointElectrodes1DMeshEdson(MyMesh):
         print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         print(f"Physical tags found (type {self.element_type}): {self.physical_tags}.")
         
-        n_nohs_msh = self.self.Coordinates.shape[0]
+        n_nohs_msh = self.Coordinates.shape[0]
         n_elementos_msh = self.msh_topology.shape[0] 
         print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
         
