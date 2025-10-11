@@ -10,6 +10,8 @@ import mesh
 import elements
 import gmsh
 import sys
+import subprocess
+import os
 
 
 class forward_problem: 
@@ -144,26 +146,28 @@ class forward_problem:
             arquivo.close()  
 ##############################################################################    
 
+
+'''
 ###############################################################################
 # Esta função abre arquivos .pos (Post-Processing), criados pela função
 # 'criar_arquivo_pos'  para vizulização no Gmsh.
 #  
 ###############################################################################
-    def abrir_Gmsh_pos(self,nome_arquivo, n_eletrodos):
+    def abrir_Gmsh_pos(self,nome_arquivo, n_eletrodos, runGmsh = False):
         for pos in range(n_eletrodos):
             # Inicialize o Gmsh
             gmsh.initialize()
             
             # Carregue o arquivo .geo
-            gmsh.open('D../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
+            gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
             #gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
             #gmsh.View[0].IntervalsType = 2;
             #gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
             #gmsh.option.setNumber("View["+str(pos)+"].NbIso", 500)
             
             
-        if '-nopopup' not in sys.argv:
+        if runGmsh and '-nopopup' not in sys.argv:
             gmsh.fltk.run()
         gmsh.finalize()
 ###############################################################################
-    
+'''        
