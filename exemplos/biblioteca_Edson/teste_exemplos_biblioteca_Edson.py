@@ -47,7 +47,8 @@ fwd.abrir_Gmsh_pos(nome_arquivo, N_padraoCC)
 # TESTE COM HUA
 
 ###############################################################################
-nome = 'D:/Git_EIT_2D/EIT_2D/malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
+#nome = 'D:/Git_EIT_2D/EIT_2D/malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
+nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
 #nome = '../malhasMSH/circ8_anom4_tst_Hua_v2_2_lc_especial.msh'
 
 MinhaMalha = mesh.HuaElectrodes2DMeshEdson(2, nome_msh=nome, altura2D = 0.02)
