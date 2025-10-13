@@ -10,12 +10,12 @@ import mesh
 import elements
 import gmsh
 import sys
-import subprocess
-import os
+#import subprocess
+#import os
 
 
 class forward_problem: 
-    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
 
@@ -28,7 +28,16 @@ class forward_problem:
 
         if Pcorrente is None:
             # ToDo: implementar a matriz de medidas com padrão pula informado (SkipPattern)
-            raise Exception("forward_problem: Pcorrente padrão ainda não implementada.")
+            self.corrente = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfElectrodes))
+            
+            if VirtualNode == True:
+                ajuste = self.mymesh.NumberOfNodes-self.mymesh.NumberOfElectrodes
+            else: ajuste = 0
+            
+            k = np.arange(self.mymesh.NumberOfElectrodes)  
+            self.corrente[k+ajuste, k] = I
+            self.corrente[((k + SkipPattern+1) % self.mymesh.NumberOfElectrodes)+ajuste, k] = -I
+            #raise Exception("forward_problem: Pcorrente padrão ainda não implementada.")
         else:
             self.corrente = Pcorrente
 
@@ -87,40 +96,52 @@ class forward_problem:
     #  opções: 'rho', 'sigma', 'V', 'I'
     ###############################################################################
     #def criar_arquivo_pos_2D(self, matriz_coordenadas, matriz_topologia, N_padraoCC, Post_Processing, nome_arquivo):
-    def criar_arquivo_pos_2D(self, N_padraoCC, Post_Processing, nome_arquivo):
+    def criar_arquivo_pos_2D(self, Post_Processing, nome_arquivo):
 
         matriz_coordenadas = self.mymesh.Coordinates
         matriz_topologia = self.mymesh.msh_topology
         dim = len(matriz_topologia[1])
-        if dim == 3:
-            header = "A list-based view"
-            Sx = "ST"
-        elif dim == 2:
+
+        if dim == 2:
             header = "V(x) 1D"
             Sx = "SL"
-        else:
-            raise Exception("3D dimesion not implemented")
-        
-        for kk in range(N_padraoCC):
-
-            arquivo = open('../../malhasPOS/'+ nome_arquivo + str(kk) + '.pos', 'w+')
+            vetor_Post_Processing = Post_Processing
+            arquivo = open('../../malhasPOS/'+ nome_arquivo + str(0) + '.pos', 'w+')
             arquivo.writelines('View "' + header + '" { \n')
-            
             for i in range(0, len(matriz_topologia)):
             
                 node_l = int(matriz_topologia[i][0]) # pegar dados do dataframe
                 node_m = int(matriz_topologia[i][1])
-                if dim == 2:
-                    arquivo.writelines(Sx + '(')
+                
+                arquivo.writelines(Sx + '(')
+                
+                
+                arquivo.writelines([str(matriz_coordenadas[node_l][0]),',', str(matriz_coordenadas[node_l][1]),',0,'])
+                arquivo.writelines([str(matriz_coordenadas[node_m][0]),',', str(matriz_coordenadas[node_m][1]),',0'])
+                
+                arquivo.writelines(u')')
+                arquivo.writelines(u'{')
+                arquivo.writelines([str(Post_Processing[node_l]),',', str(Post_Processing[node_m])])
+                arquivo.writelines(u'};')
+                arquivo.writelines(u'\n')
+            arquivo.writelines(u'};')
+            
+        else:
+            header = "A list-based view"
+            Sx = "ST"
+            n_PCurrent = self.mymesh.NumberOfElectrodes
+        
+
+            for n_ele in range(n_PCurrent):
+                vetor_Post_Processing = Post_Processing[:, n_ele]
                     
-                    
-                    arquivo.writelines([str(matriz_coordenadas[node_l][0]),',', str(matriz_coordenadas[node_l][1]),',0,'])
-                    arquivo.writelines([str(matriz_coordenadas[node_m][0]),',', str(matriz_coordenadas[node_m][1]),',0'])
-                    
-                    arquivo.writelines(u')')
-                    arquivo.writelines(u'{')
-                    arquivo.writelines([str(Post_Processing[node_l]),',', str(Post_Processing[node_m])])
-                else: 
+                arquivo = open('../../malhasPOS/'+ nome_arquivo + str(n_ele) + '.pos', 'w+')
+                arquivo.writelines('View "' + header + '" { \n')
+                
+                for i in range(0, len(matriz_topologia)):
+                
+                    node_l = int(matriz_topologia[i][0]) # pegar dados do dataframe
+                    node_m = int(matriz_topologia[i][1])
                     node_n = int(matriz_topologia[i][2]) 
                     arquivo.writelines(Sx + '(')
                     
@@ -135,39 +156,40 @@ class forward_problem:
                     arquivo.writelines(u')')
                     arquivo.writelines(u'{')
     
-                    arquivo.writelines([str(Post_Processing[node_l]),',', 
-                                        str(Post_Processing[node_m]),',', 
-                                        str(Post_Processing[node_n])])
+                    arquivo.writelines([str(vetor_Post_Processing[node_l]),',', 
+                                        str(vetor_Post_Processing[node_m]),',', 
+                                        str(vetor_Post_Processing[node_n])])
             
+                    arquivo.writelines(u'};')
+                    arquivo.writelines(u'\n')
                 arquivo.writelines(u'};')
-                arquivo.writelines(u'\n')
-            arquivo.writelines(u'};')
             
-            arquivo.close()  
+        arquivo.close()  
 ##############################################################################    
 
 
-'''
+
 ###############################################################################
 # Esta função abre arquivos .pos (Post-Processing), criados pela função
 # 'criar_arquivo_pos'  para vizulização no Gmsh.
 #  
 ###############################################################################
-    def abrir_Gmsh_pos(self,nome_arquivo, n_eletrodos, runGmsh = False):
-        for pos in range(n_eletrodos):
+    def abrir_Gmsh_pos(self,nome_arquivo, runGmsh = False):
+        for pos in range(self.mymesh.NumberOfElectrodes):
             # Inicialize o Gmsh
             gmsh.initialize()
             
             # Carregue o arquivo .geo
-            gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
-            #gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
+            #gmsh.open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
+            gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos')
+            #gmsh.open('../../malhasPOS/' + nome_arquivo + '.pos') 
             #gmsh.View[0].IntervalsType = 2;
             #gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
             #gmsh.option.setNumber("View["+str(pos)+"].NbIso", 500)
-            
+           
             
         if runGmsh and '-nopopup' not in sys.argv:
             gmsh.fltk.run()
         gmsh.finalize()
 ###############################################################################
-'''        
+        
