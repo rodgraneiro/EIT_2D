@@ -162,15 +162,27 @@ class PointElectrodes2DMeshEdson(MyMesh):
             raise Exception("PointElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")        
 
         self.Coordinates = self.__mshdata.points
-        msh_topology = self.__mshdata.cells_dict[self.element_type]
-        msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
-        self.physical_tags = np.unique(msh_physical_groups)
+        self.msh_topology = self.__mshdata.cells_dict[self.element_type]
+        self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
+        self.physical_tags = np.unique(self.msh_physical_groups)
+        physical_tags_points = np.unique(self.__mshdata.cell_data_dict["gmsh:physical"]['vertex'])     # só dos pontos (GND = 10000)
+        
+        print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         print(f"Physical tags found: {self.physical_tags}.")
+        print(f"Physical tags points: {physical_tags_points}")
+
+        # Verifica se o physical do GND está no arquivo msh
+        if not (10000 in physical_tags_points):
+            raise Exception("HuaElectrodes2DMeshEdson(): GND vertex not found.")  
+
+        n_electrodes = len(physical_tags_points) -1
+        print(f"{n_electrodes} electrodes found.")
 
         self.NumberOfNodes = self.Coordinates.shape[0]
-        self.NumberOfElements = msh_topology.shape[0]
+        self.NumberOfElements = self.msh_topology.shape[0]
 
-        print(f"{self.NumberOfElements} Elements and {self.NumberOfNodes} Nodes found.")
+        print(f"MSH file with {self.NumberOfElements} elements and {self.NumberOfNodes} nodes.")
+
 
         self.ElectrodeNodes = np.arange(self.NumberOfElectrodes, dtype=int)
         self.GndNode = self.NumberOfElectrodes
@@ -191,8 +203,8 @@ class PointElectrodes2DMeshEdson(MyMesh):
                 self.Elements[idx] = elements.LinearTriangleEdson()
             else:
                 self.Elements[idx] = elements.LinearTriangle()
-            self.Elements[idx].Topology = msh_topology[idx]
-            self.Elements[idx].PhysicalEntity = msh_physical_groups[idx]
+            self.Elements[idx].Topology = self.msh_topology[idx]
+            self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
         
 
             self.Elements[idx].CalcCentroid()
@@ -401,5 +413,3 @@ class PointElectrodes1DMeshEdson(MyMesh):
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
-        
-        
