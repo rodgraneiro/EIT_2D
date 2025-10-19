@@ -103,6 +103,7 @@ class forward_problem:
         dim = len(matriz_topologia[1])
 
         if dim == 2:
+            self.n_PCurrent = 1
             header = "V(x) 1D"
             Sx = "SL"
             vetor_Post_Processing = Post_Processing
@@ -129,10 +130,10 @@ class forward_problem:
         else:
             header = "A list-based view"
             Sx = "ST"
-            n_PCurrent = self.mymesh.NumberOfElectrodes
+            self.n_PCurrent = self.mymesh.NumberOfElectrodes
         
 
-            for n_ele in range(n_PCurrent):
+            for n_ele in range(self.n_PCurrent):
                 vetor_Post_Processing = Post_Processing[:, n_ele]
                     
                 arquivo = open('../../malhasPOS/'+ nome_arquivo + str(n_ele) + '.pos', 'w+')
@@ -175,13 +176,15 @@ class forward_problem:
 #  
 ###############################################################################
     def abrir_Gmsh_pos(self,nome_arquivo, runGmsh = False):
-        for pos in range(self.mymesh.NumberOfElectrodes):
+        gmsh.initialize()
+        for pos in range(self.n_PCurrent):
             # Inicialize o Gmsh
-            gmsh.initialize()
+            #gmsh.initialize()
             
             # Carregue o arquivo .geo
             #gmsh.open('D:/GIT_EIT_2D/EIT_2D/malhasPOS/' + nome_arquivo + str(pos) + '.pos') 
             gmsh.open('../../malhasPOS/' + nome_arquivo + str(pos) + '.pos')
+            #gmsh.open( nome_arquivo + str(pos) + '.pos')
             #gmsh.open('../../malhasPOS/' + nome_arquivo + '.pos') 
             #gmsh.View[0].IntervalsType = 2;
             #gmsh.option.setNumber("View["+str(pos)+"].IntervalsType", 1)
