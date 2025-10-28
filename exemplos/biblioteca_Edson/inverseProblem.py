@@ -6,6 +6,7 @@ Created on Sun Oct 26 13:56:12 2025
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 import mesh
 import elements
 import gmsh
@@ -254,39 +255,115 @@ class inverse_problem:
         return -alpha*(inv_primeiroTermo @ segundoTermo)
     ###############################################################################
     
-    def solve(self, sigma_inicial, V_measured):
+    ###############################################################################
+    # Essa função plota o gráfico convergência das iterações
+    ###############################################################################
+
+    def plotar_iteracoes(self, lista_indice, lista_valor):
+        plt.plot(lista_indice,
+                lista_valor,
+                marker='.',
+                linestyle='-',
+                color='b',
+                label='Norma $\Delta\sigma$')        # plota gráfico das iterações,
+        plt.xlabel("Iteração", fontsize=15)
+        plt.ylabel("Norma Delta_Sigma", fontsize=15)
+        plt.title("Otimização da Barra de Cobre", fontsize=15)
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+    ###############################################################################
+    ###############################################################################
+    # Essa função plota a curva de valores reais de sigma versus valores de sigma
+    # calculados nas iterações
+    ###############################################################################
+    def plotar_grafico(self, sigma_inicial_b,sigma_real_b, noh_medidos, ylim=(0.0, 0.60), figsize=(16, 4) ):
+        # Coordenadas x dos nós
+        x_coords = self.mymesh.Coordinates.flatten()
+        topologia_b = self.mymesh.msh_topology
+
+        centros = np.mean(x_coords[topologia_b], axis=1)
+        #centros = (x_coords[:-1] + x_coords[1:]) / 2
+        valores = sigma_inicial_b  # ou delta_sig_b
+        valores_real = sigma_real_b  # ou delta_sig_b
+        noh_medidos[-1] -= 1
+        pos_medidas = [centros[i] for i in noh_medidos]
+        pos_valores_med = [valores[i] for i in noh_medidos]
+        #pos_valores_real = [valores_real[i] for i in noh_medidos]
+        # 4. Gráfico tipo steam
+        #plt.figure(figsize=figsize)
+        #plt.stem(centros, valores)
+        #plt.plot(centros, valores , marker='None', label='$\sigma$ calculado')
+        #plt.plot(centros, sigma_real_b, marker='None', linestyle=':', label='$\sigma$ real' )
+        #plt.plot(pos_medidas, pos_valores_real, marker='x', linestyle='None', markersize=10, color='red',        label='Ptos medidos')
+        plt.xlim(0, 1.01)
+        plt.ylim(ylim)
+        plt.xlabel('Posição [m]')
+        plt.ylabel('Condutividade σ')
+        plt.title('Distribuição de  σ nos elementos 1D')
+        #plt.text(0.5, 0.87, f'Para α = {alpha_b} , λ = {lambda_b} e std={std}', ha='center', va='center',transform=plt.gcf().transFigure)
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+    ###############################################################################
+    
+    def solve(self, sigma_inicial, V_measured, meus_sigmas, max_iter=200):
+        lista_i = []                                        # Lista armazenar iterações
+        lista_plotar = []                                      # Lista Valores de sigma
         self.calc_Y_jacobian()
         print('Y_jacobiano \n', self.Y_jacobian)
         KJacobian = self.apply_boundary_conditions(self.Y_jacobian)
         print('KJacobian \n', KJacobian)
         #print('self.KJacobian', self.KJacobian)
-        self.Y_Vcalc = self.calc_Y_global_1D(sigma_inicial)
-        print('self.Y_Vcalc \n', self.Y_Vcalc)
-        KVcalc = self.apply_boundary_conditions(self.Y_Vcalc)
-        print('KVcalc \n', KVcalc)
+        for i in range(max_iter):
+            self.Y_Vcalc = self.calc_Y_global_1D(sigma_inicial)
+            print('self.Y_Vcalc \n', self.Y_Vcalc)
+            KVcalc = self.apply_boundary_conditions(self.Y_Vcalc)
+            print('KVcalc \n', KVcalc)
+            
+            invKVcalc = np.linalg.inv(KVcalc)
+    
+            V_calc = np.dot(invKVcalc, self.vetor_corrente_cond_contorno)
+            V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]
+            print('V_calc_noh \n', V_calc_noh)
+            residue = V_measured - V_calc_noh        # calc dif entre Vmedido e VCalculado
+            print('residue \n', residue)
+            
+            inv_KJacobian = np.linalg.inv(KJacobian)
+            print('inv_KJacobian \n', inv_KJacobian)
+            Jacobian = self.calc_Jacobian(inv_KJacobian)
+            print('Jacobian', Jacobian)
+            #Centroid=self.Elements.CalcCentroid()
+            #print('centroid', Centroid)
+            x_coords_b = self.mymesh.Coordinates
+            topologia_bc = self.mymesh.msh_topology
+            centroids_1D = np.mean(x_coords_b[topologia_bc], axis=1)
+            centroids_1D = centroids_1D[:,0]
+            
+            print('centroids_1D', centroids_1D)
+            L2 = self.calc_L2_gauss_1D(centroids_1D)
+            print('L2',L2)
+            
+            delta_sig = self.calc_delta_sigma(Jacobian, residue, L2, sigma_inicial, alpha=0.01, Lambda=0.006)
+            print('delta_sig \n', delta_sig)
+            
+            plotar = np.linalg.norm(delta_sig)  # calc norma vetor delta_sigama para plot
+            lista_i.append(i)                             # Armazena o índice da iteração
+            lista_plotar.append(plotar)                  # Armazena o valor a ser plotado
+    
+            if np.linalg.norm(delta_sig) < 1e-3:    # Convergência atingida se a norma de
+                                                    # delta_sigam < que  1e-6
+              print(f'Convergência atingida após {i+1} iterações.')
+              #print('Vmedido_b \n', Vmedido_b)
+              #print('Valor calculado \n',V_calc_b)
+              print('Sigma k+1 \n', sigma_inicial)
+              convergencia = True
+              break                                   # interrompe o processo de iteração
+    
+            Sig_kMais1 = sigma_inicial + delta_sig           # ajusta vetor sigma k+1
+            sigma_inicial = Sig_kMais1            # armazena vetor sigma k+1 anterior
+        self.plotar_iteracoes(lista_i, lista_plotar)
         
-        invKVcalc = np.linalg.inv(KVcalc)
-
-        V_calc = np.dot(invKVcalc, self.vetor_corrente_cond_contorno)
-        V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]
-        print('V_calc_noh \n', V_calc_noh)
-        residue = V_measured - V_calc_noh        # calc dif entre Vmedido e VCalculado
-        print('residue \n', residue)
         
-        inv_KJacobian = np.linalg.inv(KJacobian)
-        print('inv_KJacobian \n', inv_KJacobian)
-        Jacobian = self.calc_Jacobian(inv_KJacobian)
-        print('Jacobian', Jacobian)
-        #Centroid=self.Elements.CalcCentroid()
-        #print('centroid', Centroid)
-        x_coords_b = self.mymesh.Coordinates
-        topologia_bc = self.mymesh.msh_topology
-        centroids_1D = np.mean(x_coords_b[topologia_bc], axis=1)
-        centroids_1D = centroids_1D[:,0]
-        
-        print('centroids_1D', centroids_1D)
-        L2 = self.calc_L2_gauss_1D(centroids_1D)
-        print('L2',L2)
-        
-        delta_sig = self.calc_delta_sigma(Jacobian, residue, L2, sigma_inicial, alpha=0.01, Lambda=0.006)
-        print('delta_sig \n', delta_sig)
+        self.plotar_grafico(sigma_inicial, meus_sigmas, self.mymesh.ElectrodeNodes)
