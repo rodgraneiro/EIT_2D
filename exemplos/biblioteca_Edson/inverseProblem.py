@@ -79,7 +79,7 @@ class inverse_problem:
         #######################################################################
             Y_local = ((self.mymesh.altura1D*sigma[i])/(coord_2[0]-coord_1[0]))*np.array([[1, -1], [-1, 1]])
             #Y_local = (self.calc_Y_local_1D(coord_1[0], coord_2[0], self.mymesh.altura1D, sigma[i]) )                                                                             # calcula a matriz local
-            print('Y_local \n',Y_local)
+            #print('Y_local \n',Y_local)
 
             self.Y_temp[node_l - 1, node_l - 1] += Y_local[0, 0] # monta a matriz global
             self.Y_temp[node_m - 1, node_l - 1] += Y_local[0, 1]
@@ -202,7 +202,7 @@ class inverse_problem:
         Retorna:
         - F: matriz Filtro Passa Alta
         """
-        print('centroids_1D',centroids_1D)
+        #print('centroids_1D',centroids_1D)
         nelements = len(centroids_1D)
         tol = 1e-9
 
@@ -312,28 +312,28 @@ class inverse_problem:
         lista_i = []                                        # Lista armazenar iterações
         lista_plotar = []                                      # Lista Valores de sigma
         self.calc_Y_jacobian()
-        print('Y_jacobiano \n', self.Y_jacobian)
+        #print('Y_jacobiano \n', self.Y_jacobian)
         KJacobian = self.apply_boundary_conditions(self.Y_jacobian)
-        print('KJacobian \n', KJacobian)
+        #print('KJacobian \n', KJacobian)
         #print('self.KJacobian', self.KJacobian)
         for i in range(max_iter):
             self.Y_Vcalc = self.calc_Y_global_1D(sigma_inicial)
-            print('self.Y_Vcalc \n', self.Y_Vcalc)
+            #print('self.Y_Vcalc \n', self.Y_Vcalc)
             KVcalc = self.apply_boundary_conditions(self.Y_Vcalc)
-            print('KVcalc \n', KVcalc)
+            #print('KVcalc \n', KVcalc)
             
             invKVcalc = np.linalg.inv(KVcalc)
     
             V_calc = np.dot(invKVcalc, self.vetor_corrente_cond_contorno)
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]
-            print('V_calc_noh \n', V_calc_noh)
+            #print('V_calc_noh \n', V_calc_noh)
             residue = V_measured - V_calc_noh        # calc dif entre Vmedido e VCalculado
-            print('residue \n', residue)
+            #print('residue \n', residue)
             
             inv_KJacobian = np.linalg.inv(KJacobian)
-            print('inv_KJacobian \n', inv_KJacobian)
+            #print('inv_KJacobian \n', inv_KJacobian)
             Jacobian = self.calc_Jacobian(inv_KJacobian)
-            print('Jacobian', Jacobian)
+            #print('Jacobian', Jacobian)
             #Centroid=self.Elements.CalcCentroid()
             #print('centroid', Centroid)
             x_coords_b = self.mymesh.Coordinates
@@ -341,7 +341,7 @@ class inverse_problem:
             centroids_1D = np.mean(x_coords_b[topologia_bc], axis=1)
             centroids_1D = centroids_1D[:,0]
             
-            print('centroids_1D', centroids_1D)
+            #print('centroids_1D', centroids_1D)
             L2 = self.calc_L2_gauss_1D(centroids_1D)
             print('L2',L2)
             
@@ -363,6 +363,7 @@ class inverse_problem:
     
             Sig_kMais1 = sigma_inicial + delta_sig           # ajusta vetor sigma k+1
             sigma_inicial = Sig_kMais1            # armazena vetor sigma k+1 anterior
+        print('Sigma k+1 \n', sigma_inicial)
         self.plotar_iteracoes(lista_i, lista_plotar)
         
         
