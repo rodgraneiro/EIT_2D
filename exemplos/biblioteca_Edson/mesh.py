@@ -34,6 +34,7 @@ class MyMesh:
         
         self.msh_physical_groups = None
         self.msh_topology = None
+        self.sigma_vec = None
 
 
     # Ajusta um valor por elemento
@@ -80,10 +81,14 @@ class MyMesh:
     # dic[1] = 0.2 
     # dic[2] = 0.1
     def SetSigmaPhysicaEntity(self, dic):
-        print("CHAVES recebidas em dic:", sorted(dic.keys()))
+        self.sigma_vec = np.zeros(self.NumberOfElements, dtype=float)
+        #print("CHAVES recebidas em dic:", sorted(dic.keys()))
         for idx in range(self.NumberOfElements):
             tag = self.Elements[idx].PhysicalEntity
+            sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
             self.Elements[idx].SetSigma(dic[tag])
+            self.sigma_vec[idx] = sigma_value
+        #print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
 
 
     def CalcKGlobal(self):
