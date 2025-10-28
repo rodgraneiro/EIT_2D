@@ -277,30 +277,30 @@ class inverse_problem:
     # Essa função plota a curva de valores reais de sigma versus valores de sigma
     # calculados nas iterações
     ###############################################################################
-    def plotar_grafico(self, sigma_inicial_b,sigma_real_b, noh_medidos, ylim=(0.0, 0.60), figsize=(16, 4) ):
+    def plotar_grafico(self, sigma_inicial,sigma_real, noh_medidos, ylim=(0.0, 0.60), figsize=(16, 4) ):
         # Coordenadas x dos nós
-        x_coords = self.mymesh.Coordinates.flatten()
+        x_coords = self.mymesh.Coordinates[:, 0]
         topologia_b = self.mymesh.msh_topology
 
         centros = np.mean(x_coords[topologia_b], axis=1)
         #centros = (x_coords[:-1] + x_coords[1:]) / 2
-        valores = sigma_inicial_b  # ou delta_sig_b
-        valores_real = sigma_real_b  # ou delta_sig_b
+        valores = sigma_inicial  # ou delta_sig_b
+        valores_real = sigma_real  # ou delta_sig_b
         noh_medidos[-1] -= 1
         pos_medidas = [centros[i] for i in noh_medidos]
         pos_valores_med = [valores[i] for i in noh_medidos]
-        #pos_valores_real = [valores_real[i] for i in noh_medidos]
-        # 4. Gráfico tipo steam
-        #plt.figure(figsize=figsize)
+        pos_valores_real = [valores_real[i] for i in noh_medidos]
+        
+        plt.figure(figsize=figsize)
         #plt.stem(centros, valores)
-        #plt.plot(centros, valores , marker='None', label='$\sigma$ calculado')
-        #plt.plot(centros, sigma_real_b, marker='None', linestyle=':', label='$\sigma$ real' )
-        #plt.plot(pos_medidas, pos_valores_real, marker='x', linestyle='None', markersize=10, color='red',        label='Ptos medidos')
+        plt.plot(centros, valores , marker='None', label='$\sigma$ calculado')
+        plt.plot(centros, valores_real, marker='None', linestyle=':', label='$\sigma$ real' )
+        plt.plot(pos_medidas, pos_valores_real, marker='x', linestyle='None', markersize=10, color='red',        label='Ptos medidos')
         plt.xlim(0, 1.01)
         plt.ylim(ylim)
         plt.xlabel('Posição [m]')
-        plt.ylabel('Condutividade σ')
-        plt.title('Distribuição de  σ nos elementos 1D')
+        plt.ylabel('Condutividade $\sigma$')
+        plt.title('Distribuição de  $\sigma$ nos elementos 1D')
         #plt.text(0.5, 0.87, f'Para α = {alpha_b} , λ = {lambda_b} e std={std}', ha='center', va='center',transform=plt.gcf().transFigure)
         plt.legend()
         plt.grid(True)
@@ -308,7 +308,7 @@ class inverse_problem:
         plt.show()
     ###############################################################################
     
-    def solve(self, sigma_inicial, V_measured, meus_sigmas, max_iter=200):
+    def solve(self, sigma_inicial, V_measured, max_iter=200):
         lista_i = []                                        # Lista armazenar iterações
         lista_plotar = []                                      # Lista Valores de sigma
         self.calc_Y_jacobian()
@@ -367,4 +367,4 @@ class inverse_problem:
         self.plotar_iteracoes(lista_i, lista_plotar)
         
         
-        self.plotar_grafico(sigma_inicial, meus_sigmas, self.mymesh.ElectrodeNodes)
+        self.plotar_grafico(sigma_inicial, self.mymesh.sigma_vec, self.mymesh.ElectrodeNodes)
