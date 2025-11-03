@@ -1,11 +1,11 @@
 nome_arquivo = "circ8_anomalia5" 
-raio = 0.15
+raio = 0.1
 n_eletrodos = 8
 ponto_medio_x = 0
 ponto_medio_y = 0
-lc1 = 0.02
-lc2 = 0.02
+lc1 = 0.1
+lc2 = 0.1
 anomalia_lados = 5
-anomalia_rotacao = 0.0
-x_ptoCentral = 0.075
-y_ptoCentral = -0.05
+anomalia_rotacao = 30.0
+x_ptoCentral = 0.05
+y_ptoCentral = -0.04

@@ -1,0 +1,11 @@
+nome_arquivo = "circ4" 
+raio = 0.1
+n_eletrodos = 4
+ponto_medio_x = 0
+ponto_medio_y = 0
+lc1 = 10.0
+lc2 = 10.0
+anomalia_lados = 0
+anomalia_rotacao = 0.0
+x_ptoCentral = 0.0
+y_ptoCentral = 0.0
