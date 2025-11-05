@@ -251,5 +251,5 @@ class LinearLineEdson(MyElement):
               
         
         # MATRIZ DE RIGIDEZ DO ELEMENTO Hua
-        self.KGeo = ((self.Altura1D/lenth_a))*mtz
+        self.KGeo = ((self.Altura2D/lenth_a))*mtz
         #print('KGeo \n', self.KGeo)
