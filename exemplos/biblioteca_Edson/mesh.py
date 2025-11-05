@@ -344,7 +344,7 @@ class HuaElectrodes2DMeshEdson(MyMesh):
 
 class PointElectrodes1DMeshEdson(MyMesh):
     
-    def __init__(self, ElectrodeNodes, nome_msh=None, altura1D = 0.1):
+    def __init__(self, ElectrodeNodes, nome_msh=None, altura2D = 0.1):
     
         super().__init__(nome_msh)
 
@@ -356,7 +356,7 @@ class PointElectrodes1DMeshEdson(MyMesh):
         
         print(f'NumberOfElectrodes: {self.NumberOfElectrodes}')
 
-        self.altura1D = altura1D
+        self.altura1D = altura2D
 
 
     '''
@@ -406,9 +406,9 @@ class PointElectrodes1DMeshEdson(MyMesh):
         self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos
         
         elements.LinearLineEdson.Coordinates = self.Coordinates
-        elements.LinearLineEdson.Altura1D = self.altura1D # define a altura padrão como 1cm
+        elements.LinearLineEdson.Altura2D = self.altura1D # define a altura padrão como 1cm
         print(f'first five coordinates: {elements.LinearLineEdson.Coordinates[:5]}')
-        print(f'Altura1D: {elements.LinearLineEdson.Altura1D}')
+        print(f'Altura1D: {elements.LinearLineEdson.Altura2D}')
         
         # Pegando elementos lineares 'lines':
         for idx in range(n_elementos_msh):
