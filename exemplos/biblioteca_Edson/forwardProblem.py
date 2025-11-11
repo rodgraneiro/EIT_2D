@@ -21,6 +21,7 @@ class forward_problem:
 
         self.mymesh = mymesh
         self.Vmedido = None
+        self.Yinversa = None
 
         if V_imposto is None:
             V_imposto = [[mymesh.GndNode, 0.0]]
@@ -82,9 +83,9 @@ class forward_problem:
         
         self.apply_boundary_conditions()
 
-        Yinversa = np.linalg.inv(self.KGlobal)
+        self.Yinversa = np.linalg.inv(self.KGlobal)
 
-        self.Vmedido = np.dot(Yinversa, self.vetor_corrente_cond_contorno)
+        self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
         print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
