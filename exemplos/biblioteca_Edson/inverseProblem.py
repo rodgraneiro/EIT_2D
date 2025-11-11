@@ -16,10 +16,11 @@ import sys
 
 
 class inverse_problem: 
-    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3, debug=0):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
 
+        self.debug = debug
         self.mymesh = mymesh
         self.Vmedido = None
 
@@ -28,12 +29,16 @@ class inverse_problem:
         self.V_imposto = V_imposto
 
         if Pcorrente is None:
+            if SkipPattern is None:
+                raise TypeError("Parâmetro faltando: SkipPattern.")
+
             # ToDo: implementar a matriz de medidas com padrão pula informado (SkipPattern)
             self.corrente = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfElectrodes))
             
             if VirtualNode == True:
                 ajuste = self.mymesh.NumberOfNodes-self.mymesh.NumberOfElectrodes
-            else: ajuste = 0
+            else:
+                ajuste = 0
             
             k = np.arange(self.mymesh.NumberOfElectrodes)  
             self.corrente[k+ajuste, k] = I
@@ -42,11 +47,11 @@ class inverse_problem:
         else:
             self.corrente = Pcorrente
         
-        matriz_coordenadas = self.mymesh.Coordinates
-        matriz_topologia = self.mymesh.msh_topology
+        #matriz_coordenadas = self.mymesh.Coordinates
+        #matriz_topologia = self.mymesh.msh_topology
         self.Y_jacobian = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
-        self.Y_temp = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
-        self.Y_Vcalc = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
+        #self.Y_temp = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
+        self.Y_Vcalc = None
         self.jacob_1 = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfElements))   # inicia a variável 1 do jacobiano
         self.jacob_2 = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes))          # inicia a variável 2 do jacobiano
         self.length = np.zeros(self.mymesh.NumberOfElements)
@@ -63,7 +68,7 @@ class inverse_problem:
       
     ###############################################################################
     def calc_Y_global_1D(self, sigma):               # função para calcular a matriz global
-      self.Y_temp = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
+      Y_temp = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
       for i in range(0, self.mymesh.NumberOfElements):                 #  laço para montar a matriz global
 
             node_l = int(self.mymesh.msh_topology[i][0]) +1        # pegar dados da matriz elementos
@@ -81,12 +86,12 @@ class inverse_problem:
             #Y_local = (self.calc_Y_local_1D(coord_1[0], coord_2[0], self.mymesh.altura1D, sigma[i]) )                                                                             # calcula a matriz local
             #print('Y_local \n',Y_local)
 
-            self.Y_temp[node_l - 1, node_l - 1] += Y_local[0, 0] # monta a matriz global
-            self.Y_temp[node_m - 1, node_l - 1] += Y_local[0, 1]
-            self.Y_temp[node_l - 1, node_m - 1] += Y_local[1, 0]
-            self.Y_temp[node_m - 1, node_m - 1] += Y_local[1, 1]
+            Y_temp[node_l - 1, node_l - 1] += Y_local[0, 0] # monta a matriz global
+            Y_temp[node_m - 1, node_l - 1] += Y_local[0, 1]
+            Y_temp[node_l - 1, node_m - 1] += Y_local[1, 0]
+            Y_temp[node_m - 1, node_m - 1] += Y_local[1, 1]
             #print('self.Y_temp \n',self.Y_temp[:5])
-      return self.Y_temp
+      return Y_temp
     ###############################################################################
             
     ###############################################################################
@@ -101,13 +106,17 @@ class inverse_problem:
     ###############################################################################            
 
     def calc_Y_jacobian(self):   # função para calcular a matriz global
+        if self.debug>0:
+            print("Calculando calc_Y_jacobian()...")
+
         self.Y_jacobian = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
 
         for i in range(0, self.mymesh.NumberOfElements):        # laço para montar a matriz global
             #print('nro_elementos_J',i)
             node_l = int(self.mymesh.msh_topology[i][0]) +1       # pegar dados da matriz elementos
             node_m = int(self.mymesh.msh_topology[i][1]) +1
-            print(node_l, node_m)
+            if self.debug > 2:
+                print(node_l, node_m)
             coord_1 = [self.mymesh.Coordinates[node_l-1][0]]    # coordenada x do ponto 1
             coord_2 = [self.mymesh.Coordinates[node_m-1][0]]    # coordenada x do ponto 2
             
@@ -240,7 +249,8 @@ class inverse_problem:
     ###############################################################################
     def calc_delta_sigma(self, J_b, residue, L2, sigma_inicial, alpha=0.01, Lambda=0.006):
         zW1=np.eye(J_b.shape[0])
-        print(f'jacobiano shape {J_b.shape}')
+        if self.debug > 2:
+            print(f'jacobiano shape {J_b.shape}')
         JT = J_b.T
         zJTW = JT @ zW1
         zJTWJ = zJTW @ J_b
@@ -313,7 +323,7 @@ class inverse_problem:
     def solve(self, sigma_inicial, V_measured, max_iter=200):
         lista_i = []                                        # Lista armazenar iterações
         lista_plotar = []                                      # Lista Valores de sigma
-        self.calc_Y_jacobian()
+        self.calc_Y_jacobian() # Não depende de sigma
         #print('Y_jacobiano \n', self.Y_jacobian)
         KJacobian = self.apply_boundary_conditions(self.Y_jacobian)
         #print('KJacobian \n', KJacobian)
@@ -348,7 +358,8 @@ class inverse_problem:
             #print('L2',L2)
             
             delta_sig = self.calc_delta_sigma(Jacobian, residue, L2, sigma_inicial, alpha=0.01, Lambda=0.006)
-            print('delta_sig \n', delta_sig)
+            if self.debug > 2:
+                print('delta_sig \n', delta_sig)
             
             plotar = np.linalg.norm(delta_sig)  # calc norma vetor delta_sigama para plot
             lista_i.append(i)                             # Armazena o índice da iteração
@@ -356,16 +367,18 @@ class inverse_problem:
     
             if np.linalg.norm(delta_sig) < 1e-3:    # Convergência atingida se a norma de
                                                     # delta_sigam < que  1e-6
-              print(f'Convergência atingida após {i+1} iterações.')
-              #print('Vmedido_b \n', Vmedido_b)
-              #print('Valor calculado \n',V_calc_b)
-              print('Sigma k+1 \n', sigma_inicial)
+              if self.debug > 1:
+                print(f'Convergência atingida após {i+1} iterações.')
+                #print('Vmedido_b \n', Vmedido_b)
+                #print('Valor calculado \n',V_calc_b)
+                print('Sigma k+1 \n', sigma_inicial)
               convergencia = True
               break                                   # interrompe o processo de iteração
     
             Sig_kMais1 = sigma_inicial + delta_sig           # ajusta vetor sigma k+1
             sigma_inicial = Sig_kMais1            # armazena vetor sigma k+1 anterior
-        print('Sigma k+1 \n', sigma_inicial)
+        if self.debug > 0:
+            print('Sigma k+1 \n', sigma_inicial)
         self.plotar_iteracoes(lista_i, lista_plotar)
         
         
