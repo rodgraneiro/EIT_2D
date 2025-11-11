@@ -240,6 +240,7 @@ class inverse_problem:
     ###############################################################################
     def calc_delta_sigma(self, J_b, residue, L2, sigma_inicial, alpha=0.01, Lambda=0.006):
         zW1=np.eye(J_b.shape[0])
+        print(f'jacobiano shape {J_b.shape}')
         JT = J_b.T
         zJTW = JT @ zW1
         zJTWJ = zJTW @ J_b
@@ -249,6 +250,7 @@ class inverse_problem:
         inv_primeiroTermo = np.linalg.inv(primeiroTermo)
 
         JTW_zh = zJTW @ residue
+        #print(f'JTW_zh shape = {zJTW.shape} ; residue shape = {residue.shape}')
         ztermo_reg = (sigma_inicial - self.chute)
         zregularizacao = (Lambda**2)*zLTL @ ztermo_reg
         segundoTermo = JTW_zh - zregularizacao
@@ -343,7 +345,7 @@ class inverse_problem:
             
             #print('centroids_1D', centroids_1D)
             L2 = self.calc_L2_gauss_1D(centroids_1D)
-            print('L2',L2)
+            #print('L2',L2)
             
             delta_sig = self.calc_delta_sigma(Jacobian, residue, L2, sigma_inicial, alpha=0.01, Lambda=0.006)
             print('delta_sig \n', delta_sig)

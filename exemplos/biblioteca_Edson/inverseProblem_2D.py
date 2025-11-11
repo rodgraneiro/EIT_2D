@@ -373,14 +373,15 @@ class inverse_problem:
         print('inv_firstTerm \n', inv_firstTerm)
         
         
-        JTW_H = np.dot(JTW,residue)
-        print('JTW_H \n', JTW_H)
+        #JTW_H = np.dot(JTW,residue)
+        JTW_H = np.dot(residue,JTW)
+        print('JTW_H.shape \n', JTW_H .shape)
         
         regTerm = sigma_inicial - chuteInicial
-        #print('regTerm \n', regTerm)
+        print('regTerm shape\n', regTerm.shape)
         regularization = np.dot((Lambda**2)*LTL, regTerm)
-        #print('regularization \n', regularization)
-        #secondTerm = JTW_H - regularization
+        print('regularization.shape \n', regularization.shape)
+        secondTerm = JTW_H - regularization
         #print('secondTerm \n', secondTerm)
         
         #print('invKGlobalGeo \n', invKGlobalGeo)
