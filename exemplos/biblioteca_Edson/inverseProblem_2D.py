@@ -289,6 +289,25 @@ class inverse_problem:
 
         JTJ = np.dot(self.TempJ.T, self.TempJ)
         print('JTJ \n',JTJ)
+    def Calc_J(self, invVtemp):
+        listTempJ=[]
+        for idx in range(self.mymesh.NumberOfElements):
+            termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
+            #print('termo1 \n', termo1)
+            termo2 = np.dot(self.listJacobian[idx], termo1)
+            #print('termo2 \n', termo2)
+            termo3 = -np.dot(invVtemp, termo2)
+            termo3 = termo3[self.mymesh.ElectrodeNodes]
+            #print('termo3 \n', termo3.shape)
+            termo3 = termo3.reshape(-1,1,  order='F')
+            #print('termo3b \n', termo3.shape)
+            listTempJ.append(termo3)
+            listTempJa = np.array(listTempJ)
+            #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
+        self.TempJ = np.concatenate(listTempJ, axis=1)
+        #print('self.TempJ \n',self.TempJ.shape)
+        JTJ = np.dot(self.TempJ.T, self.TempJ)
+        #print('JTJ \n',JTJ.shape)
     ###############################################################################
     def calc_L2_gauss_2D(self, centroids_2D, std=0.1, tol=1e-9):
         
@@ -304,7 +323,7 @@ class inverse_problem:
                 cj = centroids_2D[j]
                 dist = np.linalg.norm(ci - cj)  # distância Euclidiana
     
-                if dist <= 5.0 * std:
+                if dist <= 1.50 * std:
                     fator = 1.0 if i == j else np.exp(-dist**2 / (2 * std**2))
                     soma += fator
                     F[i, j] = fator
@@ -319,71 +338,182 @@ class inverse_problem:
                     F[i, j] = aux if np.abs(aux) > tol else 0.0
         return F
 
-    def solve(self, V_measured, Yinversa, chute=2.0, max_iter=1):
+    def solve(self, V_measured,initialEstimate=1.0, max_iter=1):
+        alpha =0.100
         lista_i = []                                        # Lista armazenar iterações
         lista_plotar = []                                      # Lista Valores de sigma
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
-        print(centroids_2D.shape[0])  # (n_elements, 2)
+        #print(centroids_2D.shape[0])  # (n_elements, 2)
 
-
-        print(f'self.mymesh.Elements.Centroid \n {centroids_2D}')
+        Lambda = 0.6
+        #print(f'self.mymesh.Elements.Centroid \n {centroids_2D}')
         L2 = self.calc_L2_gauss_2D(centroids_2D)
-        Lambda = 0.006
-        sigma_inicial = np.ones(self.mymesh.NumberOfElements)
-        chuteInicial = np.ones(self.mymesh.NumberOfElements)*chute
+        
+        #L2 = np.eye(self.mymesh.NumberOfElements)
+        print(f'L2 \n {L2.shape}')
+        #plt.figure(figsize=(8, 8))
+        #plt.spy(L2, markersize=1)
+        #plt.title('Padrão de esparsidade da matriz FtF')
+        #plt.xlabel('Coluna')
+        #plt.ylabel('Linha')
+        #plt.show()
+        #print(f'L2 \n {L2.shape}')
+        
+        
+        sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
+        sigmaStar = sigmaInicial*0 #np.ones(self.mymesh.NumberOfElements)*0
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
-        Vtemp = self.CalcTempKGlobal(sigma_inicial)                            # calcula derivadas parciais da matriz jacobiana
-
+        ###
+        VtempJ = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
+        
+        # ***** Determinação do Valor calculado *****
         #print(f'(Vtemp {Vtemp})')
-        Vtemp = self.apply_boundary_conditions(Vtemp)                          # aplica cond contorno na matriz jacobiana
+        VtempJ = self.apply_boundary_conditions(VtempJ)                          # aplica cond contorno na matriz jacobiana
         #print('Vtemp \n', Vtemp)
-        invVtemp = np.linalg.inv(Vtemp)                                        # inverte matriz jacobiana
-        print('invVtemp \n', invVtemp)
-        KGlobalGeo = self.CalcTempKGlobal(sigmaOne)
-        KGlobalGeo = self.apply_boundary_conditions(KGlobalGeo)
-        invKGlobalGeo = np.linalg.inv(KGlobalGeo)
+        invVtempJ = np.linalg.inv(VtempJ)                                        # inverte matriz TempKGobal para jacobiana
+        #print('invVtemp \n', invVtemp)
+        ###
+        for itr in range(1):
+            #print('sigmaInicial \n', sigmaInicial)
+            Vtemp = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
+            
+            # ***** Determinação do Valor calculado *****
+            #print(f'(Vtemp {Vtemp})')
+            Vtemp = self.apply_boundary_conditions(Vtemp)                          # aplica cond contorno na matriz jacobiana
+            #print('Vtemp \n', Vtemp)
+            invVtemp = np.linalg.inv(Vtemp)                                        # inverte matriz TempKGobal para jacobiana
+            #print('invVtemp \n', invVtemp)
+            
+            
+            
+            V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)           # Calcula Valor estimado
+            V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                        # pega somente valores dos eletrodos
+            #print('V_calc \n', V_calc.shape)
+            #print('V_calc_noh \n', V_calc_noh)
+            #print('self.vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno.shape)
+            
+            #print(f'V_measured \n {V_measured[0]} \n Valc \n {V_calc_noh[0]}')
+            # ***** Determinação do resíduo *****
+            residue = V_calc_noh - V_measured                                      # Calcula resíduo matriz Nele X Nele
+            normaResidue = np.linalg.norm(residue)
+            residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
+            #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
+            #print('residue \n', residue.shape)
+            
+            
+            
+            #KGlobalGeo = self.CalcTempKGlobal(sigmaOne)
+            #KGlobalGeo = self.apply_boundary_conditions(KGlobalGeo)
+            #invKGlobalGeo = np.linalg.inv(KGlobalGeo)
+            
+                                                 # calc dif entre Vmedido e VCalculado
+            #residue = np.vstack([residue] * 4)
+            #residue = np.repeat(residue, 4, axis=0)
+            #print('bbb \n',residue)
+            #print('ccc \n',residue.shape)
+    
+            #print('residue \n', residue.shape)
+            self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
+    
+    
+            # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
+            self.Calc_J(invVtempJ)
+            #print('TempJ \n', self.TempJ.shape)
+            
+            # ***** Cálculo do termo 1a JT_W1_J *****
+            W1=np.eye(self.TempJ.shape[0])
+            #W1=np.eye(self.mymesh.NumberOfElements)
+            JTW = np.dot(self.TempJ.T, W1)
+            #JTW = JTW[self.mymesh.ElectrodeNodes]                        # pega somente valores dos eletrodos
+            #print('W1 \n', W1.shape)
+            #print('self.TempJ \n', self.TempJ.shape)
+            #print('JTW \n', JTW)
+            JTWJ = np.dot(JTW, self.TempJ)
+            
+            # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
+            #print('JTWJ \n', JTWJ)
+            #print('L2 \n', L2)
+            LTL =np.dot(L2.T, L2)
+            #LTL = np.eye(4)
+            #print('LTL \n', LTL.shape)
+            termo_L = (Lambda**2)*LTL
+            #print('termo_L \n', termo_L)
+            
+            # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
+            firstTerm = JTWJ + termo_L
+            #print('firstTerm \n', firstTerm)
+            inv_firstTerm = np.linalg.inv(firstTerm)
+            #print('inv_firstTerm \n', inv_firstTerm)
+            
+            # ***** Cálculo do termo 2a (JT_W1_residue) *****
+            
+            JTW_H = np.dot(JTW,residue)
+            #print('JTW1 \n', JTW)
+            #print('JTW_H \n', JTW_H)
+            #print('residue \n', residue)
+            
+            
+            # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
+            regTerm = (sigmaInicial - sigmaStar)* (Lambda**2)
+            #print('regTerm \n', regTerm.shape)
+            #print('sigmaInicial \n', sigmaInicial.shape)
+            #print('sigmaStar \n', sigmaStar.shape)
+            regTerm = regTerm.reshape(-1, 1)
+            regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
+            
+            #print('sigmaStar \n', sigmaStar.shape)
+            #print('regTermC \n', regTermC.shape)
+            regularization = np.dot(termo_L, regTermC)
+            #regularization = termo_L
+            
+            
+            # ***** Cálculo final do termo 2 *****
+            secondTerm = JTW_H - regularization
+            #print('secondTerm \n', secondTerm)
+            
+            
+            # ***** Produto entre termo 1 e termo 2 *****
+            deltaSigma = np.dot(inv_firstTerm, secondTerm)
+            deltaSigma = deltaSigma[:, 0]
+            #print('deltaSigma \n', deltaSigma)
+            alphaDeltaSigama = -alpha*deltaSigma
+            normaDelta = np.linalg.norm(alphaDeltaSigama)
+            
+            #print(f'{itr} - normaDelta = {normaDelta}, normaResidue = {normaResidue} ')
+            if normaDelta < 1e-9:    # Convergência atingida se a norma de
+                                                    # delta_sigam < que  1e-6
+              print(f'Convergência atingida após {itr} iterações.')
+              #print('Vmedido_b \n', Vmedido_b)
+              #print('Valor calculado \n',V_calc_b)
+              print('Sigma k+1 \n', sigmaInicial)
+              convergencia = True
+              break                                   # interrompe o processo de iteração
+            
+            sigmaPlusOne = sigmaInicial + alphaDeltaSigama
+            
+            #print('sigmaPlusOne \n', sigmaPlusOne[:10])
+            
+            sigmaInicial = sigmaPlusOne
+            #print(f'iteração = {itr}')
+            #print('sigmaInicial \n', sigmaInicial[:5])
+            #print(f'{itr} {sigmaInicial[:5]} ')
+        print('sigmaInicial \n', sigmaInicial) 
         
         
-        V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)           # Calcula Valor estimado
-        V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                        # pega somente valores dos eletrodos
-        print('V_calc \n', V_calc)
-        print('V_calc_noh \n', V_calc_noh)
-        residue = V_measured - V_calc_noh                                      # calc dif entre Vmedido e VCalculado
-        print('residue \n', residue)
-        self.calc_Y_jacobian()
-
-
+        # 4. Gráfico tipo steam
+        eixoX = np.arange(1, self.mymesh.NumberOfElements+1)   # 1 até 256
+        plt.figure()
+        #plt.stem(centros, valores)
+        plt.plot(eixoX, sigmaInicial ,
+                marker='None',
+                label='$\sigma$ calculado')
         
-        self.CalcJTJ(invKGlobalGeo)
-        print('TempJ \n', self.TempJ)
-        W1=np.eye(self.TempJ.shape[0])
-        #W1=np.eye(self.mymesh.NumberOfElements)
-        JTW = np.dot(self.TempJ.T, W1)
-        print('JTW \n', JTW)
-        JTWJ = np.dot(JTW, self.TempJ)
-        print('JTWJ \n', JTWJ)
-        #print('L2 \n', L2)
-        LTL =np.dot(L2.T, L2)
-        print('LTL \n', LTL)
-        termo_L = (Lambda**2)*LTL
-        print('termo_L \n', termo_L)
-        firstTerm = JTWJ + termo_L
-        print('firstTerm \n', firstTerm)
-        inv_firstTerm = np.linalg.inv(firstTerm)
-        print('inv_firstTerm \n', inv_firstTerm)
-        
-        
-        #JTW_H = np.dot(JTW,residue)
-        JTW_H = np.dot(residue,JTW)
-        print('JTW_H.shape \n', JTW_H .shape)
-        
-        regTerm = sigma_inicial - chuteInicial
-        print('regTerm shape\n', regTerm.shape)
-        regularization = np.dot((Lambda**2)*LTL, regTerm)
-        print('regularization.shape \n', regularization.shape)
-        secondTerm = JTW_H - regularization
-        #print('secondTerm \n', secondTerm)
-        
-        #print('invKGlobalGeo \n', invKGlobalGeo)
-        invKGlobalGeo
-        
+        #plt.xlim(0, 1.01)
+        plt.ylim(0.9, 2)
+        #plt.xlabel('Posição [m]')
+        #plt.ylabel('Condutividade σ')
+        #plt.title('Distribuição de  σ nos elementos 1D')
+        #plt.text(0.5, 0.87,f'Para α = {alpha_b} , λ = {lambda_b} e std={std}', ha='center', va='center',    plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
