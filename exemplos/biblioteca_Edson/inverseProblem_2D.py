@@ -339,13 +339,13 @@ class inverse_problem:
         return F
 
     def solve(self, V_measured,initialEstimate=1.0, max_iter=1):
-        alpha =0.100
+        alpha =0.0100
         lista_i = []                                        # Lista armazenar iterações
         lista_plotar = []                                      # Lista Valores de sigma
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         #print(centroids_2D.shape[0])  # (n_elements, 2)
 
-        Lambda = 0.6
+        Lambda = 0.06
         #print(f'self.mymesh.Elements.Centroid \n {centroids_2D}')
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         
@@ -373,7 +373,7 @@ class inverse_problem:
         invVtempJ = np.linalg.inv(VtempJ)                                        # inverte matriz TempKGobal para jacobiana
         #print('invVtemp \n', invVtemp)
         ###
-        for itr in range(1):
+        for itr in range(10):
             #print('sigmaInicial \n', sigmaInicial)
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
             
@@ -479,7 +479,7 @@ class inverse_problem:
             alphaDeltaSigama = -alpha*deltaSigma
             normaDelta = np.linalg.norm(alphaDeltaSigama)
             
-            #print(f'{itr} - normaDelta = {normaDelta}, normaResidue = {normaResidue} ')
+            print(f'{itr} - normaDelta = {normaDelta}, normaResidue = {normaResidue} ')
             if normaDelta < 1e-9:    # Convergência atingida se a norma de
                                                     # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
@@ -509,7 +509,7 @@ class inverse_problem:
                 label='$\sigma$ calculado')
         
         #plt.xlim(0, 1.01)
-        plt.ylim(0.9, 2)
+        plt.ylim(0.9, 1.5)
         #plt.xlabel('Posição [m]')
         #plt.ylabel('Condutividade σ')
         #plt.title('Distribuição de  σ nos elementos 1D')
