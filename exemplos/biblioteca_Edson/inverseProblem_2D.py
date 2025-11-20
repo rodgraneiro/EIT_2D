@@ -7,6 +7,7 @@ Created on Sun Oct 26 13:56:12 2025
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.tri as tri
 import mesh
 import elements
 import gmsh
@@ -337,13 +338,25 @@ class inverse_problem:
                         aux = -F[i, j] / soma
                     F[i, j] = aux if np.abs(aux) > tol else 0.0
         return F
-
+    def plotMSH(self,sigma):
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
+        fig, ax = plt.subplots(figsize=(6, 5))
+        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues', vmin=0, vmax=6)#'Greys')
+        fig.colorbar(tpc, ax=ax, label='σ (condutividade)')
+        ax.set_title("Condutividade Real (σ)")
+        plt.xlabel("[m]")
+        plt.ylabel("[m]")
+        plt.tight_layout()
+        plt.show()
     def solve(self, V_measured,initialEstimate=1.0, max_iter=1):
         alpha =0.0100
         lista_i = []                                        # Lista armazenar iterações
         lista_plotar = []                                      # Lista Valores de sigma
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         #print(centroids_2D.shape[0])  # (n_elements, 2)
+        
+        self.plotMSH(self.mymesh.sigma_vec)
 
         Lambda = 0.06
         #print(f'self.mymesh.Elements.Centroid \n {centroids_2D}')
@@ -373,7 +386,7 @@ class inverse_problem:
         invVtempJ = np.linalg.inv(VtempJ)                                        # inverte matriz TempKGobal para jacobiana
         #print('invVtemp \n', invVtemp)
         ###
-        for itr in range(10):
+        for itr in range(2):
             #print('sigmaInicial \n', sigmaInicial)
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
             
@@ -499,7 +512,9 @@ class inverse_problem:
             #print(f'{itr} {sigmaInicial[:5]} ')
         print('sigmaInicial \n', sigmaInicial) 
         
-        
+        self.plotMSH(sigmaInicial)
+
+        '''
         # 4. Gráfico tipo steam
         eixoX = np.arange(1, self.mymesh.NumberOfElements+1)   # 1 até 256
         plt.figure()
@@ -517,3 +532,4 @@ class inverse_problem:
         plt.grid(True)
         plt.tight_layout()
         plt.show()
+        '''
