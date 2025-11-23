@@ -53,7 +53,7 @@ class inverse_problem:
         self.jacob_1 = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfElements))   # inicia a variável 1 do jacobiano
         self.jacob_2 = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes))          # inicia a variável 2 do jacobiano
         self.length = np.zeros(self.mymesh.NumberOfElements)
-        self.chute = np.full(self.mymesh.NumberOfElements, 1.0)                           # Monta vetor chute
+        self.sigmaStar = np.full(self.mymesh.NumberOfElements, 1.0)                           # Monta vetor chute
         
         #global comprimento
         #comprimento = np.zeros(nro_elementos_J)
@@ -128,7 +128,7 @@ class inverse_problem:
             temp = self.apply_boundary_conditions(self.Y_jacobian)
             self.listJacobian.append(temp)
             
-            print('Y_jacobian calc_Y_jacobian \n',self.Y_jacobian)
+            #print('Y_jacobian calc_Y_jacobian \n',self.Y_jacobian)
             
             self.Y_jacobian = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
         #print('self.listJacobian.append \n',self.listJacobian)
@@ -175,7 +175,7 @@ class inverse_problem:
     # FPA = M - I
     # Onde I é a matriz Identidade e M a matriz gaussiana.
     ###############################################################################
-    def calc_L2_gauss_1D(self, centroids_1D, std=0.1):#, covariance_vector):
+    def calc_L2_gauss_1D(self, centroids_1D, std=0.12, tol = 1e-9):#, covariance_vector):
         """
         Calcula L2 Gaussiana para malha 1D de EIT em uma barra de 1 metro.
 
@@ -189,7 +189,7 @@ class inverse_problem:
         """
         #print('centroids_1D',centroids_1D)
         nelements = len(centroids_1D)
-        tol = 1e-9
+        #tol = 1e-9
 
         F = np.zeros((nelements, nelements), dtype=np.float32)
 
@@ -234,62 +234,30 @@ class inverse_problem:
         inv_primeiroTermo = np.linalg.inv(primeiroTermo)
 
         JTW_zh = zJTW @ residue
-        ztermo_reg = (sigma_inicial - self.chute)
+        ztermo_reg = (sigma_inicial - self.sigmaStar)
         zregularizacao = (Lambda**2)*zLTL @ ztermo_reg
         segundoTermo = JTW_zh - zregularizacao
         return -alpha*(inv_primeiroTermo @ segundoTermo)
     ###############################################################################
-    ###############################################################################
-    # Essa função plota o gráfico convergência das iterações
-    ###############################################################################
 
-    def plotar_iteracoes(self, lista_indice, lista_valor):
-        plt.plot(lista_indice,
-                lista_valor,
-                marker='.',
-                linestyle='-',
-                color='b',
-                label='Norma $\Delta\sigma$')        # plota gráfico das iterações,
-        plt.xlabel("Iteração", fontsize=15)
-        plt.ylabel("Norma Delta_Sigma", fontsize=15)
-        plt.title("Otimização da Barra de Cobre", fontsize=15)
-        plt.legend()
-        plt.grid(True)
-        plt.show()
-    ###############################################################################
 
     def CalcTempKGlobal(self, SigmaTemp):
+        self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
         for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
             #print(f' SigmaTemp {SigmaTemp}')
             for i in range(len(self.mymesh.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.mymesh.Elements[elem].Topology[i] # pega noh_i (noh global)
-
+                #print(f' no_i = {no_i}')
                 for j in range(len(self.mymesh.Elements[elem].Topology)): # para cada j (noh local):
                     no_j = self.mymesh.Elements[elem].Topology[j] # pega noh_j (noh global)
                     valorTemp = self.mymesh.Elements[elem].KGeo[i, j] * SigmaTemp[elem]
                     #print(f' self.Elements.KGeo {self.mymesh.Elements[elem].KGeo}')
                     #print(f' valorTemp \n {valorTemp}')
-                    self.KGlobalTemp[no_i, no_j]+= valorTemp
+                    self.KGlobalTemp[no_i, no_j]  += valorTemp
         #print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
         return self.KGlobalTemp
     ###############################################################################
-    def CalcJTJ(self, invKGlobalGeo):
-        listTempJ=[]
-        for idx in range(self.mymesh.NumberOfElements):
-            termo1 = np.dot(invKGlobalGeo, self.vetor_corrente_cond_contorno) 
-            #print('termo1 \n', termo1)
-            termo2 = np.dot(self.listJacobian[idx], termo1)
-            #print('termo2 \n', termo2)
-            termo3 = -np.dot(invKGlobalGeo, termo2)
-            termo3 = termo3.reshape(-1,1,  order='F')
-            #print('termo3 \n', termo3)
-            listTempJ.append(termo3)
-            #print('listTempJTJ \n', listTempJ)
-        self.TempJ = np.concatenate(listTempJ, axis=1)
-
-        JTJ = np.dot(self.TempJ.T, self.TempJ)
-        print('JTJ \n',JTJ)
     def Calc_J(self, invVtemp):
         listTempJ=[]
         for idx in range(self.mymesh.NumberOfElements):
@@ -310,10 +278,14 @@ class inverse_problem:
         JTJ = np.dot(self.TempJ.T, self.TempJ)
         #print('JTJ \n',JTJ.shape)
     ###############################################################################
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.1, tol=1e-9):
+    ###############################################################################
+    # Essa função calcula FPA com distância de cada elemento
+    ############################################################################### 
+    
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.01, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
-        F = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
+        L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
     
         for i in range(self.mymesh.NumberOfElements):
             ci = centroids_2D[i]
@@ -322,214 +294,275 @@ class inverse_problem:
             # --- primeira passada: calcula fatores gaussianos ---
             for j in range(self.mymesh.NumberOfElements):
                 cj = centroids_2D[j]
+                #print(f'cj = {cj}')
                 dist = np.linalg.norm(ci - cj)  # distância Euclidiana
-    
-                if dist <= 1.50 * std:
+                #print(f'dist = {dist}')
+                if dist <= 5.0 * std:
+                    #print(f'dist if = {2.0 * std}')
                     fator = 1.0 if i == j else np.exp(-dist**2 / (2 * std**2))
                     soma += fator
-                    F[i, j] = fator
+                    L2[i, j] = fator
     
             # --- segunda passada: normaliza e transforma em passa-alta ---
             for j in range(self.mymesh.NumberOfElements):
                 if soma > 0:
                     if i == j:
-                        aux = 1.0 - F[i, j] / soma
+                        aux = 1.0 - L2[i, j] / soma
                     else:
-                        aux = -F[i, j] / soma
-                    F[i, j] = aux if np.abs(aux) > tol else 0.0
-        return F
+                        aux = -L2[i, j] / soma
+                    L2[i, j] = aux if np.abs(aux) > tol else 0.0
+        # plot  matrix sparsity 
+        plt.figure(figsize=(8, 8))
+        plt.spy(L2, markersize=1)
+        plt.title('HPFilter matrix sparsity pattern', fontsize=15)
+        plt.xlabel('Colun', fontsize=12)
+        plt.ylabel('Line', fontsize=12)
+        plt.tight_layout()
+        plt.show()
+        return L2
+
+    
+    ###############################################################################
+    # Essa função calcula FPA com distância média entre os elementoss
+    ###############################################################################    
+
+    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
+   
+        d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
+        std = 0.1*d_media
+        print(f'std = {std}')
+        ne = centroids_2D.shape[0]
+        L = np.zeros((ne, ne), dtype=np.float64)
+    
+        for j in range(ne):                    # coluna 
+            cj = centroids_2D[j]
+            soma = 0.0
+    
+            for i in range(ne):                # linha 
+                ci = centroids_2D[i]
+                dist = np.linalg.norm(ci - cj)
+                if dist <= 5 * std:
+                    g = np.exp(-dist**2 / (2 * std**2))
+                else:
+                    g = 0.0   
+                L[i, j] = g
+                soma += g
+    
+            if soma > 0:
+                L[:, j] /= soma
+    
+        L[np.abs(L) < tol] = 0.0 
+        I = np.eye(ne)
+    
+        # filtro passa–alta
+        L2 = I - L
+        
+        # plot  matrix sparsity 
+        plt.figure(figsize=(8, 8))
+        plt.spy(L2, markersize=1)
+        plt.title('HPFilter matrix sparsity pattern', fontsize=15)
+        plt.xlabel('Colun', fontsize=12)
+        plt.ylabel('Line', fontsize=12)
+        plt.tight_layout()
+        plt.show()
+        return L2
+
+    ###############################################################################
+    # Essa função plota o gráfico convergência das iterações
+    ###############################################################################
+
+    def plotar_iteracoes(self,lista_indice, lista_valor):
+        plt.plot(lista_indice,
+                lista_valor,
+                marker='.',
+                linestyle='-',
+                color='b',
+                label='Norm $\Delta\sigma$')        # plota gráfico das iterações,
+        plt.xlabel("Iteration", fontsize=12)
+        plt.ylabel("Norm [$\Delta\sigma$]", fontsize=12)
+        plt.title("Optimization", fontsize=15)
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.show()
+    ###############################################################################
+    ###############################################################################
+    # Essa função plota o gráfico da condutividade da malha
+    ###############################################################################
     def plotMSH(self,sigma):
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
         fig, ax = plt.subplots(figsize=(6, 5))
-        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues', vmin=0, vmax=6)#'Greys')
-        fig.colorbar(tpc, ax=ax, label='σ (condutividade)')
-        ax.set_title("Condutividade Real (σ)")
-        plt.xlabel("[m]")
-        plt.ylabel("[m]")
+        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues', vmin=0)#, vmin=0, vmax=6)#'Greys')
+        fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
+        ax.set_title("Conductivity Real (σ)", fontsize=15)
+        plt.xlabel("[m]", fontsize=12)
+        plt.ylabel("[m]", fontsize=12)
         plt.tight_layout()
         plt.show()
-    def solve(self, V_measured,initialEstimate=1.0, max_iter=1):
-        alpha =0.0100
-        lista_i = []                                        # Lista armazenar iterações
-        lista_plotar = []                                      # Lista Valores de sigma
+        
+    ###############################################################################
+    # Essa função calcula o problema inverso
+    ###############################################################################
+    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6):
+        
+        ultimos10 = []
+        ultimaNorma =[99,99,99]
+        lastResidue = [99,99,99]
+        listXplot = []                                                         # Lista armazenar eixo x das iterações para plotar
+        listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
-        #print(centroids_2D.shape[0])  # (n_elements, 2)
         
         self.plotMSH(self.mymesh.sigma_vec)
-
-        Lambda = 0.06
-        #print(f'self.mymesh.Elements.Centroid \n {centroids_2D}')
-        L2 = self.calc_L2_gauss_2D(centroids_2D)
         
-        #L2 = np.eye(self.mymesh.NumberOfElements)
-        print(f'L2 \n {L2.shape}')
-        #plt.figure(figsize=(8, 8))
-        #plt.spy(L2, markersize=1)
-        #plt.title('Padrão de esparsidade da matriz FtF')
-        #plt.xlabel('Coluna')
-        #plt.ylabel('Linha')
-        #plt.show()
-        #print(f'L2 \n {L2.shape}')
+        L2 = self.calc_L2_gauss_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        
+        normaDeltaTemp = 0
+        fatorAlpha = 0.90
+        contNorma = 0
+        contNeg = 0
+        
         
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
         sigmaStar = sigmaInicial*0 #np.ones(self.mymesh.NumberOfElements)*0
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
+        
         ###
         VtempJ = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
         
         # ***** Determinação do Valor calculado *****
-        #print(f'(Vtemp {Vtemp})')
-        VtempJ = self.apply_boundary_conditions(VtempJ)                          # aplica cond contorno na matriz jacobiana
-        #print('Vtemp \n', Vtemp)
-        invVtempJ = np.linalg.inv(VtempJ)                                        # inverte matriz TempKGobal para jacobiana
-        #print('invVtemp \n', invVtemp)
-        ###
-        for itr in range(2):
-            #print('sigmaInicial \n', sigmaInicial)
-            Vtemp = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
+        VtempJ = self.apply_boundary_conditions(VtempJ)                        # aplica cond contorno na matriz jacobiana
+        invVtempJ = np.linalg.inv(VtempJ)                                      # inverte matriz TempKGobal para jacobiana
+        
+        #######################################################################
+        ###################        MAIN LOOP   ################################
+        #######################################################################
+        for itr in range(max_iter):                                            # Main Loop
+
+            Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
             # ***** Determinação do Valor calculado *****
-            #print(f'(Vtemp {Vtemp})')
-            Vtemp = self.apply_boundary_conditions(Vtemp)                          # aplica cond contorno na matriz jacobiana
-            #print('Vtemp \n', Vtemp)
-            invVtemp = np.linalg.inv(Vtemp)                                        # inverte matriz TempKGobal para jacobiana
-            #print('invVtemp \n', invVtemp)
+            Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
+            invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
-            
-            
-            V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)           # Calcula Valor estimado
-            V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                        # pega somente valores dos eletrodos
-            #print('V_calc \n', V_calc.shape)
-            #print('V_calc_noh \n', V_calc_noh)
-            #print('self.vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno.shape)
-            
-            #print(f'V_measured \n {V_measured[0]} \n Valc \n {V_calc_noh[0]}')
-            # ***** Determinação do resíduo *****
-            residue = V_calc_noh - V_measured                                      # Calcula resíduo matriz Nele X Nele
+            V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
+            V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
+                        # ***** Determinação do resíduo *****
+            residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
             normaResidue = np.linalg.norm(residue)
             residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
             #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
-            #print('residue \n', residue.shape)
             
-            
-            
-            #KGlobalGeo = self.CalcTempKGlobal(sigmaOne)
-            #KGlobalGeo = self.apply_boundary_conditions(KGlobalGeo)
-            #invKGlobalGeo = np.linalg.inv(KGlobalGeo)
-            
-                                                 # calc dif entre Vmedido e VCalculado
-            #residue = np.vstack([residue] * 4)
-            #residue = np.repeat(residue, 4, axis=0)
-            #print('bbb \n',residue)
-            #print('ccc \n',residue.shape)
-    
-            #print('residue \n', residue.shape)
             self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
     
     
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
             self.Calc_J(invVtempJ)
-            #print('TempJ \n', self.TempJ.shape)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
             W1=np.eye(self.TempJ.shape[0])
-            #W1=np.eye(self.mymesh.NumberOfElements)
-            JTW = np.dot(self.TempJ.T, W1)
-            #JTW = JTW[self.mymesh.ElectrodeNodes]                        # pega somente valores dos eletrodos
-            #print('W1 \n', W1.shape)
-            #print('self.TempJ \n', self.TempJ.shape)
-            #print('JTW \n', JTW)
+            JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
             JTWJ = np.dot(JTW, self.TempJ)
             
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
-            #print('JTWJ \n', JTWJ)
-            #print('L2 \n', L2)
             LTL =np.dot(L2.T, L2)
-            #LTL = np.eye(4)
-            #print('LTL \n', LTL.shape)
             termo_L = (Lambda**2)*LTL
-            #print('termo_L \n', termo_L)
             
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
             firstTerm = JTWJ + termo_L
-            #print('firstTerm \n', firstTerm)
             inv_firstTerm = np.linalg.inv(firstTerm)
-            #print('inv_firstTerm \n', inv_firstTerm)
             
             # ***** Cálculo do termo 2a (JT_W1_residue) *****
             
-            JTW_H = np.dot(JTW,residue)
-            #print('JTW1 \n', JTW)
-            #print('JTW_H \n', JTW_H)
-            #print('residue \n', residue)
-            
+            JTW_H = np.dot(JTW,residue)            
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
             regTerm = (sigmaInicial - sigmaStar)* (Lambda**2)
-            #print('regTerm \n', regTerm.shape)
-            #print('sigmaInicial \n', sigmaInicial.shape)
-            #print('sigmaStar \n', sigmaStar.shape)
+
             regTerm = regTerm.reshape(-1, 1)
             regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
-            
-            #print('sigmaStar \n', sigmaStar.shape)
-            #print('regTermC \n', regTermC.shape)
             regularization = np.dot(termo_L, regTermC)
-            #regularization = termo_L
-            
-            
+                        
             # ***** Cálculo final do termo 2 *****
             secondTerm = JTW_H - regularization
-            #print('secondTerm \n', secondTerm)
             
             
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
-            deltaSigma = deltaSigma[:, 0]
-            #print('deltaSigma \n', deltaSigma)
-            alphaDeltaSigama = -alpha*deltaSigma
-            normaDelta = np.linalg.norm(alphaDeltaSigama)
+
+            deltaSigma = deltaSigma[:, 0]*alpha
             
-            print(f'{itr} - normaDelta = {normaDelta}, normaResidue = {normaResidue} ')
-            if normaDelta < 1e-9:    # Convergência atingida se a norma de
-                                                    # delta_sigam < que  1e-6
+            alphaDeltaSigma = alpha*deltaSigma
+            normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
+            plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
+            listXplot.append(itr)                                              # Armazena o índice da iteração
+            listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
+            ultimaNorma.append(normaDelta)
+            if len(ultimaNorma) > 2:
+                ultimaNorma.pop(0)
+                
+            lastResidue.append(normaResidue)                                   # Calcula norma  resíduo
+            if len(lastResidue) > 2:
+                lastResidue.pop(0)                                             # Armazena 3 últimos valores da norma lastResidue
+            #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} L = {Lambda} ')
+            if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+            #if normaResidue < 1.0e-3:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
-              #print('Vmedido_b \n', Vmedido_b)
-              #print('Valor calculado \n',V_calc_b)
-              print('Sigma k+1 \n', sigmaInicial)
+              #self.plotMSH(sigmaInicial)
+
               convergencia = True
-              break                                   # interrompe o processo de iteração
+              break                                                            # interrompe o processo de iteração
             
-            sigmaPlusOne = sigmaInicial + alphaDeltaSigama
-            
-            #print('sigmaPlusOne \n', sigmaPlusOne[:10])
-            
+            sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
             sigmaInicial = sigmaPlusOne
-            #print(f'iteração = {itr}')
-            #print('sigmaInicial \n', sigmaInicial[:5])
-            #print(f'{itr} {sigmaInicial[:5]} ')
+            
+            
+            ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
+            if len(ultimos10) > 5:
+                ultimos10.pop(0)
+            
+            if any(v < 0 for v in sigmaPlusOne):
+                contNeg =  contNeg + 1
+                if contNeg > 20:
+                   contNeg = 0
+                   self.plotMSH(sigmaInicial)
+                   print(f'Algoritmo divergiu na {itr} iteração.' )
+                   break
+                elif contNeg > 2:
+                   alpha = alpha*fatorAlpha 
+                #media = np.mean(ultimos3, axis=0)
+                print(f'Encontrou sigma negativo.')
+                #print(f'Convergência atingida após {itr} iterações.')
+                #print(f'media {media}.')
+                
+                convergencia = True
+                sigmaPlusOne = ultimos10[0]
+                #sigmaPlusOne = np.mean(ultimos10, axis=0)
+                #break
+                alpha = alpha*fatorAlpha
+            
+                
+            if ultimaNorma[2] > ultimaNorma[1]:
+            #if lastResidue[2] > lastResidue[1]:
+               #contNorma =  contNorma + 1
+               #print(f'Encontrou norma lastResidue maior  que a anterior.')
+               #self.plotMSH(sigmaInicial)
+               #print(f'Algoritmo divergiu na {itr} iteração.' )
+               #break
+               #if contNorma > 2:
+               #    Lambda = Lambda - 0.01
+               #    contNorma = 0
+               alpha = alpha*fatorAlpha
+               #sigmaPlusOne = ultimos10[0]
+               #sigmaPlusOne = np.mean(ultimos10, axis=0)
+
+            
+                
         print('sigmaInicial \n', sigmaInicial) 
         
+        self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial)
-
-        '''
-        # 4. Gráfico tipo steam
-        eixoX = np.arange(1, self.mymesh.NumberOfElements+1)   # 1 até 256
-        plt.figure()
-        #plt.stem(centros, valores)
-        plt.plot(eixoX, sigmaInicial ,
-                marker='None',
-                label='$\sigma$ calculado')
         
-        #plt.xlim(0, 1.01)
-        plt.ylim(0.9, 1.5)
-        #plt.xlabel('Posição [m]')
-        #plt.ylabel('Condutividade σ')
-        #plt.title('Distribuição de  σ nos elementos 1D')
-        #plt.text(0.5, 0.87,f'Para α = {alpha_b} , λ = {lambda_b} e std={std}', ha='center', va='center',    plt.legend()
-        plt.grid(True)
-        plt.tight_layout()
-        plt.show()
-        '''
+        
