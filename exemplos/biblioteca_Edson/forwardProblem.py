@@ -54,7 +54,7 @@ class forward_problem:
     ###############################################################################  
     def apply_boundary_conditions(self):
         self.vetor_corrente_cond_contorno = self.corrente[:].copy()
-        print(f'Vetor de corrente: \n {self.vetor_corrente_cond_contorno}')
+        #print(f'Vetor de corrente: \n {self.vetor_corrente_cond_contorno}')
 
         self.KGlobal = self.mymesh.KGlobal.copy()       # Criar matriz solução
 
@@ -86,7 +86,7 @@ class forward_problem:
         self.Yinversa = np.linalg.inv(self.KGlobal)
 
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
-        print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
+        #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
         print(f' Tensões no eletrodos \n {self.Vmedido_eletrodos})')
