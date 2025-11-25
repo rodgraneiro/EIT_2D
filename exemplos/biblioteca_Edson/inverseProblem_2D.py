@@ -312,12 +312,12 @@ class inverse_problem:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
         # plot  matrix sparsity 
-        plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
         plt.title('HPFilter matrix sparsity pattern', fontsize=15)
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.show()
         return L2
 
@@ -358,12 +358,12 @@ class inverse_problem:
         L2 = I - L
         
         # plot  matrix sparsity 
-        plt.figure(figsize=(8, 8))
+        plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
         plt.title('HPFilter matrix sparsity pattern', fontsize=15)
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.show()
         return L2
 
@@ -372,6 +372,7 @@ class inverse_problem:
     ###############################################################################
 
     def plotar_iteracoes(self,lista_indice, lista_valor):
+        plt.figure(figsize=(6, 5))
         plt.plot(lista_indice,
                 lista_valor,
                 marker='.',
@@ -383,7 +384,7 @@ class inverse_problem:
         plt.title("Optimization", fontsize=15)
         plt.legend()
         plt.grid(True)
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.show()
     ###############################################################################
     ###############################################################################
@@ -398,7 +399,7 @@ class inverse_problem:
         ax.set_title("Conductivity Real (σ)", fontsize=15)
         plt.xlabel("[m]", fontsize=12)
         plt.ylabel("[m]", fontsize=12)
-        plt.tight_layout()
+        #plt.tight_layout()
         plt.show()
         
     ###############################################################################
@@ -506,7 +507,7 @@ class inverse_problem:
             lastResidue.append(normaResidue)                                   # Calcula norma  resíduo
             if len(lastResidue) > 2:
                 lastResidue.pop(0)                                             # Armazena 3 últimos valores da norma lastResidue
-            #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} L = {Lambda} ')
+            print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha}, L = {Lambda} ')
             if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
             #if normaResidue < 1.0e-3:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
