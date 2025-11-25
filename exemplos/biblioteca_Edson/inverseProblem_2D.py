@@ -524,25 +524,16 @@ class inverse_problem:
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
             
-            if any(v < 0 for v in sigmaPlusOne):
-                contNeg =  contNeg + 1
-                if contNeg > 20:
-                   contNeg = 0
-                   self.plotMSH(sigmaInicial)
-                   print(f'Algoritmo divergiu na {itr} iteração.' )
-                   break
-                elif contNeg > 2:
-                   alpha = alpha*fatorAlpha 
-                #media = np.mean(ultimos3, axis=0)
+            if any(v < 0 for v in sigmaPlusOne):                
+                alpha = alpha*fatorAlpha
+                sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
+                sigmaPlusOne[sigmaPlusOne < 0] = 0.001 
+ 
                 print(f'Encontrou sigma negativo.')
-                #print(f'Convergência atingida após {itr} iterações.')
-                #print(f'media {media}.')
+
                 
                 convergencia = True
-                sigmaPlusOne = ultimos10[0]
-                #sigmaPlusOne = np.mean(ultimos10, axis=0)
-                #break
-                alpha = alpha*fatorAlpha
+
             
                 
             if ultimaNorma[2] > ultimaNorma[1]:
