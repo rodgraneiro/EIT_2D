@@ -394,7 +394,7 @@ class inverse_problem:
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
         fig, ax = plt.subplots(figsize=(6, 5))
-        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues', vmin=0)#, vmin=0, vmax=6)#'Greys')
+        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues')#, vmin=0, vmax=6)#'Greys')
         fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
         ax.set_title("Conductivity Real (σ)", fontsize=15)
         plt.xlabel("[m]", fontsize=12)
@@ -418,7 +418,7 @@ class inverse_problem:
         
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
-        
+        difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.90
         contNorma = 0
@@ -427,7 +427,7 @@ class inverse_problem:
         
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
-        sigmaStar = sigmaInicial*0 #np.ones(self.mymesh.NumberOfElements)*0
+        sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         
         ###
@@ -506,10 +506,11 @@ class inverse_problem:
                 
             lastResidue.append(normaResidue)                                   # Calcula norma  resíduo
             if len(lastResidue) > 2:
-                lastResidue.pop(0)                                             # Armazena 3 últimos valores da norma lastResidue
-            print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha}, L = {Lambda} ')
-            if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
-            #if normaResidue < 1.0e-3:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+                lastResidue.pop(0)
+                difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
+            print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
+            #if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+            if normaResidue < 1.0e-3:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               #self.plotMSH(sigmaInicial)
 
