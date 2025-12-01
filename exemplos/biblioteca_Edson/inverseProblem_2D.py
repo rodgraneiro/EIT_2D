@@ -420,7 +420,7 @@ class inverse_problem:
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
-        fatorAlpha = 0.90
+        fatorAlpha = 0.99
         contNorma = 0
         contNeg = 0
         
@@ -453,6 +453,7 @@ class inverse_problem:
                         # ***** Determinação do resíduo *****
             residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
             normaResidue = np.linalg.norm(residue)
+            listaItrPlot.append(normaResidue)
             residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
             #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
             
@@ -499,18 +500,19 @@ class inverse_problem:
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
-            listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
+            #listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
                 ultimaNorma.pop(0)
                 
             lastResidue.append(normaResidue)                                   # Calcula norma  resíduo
+            
             if len(lastResidue) > 2:
                 lastResidue.pop(0)
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
             #if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
-            if normaResidue < 1.0e-3:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+            if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               #self.plotMSH(sigmaInicial)
 
@@ -537,8 +539,8 @@ class inverse_problem:
 
             
                 
-            if ultimaNorma[2] > ultimaNorma[1]:
-            #if lastResidue[2] > lastResidue[1]:
+            #if ultimaNorma[2] > ultimaNorma[1]:
+            if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
                #print(f'Encontrou norma lastResidue maior  que a anterior.')
                #self.plotMSH(sigmaInicial)
