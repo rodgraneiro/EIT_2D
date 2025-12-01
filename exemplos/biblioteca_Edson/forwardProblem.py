@@ -89,7 +89,7 @@ class forward_problem:
         #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
-        print(f' Tensões no eletrodos \n {self.Vmedido_eletrodos})')
+        #print(f' Tensões nos eletrodos \n {self.Vmedido_eletrodos})')
 
 
     ###############################################################################
