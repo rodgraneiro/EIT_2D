@@ -329,7 +329,7 @@ class inverse_problem:
     def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.1*d_media
+        std = 0.05*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -341,7 +341,7 @@ class inverse_problem:
             for i in range(ne):                # linha 
                 ci = centroids_2D[i]
                 dist = np.linalg.norm(ci - cj)
-                if dist <= 5 * std:
+                if dist <= 3 * std:
                     g = np.exp(-dist**2 / (2 * std**2))
                 else:
                     g = 0.0   
@@ -416,8 +416,8 @@ class inverse_problem:
         
         self.plotMSH(self.mymesh.sigma_vec)
         
-        L2 = self.calc_L2_gauss_2D(centroids_2D)
-        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
@@ -431,7 +431,7 @@ class inverse_problem:
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         
         ###
-        VtempJ = self.CalcTempKGlobal(sigmaInicial)                            # calcula derivadas parciais da matriz jacobiana
+        VtempJ = self.CalcTempKGlobal(sigmaOne)                            # calcula derivadas parciais da matriz jacobiana
         
         # ***** Determinação do Valor calculado *****
         VtempJ = self.apply_boundary_conditions(VtempJ)                        # aplica cond contorno na matriz jacobiana
@@ -500,7 +500,11 @@ class inverse_problem:
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
+<<<<<<< HEAD
             #listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
+=======
+            listaItrPlot.append(normaResidue)                                       # Armazena o valor a ser plotado
+>>>>>>> 1a8fd57c4b7b5be3e0cbd13b674c50d7a0ff82c2
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
                 ultimaNorma.pop(0)
@@ -510,7 +514,8 @@ class inverse_problem:
             if len(lastResidue) > 2:
                 lastResidue.pop(0)
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
-            print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
+            #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
+            print(f'{normaResidue} - {itr}')
             #if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
@@ -542,14 +547,16 @@ class inverse_problem:
             #if ultimaNorma[2] > ultimaNorma[1]:
             if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
-               #print(f'Encontrou norma lastResidue maior  que a anterior.')
+               print(f'Encontrou norma lastResidue maior  que a anterior.')
                #self.plotMSH(sigmaInicial)
                #print(f'Algoritmo divergiu na {itr} iteração.' )
                #break
                #if contNorma > 2:
                #    Lambda = Lambda - 0.01
                #    contNorma = 0
+               self.plotMSH(sigmaInicial)
                alpha = alpha*fatorAlpha
+               break
                #sigmaPlusOne = ultimos10[0]
                #sigmaPlusOne = np.mean(ultimos10, axis=0)
 
