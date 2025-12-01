@@ -329,7 +329,7 @@ class inverse_problem:
     def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.05*d_media
+        std = 0.15*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -341,7 +341,7 @@ class inverse_problem:
             for i in range(ne):                # linha 
                 ci = centroids_2D[i]
                 dist = np.linalg.norm(ci - cj)
-                if dist <= 3 * std:
+                if dist <= 5 * std:
                     g = np.exp(-dist**2 / (2 * std**2))
                 else:
                     g = 0.0   
@@ -540,6 +540,7 @@ class inverse_problem:
 
                 
                 convergencia = True
+                break
 
             
                 
