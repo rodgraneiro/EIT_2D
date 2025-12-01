@@ -500,11 +500,10 @@ class inverse_problem:
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
-<<<<<<< HEAD
             #listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
-=======
-            listaItrPlot.append(normaResidue)                                       # Armazena o valor a ser plotado
->>>>>>> 1a8fd57c4b7b5be3e0cbd13b674c50d7a0ff82c2
+
+            #listaItrPlot.append(normaResidue)                                       # Armazena o valor a ser plotado
+
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
                 ultimaNorma.pop(0)
