@@ -390,6 +390,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
+    '''
     def plotMSH(self,sigma):
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
@@ -401,7 +402,46 @@ class inverse_problem:
         plt.ylabel("[m]", fontsize=12)
         #plt.tight_layout()
         plt.show()
-        
+        '''
+    def plotMSH(self, sigma):
+
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+    
+        fig, ax = plt.subplots(figsize=(6, 5))
+    
+        # ============================================================
+        #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
+        # ============================================================
+        if len(elems_2D) > 0:
+            triang = tri.Triangulation(x, y, elems_2D)
+            tpc = ax.tripcolor(
+                triang,
+                facecolors=sigma[:len(elems_2D)],
+                edgecolors='k',
+                cmap='Blues'
+            )
+            fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
+            ax.set_title("Conductivity Real (σ)", fontsize=15)
+    
+        # ============================================================
+        #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
+        # ============================================================
+        if len(elems_1D) > 0:
+            for (n1, n2) in elems_1D:
+                x_coords = [x[n1], x[n2]]
+                y_coords = [y[n1], y[n2]]
+                ax.plot(x_coords, y_coords, color='red', linewidth=2)
+    
+        # ------------------------------------------------------------
+        ax.set_xlabel("[m]", fontsize=12)
+        ax.set_ylabel("[m]", fontsize=12)
+        plt.tight_layout()
+        plt.show()    
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
