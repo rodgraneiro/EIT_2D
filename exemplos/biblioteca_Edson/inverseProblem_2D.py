@@ -282,7 +282,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.01, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.02, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -329,7 +329,7 @@ class inverse_problem:
     def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.15*d_media
+        std = 0.05*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -456,14 +456,14 @@ class inverse_problem:
         
         self.plotMSH(self.mymesh.sigma_vec)
         
-        #L2 = self.calc_L2_gauss_2D(centroids_2D)
-        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
         contNorma = 0
         contNeg = 0
-        
+        contItr = 0
         
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
@@ -501,7 +501,8 @@ class inverse_problem:
     
     
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
-            self.Calc_J(invVtempJ)
+            #self.Calc_J(invVtempJ)
+            self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
             W1=np.eye(self.TempJ.shape[0])
@@ -600,10 +601,11 @@ class inverse_problem:
                #sigmaPlusOne = ultimos10[0]
                #sigmaPlusOne = np.mean(ultimos10, axis=0)
 
-            
-                
+            if contItr ==200:
+                np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
+                contItr = 0
         print('sigmaInicial \n', sigmaInicial) 
-        
+        np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial)
         
