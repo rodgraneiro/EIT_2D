@@ -282,7 +282,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.02, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.01, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -541,9 +541,7 @@ class inverse_problem:
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
-            #listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
-
-            #listaItrPlot.append(normaResidue)                                       # Armazena o valor a ser plotado
+                                             # Armazena o valor a ser plotado
 
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
@@ -556,7 +554,7 @@ class inverse_problem:
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
             print(f'{normaResidue} - {itr}')
-            #if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+           
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               #self.plotMSH(sigmaInicial)
@@ -585,21 +583,15 @@ class inverse_problem:
 
             
                 
-            #if ultimaNorma[2] > ultimaNorma[1]:
+           
             if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
                print(f'Encontrou norma lastResidue maior  que a anterior.')
-               #self.plotMSH(sigmaInicial)
-               #print(f'Algoritmo divergiu na {itr} iteração.' )
-               #break
-               #if contNorma > 2:
-               #    Lambda = Lambda - 0.01
-               #    contNorma = 0
+               
                self.plotMSH(sigmaInicial)
-               alpha = alpha*fatorAlpha
+               #alpha = alpha*fatorAlpha
                break
-               #sigmaPlusOne = ultimos10[0]
-               #sigmaPlusOne = np.mean(ultimos10, axis=0)
+               
 
             if contItr ==200:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
