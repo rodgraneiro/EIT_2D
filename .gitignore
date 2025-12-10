@@ -2,6 +2,7 @@
 #*.msh
 *.geo
 *.geo_unrolled
+*.png
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
