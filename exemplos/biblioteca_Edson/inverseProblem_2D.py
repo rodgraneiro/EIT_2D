@@ -12,6 +12,11 @@ import mesh
 import elements
 import gmsh
 import sys
+from datetime import datetime
+
+timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+
+
 #import subprocess
 #import os
 
@@ -403,7 +408,7 @@ class inverse_problem:
         #plt.tight_layout()
         plt.show()
         '''
-    def plotMSH(self, sigma):
+    def plotMSH(self, sigma, iteration = None, save = False):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -426,8 +431,11 @@ class inverse_problem:
                 cmap='Blues'
             )
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
-            ax.set_title("Conductivity Real (σ)", fontsize=15)
-    
+            if save == True:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+                ax.set_title(f"Conductivity Real (σ) - itr_{iteration}_{timestamp}", fontsize=12)
+            if save == False:
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
         #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
         # ============================================================
@@ -441,6 +449,11 @@ class inverse_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"condutiv_alfa_05_iter_{iteration}_{timestamp}.png",
+            dpi=300, bbox_inches='tight')
         plt.show()    
     ###############################################################################
     # Essa função calcula o problema inverso
@@ -454,7 +467,7 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        self.plotMSH(self.mymesh.sigma_vec)
+        self.plotMSH(self.mymesh.sigma_vec, save = False)
         
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
@@ -481,7 +494,7 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(max_iter):                                            # Main Loop
-
+            contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
             # ***** Determinação do Valor calculado *****
@@ -588,17 +601,20 @@ class inverse_problem:
                #contNorma =  contNorma + 1
                print(f'Encontrou norma lastResidue maior  que a anterior.')
                
-               self.plotMSH(sigmaInicial)
+               #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
-               break
+               #break
                
 
-            if contItr ==200:
+            if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
+            if itr % 500 == 0:   # salva de 1000 em 1000 ...
+                self.plotMSH(sigmaInicial, itr, save = True)
+
         print('sigmaInicial \n', sigmaInicial) 
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial)
+        self.plotMSH(sigmaInicial, itr, save = True)
         
         
