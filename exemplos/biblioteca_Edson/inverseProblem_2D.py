@@ -12,6 +12,11 @@ import mesh
 import elements
 import gmsh
 import sys
+from datetime import datetime
+
+timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+
+
 #import subprocess
 #import os
 
@@ -329,7 +334,7 @@ class inverse_problem:
     def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.15*d_media
+        std = 0.05*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -390,6 +395,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
+    '''
     def plotMSH(self,sigma):
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
@@ -401,7 +407,54 @@ class inverse_problem:
         plt.ylabel("[m]", fontsize=12)
         #plt.tight_layout()
         plt.show()
-        
+        '''
+    def plotMSH(self, sigma, iteration = None, save = False):
+
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+    
+        fig, ax = plt.subplots(figsize=(6, 5))
+    
+        # ============================================================
+        #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
+        # ============================================================
+        if len(elems_2D) > 0:
+            triang = tri.Triangulation(x, y, elems_2D)
+            tpc = ax.tripcolor(
+                triang,
+                facecolors=sigma[:len(elems_2D)],
+                edgecolors='k',
+                cmap='Blues'
+            )
+            fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
+            if save == True:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+                ax.set_title(f"Conductivity Real (σ) - itr_{iteration}_{timestamp}", fontsize=12)
+            if save == False:
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+        # ============================================================
+        #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
+        # ============================================================
+        if len(elems_1D) > 0:
+            for (n1, n2) in elems_1D:
+                x_coords = [x[n1], x[n2]]
+                y_coords = [y[n1], y[n2]]
+                ax.plot(x_coords, y_coords, color='red', linewidth=2)
+    
+        # ------------------------------------------------------------
+        ax.set_xlabel("[m]", fontsize=12)
+        ax.set_ylabel("[m]", fontsize=12)
+        plt.tight_layout()
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"condutiv_alfa_05_iter_{iteration}_{timestamp}.png",
+            dpi=300, bbox_inches='tight')
+        plt.show()    
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
@@ -414,16 +467,16 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        self.plotMSH(self.mymesh.sigma_vec)
+        self.plotMSH(self.mymesh.sigma_vec, save = False)
         
-        #L2 = self.calc_L2_gauss_2D(centroids_2D)
-        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
         contNorma = 0
         contNeg = 0
-        
+        contItr = 0
         
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
@@ -441,7 +494,7 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(max_iter):                                            # Main Loop
-
+            contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
             # ***** Determinação do Valor calculado *****
@@ -461,7 +514,8 @@ class inverse_problem:
     
     
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
-            self.Calc_J(invVtempJ)
+            #self.Calc_J(invVtempJ)
+            self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
             W1=np.eye(self.TempJ.shape[0])
@@ -500,9 +554,7 @@ class inverse_problem:
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
-            #listaItrPlot.append(plotItr)                                       # Armazena o valor a ser plotado
-
-            #listaItrPlot.append(normaResidue)                                       # Armazena o valor a ser plotado
+                                             # Armazena o valor a ser plotado
 
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
@@ -515,7 +567,7 @@ class inverse_problem:
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
             print(f'{normaResidue} - {itr}')
-            #if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+           
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               #self.plotMSH(sigmaInicial)
@@ -544,27 +596,25 @@ class inverse_problem:
 
             
                 
-            #if ultimaNorma[2] > ultimaNorma[1]:
+           
             if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
                print(f'Encontrou norma lastResidue maior  que a anterior.')
-               #self.plotMSH(sigmaInicial)
-               #print(f'Algoritmo divergiu na {itr} iteração.' )
+               
+               #self.plotMSH(sigmaInicial,itr, save = True)
+               #alpha = alpha*fatorAlpha
                #break
-               #if contNorma > 2:
-               #    Lambda = Lambda - 0.01
-               #    contNorma = 0
-               self.plotMSH(sigmaInicial)
-               alpha = alpha*fatorAlpha
-               break
-               #sigmaPlusOne = ultimos10[0]
-               #sigmaPlusOne = np.mean(ultimos10, axis=0)
+               
 
-            
-                
+            if contItr ==50:
+                np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
+                contItr = 0
+            if itr % 500 == 0:   # salva de 1000 em 1000 ...
+                self.plotMSH(sigmaInicial, itr, save = True)
+
         print('sigmaInicial \n', sigmaInicial) 
-        
+        np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial)
+        self.plotMSH(sigmaInicial, itr, save = True)
         
         
