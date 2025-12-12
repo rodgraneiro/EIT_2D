@@ -10,6 +10,8 @@ import mesh
 import elements
 import gmsh
 import sys
+import matplotlib.pyplot as plt
+import matplotlib.tri as tri
 #import subprocess
 #import os
 
@@ -75,9 +77,53 @@ class forward_problem:
               self.KGlobal[noh_cond_contorno][k] = 0
               self.KGlobal[k][noh_cond_contorno] = 0
         self.KGlobal[noh_cond_contorno][noh_cond_contorno] = 1
+    ###############################################################################
+    def plotMSH(self, sigma, iteration = None, save = False):
 
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+    
+        fig, ax = plt.subplots(figsize=(6, 5))
+    
+        # ============================================================
+        #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
+        # ============================================================
+        if len(elems_2D) > 0:
+            triang = tri.Triangulation(x, y, elems_2D)
+            tpc = ax.tripcolor(
+                triang,
+                facecolors=sigma[:len(elems_2D)],
+                edgecolors='k',
+                cmap='Blues'
+            )
+            fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
+            if save == True:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=12)
+            if save == False:
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+        # ============================================================
+        #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
+        # ============================================================
+        if len(elems_1D) > 0:
+            for (n1, n2) in elems_1D:
+                x_coords = [x[n1], x[n2]]
+                y_coords = [y[n1], y[n2]]
+                ax.plot(x_coords, y_coords, color='red', linewidth=2)
+    
+        # ------------------------------------------------------------
+        ax.set_xlabel("[m]", fontsize=12)
+        ax.set_ylabel("[m]", fontsize=12)
+        plt.tight_layout()
+        
+        plt.show()    
 
     def Solve(self, forceKGolbalCalc=False):
+        self.plotMSH(self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
             self.mymesh.CalcKGlobal()
         
