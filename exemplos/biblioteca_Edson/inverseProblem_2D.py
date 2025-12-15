@@ -331,7 +331,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância média entre os elementoss
     ###############################################################################    
 
-    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
+    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-2):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
         std = 0.05*d_media
@@ -428,11 +428,12 @@ class inverse_problem:
                 triang,
                 facecolors=sigma[:len(elems_2D)],
                 edgecolors='k',
-                cmap='Blues'
+                cmap='Blues',
+                vmin=0.0
             )
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+                timestamp = datetime.now().strftime("%m%d_%H%M")
                 ax.set_title(f"Conductivity Real (σ) - itr_{iteration}_{timestamp}", fontsize=12)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
@@ -452,7 +453,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"condutiv_alfa_05_iter_{iteration}_{timestamp}.png",
+            plt.savefig(f"condutiv_limits_0_3_iter_{iteration}_{timestamp}.png",
             dpi=300, bbox_inches='tight')
         plt.show()    
     ###############################################################################
@@ -469,8 +470,8 @@ class inverse_problem:
         
         self.plotMSH(self.mymesh.sigma_vec, save = False)
         
-        L2 = self.calc_L2_gauss_2D(centroids_2D)
-        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
@@ -566,16 +567,20 @@ class inverse_problem:
                 lastResidue.pop(0)
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
-            print(f'{normaResidue} - {itr}')
+            print(f'{normaResidue} - {normaDelta} - {itr}')
            
+            if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+              print(f'Convergência atingida após {itr} iterações.')
+              convergencia = True
+              break
+                                                                        # interrompe o processo de iteração
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
-              #self.plotMSH(sigmaInicial)
-
               convergencia = True
-              break                                                            # interrompe o processo de iteração
-            
+              break
+
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 0.9, 3.1)
             sigmaInicial = sigmaPlusOne
             
             
