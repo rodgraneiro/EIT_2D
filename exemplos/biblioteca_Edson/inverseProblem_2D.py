@@ -494,7 +494,8 @@ class inverse_problem:
         #######################################################################
         ###################        MAIN LOOP   ################################
         #######################################################################
-        for itr in range(max_iter):                                            # Main Loop
+        for itr in range(max_iter):
+            np.savetxt("lastIteration.txt", int(itr)) # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
