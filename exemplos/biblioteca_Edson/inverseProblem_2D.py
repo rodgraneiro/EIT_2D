@@ -334,7 +334,7 @@ class inverse_problem:
     def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.05*d_media
+        std = 0.5*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -428,11 +428,12 @@ class inverse_problem:
                 triang,
                 facecolors=sigma[:len(elems_2D)],
                 edgecolors='k',
-                cmap='Blues'
-            )
+                cmap='Blues',
+                vmin=1.0 )
+            
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+                timestamp = datetime.now().strftime("%m%d_%H%M")
                 ax.set_title(f"Conductivity Real (σ) - itr_{iteration}_{timestamp}", fontsize=12)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
@@ -452,7 +453,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"condutiv_alfa_05_iter_{iteration}_{timestamp}.png",
+            plt.savefig(f"condutiv_alinhado_1_3_data_{timestamp}.png",
             dpi=300, bbox_inches='tight')
         plt.show()    
     ###############################################################################
@@ -469,8 +470,8 @@ class inverse_problem:
         
         self.plotMSH(self.mymesh.sigma_vec, save = False)
         
-        L2 = self.calc_L2_gauss_2D(centroids_2D)
-        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
@@ -566,23 +567,27 @@ class inverse_problem:
                 lastResidue.pop(0)
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
-            print(f'{normaResidue} - {itr}')
+            print(f'{normaResidue} - {normaDelta} - {itr}')
            
+            if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+              print(f'Convergência atingida após {itr} iterações.')
+              convergencia = True
+              break
+                                                                        # interrompe o processo de iteração
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
-              #self.plotMSH(sigmaInicial)
-
               convergencia = True
-              break                                                            # interrompe o processo de iteração
-            
+              break
+
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 1.0, 3.0)
             sigmaInicial = sigmaPlusOne
             
             
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
-            
+            '''
             if any(v < 0 for v in sigmaPlusOne):                
                 alpha = alpha*fatorAlpha
                 sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
@@ -593,7 +598,7 @@ class inverse_problem:
                 
                 convergencia = True
                 break
-
+            '''
             
                 
            
