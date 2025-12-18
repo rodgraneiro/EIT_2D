@@ -459,8 +459,9 @@ class inverse_problem:
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
-    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6):
-        
+    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
+        print(f'lastIteration 2222 {iteration}')
+        itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
         lastResidue = [99,99,99]
@@ -494,7 +495,8 @@ class inverse_problem:
         #######################################################################
         ###################        MAIN LOOP   ################################
         #######################################################################
-        for itr in range(max_iter):                                            # Main Loop
+        for itr in range(itr_start,max_iter):
+            np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
