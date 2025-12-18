@@ -1,0 +1,11 @@
+nome_arquivo = "circ16_base" 
+raio = 0.15
+n_eletrodos = 16
+ponto_medio_x = 0
+ponto_medio_y = 0
+lc1 = 0.1
+lc2 = 0.1
+anomalia_lados = 0
+anomalia_rotacao = 0.0
+x_ptoCentral = 0.0
+y_ptoCentral = 0.0
