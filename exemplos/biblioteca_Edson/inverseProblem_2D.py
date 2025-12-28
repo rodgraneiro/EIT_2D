@@ -287,7 +287,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.01, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.02, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -323,6 +323,23 @@ class inverse_problem:
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
+
+        N = L2.shape[0]
+        X, Y = np.meshgrid(np.arange(N), np.arange(N))
+        
+        fig = plt.figure(figsize=(9, 7))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        surf = ax.plot_surface( X, Y, L2, cmap='viridis',  linewidth=0, antialiased=True )
+        
+        ax.set_xlabel('Coluna')
+        ax.set_ylabel('Linha')
+        #ax.set_zlabel('L[i,j]')
+        ax.set_title('HPFilter – Superfície 3D')
+        
+        fig.colorbar(surf, shrink=0.5)
+        plt.show()
+
         plt.show()
         return L2
 
@@ -334,7 +351,7 @@ class inverse_problem:
     def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.5*d_media
+        std = 0.05*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -471,8 +488,8 @@ class inverse_problem:
         
         self.plotMSH(self.mymesh.sigma_vec, save = False)
         
-        #L2 = self.calc_L2_gauss_2D(centroids_2D)
-        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
@@ -582,7 +599,7 @@ class inverse_problem:
               break
 
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
-            sigmaPlusOne = np.clip(sigmaPlusOne, 1.0, 3.0)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)
             sigmaInicial = sigmaPlusOne
             
             
@@ -610,7 +627,7 @@ class inverse_problem:
                
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
-               #break
+               break
                
 
             if contItr ==50:
