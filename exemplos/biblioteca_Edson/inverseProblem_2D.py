@@ -287,7 +287,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.002, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.005, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -470,7 +470,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"cond3_obj_skip3_{timestamp}.png",
+            plt.savefig(f"cond3_obj_skip2_{timestamp}.png",
             dpi=300, bbox_inches='tight')
         plt.show()    
     ###############################################################################
