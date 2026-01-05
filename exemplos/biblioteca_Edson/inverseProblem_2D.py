@@ -287,7 +287,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.02, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.002, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -470,7 +470,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"condutiv_alinhado_1_3_data_{timestamp}.png",
+            plt.savefig(f"cond3_obj_skip3_{timestamp}.png",
             dpi=300, bbox_inches='tight')
         plt.show()    
     ###############################################################################
@@ -633,8 +633,8 @@ class inverse_problem:
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
-            if itr % 500 == 0:   # salva de 1000 em 1000 ...
-                self.plotMSH(sigmaInicial, itr, save = True)
+            #if itr % 500 == 0:   # salva de 1000 em 1000 ...
+            #    self.plotMSH(sigmaInicial, itr, save = True)
 
         print('sigmaInicial \n', sigmaInicial) 
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
