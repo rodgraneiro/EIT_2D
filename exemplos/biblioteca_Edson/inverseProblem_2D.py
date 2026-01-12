@@ -470,7 +470,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"cond3_obj_skip2_{timestamp}.png",
+            plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
             dpi=300, bbox_inches='tight')
         plt.show()    
     ###############################################################################
