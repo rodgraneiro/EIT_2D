@@ -4,6 +4,8 @@ Created on Sun Oct 26 13:56:12 2025
 
 @author: rodgr
 """
+# este comentário está no branch test
+
 
 import numpy as np
 import matplotlib.pyplot as plt
