@@ -120,8 +120,9 @@ class forward_problem:
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
         
-        plt.show()    
-
+        #plt.show()    
+        plt.show(block=False)
+        plt.pause(0.1)  
     def Solve(self, forceKGolbalCalc=False):
         self.plotMSH(self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
