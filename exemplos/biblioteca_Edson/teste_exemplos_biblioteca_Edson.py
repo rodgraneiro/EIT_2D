@@ -322,5 +322,5 @@ invProblem_2D = inverseProblem_2D.inverse_problem(MinhaMalhaBase16, Pcorrente=fw
 
 
 #invProblem_2D.solve(V_measured,initialEstimate=sigma_inicial_rnd, alpha =0.1,  Lambda = 0.50, max_iter=3, Tol=1.0e-20, iteration=iteration)
-invProblem_2D.solve(V_measured,initialEstimate=3.1, alpha =0.0100,  Lambda = 1.0e-3, max_iter=200, Tol=1.0e-6, iteration=iteration)
+invProblem_2D.solve(V_measured,initialEstimate=3.1, alpha =0.0100,  Lambda = 1.0e-3, max_iter=3, Tol=1.0e-6, iteration=iteration)
 #print('Y_jacobian',invProblem.Y_jacobian)
