@@ -373,10 +373,10 @@ class inverse_problem:
     # Essa função calcula FPA com distância média entre os elementoss
     ###############################################################################    
 
-    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1.0e-3):
+    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1.0e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.10 #*d_media
+        std = 0.00250 #*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
