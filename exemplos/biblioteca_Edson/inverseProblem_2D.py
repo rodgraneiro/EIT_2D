@@ -304,7 +304,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.0090, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.0050, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -373,10 +373,10 @@ class inverse_problem:
     # Essa função calcula FPA com distância média entre os elementoss
     ###############################################################################    
 
-    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1.0e-9):
+    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1.0e-3):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.05*d_media
+        std = 0.10 #*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -526,11 +526,11 @@ class inverse_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        if save == True:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"condutiv_coarse_3objetos_{timestamp}.png",
-            dpi=300, bbox_inches='tight')
+        #if save == True:
+        #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+        #    plt.savefig(f"condutiv_coarse_3objetos_{timestamp}.png",
+        #    dpi=300, bbox_inches='tight')
         #plt.ion()
         #plt.show()
         plt.show(block=False)
@@ -607,8 +607,8 @@ class inverse_problem:
         
         #self.plotMSH(self.mymesh.sigma_vec, save = False)
         
-        L2 = self.calc_L2_gauss_2D(centroids_2D)
-        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_2D(centroids_2D)
+        L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         
         difResidue = 0
         normaDeltaTemp = 0
@@ -623,7 +623,7 @@ class inverse_problem:
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
         sigmaInicial = sigmaInicial.reshape(-1, 1)
-        sigmaStar = sigmaInicial*0 #np.ones(self.mymesh.NumberOfElements)*0
+        sigmaStar = (sigmaInicial/sigmaInicial)*2.5 #np.ones(self.mymesh.NumberOfElements)*0
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         #print('sigmaInicial 111',sigmaInicial.shape)
         #self.plot_espectro(sigmaInicial)
@@ -720,7 +720,7 @@ class inverse_problem:
             #print(f'regularization = {regularization.shape}')    
             #print(f'regularizationBarata = {regularizationBarata.shape}')            
             # ***** Cálculo final do termo 2 *****
-            secondTerm = JTW_H - regularization
+            secondTerm = JTW_H ################################ - regularization
             #print(f'secondTerm = {secondTerm.shape}')
             
             #secondTermBarata = JTW_Hbarata - regularizationBarata
