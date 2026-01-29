@@ -256,22 +256,23 @@ class inverse_problem:
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
         for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
-            #print(f' SigmaTemp {SigmaTemp}')
+            print(f' SigmaTemp {SigmaTemp}')
             for i in range(len(self.mymesh.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.mymesh.Elements[elem].Topology[i] # pega noh_i (noh global)
-                #print(f' no_i = {no_i}')
+                print(f' no_i = {no_i}')
                 for j in range(len(self.mymesh.Elements[elem].Topology)): # para cada j (noh local):
                     no_j = self.mymesh.Elements[elem].Topology[j] # pega noh_j (noh global)
                     valorTemp = self.mymesh.Elements[elem].KGeo[i, j] * SigmaTemp[elem]
-                    #print(f' self.Elements.KGeo {self.mymesh.Elements[elem].KGeo}')
-                    #print(f' valorTemp \n {valorTemp}')
+                    print(f' self.Elements.KGeo {self.mymesh.Elements[elem].KGeo}')
+                    print(f' valorTemp \n {valorTemp}')
                     self.KGlobalTemp[no_i, no_j]  += valorTemp
-        #print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
+        print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
         return self.KGlobalTemp
     ###############################################################################
     def Calc_J(self, invVtemp):
         listTempJ=[]
         for idx in range(self.mymesh.NumberOfElements):
+            print('invVtemp',invVtemp)
             termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
             #print('vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno[0:15, 0:9])
             #print('termo1 \n', termo1.shape)
@@ -296,7 +297,7 @@ class inverse_problem:
             #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
         self.TempJ = np.concatenate(listTempJ, axis=1)
         #np.savetxt('JacobianoCoarse.txt', self.TempJ, fmt="%.8f")
-        #print('self.TempJ \n',self.TempJ)
+        print('self.TempJ \n',self.TempJ)
         self.JTJ = np.dot(self.TempJ.T, self.TempJ)
         #print('JTJ \n', self.JTJ)
     ###############################################################################
@@ -333,7 +334,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-            
+        '''    
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -365,7 +366,8 @@ class inverse_problem:
         fig.colorbar(surf, shrink=0.5)
         #plt.show()
         plt.show(block=False)
-        plt.pause(0.1)  
+        plt.pause(0.1)
+        '''  
         return L2
 
     
@@ -815,9 +817,10 @@ class inverse_problem:
             
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-        self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial, itr, save = True)
-        self.plot_espectro(sigmaInicial)
+        
+        #self.plotar_iteracoes(listXplot, listaItrPlot)
+        #self.plotMSH(sigmaInicial, itr, save = True)
+        #self.plot_espectro(sigmaInicial)
         
         #import numpy as np
         #import matplotlib.pyplot as plt
