@@ -256,37 +256,34 @@ class inverse_problem:
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
         for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
-            print(f' SigmaTemp {SigmaTemp}')
+            #print(f' SigmaTemp {SigmaTemp}')
             for i in range(len(self.mymesh.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.mymesh.Elements[elem].Topology[i] # pega noh_i (noh global)
-                print(f' no_i = {no_i}')
+                #print(f' no_i = {no_i}')
                 for j in range(len(self.mymesh.Elements[elem].Topology)): # para cada j (noh local):
                     no_j = self.mymesh.Elements[elem].Topology[j] # pega noh_j (noh global)
                     valorTemp = self.mymesh.Elements[elem].KGeo[i, j] * SigmaTemp[elem]
-                    print(f' self.Elements.KGeo {self.mymesh.Elements[elem].KGeo}')
-                    print(f' valorTemp \n {valorTemp}')
+                    #print(f' self.Elements.KGeo {self.mymesh.Elements[elem].KGeo}')
+                    #print(f' valorTemp \n {valorTemp}')
                     self.KGlobalTemp[no_i, no_j]  += valorTemp
-        print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
+        #print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
         return self.KGlobalTemp
     ###############################################################################
     def Calc_J(self, invVtemp):
         listTempJ=[]
         for idx in range(self.mymesh.NumberOfElements):
-            print('invVtemp',invVtemp)
+            #print('invVtemp',invVtemp)
             termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
             #print('vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno[0:15, 0:9])
             #print('termo1 \n', termo1.shape)
-            #banana = np.dot(invVtemp, self.vetor_corrente_cond_contorno[:, 0:1])
-            #print('banana \n', banana.shape)
+            
             termo2 = np.dot(self.listJacobian[idx], termo1)
             #print('termo2 \n', termo2.shape)
-            #banana2 = np.dot(self.listJacobian[idx], banana)
-            #print('banana2 \n', banana2.shape)
+            
             termo3 = -np.dot(invVtemp, termo2)
-            #banana3 = -np.dot(invVtemp, banana2)
+            
             #print('termo3 \n', termo3.shape)
             termo3 = termo3[self.mymesh.ElectrodeNodes]
-            #banana3a = banana3[self.mymesh.ElectrodeNodes]
             #print('elemento \n', idx)
             #print('termo3a \n', termo3.shape)
             
@@ -297,7 +294,7 @@ class inverse_problem:
             #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
         self.TempJ = np.concatenate(listTempJ, axis=1)
         #np.savetxt('JacobianoCoarse.txt', self.TempJ, fmt="%.8f")
-        print('self.TempJ \n',self.TempJ)
+        #print('self.TempJ \n',self.TempJ)
         self.JTJ = np.dot(self.TempJ.T, self.TempJ)
         #print('JTJ \n', self.JTJ)
     ###############################################################################
@@ -649,6 +646,7 @@ class inverse_problem:
             #print('sigmaInicial',sigmaInicial)
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
+            #print('Vtemp',Vtemp)
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
@@ -722,14 +720,14 @@ class inverse_problem:
             #print(f'regularization = {regularization.shape}')    
             #print(f'regularizationBarata = {regularizationBarata.shape}')            
             # ***** Cálculo final do termo 2 *****
-            secondTerm = JTW_H ################################ - regularization
+            secondTerm = -JTW_H ################################ - regularization
             #print(f'secondTerm = {secondTerm.shape}')
             
             #secondTermBarata = JTW_Hbarata - regularizationBarata
             #print(f'secondTermBarata = {secondTermBarata.shape}')
             
             # ***** Produto entre termo 1 e termo 2 *****
-            deltaSigma = -np.dot(inv_firstTerm, secondTerm)
+            deltaSigma = np.dot(inv_firstTerm, secondTerm)
             
             #deltaSigmaBarata = np.dot(inv_firstTerm, secondTermBarata)
             #print(f'deltaSigmaBarata = {deltaSigmaBarata.shape}')
@@ -818,9 +816,9 @@ class inverse_problem:
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         
-        #self.plotar_iteracoes(listXplot, listaItrPlot)
-        #self.plotMSH(sigmaInicial, itr, save = True)
-        #self.plot_espectro(sigmaInicial)
+        self.plotar_iteracoes(listXplot, listaItrPlot)
+        self.plotMSH(sigmaInicial, itr, save = True)
+        self.plot_espectro(sigmaInicial)
         
         #import numpy as np
         #import matplotlib.pyplot as plt
