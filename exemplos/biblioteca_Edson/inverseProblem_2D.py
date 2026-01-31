@@ -302,7 +302,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.250, tol=1e-3):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.004, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -331,7 +331,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-        '''    
+            
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -364,7 +364,7 @@ class inverse_problem:
         #plt.show()
         plt.show(block=False)
         plt.pause(0.1)
-        '''  
+          
         return L2
 
     
@@ -615,7 +615,7 @@ class inverse_problem:
         contNorma = 0
         contNeg = 0
         contItr = 0
-        
+        V_measured = V_measured.T
         V_measured = V_measured.reshape(-1, 1)
         #print('V_measured',V_measured.shape)
         
@@ -650,22 +650,25 @@ class inverse_problem:
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
-            #print('V_calc',V_calc.shape)
+            #print('self.vetor_corrente_cond_contorno',self.vetor_corrente_cond_contorno)
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
             #print('V_calc_noh',V_calc_noh.shape)
+            V_calc_noh = V_calc_noh.T
             V_calc_noh = V_calc_noh.reshape(-1, 1)
             #print('V_calc_noh ',V_calc_noh)
             #print('V_measured ',V_measured)
                         # ***** Determinação do resíduo *****
             residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
             #print('residue',residue)
-            
-            #barata = batata - caraca
-            #print('barata',barata.shape)
+            #plt.figure(figsize=(16,8))
+            #plt.plot(V_measured,  'o-', label='Tensão medida')
+            #plt.plot(V_calc_noh, 's--', label='Tensão calculada')
+            #plt.xlim(right=250)
+            #plt.xlim(left=0)
+            #plt.show()
             
             normaResidue = np.linalg.norm(residue)
-            #barataResidue = np.linalg.norm(barata)
-            #print('barataResidue norma',barataResidue)
+            
             
             listaItrPlot.append(normaResidue)
             #residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
@@ -806,7 +809,7 @@ class inverse_problem:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 #self.plotMSH(sigmaInicial, itr, save = True)
                 contItr = 0
-            if itr % 50 == 0:   # salva de 1000 em 1000 ...
+            if itr % 4 == 0:   # salva de 1000 em 1000 ...
                 self.plotMSH(sigmaInicial, itr, save = True)
             #self.plot_espectro(sigmaInicial)
             #self.plotMSH(sigmaInicial, itr, save = True)
