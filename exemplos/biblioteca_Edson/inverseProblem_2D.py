@@ -713,7 +713,7 @@ class inverse_problem:
             
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
-            regTerm = (sigmaInicial - sigmaStar) #* (Lambda**2)
+            regTerm = (sigmaInicial) # - sigmaStar) #* (Lambda**2)
             #print(f'regTerm = {regTerm.shape}')
             regTerm = regTerm.reshape(-1, 1)
             #print(f'regTerm reshape = {regTerm.shape}')
@@ -723,7 +723,7 @@ class inverse_problem:
             #print(f'regularization = {regularization.shape}')    
             #print(f'regularizationBarata = {regularizationBarata.shape}')            
             # ***** Cálculo final do termo 2 *****
-            secondTerm = -JTW_H ################################ - regularization
+            secondTerm = -JTW_H  - regularization
             #print(f'secondTerm = {secondTerm.shape}')
             
             #secondTermBarata = JTW_Hbarata - regularizationBarata
