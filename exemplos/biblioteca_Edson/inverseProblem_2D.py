@@ -302,7 +302,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.004, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.007, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -809,7 +809,7 @@ class inverse_problem:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 #self.plotMSH(sigmaInicial, itr, save = True)
                 contItr = 0
-            if itr % 4 == 0:   # salva de 1000 em 1000 ...
+            if itr % 25 == 0:   # salva de 1000 em 1000 ...
                 self.plotMSH(sigmaInicial, itr, save = True)
             #self.plot_espectro(sigmaInicial)
             #self.plotMSH(sigmaInicial, itr, save = True)
