@@ -35,24 +35,24 @@ class ConfigDashboard(tk.Tk):
         # ====== variáveis ======
         self.nome_arquivo = tk.StringVar(value="teste01")
         self.raio = tk.StringVar(value="0.15")
-        self.n_eletrodos = tk.StringVar(value="32")
+        self.n_eletrodos = tk.StringVar(value="16")
         self.lc1 = tk.StringVar(value="1e-1")
         
         
         self.NrAnomalias = tk.StringVar(value="0") 
-        self.anomalia1_raio = tk.StringVar(value="0.01")
+        self.anomalia1_raio = tk.StringVar(value="0.05")
         self.anomalia1_lados = tk.StringVar(value="16")
         self.anomalia1_rotacao = tk.StringVar(value="22.5")
-        self.x1_ptoCentral = tk.StringVar(value="0.01")
-        self.y1_ptoCentral = tk.StringVar(value="0.01")
+        self.x1_ptoCentral = tk.StringVar(value="0.06")
+        self.y1_ptoCentral = tk.StringVar(value="0.05")
         self.lc2 = tk.StringVar(value="1e-1")
 
-        self.anomalia2_lados = tk.StringVar(value="0")
-        self.anomalia2_raio = tk.StringVar(value="0")
+        self.anomalia2_lados = tk.StringVar(value="5")
+        self.anomalia2_raio = tk.StringVar(value="0.06")
         self.anomalia2_rotacao = tk.StringVar(value="0")
-        self.x2_ptoCentral = tk.StringVar(value="0")
-        self.y2_ptoCentral = tk.StringVar(value="0")
-        self.lc3 = tk.StringVar(value="0")
+        self.x2_ptoCentral = tk.StringVar(value="-0.05")
+        self.y2_ptoCentral = tk.StringVar(value="-0.05")
+        self.lc3 = tk.StringVar(value="1e-1")
 
         self.out_dir = tk.StringVar(value=str(Path.cwd() / "Configs"))
 
@@ -206,8 +206,53 @@ class ConfigDashboard(tk.Tk):
             y_anomalia2 = float(self.y2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.sin((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
             pts_anomalia2.append(gmsh.model.geo.addPoint(x_anomalia2, y_anomalia2, 0.0,  float(self.lc3.get())))
         
+
+
+        linhas_circulo = []
+        for L in range(int(self.n_eletrodos.get())):
+            L_circulo = gmsh.model.geo.addCircleArc(pts_circulo[L], ptoCentral, pts_circulo[(L+1) % int(self.n_eletrodos.get())])
+            linhas_circulo.append(L_circulo)
+
+        for L in range(int(self.anomalia1_lados.get())):
+            L_circulo = gmsh.model.geo.addLine(pts_anomalia[L], pts_anomalia[(L+1) % int(self.anomalia1_lados.get())])
+            linhas_circulo.append(L_circulo)
+
+        for L in range(int(self.anomalia2_lados.get())):
+            L_circulo = gmsh.model.geo.addLine(pts_anomalia2[L], pts_anomalia2[(L+1) % int(self.anomalia2_lados.get())])
+            linhas_circulo.append(L_circulo)
+
+        curva_circulo = gmsh.model.geo.addCurveLoop(linhas_circulo)
+        surface_circulo = gmsh.model.geo.addPlaneSurface([curva_circulo])
+
+        linhas_anomalia1 = []
+        for A in range(int(self.anomalia1_lados.get())):
+            L_anomalia1 = gmsh.model.geo.addLine(pts_anomalia[A], pts_anomalia[(A+1) % int(self.anomalia1_lados.get())])
+            linhas_anomalia1.append(L_anomalia1)
+    
+
+        curva_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+        surface_anomalia1 = gmsh.model.geo.addPlaneSurface([curva_anomalia1])
+        
+        linhas_anomalia2 = []
+        for A in range(int(self.anomalia2_lados.get())):
+            L_anomalia2 = gmsh.model.geo.addLine(pts_anomalia2[A], pts_anomalia2[(A+1) % int(self.anomalia2_lados.get())])
+            linhas_anomalia2.append(L_anomalia2)
+    
+
+        curva_anomalia2 = gmsh.model.geo.addCurveLoop(linhas_anomalia2)
+        surface_anomalia2 = gmsh.model.geo.addPlaneSurface([curva_anomalia2])
+    
+        gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
+        for idx in range(int(self.n_eletrodos.get())):
+            gmsh.model.addPhysicalGroup(0, [pts_circulo[idx]], 10000+idx+1, name=f'electrode_{idx+1}')
+        gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000, name='body')
+        gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001, name='anomalia1')
+        gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002, name='anomalia1')
+
+
+
         gmsh.model.geo.synchronize()
-        #gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_circulo)
+        gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_circulo)
         gmsh.model.mesh.generate(2)
         #gmsh.option.setNumber("Mesh.SaveAll", 0)
         gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
