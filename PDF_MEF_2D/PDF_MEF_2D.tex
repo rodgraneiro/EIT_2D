@@ -13,6 +13,7 @@ sumario=tradicional
 \usepackage{graphicx}
 %\setlength{\mathindent}{0pt} % opcional: cola totalmente à esquerda
 \usepackage{bm}
+\usepackage{xcolor}
 
 
 \graphicspath{{imagens/}}
@@ -123,7 +124,7 @@ sumario=tradicional
     \label{eq:MEF_eq_0002}   
     \end{equation}
 
-    Para isso, precisamos calcular a inversa da matriz $[M]$. O procedimento para a inversão da matriz $[M]$ é apresentado no Apêndice 1, equação \textbf{A1.xxx}. Substituindo a matriz inversa de $[M]$ na equação \ref{eq:MEF_eq_0002}, temos:
+    Para isso, precisamos calcular a inversa da matriz $[M]$. O procedimento para a inversão da matriz $[M]$ é apresentado no Apêndice 1, equação \textcolor{red}{A1.xxx}. Substituindo a matriz inversa de $[M]$ na equação \ref{eq:MEF_eq_0002}, temos:
     
     \begin{equation}
     \begin{Bmatrix}
@@ -145,7 +146,7 @@ sumario=tradicional
     \end{Bmatrix}
     \label{eq:MEF_eq_0003} 
 	\end{equation}
-    onde $A$ é área do elemento dada pela equação \textbf{A1.xxx}, e será positivo se for numerado no sentido anti-horário.
+    onde $A$ é área do elemento dada pela equação \textcolor{red}{A1.xxx}, e será positivo se for numerado no sentido anti-horário.
     
     
     Substituindo a equação \ref{eq:MEF_eq_0003} na equação \ref{eq:MEF_eq_0001}, temos:
@@ -168,39 +169,191 @@ sumario=tradicional
     \end{Bmatrix}}_{= \begin{Bmatrix} a \\b\\c\end{Bmatrix}}
     \end{equation}
     
-    Representado a expressão destaca pelo símbolo da chave pela variável $\alpha$ para facilitar a notação obtém-se
-    \begin{equation}
-    \phi_e(x,y) = \sum_{i=1}^{3} \alpha_i(x,y) \, \phi_{i} \end{equation}
-    As variáveis $\alpha_i$ correspondem as equações de forma dos elementos triangulares, onde:
-    \begin{equation}
-    \alpha_l = \frac{1}{2A} \left[ (x_m y_n - x_n y_m) + (y_m - y_n)x + (x_n - x_m)y \right] \end{equation}
-    \begin{equation}
-    \alpha_m = \frac{1}{2A} \left[ (x_n y_l - x_l y_n) + (y_n - y_l)x + (x_l - x_n)y \right] \end{equation}
-    \begin{equation}
-    \alpha_n = \frac{1}{2A} \left[ (x_l y_m - x_m y_l) + (y_l - y_m)x + (x_m - x_l)y \right] \end{equation}
     
-    A função de forma tem as seguintes propriedades:
+    Para simplificar a notação substituímos os elementos da matriz por:
+    
     \begin{equation*}
-    \alpha_i =
-    \begin{cases}
-    	1, & i = j \\
-    	0, & i \neq j
-    \end{cases},
-    \qquad
-    \sum_{i=1}^{3} \alpha_i(x,y) = 1
+    	\begin{array}{ccc}
+    		\alpha_l = (x_m y_n - x_n y_m) &
+    		\beta_l = (y_m - y_n) &
+    		\gamma_l = (x_n - x_m) \\[6pt]
+    		
+    		\alpha_m  = (x_n y_l - x_l y_n) &
+    		\beta_m = (y_n - y_l) &
+    		\gamma_m = (x_l - x_n) \\[6pt]
+    		
+    		\alpha_n = (x_l y_m - x_m y_l) &
+    		\beta_m = (y_l - y_m) &
+    		\gamma_n = (x_m - x_l)
+    	\end{array}
+    \end{equation*}
+    assim,
+    \begin{equation*}
+   	\phi_e(x,y) =
+   	\begin{bmatrix}
+   		1 & x & y
+   	\end{bmatrix}    	
+  	\frac{1}{2A}
+  	\begin{bmatrix}
+	\alpha_l &\alpha_m & \alpha_n \\
+	\beta_l & \beta_m & \beta_n \\
+	\gamma_l & \gamma_m & \gamma_n
+  	\end{bmatrix}
+	\begin{Bmatrix}
+		\phi_{l} \\
+		\phi_{m} \\
+		\phi_{n}
+	\end{Bmatrix}
     \end{equation*}
     
-    \begin{figure}[htbp]
-    	\centering
-    	\includegraphics[width=0.7\textwidth]{fucoesFormaAlfa.png}
-    	\caption{Funções de forma do elemento triangular.}
-    	\label{fig:fucoesFormaAlfa}
-    \end{figure}
+    \begin{equation*}
+   	\phi_e(x,y) =
+   	\begin{bmatrix}
+   		1 & x & y
+   	\end{bmatrix}    	
+   	\frac{1}{2A}
+   	\begin{bmatrix}
+   		\alpha_l\phi_{l} +\alpha_m\phi_{m} + \alpha_n\phi_{n} \\
+   		\beta_l\phi_{l} + \beta_m\phi_{m} + \beta_n\phi_{n} \\
+   		\gamma_l\phi_{l} + \gamma_m\phi_{m} + \gamma_n\phi_{n}
+   	\end{bmatrix}
+    \end{equation*}
+    \begin{equation*}
+    \begin{aligned}
+   	\phi_e(x,y) =  \frac{1}{2A} \Big[ \,
+   	    &(1)(\alpha_l\phi_{l} +\alpha_m\phi_{m} + \alpha_n\phi_{n}) \\
+   		& + x(\beta_l\phi_{l} + \beta_m\phi_{m} + \beta_n\phi_{n}) \\
+   		& + y(\gamma_l\phi_{l} + \gamma_m\phi_{m} + \gamma_n\phi_{n})\,\Big]
+   	\end{aligned}
+    \end{equation*}
     
-    A figura \ref{fig:fucoesFormaAlfa} apresenta graficamente o comportamentos das funções de forma $\alpha_l, \alpha_m$ e $\alpha_n$ para um elemento finito triangular. 
+	Agrupando os termos $\phi_l$, $\phi_m$ e $\phi_n$, temos:
+	\begin{equation}
+	\begin{aligned}
+		\phi_e(x,y) = \frac{1}{2A} \Big[ \,
+		&\phi_l \left(\alpha_l + x\beta_l + y\gamma_l\right) \\
+		&+ \phi_m \left(\alpha_m + x\beta_m + y\gamma_m\right) \\
+		&+ \phi_n \left(\alpha_n + x\beta_n + y\gamma_n\right)
+		\,\Big]
+	\end{aligned}
+	\label{eq:MEF_eq_0003b}
+	\end{equation}
+
+    Note que podemos substituir convenientemente os termos entre parênteses da equação \ref{eq:MEF_eq_0003b} por:
+    \begin{equation*}
+    	N_i = \frac{1}{2A}[\alpha_i + x\beta_i + y\gamma_i]
+    \end{equation*}
+   assim,
+   \begin{equation*}
+   	N_l = \frac{1}{2A}[\alpha_l + x\beta_l + y\gamma_l]
+   \end{equation*}
+   \begin{equation*}
+   	N_m = \frac{1}{2A}[\alpha_m + x\beta_m + y\gamma_m]
+   \end{equation*}
+   \begin{equation*}
+   	N_n = \frac{1}{2A}[\alpha_n + x\beta_n + y\gamma_n]
+   \end{equation*}
+  Substituindo $N_i$  na equação \ref{eq:MEF_eq_0003b}obtém-se
+   \begin{equation}
+   	\phi_e(x,y) = \sum_{i=1}^{3} N_i(x,y) \, \phi_{i} \label{eq:MEF_eq_0003a}\end{equation}
+   A função de forma tem as seguintes propriedades:
+   \begin{equation*}
+   	N_i =
+   	\begin{cases}
+   		1, & i = j \\
+   		0, & i \neq j
+   	\end{cases},
+   	\qquad
+   	\sum_{i=1}^{3} N_i(x,y) = 1
+   \end{equation*}
+   
+
+    Dessa maneira, a equação \ref{eq:MEF_eq_0003b} fica como:
+   	\begin{equation}
+    \phi_e(x,y) = \frac{1}{2A} \Big[ \,\phi_l N_l + \phi_m N_m + \phi_n N_n \,\Big]
+    \label{eq:MEF_eq_0003ab}
+    \end{equation}
+    ou
+    \begin{equation}
+    	\phi_e(x,y) = \frac{1}{2A} [ \bm{N} ]\{\bm{\phi}\} \label{eq:MEF_eq_0003c}
+    \end{equation}
     
+    Observe que $\bm{[N]}$ sem as simplificações fica como:
+
+   	\begin{equation}
+   	\begin{aligned}
+   		\phi_e(x,y) = \frac{1}{2A} \Big[ \,
+   		&[(x_m y_n - x_n y_m)+(y_m - y_n)+ (x_n - x_m)]\\
+   		& x[(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]\\
+   		& y[(x_l y_m - x_m y_)+ (y_l - y_m)+(x_m - x_l)] \, \Big]_{1\times 3}
+   				\begin{Bmatrix}
+   			\phi_{l} \\
+   			\phi_{m} \\
+   			\phi_{n}
+   		\end{Bmatrix}_{3\times 1}
+   	\end{aligned}
+    \end{equation}
+      A figura \ref{fig:fucoesFormaAlfa} apresenta graficamente o comportamentos das funções de forma $\alpha_l, \alpha_m$ e $\alpha_n$ para um elemento finito triangular.
+   \begin{figure}[htbp]
+   	\centering
+   	\includegraphics[width=0.7\textwidth]{fucoesFormaAlfaN.png}
+   	\caption{Funções de forma do elemento triangular.}
+   	\label{fig:fucoesFormaAlfa}
+   \end{figure} 
     
-    \subsection*{Formulação do Funcional}
+  
+    \subsection*{Gradiente da função do potencial $\phi(x,y)$}
+    Para efetuar o desenvolvimento do funcional que governa o processo de iteração numérica para resolver o problema direto pelo MEF, precisamos determinar o gradiente da função $\phi(x,y)$, assim, seja:
+    
+    \begin{equation*}
+    	\nabla \phi = 
+    	\begin{Bmatrix} 
+    	\frac{\partial\phi}{\partial x} \\
+    	\frac{\partial\phi}{\partial y}
+        \end{Bmatrix} 
+    	\end{equation*}
+    
+    Dessa maneira, vamos determinar o gradiente da função potencial descrita pela equação \ref{eq:MEF_eq_0003ab}, portanto:
+    
+    \begin{equation*}
+    		\frac{\partial\phi(x,y)}{\partial x} = 
+    	 \frac{1}{2A} \Big[ \,	\frac{\partial N_l}{\partial x} 
+    	+ 	\frac{\partial N_m)}{\partial x} +	\frac{\partial N_n}{\partial x} \,\Big]
+    \end{equation*}
+    ou seja:
+    
+%     \begin{equation*}
+%     	\begin{aligned}
+%    	\frac{\partial\phi(x,y)}{\partial x} = \frac{1}{2A} \Big[ \, 
+%    	& 	\frac{\partial [(x_m y_n - x_n y_m)+(y_m - y_n)+ (x_n - x_m)]}{\partial x}\phi_l \\
+%   	&+ 	\frac{\partial [(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]x}{\partial x}\phi_m \\
+%    	&+	\frac{\partial[(x_l y_m - x_m y_)+ (y_l - y_m)+(x_m - x_l)]y}{\partial x}\phi_n \,\Big]
+%       \end{aligned}
+%    \end{equation*}
+%    
+%    \begin{equation*}    	
+%    		\frac{\partial\phi(x,y)}{\partial x} = \frac{1}{2A} \Big[ \,    		 	
+%    	 	\frac{\partial [(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]x}{\partial x}\phi_m
+%    		\,\Big]   	
+%    \end{equation*}
+%    
+%%    \begin{equation}
+%%    	\begin{aligned}
+%%    		\phi_e(x,y) = \frac{1}{2A} \Big[ \,
+%%    		&[(x_m y_n - x_n y_m)+(y_m - y_n)+ (x_n - x_m)]\\
+%%    		& x[(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]\\
+%%    		& y[(x_l y_m - x_m y_)+ (y_l - y_m)+(x_m - x_l)] \, \Big]_{1\times 3}
+%%    		\begin{Bmatrix}
+%%    			\phi_{l} \\
+%%    			\phi_{m} \\
+%%    			\phi_{n}
+%%    		\end{Bmatrix}_{3\times 1}
+%%    	\end{aligned}
+%%    \end{equation}
+    
+    \textcolor{red}{*********** CONTINUAR ***********}
+    
+    \subsection*{Formulação da equação de Laplace}
     
     As Equações de Maxwell descrevem o campo eletromagnético dentro de um objeto:
     
@@ -312,7 +465,7 @@ sumario=tradicional
     +\sigma_{zy}\frac{\partial \phi}{\partial y}
     +\sigma_{zz}\frac{\partial \phi}{\partial z}
     \right) = 0 \end{equation}
-    ---
+    
     obs:
     \begin{equation}
     \sigma_{xx} = \sigma_n \cos^2 \theta + \sigma_t \sin^2 \theta 
@@ -323,36 +476,101 @@ sumario=tradicional
     \sigma_{yx} = \sigma_{xy} = \sigma_n \sin \theta \cos \theta - \sigma_t \sin \theta \cos \theta \end{equation}
     VERIFICAR EIXO Z
     
-	\begin{figure}[htbp]
+
+	\subsection*{Formulação do Funcional}
+	
+	Para determinar o sistema de equações necessárias para utilização do MEF é preciso efetuar  minimização de um funcional que represente a equação diferencial que governa o problema. Os métodos frequentemente mencionados na literatura para encontrar essas equações são: o método variacional e método  dos resíduos ponderados de Galerkin, respectivamente. 
+	
+	
+	
+	Por meio do método variacional, para resolver a equação diferencial de Laplace, utiliza-se a minimização de um funcional baseado na energia do sistema,  que corresponde a solução da equação original, dado por.
+	\begin{equation}\pi = \frac{1}{2}\int_S \varepsilon |E|^2 dS= \frac{1}{2}\int_S \varepsilon |\nabla \phi|^2 dS \label{eq:MEF_eq_0010}\end{equation}
+	
+	Considerando um meio puramente resistivo e desconsiderando os efeitos de capacitância, pode-se reescrever a equação \ref{eq:MEF_eq_0010} em função da condutividadeque assim:
+	\begin{equation}\pi = \frac{1}{2}\int_S \sigma |E|^2 dS= \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS \end{equation}
+	Para um único elemento da malha de elementos finitos o funcional fica como:
+	\begin{equation} \pi_e = \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS \label{eq:MEF_eq_0011}\end{equation}
+	Da equação \ref{eq:MEF_eq_0003a} obtemos que:
+	\begin{equation}
+	\nabla \phi = \sum_{i=1}^{3} \phi_{i} \nabla \alpha_i \label{eq:MEF_eq_0012}\end{equation}
+	
+	Substituindo a equação \ref{eq:MEF_eq_0012} na \ref{eq:MEF_eq_0011} temos:
+	Expandindo o termo quadrático, temos:
+	\begin{equation*}
+	\textstyle
+	\lvert \nabla \phi\rvert^2
+	= \nabla \phi\cdot \nabla \phi
+	= \left(\sum_{i=1}^3 \phi_{i}\,\nabla \alpha_i\right)\cdot
+	\left(\sum_{j=1}^3 \phi_{j}\,\nabla \alpha_j\right)
+	= \sum_{i=1}^3\sum_{j=1}^3
+	\phi_{i}\phi_{j}\,(\nabla \alpha_i\cdot \nabla \alpha_j)\end{equation*}
+	
+	Substituindo e na equação \ref{eq:MEF_eq_0011}:
+	\begin{equation}
+	\pi_e=\tfrac12\int_S \bm{\sigma}
+	\left[\sum_{i=1}^3\sum_{j=1}^3
+	\phi_{i}\phi_{j}\,(\nabla \alpha_i\cdot \nabla \alpha_j)\right] dS\end{equation}
+	ou,
+	\begin{equation}
+	\pi_e = \tfrac{1}{2} \sum_{i=1}^{3} \sum_{j=1}^{3} \bm{\sigma} \phi_{i} 
+	\left[ \int_S \nabla \alpha_i \nabla \alpha_j \, dS \right] \phi_{j} \label{eq:MEF_eq_0013}\end{equation}
+	Nomeando os termos entre colchetes por $Y_{ij}^{(e)}$,temos:
+	\begin{equation*}
+	Y_{ij}^{(e)} = \int_S \nabla \alpha_i \nabla \alpha_j \, dS \end{equation*}
+	podemos reescrever a equação \ref{eq:MEF_eq_0013} na forma matricial,
+	\begin{equation}
+	\pi_e = \tfrac{1}{2} \sigma \{\phi_e\}^T [Y^{(e)}] \{\phi_e\} \end{equation}
+	onde $T$ indica a transposta do vetor ${\phi_e}$ com os potenciais  do elemento triangular.
+	
+	A matriz $[Y^{(e)}]$ apresentada na equação \ref{eq:MEF_eq_0014} é conhecida como \textbf{matriz local dos coeficientes dos elementos} triangulares que pode ser representada como:
+	\begin{equation}
+	[Y^{(e)}] =
+	\begin{bmatrix}
+		Y^{(e)}_{ll} & Y^{(e)}_{lm} & Y^{(e)}_{ln} \\
+		Y^{(e)}_{ml} & Y^{(e)}_{mm} & Y^{(e)}_{mn} \\
+		Y^{(e)}_{nl} & Y^{(e)}_{nm} & Y^{(e)}_{nn}
+	\end{bmatrix} \label{eq:MEF_eq_0014}
+    \end{equation}
+	As equações de cada termo da matriz $[Y^{(e)}]$ são apresentadas a seguir:
+	
+	\begin{equation*}
+	\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big]; }
+	\end{equation*}
+	\begin{equation*}
+	\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]; }
+	\end{equation*}
+	\begin{equation*}
+	\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big]; }
+	\end{equation*}
+	\begin{equation*}
+	\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]; }
+	\end{equation*}
+	\begin{equation*}
+	\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big]; }
+	\end{equation*}
+	\begin{equation*}
+	\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big]. }
+	\end{equation*}
+	Onde $A$ é a área do elemento dada pela equação \textcolor{red}{XXXXX}.
+	Como a matriz $[Y^{(e)}]$ é simétrica temos:  $Y_{ml}^{(e)} = Y_{lm}^{(e)}$ ; $Y_{nl}^{(e)} = Y_{ln}^{(e)}$ ; $Y_{nm}^{(e)} = Y_{mn}^{(e)}$.
+	
+	O desenvolvimento dos cálculos para cada termo da matriz $[Y^{(e)}]$ estão detalhados no Apêndice  \textcolor{red}{XXXXX}.
+	
+		\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=0.2\textwidth]{Burro.png}
 		\caption{Burro.}
 		\label{fig:burro}
 	\end{figure}
-%	Para determinar as equações necessárias ao cálculo dos potencias elétricos $\phi_e (x,y)$ de uma região bidimensional pelo MEF, pode-se considerar o elemento triangular da figura \ref{fig:elemento_triangular}, onde os potenciais elétricos $\phi_{el}$,  $\phi_{em}$ e  $\phi_{en}$, localizados nos nós  $l$,  $m$ e  $n$, são obtidos por meio da equação:
-%	\begin{equation} %\large
-%		\phi \left(x,y\right)\:=\left[1\:\:x\:\:y\right]\begin{Bmatrix}a\\ b\\ c\end{Bmatrix}
-%		\label{eq:pot_eletrico_2D1}
-%	\end{equation}
-%	
-%	
-%	%Os potenciais $\phi_{i_l}\\ \phi_{i_m}$ e  $\phi_{i_n}$ nos nós  $l, m$ e $n$
-%	
-%	
-%	Desta maneira, os coeficientes  $a$,  $b$ e  $c$ podem ser determinados por meio da equação \ref{eq:pot_eletrico_2D3}. Para isso, precisamos calcular a inversa da matriz $[M]$ que pode ser encontrada a partir da equação \ref{eq:inversa_matrizM2D}.
-%	\begin{equation} %\large
-%		\begin{Bmatrix}a\\ b\\ c\end{Bmatrix}  = 
-%		\begin{bmatrix}1&x_l&y_l\\ 1&x_m&y_m\\ 1&x_n&y_n\end{bmatrix}^{-1}
-%		\begin{Bmatrix}\phi_{e_l}\\ \phi_{e_m}\\ \phi_{e_n}\end{Bmatrix}= 
-%		\begin{bmatrix}\textbf{M}\end{bmatrix}^{-1}
-%		\begin{Bmatrix} {\phi}_{e_i} \end{Bmatrix}
-%		\label{eq:pot_eletrico_2D3}
-%	\end{equation}
-%	\begin{equation} %\large
-%		[\textbf{M}]^{-1} = \frac{1}{det(\textbf{M})}Adj(\textbf{M})
-%		\label{eq:inversa_matrizM2D}
-%	\end{equation}
-%	
+	
+%\displaystyle	grande (padrão)
+%\textstyle	médio
+%\scriptstyle	pequeno
+%\scriptscriptstyle	bem pequeno
+
+	
+	
+	
 %	Para calcular a matriz adjunta $Adj[\textbf{M}]$, precisamos transpor a matriz $[\textbf{M}]$, e em seguida, determinar os cofatores da nova matriz $[\textbf{M}]^T$.
 %	\begin{equation*} %\large
 %		[\bm{M}]^{T}  = 
@@ -361,8 +579,8 @@ sumario=tradicional
 %	
 %	Os cofatores de uma matriz \(3\times3\) são calculados por meio da seguinte equação $C_{ij} = (-1)^{i+j} M_{ij}$, onde $M_{ij}$ é um \textit{menor} da matriz $[M]^T$, de um dado elemento  de índices \textit{i} e \textit{j}.
 %	%\vspace{2cm}
-	
-	
+%	
+%	
 %	Cálculo dos \textit{cofatores} ($C_{ij}$) de cada elemento da matriz $[M]^T$.
 %	{\small
 %		\begin{align*}
@@ -449,99 +667,7 @@ sumario=tradicional
 %		\begin{bmatrix} (x_m-x_l)(y_n-y_l)-(x_n-x_l)(y_m-y_l)\end{bmatrix}
 %		\label{eq:area_triangulo}
 %	\end{equation}
-%	
-%	Substituindo as equações \ref{eq:adjunta} e \ref{eq:det_Matriz} na equação \ref{eq:pot_eletrico_2D1}  temos:
-%	\begin{equation} %\large
-%		\phi \left(x,y\right)  = \begin{bmatrix}1&x&y\end{bmatrix} \frac{1}{2A}
-%		\begin{bmatrix}(x_my_n -x_ny_m)&(x_ny_l-x_ly_n)&(x_ly_m-x_my_l)\\ 
-%			(y_m-y_n)&(y_n-y_l)&(y_l-y_m)\\ 
-%			(x_n-x_m)&(x_l-x_n)&(x_m-x_l)\end{bmatrix}
-%		\begin{Bmatrix}\phi_{e_l}\\ \phi_{e_m}\\ \phi_{e_n}\end{Bmatrix} \\
-%		\label{eq:pot_eletrico_2D4}
-%	\end{equation}
-%	ou,
-%	\begin{equation} %\large
-%		\phi_e =  \sum_{i=1}^{3} \alpha_i(x,y)\phi_{e_i}  
-%		\label{eq:pot_eletrico_2D5}
-%	\end{equation}
-%	onde \textit{A} é área do elemento dada pela equação \ref{eq:area_triangulo}, e será positivo se for numerado no sentido anti-horário, e $\alpha_i$ correspondem as equações de forma dos elementos triangulares.
-%	\begin{equation} %\large
-%		\alpha_l  = \frac{1}{2A}
-%		\begin{bmatrix}(x_my_n -x_ny_m)+(y_m-y_n)x+(x_n-x_m)y
-%		\end{bmatrix}
-%		\label{eq:alpha_l}
-%	\end{equation}
-%	\begin{equation}
-%		\alpha_m  = \frac{1}{2A}
-%		\begin{bmatrix} 
-%			(x_ny_l-x_ly_n)+(y_n-y_l)x+(x_l-x_n)y\\ 
-%		\end{bmatrix}
-%		\label{eq:alpha_m}
-%	\end{equation}
-%	\begin{equation} %\large
-%		\alpha_n  = \frac{1}{2A}
-%		\begin{bmatrix}
-%			(x_ly_m-x_my_l)+(y_l-y_m)x+(x_m-x_l)y\end{bmatrix}
-%		\label{eq:alpha_n}
-%	\end{equation}
-%	
-%	A função de forma tem as seguintes propriedades:
-%	
-%	\begin{equation}
-%		\alpha _i=\begin{cases}1,&i=j\\ 0,&i\ne j\end{cases} \quad, \quad
-%		\sum_{i=1}^{3} \alpha_i(x,y)=1
-%	\end{equation}
-%	
-%	Sabe-se que a energia por unidade de longitude associada ao elemento '\textit{e}' é dada pela equação \ref{eq:variacionalLaplace}, que representa o funcional referente a equação de Laplace $\nabla^2\phi=0$.
-%	\begin{equation} %\large
-%		\pi_i = \frac{1}{2} 
-%		\iint_S \sigma |E|^2 dS = \frac{1}{2}\iint_S \sigma |\nabla\phi_i|^2 dS
-%		\label{eq:variacionalLaplace}
-%	\end{equation}
-%	
-%	Podemos calcular o gradiente do potencial no elemento por meio da equação \ref{eq:pot_eletrico_2D5},
-%	\begin{equation} %\large
-%		\nabla\phi_e = \sum_{i=1}^{3} \phi_{e_i}\nabla\alpha_i 
-%		\label{eq:nabla_pot_ele}
-%	\end{equation}
-%	
-%	Substituindo a equação \ref{eq:nabla_pot_ele} na \ref{eq:variacionalLaplace} temos:
-%	\begin{equation} %\large
-%		\pi_e = \frac{1}{2}
-%		\sum_{i=1}^{3} \sum_{j=1}^{3}\sigma\phi_{e_i} \left[\iint_S \nabla\alpha_i \nabla\alpha_j dS\right] \phi_{e_j}\\
-%		% [\iint_S \sigma |E|^2 dS]% = \frac{1}{2}\iint_S \sigma |\nabla\phi_i|^2 dS
-%		\label{eq:variacionalLaplace2}
-%	\end{equation}
-%	onde  $\sigma$ é a condutividade elétrica da região.
-%	
-%	Por conveniência, substituindo os termos entre colchetes por,
-%	{\large
-%		\begin{equation}
-%			Y_{ij}^{(e)} = \iint_{S} \nabla \alpha_i \cdot \nabla \alpha_j \, dS
-%			\label{eq:termo_Yij}
-%		\end{equation}
-%	}
-%	
-%	podemos reescrever a equação \ref{eq:variacionalLaplace2} na forma matricial,
-%	\begin{equation} %\large
-%		\pi_e = \frac{1}{2} \sigma
-%		|\phi_e|^T| Y^{(e)}| |\phi_e|
-%		\label{eq:variacionalLaplace3}
-%	\end{equation}
-%	onde \textit{T} indica matriz transposta de $[\phi_e]$, vetor com os potenciais em cada vértice do elemento triangular.
-%	\begin{equation} %\large
-%		[\phi_e] = 
-%		\begin{Bmatrix} \phi_{e_l}\\\phi_{e_m}\\\phi_{e_n}\end{Bmatrix}
-%		\label{eq:potencial}
-%	\end{equation}
-%	
-%	A matriz $[Y^{(e)}]$ apresentada na equação \ref{eq:matriz_Ye}, é conhecida como \textit{matriz local dos coeficientes dos elementos}, também é conhecida como \textit{matriz de rigidez}, uma vez que a origem do MEF provém da área de conhecimento de análises estruturais.
-%	\begin{equation} 
-%		[Y^{(e)}]  = 
-%		\begin{bmatrix}Y_{ll}^{(e)}&Y_{lm}^{(e)}&Y_{ln}^{(e)}\\
-%			Y_{ml}^{(e)}&Y_{mm}^{(e)}&Y_{mn}^{(e)}\\ 
-%			Y_{nl}^{(e)}&Y_{nm}^{(e)}&Y_{nn}^{(e)}\end{bmatrix}
-%		\label{eq:matriz_Ye}
-%	\end{equation}
+	
+	
 	
 \end{document}
