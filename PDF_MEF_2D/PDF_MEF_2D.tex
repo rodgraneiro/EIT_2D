@@ -486,13 +486,13 @@ sumario=tradicional
 	Por meio do método variacional, para resolver a equação diferencial de Laplace, utiliza-se a minimização de um funcional baseado na energia do sistema,  que corresponde a solução da equação original, dado por.
 	\begin{equation}\pi = \frac{1}{2}\int_S \varepsilon |E|^2 dS= \frac{1}{2}\int_S \varepsilon |\nabla \phi|^2 dS \label{eq:MEF_eq_0010}\end{equation}
 	
-	Considerando um meio puramente resistivo e desconsiderando os efeitos de capacitância, pode-se reescrever a equação \ref{eq:MEF_eq_0010} em função da condutividadeque assim:
+	Considerando um meio puramente resistivo e desconsiderando os efeitos de capacitância, pode-se reescrever a equação \ref{eq:MEF_eq_0010} em função da condutividade, que assim:
 	\begin{equation}\pi = \frac{1}{2}\int_S \sigma |E|^2 dS= \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS \end{equation}
 	Para um único elemento da malha de elementos finitos o funcional fica como:
 	\begin{equation} \pi_e = \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS \label{eq:MEF_eq_0011}\end{equation}
 	Da equação \ref{eq:MEF_eq_0003a} obtemos que:
 	\begin{equation}
-	\nabla \phi = \sum_{i=1}^{3} \phi_{i} \nabla \alpha_i \label{eq:MEF_eq_0012}\end{equation}
+	\nabla \phi = \sum_{i=1}^{3} \phi_{i} \nabla N_i \label{eq:MEF_eq_0012}\end{equation}
 	
 	Substituindo a equação \ref{eq:MEF_eq_0012} na \ref{eq:MEF_eq_0011} temos:
 	Expandindo o termo quadrático, temos:
@@ -500,29 +500,35 @@ sumario=tradicional
 	\textstyle
 	\lvert \nabla \phi\rvert^2
 	= \nabla \phi\cdot \nabla \phi
-	= \left(\sum_{i=1}^3 \phi_{i}\,\nabla \alpha_i\right)\cdot
-	\left(\sum_{j=1}^3 \phi_{j}\,\nabla \alpha_j\right)
+	= \left(\sum_{i=1}^3 \phi_{i}\,\nabla N_i\right)\cdot
+	\left(\sum_{j=1}^3 \phi_{j}\,\nabla N_j\right)
 	= \sum_{i=1}^3\sum_{j=1}^3
-	\phi_{i}\phi_{j}\,(\nabla \alpha_i\cdot \nabla \alpha_j)\end{equation*}
+	\phi_{i}\phi_{j}\,(\nabla N_i\cdot \nabla N_j)\end{equation*}
 	
 	Substituindo e na equação \ref{eq:MEF_eq_0011}:
 	\begin{equation}
 	\pi_e=\tfrac12\int_S \bm{\sigma}
 	\left[\sum_{i=1}^3\sum_{j=1}^3
-	\phi_{i}\phi_{j}\,(\nabla \alpha_i\cdot \nabla \alpha_j)\right] dS\end{equation}
+	\phi_{i}\phi_{j}\,(\nabla N_i\cdot \nabla N_j)\right] dS\end{equation}
 	ou,
 	\begin{equation}
-	\pi_e = \tfrac{1}{2} \sum_{i=1}^{3} \sum_{j=1}^{3} \bm{\sigma} \phi_{i} 
-	\left[ \int_S \nabla \alpha_i \nabla \alpha_j \, dS \right] \phi_{j} \label{eq:MEF_eq_0013}\end{equation}
+	\pi_e = \tfrac{1}{2} \sum_{i=1}^{3} \sum_{j=1}^{3}
+	 \begin{bmatrix}
+		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
+		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
+		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+	\end{bmatrix}	
+	  \phi_{i} 
+	\left[ \int_S \nabla N_i \nabla N_j \, dS \right] \phi_{j} \label{eq:MEF_eq_0013}\end{equation}
 	Nomeando os termos entre colchetes por $Y_{ij}^{(e)}$,temos:
-	\begin{equation*}
-	Y_{ij}^{(e)} = \int_S \nabla \alpha_i \nabla \alpha_j \, dS \end{equation*}
+	\begin{equation}
+	Y_{ij}^{(e)} = \int_S \nabla N_i \nabla N_j \, dS \label{eq:MEF_eq_0013a} \end{equation}
 	podemos reescrever a equação \ref{eq:MEF_eq_0013} na forma matricial,
 	\begin{equation}
-	\pi_e = \tfrac{1}{2} \sigma \{\phi_e\}^T [Y^{(e)}] \{\phi_e\} \end{equation}
-	onde $T$ indica a transposta do vetor ${\phi_e}$ com os potenciais  do elemento triangular.
+	\pi_e = \tfrac{1}{2} [\bm{\sigma}] \{\phi_e\}^T [Y^{(e)}] \{\phi_e\} \label{eq:MEF_eq_0015} \end{equation}
+	onde $T$ indica a transposta do vetor ${\phi_e}$ com os potenciais  do elemento triangular e [$\bm{\sigma}$] é o tensor de condutividade anisotrópica.
 	
-	A matriz $[Y^{(e)}]$ apresentada na equação \ref{eq:MEF_eq_0014} é conhecida como \textbf{matriz local dos coeficientes dos elementos} triangulares que pode ser representada como:
+	A matriz $[Y^{(e)}]$ apresentada na equação \ref{eq:MEF_eq_0014} é como \textbf{matriz local dos coeficientes dos elementos} triangulares que pode ser representada como:
 	\begin{equation}
 	[Y^{(e)}] =
 	\begin{bmatrix}
@@ -553,15 +559,168 @@ sumario=tradicional
 	\end{equation*}
 	Onde $A$ é a área do elemento dada pela equação \textcolor{red}{XXXXX}.
 	Como a matriz $[Y^{(e)}]$ é simétrica temos:  $Y_{ml}^{(e)} = Y_{lm}^{(e)}$ ; $Y_{nl}^{(e)} = Y_{ln}^{(e)}$ ; $Y_{nm}^{(e)} = Y_{mn}^{(e)}$.
+	O desenvolvimento dos cálculos para cada termo da matriz $[Y^{(e)}]$ estão detalhados no Apêndice \ref{ap:MEF_ap_B}.
 	
-	O desenvolvimento dos cálculos para cada termo da matriz $[Y^{(e)}]$ estão detalhados no Apêndice  \textcolor{red}{XXXXX}.
+	Retomando a equação \ref{eq:MEF_eq_0015}, temos
 	
-		\begin{figure}[htbp]
-		\centering
-		\includegraphics[width=0.2\textwidth]{Burro.png}
-		\caption{Burro.}
-		\label{fig:burro}
-	\end{figure}
+		\begin{equation*}
+		\pi_e = \tfrac{1}{2}
+		\begin{bmatrix}
+			\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
+			\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
+			\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+		\end{bmatrix}
+		 \begin{Bmatrix}
+		 	\phi_{l} \\
+		 	\phi_{m} \\
+		 	\phi_{n}
+		 \end{Bmatrix}^T 	
+		 \begin{bmatrix}
+		 Y^{(e)}_{ll} & Y^{(e)}_{lm} & Y^{(e)}_{ln} \\
+		 Y^{(e)}_{ml} & Y^{(e)}_{mm} & Y^{(e)}_{mn} \\
+		 Y^{(e)}_{nl} & Y^{(e)}_{nm} & Y^{(e)}_{nn}
+		 \end{bmatrix}
+		 \begin{Bmatrix}
+		 \phi_{l} \\
+		 \phi_{m} \\
+		 \phi_{n}
+		 \end{Bmatrix}  \end{equation*}
+	
+\begin{equation*}
+	\pi_e = \tfrac{1}{2}
+	\begin{bmatrix}
+		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
+		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
+		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+	\end{bmatrix}
+	\begin{Bmatrix}
+		\phi_{l} &
+		\phi_{m} &
+		\phi_{n}
+	\end{Bmatrix} 	
+	\begin{bmatrix}
+		Y^{(e)}_{ll}\phi_{l} + Y^{(e)}_{lm}\phi_{m} + Y^{(e)}_{ln}\phi_{n} \\
+		Y^{(e)}_{ml}\phi_{l} + Y^{(e)}_{mm}\phi_{m} + Y^{(e)}_{mn}\phi_{m} \\
+		Y^{(e)}_{nl}\phi_{l} + Y^{(e)}_{nm}\phi_{m} + Y^{(e)}_{nn}\phi_{n}
+	\end{bmatrix}  \end{equation*}	
+\begin{equation*}
+	\pi_e = \tfrac{1}{2}
+	\begin{bmatrix}
+		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
+		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
+		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\phi_{l}(Y^{(e)}_{ll}\phi_{l} + Y^{(e)}_{lm}\phi_{m} + Y^{(e)}_{ln}\phi_{n}) \\
+		\phi_{m}(Y^{(e)}_{ml}\phi_{l} + Y^{(e)}_{mm}\phi_{m} + Y^{(e)}_{mn}\phi_{m}) \\
+		\phi_{n}(Y^{(e)}_{nl}\phi_{l} + Y^{(e)}_{nm}\phi_{m} + Y^{(e)}_{nn}\phi_{n})
+\end{bmatrix}  \end{equation*}
+
+
+\begin{equation*}
+	\pi_e = \tfrac{1}{2}
+	\begin{bmatrix}
+		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
+		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
+		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+	\end{bmatrix}
+	\begin{bmatrix}
+		(Y^{(e)}_{ll}\phi_{l}^2 + Y^{(e)}_{lm}\phi_{l}\phi_{m} + Y^{(e)}_{ln}\phi_{l}\phi_{n}) \\
+		(Y^{(e)}_{ml}\phi_{l}\phi_{m} + Y^{(e)}_{mm}\phi_{m}^2 + Y^{(e)}_{mn\phi_{m}}\phi_{m}\phi_{m}) \\
+		(Y^{(e)}_{nl}\phi_{l}\phi_{n} + Y^{(e)}_{nm}\phi_{m} + Y^{(e)}_{nn}\phi_{n})^2
+\end{bmatrix}  \end{equation*}
+
+Como todos so termos da matriz $[Y^{(e)}]]$ são multiplicados por $(\frac{1}{4A})$ podemos tirá-lo da matriz e substituindo os termos da  matriz $[\{\phi_e\}^T [Y^{(e)}] \{\phi_e\}]$por $\xi_i$, temos:
+\begin{equation*}
+	\pi_e = \tfrac{1}{2}\tfrac{1}{4}
+	\begin{bmatrix}
+		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
+		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
+		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\xi_l \\
+		\xi_m \\
+		\xi_n
+\end{bmatrix}  \end{equation*}
+
+\begin{equation*}
+	\pi_e = \tfrac{1}{8}
+	\begin{Bmatrix}
+		\sigma_{xx}\xi_l + \sigma_{xy}\xi_m + \sigma_{xz}\xi_n\\
+		\sigma_{yx}\xi_l + \sigma_{yy}\xi_l + \sigma_{yz}\xi_l\\
+		\sigma_{zx}\xi_l + \sigma_{zy}\xi_l + \sigma_{zz}\xi_l
+	\end{Bmatrix} = \tfrac{1}{8} \{\Pi\}
+  \end{equation*}
+  
+dessa maneira, expandindo o primeiro termo do vetor $\{\Pi\}$, temos
+
+
+\begin{equation*}
+\begin{aligned}
+&\{\Pi\}_l = \sigma_{xx}[Y^*_{ll}\phi_{l}^2 + Y^*_{lm}\phi_{l}\phi_{m} + Y^*_{ln}\phi_{l}\phi_{n}]  \\
+& +\sigma_{xy}[Y^*_{ml}\phi_{l}\phi_{m} + Y^*_{mm}\phi_{m}^2 + Y^*_{mn\phi_{m}}\phi_{m}\phi_{m}]  \\
+& + \sigma_{yy}[Y^*_{nl}\phi_{l}\phi_{n} + Y^*_{nm}\phi_{m} + Y^*_{nn}\phi_{n}^2 ] \\
+\end{aligned}
+\end{equation*}
+
+\begin{equation*}
+	\begin{aligned}
+		&\{\Pi\}_l = \sigma_{xx}\{ [\beta_l^2 + \gamma_l^2]\phi_{l}^2 + Y^*_{lm}\phi_{l}\phi_{m} + Y^*_{ln}\phi_{l}\phi_{n} \} \\
+		& +\sigma_{xy}[Y^*_{ml}\phi_{l}\phi_{m} + Y^*_{mm}\phi_{m}^2 + Y^*_{mn\phi_{m}}\phi_{m}\phi_{m}]  \\
+		& + \sigma_{yy}[Y^*_{nl}\phi_{l}\phi_{n} + Y^*_{nm}\phi_{m} + Y^*_{nn}\phi_{n}^2 ] \\
+	\end{aligned}
+\end{equation*}
+
+
+
+
+%\begin{equation*}
+%	\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big]; }
+%\end{equation*}
+%\begin{equation*}
+%	\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]; }
+%\end{equation*}
+%\begin{equation*}
+%	\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big]; }
+%\end{equation*}
+%\begin{equation*}
+%	\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]; }
+%\end{equation*}
+%\begin{equation*}
+%	\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big]; }
+%\end{equation*}
+%\begin{equation*}
+%	\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big]. }
+%\end{equation*}
+
+
+
+%	\begin{equation*}
+%	\begin{array}{ccc}
+%		\alpha_l = (x_m y_n - x_n y_m) &
+%		\beta_l = (y_m - y_n) &
+%		\gamma_l = (x_n - x_m) \\[6pt]
+%		
+%		\alpha_m  = (x_n y_l - x_l y_n) &
+%		\beta_m = (y_n - y_l) &
+%		\gamma_m = (x_l - x_n) \\[6pt]
+%		
+%		\alpha_n = (x_l y_m - x_m y_l) &
+%		\beta_m = (y_l - y_m) &
+%		\gamma_n = (x_m - x_l)
+%	\end{array}
+%\end{equation*}
+
+	
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.2\textwidth]{Burro.png}
+\caption{Burro.}
+\label{fig:burro}
+\end{figure}
+
+
 	
 %\displaystyle	grande (padrão)
 %\textstyle	médio
@@ -667,6 +826,56 @@ sumario=tradicional
 %		\begin{bmatrix} (x_m-x_l)(y_n-y_l)-(x_n-x_l)(y_m-y_l)\end{bmatrix}
 %		\label{eq:area_triangulo}
 %	\end{equation}
+	
+		\apendices
+	\chapter{da termo da matriz}
+
+	\chapter{Cálculo de cada termo da matriz}\label{ap:MEF_ap_B}
+	\begin{equation*}
+		N_l = \frac{1}{2A}[\alpha_l + x\beta_l + y\gamma_l]
+	\end{equation*}
+	\begin{equation*}
+		N_m = \frac{1}{2A}[\alpha_m + x\beta_m + y\gamma_m]
+	\end{equation*}
+	\begin{equation*}
+		N_n = \frac{1}{2A}[\alpha_n + x\beta_n + y\gamma_n]
+	\end{equation*}
+	
+	\begin{equation*}
+		\begin{array}{ccc}
+			\alpha_l = (x_m y_n - x_n y_m) &
+			\beta_l = (y_m - y_n) &
+			\gamma_l = (x_n - x_m) \\[6pt]
+			
+			\alpha_m  = (x_n y_l - x_l y_n) &
+			\beta_m = (y_n - y_l) &
+			\gamma_m = (x_l - x_n) \\[6pt]
+			
+			\alpha_n = (x_l y_m - x_m y_l) &
+			\beta_m = (y_l - y_m) &
+			\gamma_n = (x_m - x_l)
+		\end{array}
+	\end{equation*}
+	
+	
+	\section{Cálculo de $Y_{lm}^{(e)}$}
+	Os coeficientes da matriz $[Y^{(e)}]$ podem ser obtidos pela equação \ref{eq:MEF_eq_0013a}, por exemplo:
+	\begin{equation} 
+	\boxed{Y_{lm}^{(e)} = \int \nabla N_l \nabla N_m dS}
+\end{equation}
+	Para calcular o gradiente de $N_i$, precisamos determinar as derivadas parciais da função em relação a ’x’ e ’y’, então:
+	\begin{equation*}
+	N_l(x,y) = \frac{1}{2A}\Big[ (x_m y_n - x_n y_m) + (y_m - y_n)x + (x_n - x_m)y \Big]
+\end{equation*}
+\begin{equation*}
+	\frac{\partial N_l}{\partial x} = \frac{1}{2A}\frac{\partial}{\partial x}\Big[ (x_m y_n - x_n y_m) + (y_m - y_n)x + (x_n - x_m)y \Big]
+\end{equation*}
+	\begin{equation}
+	\boxed{\frac{\partial N_l}{\partial x} = \frac{1}{2A}(y_m - y_n)}
+\end{equation}
+	analogamente,
+	
+	
 	
 	
 	
