@@ -12,6 +12,9 @@ class MyElement:
     Coordinates = None
     Altura2D = None
     Altura1D = None
+    thetaAngle = None
+    sigmaX = None
+    sigmaY = None
 
     def __init__(self):
         self.Centroid = None
@@ -299,9 +302,13 @@ class LinearTriangleAnisotropic(MyElement):
         G_l = (x[2]-x[1])
         G_m = (x[0]-x[2])
         G_n = (x[1]-x[0])
-        Sxx = 1.0
-        Sxy = 0.0
-        Syy = 1.0
+        Sx = self.sigmaX
+        Sy = self.sigmaY
+        atheta_deg = self.thetaAngle
+        atheta = np.deg2rad(atheta_deg)
+        Sxx = Sx*np.cos(atheta)**2 + Sy*np.sin(atheta)**2 
+        Sxy = Sx*np.sin(atheta)*np.cos(atheta) - Sy*np.sin(atheta)*np.cos(atheta)
+        Syy = Sx*np.sin(atheta)**2 + Sy*np.cos(atheta)**2
         C_11 = Sxx*B_l**2 + 2*B_l*G_l*Sxy + Syy*G_l**2
         C_12 = B_l*(Sxx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Syy*G_m)        #C_21 = C_12
         C_13 = B_l*(Sxx*B_n + Sxy*G_n) + G_l*(Sxy*B_n + Syy*G_n)        #C_31 = C_13
