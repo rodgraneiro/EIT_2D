@@ -151,7 +151,7 @@ class PointElectrodes2DMeshEdson(MyMesh):
         if self.MshFileName == "":
             raise Exception("PointElectrodes2DMeshEdson(): MshFileName not defined.")
 
-         (f"Reading {self.MshFileName}.")
+        (f"Reading {self.MshFileName}.")
         self.__mshdata = meshio.read(self.MshFileName)
 
         # Check msh dimension
