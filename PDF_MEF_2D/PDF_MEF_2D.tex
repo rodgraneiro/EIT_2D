@@ -257,6 +257,123 @@ sumario=tradicional
      \begin{equation*}
     	N = \frac{1}{2A}[N_l + N_m  + N_n]
     \end{equation*}
+    
+    \subsubsection*{Função gradiente.}
+    
+    
+    O vetor gradiente do potencial elétrico $E=\nabla\phi$ é dado por:
+    
+    \begin{equation} %\large
+    	\{\nabla\phi\} = 
+    	\begin{Bmatrix} \frac{\partial \phi}{\partial x}\\\frac{\partial \phi}{\partial y}\end{Bmatrix}
+    	\label{eq:gradiente_phi}
+    \end{equation}
+    
+    Como a função  $\phi(x,y)$ é descrita com a equação \ref{eq:MEF_eq_0004}
+    %\begin{fleqn} \small
+   	\begin{equation*} %\large
+   		\phi(x,y) = \frac{1}{2A} (N_l\phi_l +N_m\phi_m +N_n\phi_n)
+   	\end{equation*}
+    %\end{fleqn}
+    então:
+    
+    \begin{equation}
+    	\frac{\partial \phi(x,y)}{\partial x} = \frac{1}{2A}
+    	\left ( \frac{\partial N_l}{\partial x}\phi_l +
+    	\frac{\partial N_m}{\partial x}\phi_m +
+    	\frac{\partial N_n}{\partial x}\phi_n \right )
+    	\label{eq:parcial_x}
+    \end{equation}
+    
+    e
+    
+    \begin{equation}
+    	\frac{\partial \phi(x,y)}{\partial y} = \frac{1}{2A}
+    	\left ( \frac{\partial N_l}{\partial y}\phi_l +
+    	\frac{\partial N_m}{\partial y}\phi_m +
+    	\frac{\partial N_n}{\partial y}\phi_n \right )
+    	\label{eq:parcial_y}
+    \end{equation}
+     Podemos representar  $\nabla\phi$ na forma matricial como:
+     
+\begin{equation}
+	\begin{Bmatrix} \frac{\partial \phi}{\partial x}\\\frac{\partial \phi}{\partial y}\end{Bmatrix} =
+	\frac{1}{2A} 
+	\begin{bmatrix} \frac{\partial N_l}{\partial x}& \frac{\partial N_m}{\partial x}& \frac{\partial N_n}{\partial x}\\ 
+		\frac{\partial N_l}{\partial y}& \frac{\partial N_m}{\partial y}& \frac{\partial N_n}{\partial y} \end{bmatrix}
+	\begin{Bmatrix} \phi_l\\ \phi_m\\ \phi_n\end{Bmatrix}
+	\label{eq:parcial_total}
+\end{equation}
+     
+    
+    Podemos notar ba \ref{eq:parcial_total} que os termos de que dependem $x$ e  $y$ são equivalentes  aos $\beta 's$ e $\gamma 's$, assim, a equação \ref{eq:parcial_total} pode ser reescrita como:
+    
+    \begin{equation}
+    	\begin{Bmatrix} \frac{\partial \phi}{\partial x}\\\frac{\partial \phi}{\partial y}\end{Bmatrix} =
+    	\frac{1}{2A} 
+    	\begin{bmatrix} \beta_l & \beta_m& \beta_n\\ 
+    		\gamma_l& \gamma_m& \gamma_n \end{bmatrix}
+    	\begin{Bmatrix} \phi_l\\ \phi_m\\ \phi_n\end{Bmatrix}
+    	\label{eq:parcial_total2}
+    \end{equation}
+    
+    Convenientemente,  podemos expressar a equação \ref*{eq:parcial_total2} na forma compacta, 
+    
+    \begin{equation}
+    	\{ \bm{\nabla\phi} \} = [ \bm{B} ] \{ \bm{\phi} \}
+    	\label{eq:parcial_compacta}
+    \end{equation}
+    
+    Das A equação da lei de Ohm na forma diferencial, sabemos ques:
+    
+    \begin{equation}
+    	J_x = \sigma_{xx} \frac{\partial \phi}{\partial x}
+    	\label{eq:c_calor_x}
+    \end{equation}
+    e
+    \begin{equation}
+    	J_y = \sigma_{yy} \frac{\partial \phi}{\partial y}
+    	\label{eq:c_calor_y}
+    \end{equation}
+    
+    Definindo a matriz 
+
+    \begin{equation}
+    	[D] =
+    	\begin{bmatrix} \sigma_{xx} & \sigma_{xy}\\ 
+    		\sigma_{yx}& \sigma_{yy} \end{bmatrix}
+    	\label{eq:matriz_D}
+    \end{equation}
+    
+    temos:
+    
+    \begin{equation}
+    	\begin{Bmatrix}J_x\\J_y\end{Bmatrix} = [D] \{ \nabla\phi \} =
+    	[D][B] \{ \phi \}
+    	\label{eq:matriz_D2}
+    \end{equation}
+    
+    O funcional que governa o problema eletrostático pode ser dado por:
+    
+    \begin{equation}
+    	\pi = \frac{1}{2}\int_V 
+    	\begin{bmatrix}\sigma_{xx} (\frac{\partial \phi}{\partial x})^2 +
+    	\sigma_{yy} (\frac{\partial \phi}{\partial y})^2 \end{bmatrix}dV -
+    	\int_{S_2} J^*\nabla\phi dS
+    	\label{eq:funcional2}
+    \end{equation}
+    
+    
+    
+    Usando as equações \ref{eq:MEF_eq_0005},\ref{eq:gradiente_phi} e \ref{eq:matriz_D}, obtemos:
+    
+    
+    \begin{equation}
+    	\pi = \frac{1}{2}\int_V \{ \nabla\phi \}^T[D]\{ \nabla\phi \}dV - 
+    	\int_{S_2} J^*[N] \{ \phi \} dS
+    	\label{eq:funcional3}
+    \end{equation}
+    
     \begin{equation*}
     \vdots
     \end{equation*}
