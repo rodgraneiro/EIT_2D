@@ -296,6 +296,7 @@ class LinearTriangleAnisotropic(MyElement):
 
         triangulo = np.array([ [1, x[0],  y[0]], [1, x[1],  y[1]], [1, x[2],  y[2]]], dtype=np.float64)
         area_triangulo = abs((np.linalg.det(triangulo))/2)
+        print('area_triangulo',area_triangulo)
         B_l = (y[1]-y[2])
         B_m = (y[2]-y[0])
         B_n = (y[0]-y[1])
@@ -306,22 +307,29 @@ class LinearTriangleAnisotropic(MyElement):
         Sy = self.sigmaY
         atheta_deg = self.thetaAngle
         atheta = np.deg2rad(atheta_deg)
-        Sxx = Sx*np.cos(atheta)**2 + Sy*np.sin(atheta)**2 
+        #Sxx = Sx*np.cos(atheta)**2 + Sy*np.sin(atheta)**2
+        Sxx = Sx*(np.cos(atheta))*(np.cos(atheta)) + Sy*(np.sin(atheta))*(np.sin(atheta)) 
         Sxy = Sx*np.sin(atheta)*np.cos(atheta) - Sy*np.sin(atheta)*np.cos(atheta)
-        Syy = Sx*np.sin(atheta)**2 + Sy*np.cos(atheta)**2
-        #print(Sxx,Sxy,Syy)
+        #Syy = Sx*np.sin(atheta)**2 + Sy*np.cos(atheta)**2
+        Syy = Sx*(np.sin(atheta))*(np.sin(atheta))  + Sy*(np.cos(atheta))*(np.cos(atheta))
+        print(Sxx,Sxy,Syy)
         C_11 = Sxx*B_l**2 + 2*B_l*G_l*Sxy + Syy*G_l**2
         C_12 = B_l*(Sxx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Syy*G_m)        #C_21 = C_12
         C_13 = B_l*(Sxx*B_n + Sxy*G_n) + G_l*(Sxy*B_n + Syy*G_n)        #C_31 = C_13
         C_22 = Sxx*B_m**2 + 2*B_m*G_m*Sxy + Syy*G_m**2
         C_23 = B_m*(Sxx*B_n + Sxy*G_n) + G_m*(Sxy*B_n + Syy*G_n)        #C_32 = C_23
         C_33 = Sxx*B_n**2 + 2*B_n*G_n*Sxy + Syy*G_n**2
-
-
         
+        print(C_11,C_12,C_13,C_22,C_23,C_33)
+
+        '''
         self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[C_11, C_12, C_13], 
                                         [C_12, C_22, C_23],      
                                         [C_13, C_23, C_33]       
                                         ])
-
+        '''
+        self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[C_11, C_12, C_13], 
+                                [C_12, C_22, C_23],      
+                                [C_13, C_23, C_33]       
+                                ])
         print('KGeo1', self.KGeo)
