@@ -134,7 +134,7 @@ class forward_problem:
         self.Yinversa = np.linalg.inv(self.KGlobal)
 
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
-        #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
+        print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
         #print(f' Tensões nos eletrodos \n {self.Vmedido_eletrodos})')
