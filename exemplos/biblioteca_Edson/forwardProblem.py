@@ -130,7 +130,7 @@ class forward_problem:
             self.mymesh.CalcKGlobal()
         
         self.apply_boundary_conditions()
-
+        print('solve self.KGlobal \n',self.KGlobal)
         self.Yinversa = np.linalg.inv(self.KGlobal)
 
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
