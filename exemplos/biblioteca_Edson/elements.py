@@ -332,4 +332,4 @@ class LinearTriangleAnisotropic(MyElement):
         #                        [C_12, C_22, C_23],      
         #                        [C_13, C_23, C_33]       
         #                        ])
-        #print('KGeo1', self.KGeo)
+        print('KGeo1', self.KGeo)
