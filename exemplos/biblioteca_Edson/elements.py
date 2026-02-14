@@ -152,8 +152,13 @@ class LinearTriangleEdson(MyElement):
         Y_23 =  (y[2]-y[0])*(y[0]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # 
         Y_33 =  (y[0]- y[1])**2 + (x[1]-x[0])**2  
 
-        
+        '''
         self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[Y_11, Y_12, Y_13], 
+                                        [Y_12, Y_22, Y_23],      
+                                        [Y_13, Y_23, Y_33]       
+                                        ])
+        '''
+        self.KGeo = (1 /(4.0*area_triangulo*self.Altura2D))*np.array([[Y_11, Y_12, Y_13], 
                                         [Y_12, Y_22, Y_23],      
                                         [Y_13, Y_23, Y_33]       
                                         ])
@@ -314,18 +319,27 @@ class LinearTriangleAnisotropic(MyElement):
         Sxy = Sx*np.sin(atheta)*np.cos(atheta) - Sy*np.sin(atheta)*np.cos(atheta)
         Syy = Sx*np.sin(atheta)**2 + Sy*np.cos(atheta)**2
         #Syy = Sx*(np.sin(atheta))*(np.sin(atheta))  + Sy*(np.cos(atheta))*(np.cos(atheta))
+        print('Xs',x[0], x[1], x[2] )
+        print('Ys',y[0], y[1], y[2] )
         print(Sxx,Sxy,Syy)
+        '''
         C_11 = Sxx*B_l**2 + 2*B_l*G_l*Sxy + Syy*G_l**2
         C_12 = B_l*(Sxx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Syy*G_m)        #C_21 = C_12
         C_13 = B_l*(Sxx*B_n + Sxy*G_n) + G_l*(Sxy*B_n + Syy*G_n)        #C_31 = C_13
         C_22 = Sxx*B_m**2 + 2*B_m*G_m*Sxy + Syy*G_m**2
         C_23 = B_m*(Sxx*B_n + Sxy*G_n) + G_m*(Sxy*B_n + Syy*G_n)        #C_32 = C_23
         C_33 = Sxx*B_n**2 + 2*B_n*G_n*Sxy + Syy*G_n**2
-        
+        '''
+        C_11 = Sx*B_l**2 + 2*B_l*G_l*Sxy + Sy*G_l**2
+        C_12 = B_l*(Sx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Sy*G_m)        #C_21 = C_12
+        C_13 = B_l*(Sx*B_n + Sxy*G_n) + G_l*(Sxy*B_n + Sy*G_n)        #C_31 = C_13
+        C_22 = Sx*B_m**2 + 2*B_m*G_m*Sxy + Sy*G_m**2
+        C_23 = B_m*(Sx*B_n + Sxy*G_n) + G_m*(Sxy*B_n + Sy*G_n)        #C_32 = C_23
+        C_33 = Sx*B_n**2 + 2*B_n*G_n*Sxy + Sy*G_n**2
         print('C_xx',C_11,C_12,C_13,C_22,C_23,C_33)
 
         
-        self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[C_11, C_12, C_13], 
+        self.KGeo = (1 /(4.0*area_triangulo*self.Altura2D ))*np.array([[C_11, C_12, C_13], 
                                         [C_12, C_22, C_23],      
                                         [C_13, C_23, C_33]       
                                         ])
