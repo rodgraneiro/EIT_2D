@@ -13,6 +13,7 @@ import gmsh
 import sys
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+import datetime
 #import subprocess
 #import os
 
@@ -60,7 +61,7 @@ class forward_problem:
         #print(f'Vetor de corrente: \n {self.vetor_corrente_cond_contorno}')
 
         self.KGlobal = self.mymesh.KGlobal.copy()       # Criar matriz solução
-
+        print(f' AppCC self.KGlobal: \n {self.KGlobal}')
         # atualiza vetor de correntes:
         for [noh_cond_contorno,valor_cond_contorno] in self.V_imposto:   # Necessário quando valor imposto é diferente de zero
             for i in range(0, self.mymesh.NumberOfNodes):                    # corrige matriz de corrente
@@ -136,6 +137,9 @@ class forward_problem:
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
         print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
+        print('solve vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno)
+
+
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
         #print(f' Tensões nos eletrodos \n {self.Vmedido_eletrodos})')
 
