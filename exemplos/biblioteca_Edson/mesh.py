@@ -113,7 +113,7 @@ class MyMesh:
                     else:
                         valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
                     self.KGlobal[no_i, no_j] += valor
-
+            #print('self.KGlobal \n',self.KGlobal)
 
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
