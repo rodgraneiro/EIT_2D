@@ -125,8 +125,8 @@ class forward_problem:
         plt.show()    
 
     def Solve(self, forceKGolbalCalc=False):
-        self.plotMSH(self.mymesh.sigma_vec)
-        print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
+        #self.plotMSH(self.mymesh.sigma_vec)
+        #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
             self.mymesh.CalcKGlobal()
         
