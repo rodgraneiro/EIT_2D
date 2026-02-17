@@ -92,6 +92,7 @@ class MyMesh:
 
 
     def CalcKGlobal(self):
+       
         if self.Elements[0].Rho == 0.0:
             raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
             
@@ -112,6 +113,7 @@ class MyMesh:
                         valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
                     else:
                         valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                        print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
             #print('self.KGlobal \n',self.KGlobal)
 
