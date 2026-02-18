@@ -507,7 +507,7 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
             elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
             elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
             elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
-            print('banana')
+           
         else:
             elements.LinearTriangle.Coordinates = self.Coordinates
             elements.LinearTriangle.Altura2D = self.altura2D # define a altura padrão como 1cm
@@ -522,8 +522,7 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
 
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
-            #banana = self.Elements[idx].CalcKgeo()
-            print('bananaXX',idx)
+          
 
 ################################################################################
 ################################################################################
