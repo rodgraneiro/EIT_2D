@@ -113,7 +113,7 @@ class MyMesh:
                         valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
                     else:
                         valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
-                        print('mesh sigma', self.Elements[elem].Sigma, elem)
+                        #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
             #print('self.KGlobal \n',self.KGlobal)
 
@@ -256,14 +256,16 @@ class HuaElectrodes2DMeshEdson(MyMesh):
         if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
             if 'tetra' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
                 raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error. Should be 2D mesh.")
+                
             elif 'triangle' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
                 self.dim = 2 # 2D mesh
                 self.element_type = 'triangle'
             else:
                 raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error.")
+                
         else:
             raise Exception("HuaElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")  
-        
+            
         # Verifica se tem as linhas dos eletrodos
         if not ('line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys()):
             raise Exception("HuaElectrodes2DMeshEdson(): Não encontrei as linhas.")    
