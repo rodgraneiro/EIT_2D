@@ -64,7 +64,7 @@ class MyElement:
     
     def CalcKHua(self):
         raise NotImplementedError("A função CalcKgeo() tem que ser implementada na subclasse.")
-'''
+
 class LinearTriangle(MyElement):
     #Altura2D = 1.0
 
@@ -108,7 +108,7 @@ class LinearTriangle(MyElement):
                 value = (self.Altura2D / (4.0 * area)) * (coeficientes[0][i] * coeficientes[0][j] + coeficientes[1][i] * coeficientes[1][j])
                 self.KGeo[j][i] = value
                 self.KGeo[i][j] = value
-'''
+
 
 
 class LinearTriangleEdson(MyElement):
