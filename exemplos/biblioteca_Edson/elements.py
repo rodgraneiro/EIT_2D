@@ -306,7 +306,15 @@ class LinearTriangleAnisotropic(MyElement):
         #print('self.element_type',  {self.element_type})
         #print('self.msh_physical_groups',  {self.msh_physical_groups})
         #print(f"Physical tags found {self.physical_tags}.")
-        print("Physical tag:", self.PhysicalEntity)
+        #print("Physical tag:", self.PhysicalEntity)
+        if self.PhysicalEntity == 1000:
+            Sx = 1000.0
+            Sy = 1000.0
+        if self.PhysicalEntity > 5000:
+            print("banana 5000")
+        if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
+            Sx = self.sigmaX
+            Sy = self.sigmaY
 
         #print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         x = [self.Coordinates[noh1][0], self.Coordinates[noh2][0], self.Coordinates[noh3][0]]
@@ -321,8 +329,8 @@ class LinearTriangleAnisotropic(MyElement):
         G_l = (x[2]-x[1])
         G_m = (x[0]-x[2])
         G_n = (x[1]-x[0])
-        Sx = self.sigmaX
-        Sy = self.sigmaY
+        #Sx = self.sigmaX
+        #Sy = self.sigmaY
         atheta_deg = self.thetaAngle
         atheta =  np.deg2rad(atheta_deg)
         Sxx =  Sx*np.cos(atheta)**2 + Sy*np.sin(atheta)**2
