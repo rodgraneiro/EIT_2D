@@ -15,7 +15,8 @@ class MyElement:
     thetaAngle = None
     sigmaX = None
     sigmaY = None
-
+    #element_type = None
+    
     def __init__(self):
         self.Centroid = None
         self.ElementType = 0
@@ -29,7 +30,12 @@ class MyElement:
         self.Sigma = 0.0
         
         self.msh_physical_groups = None  ########################################################
-    
+        #self.element_type = None
+        self.element_type = self.__class__.__name__  # automático
+        self.msh_physical_groups = self.__class__.__name__  # automático
+        self.physical_tags = self.__class__.__name__  # automático
+        self.PhysicalEntity = self.__class__.__name__  # automático
+
     def SetRho(self, value):
         if value == 0:
             raise Exception("MyElement(): SetRho(): value não pode ser 0.")
@@ -162,10 +168,10 @@ class LinearTriangleEdson(MyElement):
                                         [Y_12, Y_22, Y_23],      
                                         [Y_13, Y_23, Y_33]       
                                         ])
-        print(noh1,noh2,noh3)
-        print('x',x)
-        print('y',y)
-        print('KGeo1 zz \n', self.KGeo)
+        #print(noh1,noh2,noh3)
+        #print('x',x)
+        #print('y',y)
+        #print('KGeo1 zz \n', self.KGeo)
     
 
 # Equacionamento deduzido na tese do Fernando Moura, Apendice A.2.1
@@ -277,7 +283,7 @@ class LinearTriangleAnisotropic(MyElement):
 
     def __init__(self):
         super().__init__()
-
+        
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
     # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
     # Seção 6.2.2. Veja equacionamento  em  "Método Elementos Finitos 2D - Triângulos.pdf"
@@ -297,7 +303,12 @@ class LinearTriangleAnisotropic(MyElement):
         noh2 = int(self.Topology[1])
         noh3 = int(self.Topology[2])
         #print(noh1, noh2, noh3)
-        
+        #print('self.element_type',  {self.element_type})
+        #print('self.msh_physical_groups',  {self.msh_physical_groups})
+        #print(f"Physical tags found {self.physical_tags}.")
+        print("Physical tag:", self.PhysicalEntity)
+
+        #print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         x = [self.Coordinates[noh1][0], self.Coordinates[noh2][0], self.Coordinates[noh3][0]]
         y = [self.Coordinates[noh1][1], self.Coordinates[noh2][1], self.Coordinates[noh3][1]]
 
@@ -340,11 +351,11 @@ class LinearTriangleAnisotropic(MyElement):
         C_13 = Sxx*B_l*B_n + Sxy*(B_l*G_n + G_l*B_n) + Syy*G_l*G_n
         C_23 = Sxx*B_m*B_n + Sxy*(B_m*G_n + G_m*B_n) + Syy*G_m*G_n
 
-        print('C_xx',C_11,C_12,C_13,C_22,C_23,C_33)
+        #print('C_xx',C_11,C_12,C_13,C_22,C_23,C_33)
         
         self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[C_11, C_12, C_13], 
                                 [C_12, C_22, C_23],      
                                 [C_13, C_23, C_33]       
                                 ])
 
-        print('KGeo1', self.KGeo)
+        #print('KGeo1', self.KGeo)
