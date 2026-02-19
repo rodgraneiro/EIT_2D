@@ -308,8 +308,8 @@ class LinearTriangleAnisotropic(MyElement):
         #print(f"Physical tags found {self.physical_tags}.")
         #print("Physical tag:", self.PhysicalEntity)
         if self.PhysicalEntity == 1000:
-            Sx = 1000000.0
-            Sy = 1000000.0
+            Sx = 1000.0
+            Sy = 1000.0
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
