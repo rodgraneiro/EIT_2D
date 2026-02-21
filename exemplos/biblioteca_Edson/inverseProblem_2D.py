@@ -447,8 +447,7 @@ class inverse_problem:
                 triang,
                 facecolors=sigma[:len(elems_2D)],
                 edgecolors='k',
-                cmap='Blues',
-                vmin=1.0 )
+                cmap='Blues')#,vmin=1.0 )
             
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -641,6 +640,7 @@ class inverse_problem:
         print('sigmaInicial \n', sigmaInicial) 
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial, itr, save = True)
+        #self.plotMSH(sigmaInicial, itr, save = True)
+        self.plotMSH(sigmaInicial, save = True)
         
         
