@@ -92,6 +92,7 @@ class MyMesh:
 
 
     def CalcKGlobal(self):
+       
         if self.Elements[0].Rho == 0.0:
             raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
             
@@ -112,8 +113,9 @@ class MyMesh:
                         valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
                     else:
                         valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                        #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
-        #print(f' self.KGlobal mmmm \n {self.KGlobal}')
+            #print('self.KGlobal \n',self.KGlobal)
 
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
@@ -129,7 +131,7 @@ class MyMesh:
     Os objetos são physical_group 2, 3, 4 etc.
 '''
 class PointElectrodes2DMeshEdson(MyMesh):
-    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, useEdson=False):
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, useEdson=True):
         super().__init__(nome_msh)
 
         if type(NumberOfEletrodes) == int:
@@ -151,7 +153,7 @@ class PointElectrodes2DMeshEdson(MyMesh):
         if self.MshFileName == "":
             raise Exception("PointElectrodes2DMeshEdson(): MshFileName not defined.")
 
-        print(f"Reading {self.MshFileName}.")
+        (f"Reading {self.MshFileName}.")
         self.__mshdata = meshio.read(self.MshFileName)
 
         # Check msh dimension
@@ -178,7 +180,7 @@ class PointElectrodes2DMeshEdson(MyMesh):
 
         # Verifica se o physical do GND está no arquivo msh
         if not (10000 in physical_tags_points):
-            raise Exception("HuaElectrodes2DMeshEdson(): GND vertex not found.")  
+            raise Exception("PointElectrodes2DMeshEdson(): GND vertex not found.")  
 
         n_electrodes = len(physical_tags_points) -1
         print(f"{n_electrodes} electrodes found.")
@@ -253,15 +255,17 @@ class HuaElectrodes2DMeshEdson(MyMesh):
         # Check msh dimension
         if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
             if 'tetra' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
-                raise Exception("PointElectrodes2DMeshEdson(): dimension identification error. Should be 2D mesh.")
+                raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error. Should be 2D mesh.")
+                
             elif 'triangle' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
                 self.dim = 2 # 2D mesh
                 self.element_type = 'triangle'
             else:
-                raise Exception("PointElectrodes2DMeshEdson(): dimension identification error.")
+                raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error.")
+                
         else:
-            raise Exception("PointElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")  
-        
+            raise Exception("HuaElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")  
+            
         # Verifica se tem as linhas dos eletrodos
         if not ('line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys()):
             raise Exception("HuaElectrodes2DMeshEdson(): Não encontrei as linhas.")    
@@ -416,5 +420,245 @@ class PointElectrodes1DMeshEdson(MyMesh):
             self.Elements[idx].Topology = self.msh_topology[idx]
             #print(f'ElementsTopo1 {self.Elements[idx].Topology}')
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
+            self.Elements[idx].CalcCentroid()
+            self.Elements[idx].CalcKgeo()
+
+
+################################################################################
+################################################################################
+######################## ANISOTROPICO ##########################################
+################################################################################
+
+
+class PointElectrodes2DMeshAnisotropic(MyMesh):
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, thetaAngle=None, sigmaX = None, sigmaY = None, useEdson=True):
+        super().__init__(nome_msh)
+
+        if type(NumberOfEletrodes) == int:
+            self.NumberOfElectrodes = NumberOfEletrodes
+        else:
+            raise Exception("PointElectrodes2DMeshAnisotropic(): Invalid NumberOfEletrodes.")
+
+        self.altura2D = altura2D
+        self.useEdson = useEdson
+        self.thetaAngle = thetaAngle
+        self.sigmaX = sigmaX
+        self.sigmaY = sigmaY
+
+    '''
+    - O corpo (background) é physical_group 1.
+    - Os objetos são physical_group 2, 3, 4 etc.
+    - os eletrodos são os primeiros (n_elect) pontos do msh
+    - O índice do GND é o ponto = (n_elect) + 1
+    '''
+    def ReadMesh(self):
+        if self.MshFileName == "":
+            raise Exception("PointElectrodes2DMeshAnisotropic(): MshFileName not defined.")
+
+        print(f"Reading {self.MshFileName}.")
+        self.__mshdata = meshio.read(self.MshFileName)
+
+        # Check msh dimension
+        if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
+            if 'tetra' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                raise Exception("PointElectrodes2DMeshAnisotropic(): dimension identification error. Should be 2D mesh.")
+            elif 'triangle' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                self.dim = 2 # 2D mesh
+                self.element_type = 'triangle'
+            else:
+                raise Exception("PointElectrodes2DMeshAnisotropic(): dimension identification error.")
+        else:
+            raise Exception("PointElectrodes2DMeshAnisotropic(): invalid mesh (no physical entities found).")        
+
+        self.Coordinates = self.__mshdata.points
+        self.msh_topology = self.__mshdata.cells_dict[self.element_type]
+        self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
+        self.physical_tags = np.unique(self.msh_physical_groups)
+        physical_tags_points = np.unique(self.__mshdata.cell_data_dict["gmsh:physical"]['vertex'])     # só dos pontos (GND = 10000)
+        
+        print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
+        print(f"Physical tags found: {self.physical_tags}.")
+        print(f"Physical tags points: {physical_tags_points}")
+
+        # Verifica se o physical do GND está no arquivo msh
+        if not (10000 in physical_tags_points):
+            raise Exception("PointElectrodes2DMeshAnisotropic(): GND vertex not found.")  
+
+        n_electrodes = len(physical_tags_points) -1
+        print(f"{n_electrodes} electrodes found.")
+
+        self.NumberOfNodes = self.Coordinates.shape[0]
+        self.NumberOfElements = self.msh_topology.shape[0]
+
+        print(f"MSH file with {self.NumberOfElements} elements and {self.NumberOfNodes} nodes.")
+
+
+        self.ElectrodeNodes = np.arange(self.NumberOfElectrodes, dtype=int)
+        self.GndNode = self.NumberOfElectrodes
+
+        print(f"ElectrodeNodes: {self.ElectrodeNodes}")
+        print(f"GndNode: {self.GndNode}")
+
+        self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos
+
+        if self.useEdson:
+            elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
+            elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
+            elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
+            elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
+            elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
+           
+        else:
+            elements.LinearTriangle.Coordinates = self.Coordinates
+            elements.LinearTriangle.Altura2D = self.altura2D # define a altura padrão como 1cm
+        for idx in range(self.NumberOfElements):
+            if self.useEdson:
+                self.Elements[idx] = elements.LinearTriangleAnisotropic()
+            else:
+                self.Elements[idx] = elements.LinearTriangle()
+            self.Elements[idx].Topology = self.msh_topology[idx]
+            self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
+        
+
+            self.Elements[idx].CalcCentroid()
+            self.Elements[idx].CalcKgeo()
+          
+
+################################################################################
+################################################################################
+#    Malhas 2D do Edson onde os eletrodos são definidos por linhas para implementação do modelo Hua.
+#    - Os elementos são sempre triangulares.
+#    - Usa modelo de eletrodo Hua.
+#    - O corpo (background) é physical_group 1000.
+#    - Os objetos são physical_group 1001, 1002, 1003...
+#    - Os eletrodos são physical_group 5001, 5002, 5003 etc...
+################################################################################
+class HuaElectrodes2DAnisotropic(MyMesh):
+    #def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1):
+    #    super().__init__(nome_msh)
+
+    #    if type(NumberOfEletrodes) == int:
+    #        self.NumberOfElectrodes = NumberOfEletrodes
+    #    else:
+    #        raise Exception("HuaElectrodes2DAnisotropic(): Invalid NumberOfEletrodes.")
+
+    #    self.altura2D = altura2D
+    
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, thetaAngle=None, sigmaX = None, sigmaY = None, useEdson=True):
+        super().__init__(nome_msh)
+
+        if type(NumberOfEletrodes) == int:
+            self.NumberOfElectrodes = NumberOfEletrodes
+        else:
+            raise Exception("PointElectrodes2DMeshAnisotropic(): Invalid NumberOfEletrodes.")
+
+        self.altura2D = altura2D
+        self.useEdson = useEdson
+        self.thetaAngle = thetaAngle
+        self.sigmaX = sigmaX
+        self.sigmaY = sigmaY
+
+
+
+
+
+    '''
+    - O corpo (background) é physical_group 1000 formado por triângulos.
+    - Os objetos são physical_group 1001, 1002, 1003... formados por triângulos.
+    - Os eletrodos linhas identificadas por physical_group 5001, 5002, 5003 etc...
+    - O gnd está o physical_group 10000.
+    '''
+    def ReadMesh(self):
+        if self.MshFileName == "":
+            raise Exception("HuaElectrodes2DAnisotropic(): MshFileName not defined.")
+
+        print(f"Reading {self.MshFileName}.")
+        self.__mshdata = meshio.read(self.MshFileName)
+
+        # Check msh dimension
+        if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
+            if 'tetra' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                raise Exception("HuaElectrodes2DAnisotropic(): dimension identification error. Should be 2D mesh.")
+            elif 'triangle' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
+                self.dim = 2 # 2D mesh
+                self.element_type = 'triangle'
+            else:
+                raise Exception("HuaElectrodes2DAnisotropic(): dimension identification error.")
+        else:
+            raise Exception("HuaElectrodes2DAnisotropic(): invalid mesh (no physical entities found).")  
+        
+        # Verifica se tem as linhas dos eletrodos
+        if not ('line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys()):
+            raise Exception("HuaElectrodes2DAnisotropic(): Não encontrei as linhas.")    
+        
+        self.Coordinates = self.__mshdata.points
+        self.msh_topology = self.__mshdata.cells_dict[self.element_type]   # só dos triângulos
+
+        self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]   # só dos triângulos
+        self.physical_tags = np.unique(self.msh_physical_groups)
+        print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
+        print(f"Physical tags found (type {self.element_type}): {self.physical_tags}.")
+
+        # pegando informações dos eletrodos (elementos linha)
+        physical_groups_lines = self.__mshdata.cell_data_dict["gmsh:physical"]['line']                 # só das linhas (eletrodos = 500X)
+        physical_tags_lines = np.unique(physical_groups_lines)
+        physical_tags_points = np.unique(self.__mshdata.cell_data_dict["gmsh:physical"]['vertex'])     # só dos pontos (GND = 10000)
+        print(f"Physical tags: lines: {physical_tags_lines}; points: {physical_tags_points}")
+
+        # Verifica se o physical do GND está no arquivo msh
+        if not (10000 in physical_tags_points):
+            raise Exception("HuaElectrodes2DAnisotropic(): GND vertex not found.")  
+
+        n_electrodes = len(physical_tags_lines)
+        print(f"{n_electrodes} electrodes found.")
+
+        n_nohs_msh = self.Coordinates.shape[0]
+        n_elementos_msh = self.msh_topology.shape[0] 
+        print(f"MSH file with {n_elementos_msh} elements and {n_nohs_msh} nodes.")
+
+        self.NumberOfNodes = n_nohs_msh + n_electrodes # incluindo os nós virtuais
+        self.ElectrodeNodes = np.arange(n_nohs_msh, n_nohs_msh + n_electrodes, dtype=int) # nessa malha os eletrodos são os últimos nós (virtuais))
+
+        print(f"ElectrodeNodes: {self.ElectrodeNodes}")
+
+        electrodes_topology = self.__mshdata.cells_dict['line'] # só linhas dos eletrodos
+        points_topology = self.__mshdata.cells_dict['vertex']   # só pontos (deveria ser só o GND)
+
+        n_elementos_eletrodos = electrodes_topology.shape[0] # só linhas 
+
+        self.NumberOfElements = n_elementos_msh + n_elementos_eletrodos # inclui triângulos  e as linhas dos eletrodos
+
+        print(f"{self.NumberOfElements} Elements and {self.NumberOfNodes} Nodes found on model.")
+
+        self.GndNode = points_topology[0][0] # o primeiro noh do primeiro physical vertex
+        print(f'GndNode: {self.GndNode}')
+
+        self.Elements = [None] * self.NumberOfElements # alocando vetor de elementos (triângulos do meio + elementos dos eletrodos)
+
+        # Setando variáveis das classes elemento (a mesma variável para toda a classe)
+        elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
+        elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
+        elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
+        elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
+        elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
+
+        elements.LinearLineHua.Coordinates = self.Coordinates
+        elements.LinearLineHua.Altura2D = self.altura2D # define a altura padrão como 1cm
+
+        # Pegando elementos triangulares:
+        for idx in range(n_elementos_msh):
+            self.Elements[idx] = elements.LinearTriangleAnisotropic()
+            self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
+            self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
+            self.Elements[idx].CalcCentroid()
+            self.Elements[idx].CalcKgeo()
+
+        # Pegando elementos dos eletrodos:
+        for idy in range(n_elementos_eletrodos): # idy começa em zero
+            idx = idy + n_elementos_msh          # idx continua a partir de n_elementos_msh
+            self.Elements[idx] = elements.LinearLineHua()
+            self.Elements[idx].PhysicalEntity = physical_groups_lines[idy]
+            noh_virtual = self.ElectrodeNodes[self.Elements[idx].PhysicalEntity - 5001]
+            self.Elements[idx].Topology = np.append(electrodes_topology[idy], noh_virtual)
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
