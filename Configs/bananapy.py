@@ -1,0 +1,11 @@
+nome_arquivo = "bananapy" 
+raio = 0.15
+n_eletrodos = 32
+ponto_medio_x = 0
+ponto_medio_y = 0
+lc1 = 0.02
+lc2 = 0.02
+anomalia_lados = 32
+anomalia_rotacao = 0.0
+x_ptoCentral = -0.06
+y_ptoCentral = 0.0
