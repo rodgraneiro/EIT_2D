@@ -4,17 +4,17 @@ Created on Sun Oct 26 13:56:12 2025
 
 @author: rodgr
 """
+# este comentário está no branch test
+# este comentário está no branch test2
 
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
-
 import mesh
 import elements
 import gmsh
 import sys
 from datetime import datetime
-from matplotlib import cm
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
@@ -134,15 +134,12 @@ class inverse_problem:
             self.Y_jacobian[node_n-1, node_n-1] += Y_local[2, 2]
             temp = self.apply_boundary_conditions(self.Y_jacobian)
             self.listJacobian.append(temp)
-            #self.listJacobian.append(self.Y_jacobian)
             
             #print('Y_jacobian calc_Y_jacobian \n',self.Y_jacobian)
-            #print('temp \n',temp.shape)
             
             self.Y_jacobian = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
         #print('self.listJacobian.append \n',self.listJacobian)
         #return Y_jacobiano
-        #print('self.listJacobian \n',self.listJacobian)
     ###############################################################################
     ###############################################################################
     # Esta função aplica condições de contorno conforme exemplo abaixo:
@@ -161,7 +158,6 @@ class inverse_problem:
 
         # atualiza vetor de correntes:
         for [noh_cond_contorno,valor_cond_contorno] in self.V_imposto:   # Necessário quando valor imposto é diferente de zero
-
             for i in range(0, self.mymesh.NumberOfNodes):                    # corrige matriz de corrente
                 self.vetor_corrente_cond_contorno[i] = (
                     self.vetor_corrente_cond_contorno[i] - \
@@ -272,37 +268,28 @@ class inverse_problem:
     def Calc_J(self, invVtemp):
         listTempJ=[]
         for idx in range(self.mymesh.NumberOfElements):
-            #print('invVtemp',invVtemp)
             termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
-            #print('vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno[0:15, 0:9])
-            #print('termo1 \n', termo1.shape)
-            
+            #print('termo1 \n', termo1)
             termo2 = np.dot(self.listJacobian[idx], termo1)
-            #print('termo2 \n', termo2.shape)
-            
+            #print('termo2 \n', termo2)
             termo3 = -np.dot(invVtemp, termo2)
-            
-            #print('termo3 \n', termo3.shape)
             termo3 = termo3[self.mymesh.ElectrodeNodes]
-            #print('elemento \n', idx)
-            #print('termo3a \n', termo3.shape)
-            
+            #print('termo3 \n', termo3.shape)
             termo3 = termo3.reshape(-1,1,  order='F')
             #print('termo3b \n', termo3.shape)
             listTempJ.append(termo3)
             listTempJa = np.array(listTempJ)
             #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
         self.TempJ = np.concatenate(listTempJ, axis=1)
-        #np.savetxt('JacobianoCoarse.txt', self.TempJ, fmt="%.8f")
-        #print('self.TempJ \n',self.TempJ)
-        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
-        #print('JTJ \n', self.JTJ)
+        #print('self.TempJ \n',self.TempJ.shape)
+        JTJ = np.dot(self.TempJ.T, self.TempJ)
+        #print('JTJ \n',JTJ.shape)
     ###############################################################################
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.007, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.005, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -322,7 +309,7 @@ class inverse_problem:
                     fator = 1.0 if i == j else np.exp(-dist**2 / (2 * std**2))
                     soma += fator
                     L2[i, j] = fator
-            
+    
             # --- segunda passada: normaliza e transforma em passa-alta ---
             for j in range(self.mymesh.NumberOfElements):
                 if soma > 0:
@@ -331,7 +318,6 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-            
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -339,21 +325,14 @@ class inverse_problem:
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)  
+
         N = L2.shape[0]
         X, Y = np.meshgrid(np.arange(N), np.arange(N))
         
         fig = plt.figure(figsize=(9, 7))
         ax = fig.add_subplot(111, projection='3d')
         
-        surf = ax.plot_surface(
-            X, Y, L2,
-            cmap='viridis',
-            linewidth=0,
-            antialiased=True
-        )
+        surf = ax.plot_surface( X, Y, L2, cmap='viridis',  linewidth=0, antialiased=True )
         
         ax.set_xlabel('Coluna')
         ax.set_ylabel('Linha')
@@ -361,10 +340,9 @@ class inverse_problem:
         ax.set_title('HPFilter – Superfície 3D')
         
         fig.colorbar(surf, shrink=0.5)
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)
-          
+        plt.show()
+
+        plt.show()
         return L2
 
     
@@ -372,10 +350,10 @@ class inverse_problem:
     # Essa função calcula FPA com distância média entre os elementoss
     ###############################################################################    
 
-    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1.0e-9):
+    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 1.250 #*d_media
+        std = 0.05*d_media
         print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
@@ -387,7 +365,7 @@ class inverse_problem:
             for i in range(ne):                # linha 
                 ci = centroids_2D[i]
                 dist = np.linalg.norm(ci - cj)
-                if dist <= 5.00 * std:
+                if dist <= 5 * std:
                     g = np.exp(-dist**2 / (2 * std**2))
                 else:
                     g = 0.0   
@@ -402,9 +380,7 @@ class inverse_problem:
     
         # filtro passa–alta
         L2 = I - L
-       
-        i, j = np.nonzero(L)
-        values = L2[i, j]
+        
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -412,31 +388,7 @@ class inverse_problem:
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)  
-        N = L.shape[0]
-        X, Y = np.meshgrid(np.arange(N), np.arange(N))
-        
-        fig = plt.figure(figsize=(9, 7))
-        ax = fig.add_subplot(111, projection='3d')
-        
-        surf = ax.plot_surface(
-            X, Y, L,
-            cmap='viridis',
-            linewidth=0,
-            antialiased=True
-        )
-        
-        ax.set_xlabel('Coluna')
-        ax.set_ylabel('Linha')
-        ax.set_zlabel('L[i,j]')
-        ax.set_title('HPFilter – Superfície 3D')
-        
-        fig.colorbar(surf, shrink=0.5)
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)  
+        plt.show()
         return L2
 
     ###############################################################################
@@ -457,9 +409,7 @@ class inverse_problem:
         plt.legend()
         plt.grid(True)
         #plt.tight_layout()
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)  
+        plt.show()
     ###############################################################################
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
@@ -478,7 +428,7 @@ class inverse_problem:
         plt.show()
         '''
     def plotMSH(self, sigma, iteration = None, save = False):
-        
+
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
     
@@ -487,31 +437,25 @@ class inverse_problem:
         elems_1D = np.array([el for el in topo if len(el) == 2])
     
         fig, ax = plt.subplots(figsize=(6, 5))
-        
+    
         # ============================================================
         #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
         # ============================================================
-        sigma1d = sigma.ravel()   # ou sigmaInicial[:,0]
         if len(elems_2D) > 0:
             triang = tri.Triangulation(x, y, elems_2D)
-            #tpc = ax.tripcolor(triang,facecolors=sigma1d[:len(elems_2D)],edgecolors='k', cmap='Blues')#, vmin=2.0)
-            ntri = triang.triangles.shape[0]
-            fc = sigma.ravel()[:ntri]
-
             tpc = ax.tripcolor(
                 triang,
-                facecolors=fc,
+                facecolors=sigma[:len(elems_2D)],
                 edgecolors='k',
-                cmap='Blues'
-            )
-
+                cmap='Blues',
+                vmin=1.0 )
+            
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity Real (σ) - rnd - itr_{iteration}", fontsize=12)
+                ax.set_title(f"Conductivity Real (σ) - itr_{iteration}_{timestamp}", fontsize=12)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
-        
         # ============================================================
         #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
         # ============================================================
@@ -525,77 +469,17 @@ class inverse_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        #if save == True:
-        #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-        #    plt.savefig(f"condutiv_coarse_3objetos_{timestamp}.png",
-        #    dpi=300, bbox_inches='tight')
-        #plt.ion()
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)
-          
-        # Criar triangulação
-        #triang = tri.Triangulation(x, y, topo)
-        '''
-        # Figura 3D
-        fig = plt.figure(figsize=(8, 6))
-        ax = fig.add_subplot(111, projection='3d')
-        
-        # Superfície 3D
-        surf = ax.plot_trisurf(
-            triang,
-            sigma[:len(elems_2D)],
-            cmap='viridis',
-            edgecolor='k',
-            linewidth=0.2,
-            antialiased=True )
-        
-        # Barra de cores
-        fig.colorbar(surf, ax=ax, shrink=0.6, label='σ (condutividade)')
-        
-        # Labels
-        ax.set_xlabel('x [m]')
-        ax.set_ylabel('y [m]')
-        ax.set_zlabel('σ')
-        
-        ax.set_title('Condutividade – Superfície 3D')
-        ax.set_zlim(1.99, 3.01)
-
-        plt.tight_layout()
-        plt.show()
-       '''
-    ###############################################################################    
-    def plot_espectro(self,x, titulo="Espectro (FFT)"):
-        X = np.fft.fft(x)
-        w = np.fft.fftfreq(len(x))
-        
-        X_shifted = np.fft.fftshift(X)
-        w_shifted = np.fft.fftshift(w)
-
-
-
-        plt.figure(figsize=(8,4))
-        #plt.stem(w, np.abs(X))
-        #plt.plot(w, np.abs(X))
-        plt.plot(w_shifted, np.abs(X_shifted))
-        plt.yscale("log")
-        plt.xlim(left=0)
-        plt.ylim(top=1e4) 
-        #plt.ylim(bottom=1e-3) 
-        plt.title(titulo)
-        plt.xlabel("Frequência (w)")
-        plt.ylabel("|X(w)|")
-        plt.grid(True)
-        plt.tight_layout()
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)  
-    ###############################################################################
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
+            dpi=300, bbox_inches='tight')
+        plt.show()    
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
     def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
+        print(f'lastIteration 2222 {iteration}')
         itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
@@ -604,76 +488,49 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        #self.plotMSH(self.mymesh.sigma_vec, save = False)
+        self.plotMSH(self.mymesh.sigma_vec, save = False)
         
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
-        
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
         contNorma = 0
         contNeg = 0
         contItr = 0
-        V_measured = V_measured.T
-        V_measured = V_measured.reshape(-1, 1)
-        #print('V_measured',V_measured.shape)
         
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
-        sigmaInicial = sigmaInicial.reshape(-1, 1)
-        sigmaStar = (sigmaInicial/sigmaInicial)*2.5 #np.ones(self.mymesh.NumberOfElements)*0
+        sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
-        #print('sigmaInicial 111',sigmaInicial.shape)
-        #self.plot_espectro(sigmaInicial)
-        '''
+        
         ###
         VtempJ = self.CalcTempKGlobal(sigmaOne)                            # calcula derivadas parciais da matriz jacobiana
-        print('VtempJ',VtempJ)
+        
         # ***** Determinação do Valor calculado *****
         VtempJ = self.apply_boundary_conditions(VtempJ)                        # aplica cond contorno na matriz jacobiana
         invVtempJ = np.linalg.inv(VtempJ)                                      # inverte matriz TempKGobal para jacobiana
-        '''
+        
         #######################################################################
         ###################        MAIN LOOP   ################################
         #######################################################################
-        for itr in range(itr_start, max_iter):                                            # Main Loop
-            np.savetxt("lastIteration.txt",np.array([itr]), fmt="%d")
-            
-            #self.plotMSH(sigmaInicial, itr, save = True)
+        for itr in range(itr_start,max_iter):
+            np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
-            #print('sigmaInicial',sigmaInicial)
+            
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
-            #print('Vtemp',Vtemp)
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
-            #print('self.vetor_corrente_cond_contorno',self.vetor_corrente_cond_contorno)
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
-            #print('V_calc_noh',V_calc_noh.shape)
-            V_calc_noh = V_calc_noh.T
-            V_calc_noh = V_calc_noh.reshape(-1, 1)
-            #print('V_calc_noh ',V_calc_noh)
-            #print('V_measured ',V_measured)
                         # ***** Determinação do resíduo *****
             residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
-            #print('residue',residue)
-            #plt.figure(figsize=(16,8))
-            #plt.plot(V_measured,  'o-', label='Tensão medida')
-            #plt.plot(V_calc_noh, 's--', label='Tensão calculada')
-            #plt.xlim(right=250)
-            #plt.xlim(left=0)
-            #plt.show()
-            
             normaResidue = np.linalg.norm(residue)
-            
-            
             listaItrPlot.append(normaResidue)
-            #residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
-            #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes)
-            #print('residue repeat',residue.shape)
+            residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
+            #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
             
             self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
     
@@ -683,67 +540,44 @@ class inverse_problem:
             self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
-            #W1=np.eye(self.TempJ.shape[0])
-            #W1=np.eye(self.JTJ.shape[0])
-            #print('W1',W1.shape)
-            #print('self.TempJ.T',self.TempJ.T.shape)
-            #JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
-            #print('JTW',JTW.shape)
-            #JTWJ = np.dot(self.JTJ, W1)
-            #print('JTWJ',JTWJ.shape)
+            W1=np.eye(self.TempJ.shape[0])
+            JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
+            JTWJ = np.dot(JTW, self.TempJ)
+            
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
             LTL =np.dot(L2.T, L2)
             termo_L = (Lambda**2)*LTL
             
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
-            #firstTerm = JTWJ + termo_L
-            firstTerm = self.JTJ + termo_L
+            firstTerm = JTWJ + termo_L
             inv_firstTerm = np.linalg.inv(firstTerm)
-            #print(f'inv_firstTerm = {inv_firstTerm.shape}')
             
             # ***** Cálculo do termo 2a (JT_W1_residue) *****
-            #print(f'JTW = {JTW.shape}; residue = {residue.shape}')
-            #JTW_H = np.dot(JTW,residue)
-            JTW_H = np.dot(self.TempJ.T,residue)
             
-            #print(f'JTW_H = {JTW_H.shape}')
-            #JTW_Hbarata = np.dot(JTW,barata)
-            #print(f'JTW_Hbarata = {JTW_Hbarata.shape}')
-
-            
+            JTW_H = np.dot(JTW,residue)            
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
-            regTerm = (sigmaInicial) # - sigmaStar) #* (Lambda**2)
-            #print(f'regTerm = {regTerm.shape}')
+            regTerm = (sigmaInicial - sigmaStar)* (Lambda**2)
+
             regTerm = regTerm.reshape(-1, 1)
-            #print(f'regTerm reshape = {regTerm.shape}')
-            #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
-            regularization = np.dot(termo_L, regTerm)
-            #regularizationBarata = np.dot(termo_L, regTerm)
-            #print(f'regularization = {regularization.shape}')    
-            #print(f'regularizationBarata = {regularizationBarata.shape}')            
+            regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
+            regularization = np.dot(termo_L, regTermC)
+                        
             # ***** Cálculo final do termo 2 *****
-            secondTerm = -JTW_H  - regularization
-            #print(f'secondTerm = {secondTerm.shape}')
+            secondTerm = JTW_H - regularization
             
-            #secondTermBarata = JTW_Hbarata - regularizationBarata
-            #print(f'secondTermBarata = {secondTermBarata.shape}')
             
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
+
+            deltaSigma = deltaSigma[:, 0]*alpha
             
-            #deltaSigmaBarata = np.dot(inv_firstTerm, secondTermBarata)
-            #print(f'deltaSigmaBarata = {deltaSigmaBarata.shape}')
-            #print(f'deltaSigma = {deltaSigma}')
-            #deltaSigma = deltaSigma[:, 0]*alpha
-            #print(f'deltaSigma 2 = {deltaSigma.shape}')
-            #alphaDeltaSigma = alpha*deltaSigma
             alphaDeltaSigma = alpha*deltaSigma
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
                                              # Armazena o valor a ser plotado
-            
+
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
                 ultimaNorma.pop(0)
@@ -755,47 +589,40 @@ class inverse_problem:
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
             print(f'{normaResidue} - {normaDelta} - {itr}')
-            
-            if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
-              print(f'Convergência atingida após {itr} iterações.')
-              #self.plotMSH(sigmaInicial)
-
-              convergencia = True
-              break
-                                                            # interrompe o processo de iteração
+           
             if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
-              #self.plotMSH(sigmaInicial)
-
               convergencia = True
               break
-            #print('sigmaInicial 1x', sigmaInicial.shape)
-            #print('alphaDeltaSigma ', alphaDeltaSigma.shape)  
+                                                                        # interrompe o processo de iteração
+            if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
+              print(f'Convergência atingida após {itr} iterações.')
+              convergencia = True
+              break
+
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
-            sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)                     # limites inferior e superior da condutividade
-            #print('sigmaPlusOne', sigmaPlusOne.shape)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)
             sigmaInicial = sigmaPlusOne
-            #print('sigmaInicial', sigmaInicial)
+            
             
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
-            
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
-            
-            #if any(v < 0 for v in sigmaPlusOne):                
-            #    alpha = alpha*fatorAlpha
-            #    sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
-            #    sigmaPlusOne[sigmaPlusOne < 0] = 0.001 
+            '''
+            if any(v < 0 for v in sigmaPlusOne):                
+                alpha = alpha*fatorAlpha
+                sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
+                sigmaPlusOne[sigmaPlusOne < 0] = 0.001 
  
-            #    print(f'Encontrou sigma negativo.')
+                print(f'Encontrou sigma negativo.')
 
                 
-            #    convergencia = True
-            #    break
-
+                convergencia = True
+                break
+            '''
             
                 
-            
+           
             if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
                print(f'Encontrou norma lastResidue maior  que a anterior.')
@@ -804,49 +631,16 @@ class inverse_problem:
                #alpha = alpha*fatorAlpha
                break
                
-           
+
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-                #self.plotMSH(sigmaInicial, itr, save = True)
                 contItr = 0
-            if itr % 25 == 0:   # salva de 1000 em 1000 ...
-                self.plotMSH(sigmaInicial, itr, save = True)
-            #self.plot_espectro(sigmaInicial)
-            #self.plotMSH(sigmaInicial, itr, save = True)
-            
-            
-            
-        #print('sigmaInicial \n', sigmaInicial) 
-        #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-        
+            #if itr % 500 == 0:   # salva de 1000 em 1000 ...
+            #    self.plotMSH(sigmaInicial, itr, save = True)
+
+        print('sigmaInicial \n', sigmaInicial) 
+        np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial, itr, save = True)
-        self.plot_espectro(sigmaInicial)
-        
-        #import numpy as np
-        #import matplotlib.pyplot as plt
-        
-        # J: sua matriz Jacobiana (m x n)
-        # Ex.: J = ... (numpy array)
-        
-        # --- 1) SVD: pegue só os valores singulares
-        s = np.linalg.svd(self.TempJ, compute_uv=False)   # s é 1D (min(m,n),)
-        
-        # --- 2) Gráfico tipo semilogy
-        plt.figure()
-        plt.semilogy(s, 'o-')
-        plt.grid(True, which='both')
-        plt.xlabel('índice')
-        plt.ylabel('valor singular (log)')
-        plt.title('Espectro singular do Jacobiano')
-        plt.show()
-        #plt.show(block=False)
-        #plt.pause(0.01)  
-        # --- 3) Rank efetivo (mesma ideia do seu código)
-        tol = 1e-6 * s[0]          # ou outro fator
-        rank_eff = np.sum(s > tol)
-        print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
-        
-
         
         
