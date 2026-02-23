@@ -42,25 +42,25 @@ class ConfigDashboard(tk.Tk):
         self.comAnomalia = tk.StringVar(value='True')            
         self.NrAnomalias = tk.IntVar(value=0)
         
-        self.anomalia1_raio = tk.StringVar(value="0.05")
+        self.anomalia1_raio = tk.StringVar(value="0.04")
         self.anomalia1_lados = tk.StringVar(value="16")
-        self.anomalia1_rotacao = tk.StringVar(value="22.5")
-        self.x1_ptoCentral = tk.StringVar(value="0.06")
+        self.anomalia1_rotacao = tk.StringVar(value="0.0")
+        self.x1_ptoCentral = tk.StringVar(value="0.075")
         self.y1_ptoCentral = tk.StringVar(value="0.05")
         self.lc2 = tk.StringVar(value="2e-2")
 
-        self.anomalia2_lados = tk.StringVar(value="0")
-        self.anomalia2_raio = tk.StringVar(value="0.0")
-        self.anomalia2_rotacao = tk.StringVar(value="0")
-        self.x2_ptoCentral = tk.StringVar(value="0.0")
-        self.y2_ptoCentral = tk.StringVar(value="0.0")
+        self.anomalia2_lados = tk.StringVar(value="4")
+        self.anomalia2_raio = tk.StringVar(value="0.04")
+        self.anomalia2_rotacao = tk.StringVar(value="45")
+        self.x2_ptoCentral = tk.StringVar(value="-0.075")
+        self.y2_ptoCentral = tk.StringVar(value="0.05")
         self.lc3 = tk.StringVar(value="2e-2")
         
-        self.anomalia3_lados = tk.StringVar(value="0")
-        self.anomalia3_raio = tk.StringVar(value="0.0")
+        self.anomalia3_lados = tk.StringVar(value="5")
+        self.anomalia3_raio = tk.StringVar(value="0.03")
         self.anomalia3_rotacao = tk.StringVar(value="0")
         self.x3_ptoCentral = tk.StringVar(value="0.0")
-        self.y3_ptoCentral = tk.StringVar(value="0.0")
+        self.y3_ptoCentral = tk.StringVar(value="-0.04")
         self.lc4 = tk.StringVar(value="2e-2")
 
         self.out_dir = tk.StringVar(value=str(Path.cwd() / "malhasMSH"))
@@ -84,7 +84,7 @@ class ConfigDashboard(tk.Tk):
         r = self._row(form, r, "Raio:", self.raio)
         r = self._row(form, r, "Nº eletrodos:", self.n_eletrodos)
         r = self._row(form, r, "lc (cuba):", self.lc1)
-        r = self._row(form, r, "Nr anomalias", self.NrAnomalias)
+        r = self._row(form, r, "Nr anomalias de 0 à 3", self.NrAnomalias)
         ttk.Separator(form, orient="horizontal").grid(
             row=r, column=0, columnspan=2, sticky="ew", pady=8
         )
@@ -162,6 +162,7 @@ class ConfigDashboard(tk.Tk):
         d = filedialog.askdirectory(title="Escolher pasta de saída")
         if d:
             self.out_dir.set(d)
+
    
     def update_preview(self):
 
@@ -187,20 +188,20 @@ class ConfigDashboard(tk.Tk):
                 pts_anomalia.append(gmsh.model.geo.addPoint(x_anomalia, y_anomalia, 0.0,  float(self.lc2.get())))
         
         
-        
-            pts_anomalia2 = []
-            for anom2 in range(int(self.anomalia2_lados.get())):
-                x_anomalia2 = float(self.x2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.cos((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
-                y_anomalia2 = float(self.y2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.sin((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
-                pts_anomalia2.append(gmsh.model.geo.addPoint(x_anomalia2, y_anomalia2, 0.0,  float(self.lc3.get())))
+            if int(self.NrAnomalias.get()) == 2 or int(self.NrAnomalias.get()) == 3:
+                pts_anomalia2 = []
+                for anom2 in range(int(self.anomalia2_lados.get())):
+                    x_anomalia2 = float(self.x2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.cos((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
+                    y_anomalia2 = float(self.y2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.sin((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
+                    pts_anomalia2.append(gmsh.model.geo.addPoint(x_anomalia2, y_anomalia2, 0.0,  float(self.lc3.get())))
             
   
-     
-            pts_anomalia3 = []
-            for anom3 in range(int(self.anomalia3_lados.get())):
-                x_anomalia3 = float(self.x3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.cos((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
-                y_anomalia3 = float(self.y3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.sin((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
-                pts_anomalia3.append(gmsh.model.geo.addPoint(x_anomalia3, y_anomalia3, 0.0,  float(self.lc4.get())))        
+            if int(self.NrAnomalias.get()) == 3:
+                pts_anomalia3 = []
+                for anom3 in range(int(self.anomalia3_lados.get())):
+                    x_anomalia3 = float(self.x3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.cos((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
+                    y_anomalia3 = float(self.y3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.sin((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
+                    pts_anomalia3.append(gmsh.model.geo.addPoint(x_anomalia3, y_anomalia3, 0.0,  float(self.lc4.get())))        
   
     
     
@@ -212,7 +213,7 @@ class ConfigDashboard(tk.Tk):
     
         loop_circulo = gmsh.model.geo.addCurveLoop(linhas_circulo)
     
-        if int(self.NrAnomalias.get()) > 0:
+        if int(self.NrAnomalias.get()) == 1:
             
             linhas_anomalia1 = []
             for A in range(int(self.anomalia1_lados.get())):
@@ -220,16 +221,41 @@ class ConfigDashboard(tk.Tk):
                 linhas_anomalia1.append(L_anomalia1)
                 #print('pts_anomalia',pts_anomalia[A])
             loop_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1])
             
+        if int(self.NrAnomalias.get()) == 2:
+            linhas_anomalia1 = []
+            for A in range(int(self.anomalia1_lados.get())):
+                L_anomalia1 = gmsh.model.geo.addLine(pts_anomalia[A], pts_anomalia[(A+1) % int(self.anomalia1_lados.get())])
+                linhas_anomalia1.append(L_anomalia1)
+                #print('pts_anomalia',pts_anomalia[A])
+            loop_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+            #surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1])
             linhas_anomalia2 = []
             for B in range(int(self.anomalia2_lados.get())):
                 L_anomalia2 = gmsh.model.geo.addLine(pts_anomalia2[B], pts_anomalia2[(B+1) % int(self.anomalia2_lados.get())])
                 linhas_anomalia2.append(L_anomalia2)
                 #print('pts_anomalia',pts_anomalia[B])
             loop_anomalia2 = gmsh.model.geo.addCurveLoop(linhas_anomalia2)
+            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1, loop_anomalia2])
             # cuba COM FURO (interface conformal)
-            
-                        
+        
+        if int(self.NrAnomalias.get()) == 3:
+            linhas_anomalia1 = []
+            for A in range(int(self.anomalia1_lados.get())):
+                L_anomalia1 = gmsh.model.geo.addLine(pts_anomalia[A], pts_anomalia[(A+1) % int(self.anomalia1_lados.get())])
+                linhas_anomalia1.append(L_anomalia1)
+                #print('pts_anomalia',pts_anomalia[A])
+            loop_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+            #surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1])
+            linhas_anomalia2 = []
+            for B in range(int(self.anomalia2_lados.get())):
+                L_anomalia2 = gmsh.model.geo.addLine(pts_anomalia2[B], pts_anomalia2[(B+1) % int(self.anomalia2_lados.get())])
+                linhas_anomalia2.append(L_anomalia2)
+                #print('pts_anomalia',pts_anomalia[B])
+            loop_anomalia2 = gmsh.model.geo.addCurveLoop(linhas_anomalia2)
+            #surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1, loop_anomalia2])
+            # cuba COM FURO (interface conformal)
             linhas_anomalia3 = []
             for C in range(int(self.anomalia3_lados.get())):
                 L_anomalia3 = gmsh.model.geo.addLine(pts_anomalia3[C], pts_anomalia3[(C+1) % int(self.anomalia3_lados.get())])
@@ -240,15 +266,23 @@ class ConfigDashboard(tk.Tk):
             
             surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1, loop_anomalia2, loop_anomalia3])
 
-            # anomalia preenchendo o buraco
+        # anomalia preenchendo o buraco
+        if int(self.NrAnomalias.get()) == 0:
+            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
+        if int(self.NrAnomalias.get()) == 1:
+            surface_anomalia1 = gmsh.model.geo.addPlaneSurface([loop_anomalia1])
+        if int(self.NrAnomalias.get()) == 2:
+            surface_anomalia1 = gmsh.model.geo.addPlaneSurface([loop_anomalia1])
+            surface_anomalia2 = gmsh.model.geo.addPlaneSurface([loop_anomalia2])
+        if int(self.NrAnomalias.get()) == 3:
             surface_anomalia1 = gmsh.model.geo.addPlaneSurface([loop_anomalia1])
             surface_anomalia2 = gmsh.model.geo.addPlaneSurface([loop_anomalia2])
             surface_anomalia3 = gmsh.model.geo.addPlaneSurface([loop_anomalia3])
 
 
 
-        else:
-            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
+
+           
 
 
         # colocando ptoCentral na superfície da cuba
@@ -259,15 +293,21 @@ class ConfigDashboard(tk.Tk):
         physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000)
 
         
-        if int(self.NrAnomalias.get()) > 0 and surface_anomalia1 is not None:
+        if int(self.NrAnomalias.get()) == 1:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
             gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")
-            if int(self.NrAnomalias.get()) == 2 or int(self.NrAnomalias.get()) == 3:
-                physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
-                gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
-            if int(self.NrAnomalias.get()) == 3:
-                physycal_anomalia3 = gmsh.model.addPhysicalGroup(2, [surface_anomalia3], 1003)
-                gmsh.model.setPhysicalName(2, physycal_anomalia3, "anomalia3")
+        if int(self.NrAnomalias.get()) == 2:
+            physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")    
+            physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
+        if int(self.NrAnomalias.get()) == 3:
+            physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")    
+            physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
+            physycal_anomalia3 = gmsh.model.addPhysicalGroup(2, [surface_anomalia3], 1003)
+            gmsh.model.setPhysicalName(2, physycal_anomalia3, "anomalia3")
         
         
         tipo = self.superficie_PCentral.get()
@@ -303,38 +343,9 @@ class ConfigDashboard(tk.Tk):
             gmsh.fltk.run()
 
         gmsh.finalize()
-    
+
     def save_file(self):
-        #nome = self.nome_arquivo.get().strip()
-        '''
-        if not nome:
-            messagebox.showerror("Erro", "Digite um nome de arquivo .")
-            return
 
-        out_dir = Path(self.out_dir.get().strip() or (Path.cwd() / "MalhasMSH"))
-        try:
-            os.makedirs(out_dir, exist_ok=True)
-        except Exception as e:
-            messagebox.showerror("Erro", f"Não consegui criar a pasta:\n{out_dir}\n\n{e}")
-            return
-
-        path_out = out_dir / f"{nome}.msh"
-        try:
-            path_out.write_text(self.build_content(), encoding="utf-8")
-        except Exception as e:
-            messagebox.showerror("Erro", f"Não consegui salvar o arquivo:\n{path_out}\n\n{e}")
-            return
-
-        messagebox.showinfo("OK", f"Arquivo salvo:\n{path_out}")
-        '''
-        # atualiza dica do limite raio/2
-        #raio = safe_float(self.raio.get(), 0.1)
-        #self.info_lbl.config(text=f"Dica: no seu script, o limite do ponto central era 0 até raio/2 = {raio/2:g}")
-        #print('banana')
-        
-        #content = self.build_content()
-        #self.txt.delete("1.0", "end")
-        #self.txt.insert("1.0", content)
         gmsh.initialize()
 
         gmsh.model.add("circulo")
@@ -357,20 +368,20 @@ class ConfigDashboard(tk.Tk):
                 pts_anomalia.append(gmsh.model.geo.addPoint(x_anomalia, y_anomalia, 0.0,  float(self.lc2.get())))
         
         
-        
-            pts_anomalia2 = []
-            for anom2 in range(int(self.anomalia2_lados.get())):
-                x_anomalia2 = float(self.x2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.cos((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
-                y_anomalia2 = float(self.y2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.sin((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
-                pts_anomalia2.append(gmsh.model.geo.addPoint(x_anomalia2, y_anomalia2, 0.0,  float(self.lc3.get())))
+            if int(self.NrAnomalias.get()) == 2 or int(self.NrAnomalias.get()) == 3:
+                pts_anomalia2 = []
+                for anom2 in range(int(self.anomalia2_lados.get())):
+                    x_anomalia2 = float(self.x2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.cos((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
+                    y_anomalia2 = float(self.y2_ptoCentral.get()) + float(self.anomalia2_raio.get())*math.sin((2*np.pi*anom2/int(self.anomalia2_lados.get()))+ math.radians(float(self.anomalia2_rotacao.get())))
+                    pts_anomalia2.append(gmsh.model.geo.addPoint(x_anomalia2, y_anomalia2, 0.0,  float(self.lc3.get())))
             
   
-     
-            pts_anomalia3 = []
-            for anom3 in range(int(self.anomalia3_lados.get())):
-                x_anomalia3 = float(self.x3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.cos((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
-                y_anomalia3 = float(self.y3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.sin((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
-                pts_anomalia3.append(gmsh.model.geo.addPoint(x_anomalia3, y_anomalia3, 0.0,  float(self.lc4.get())))        
+            if int(self.NrAnomalias.get()) == 3:
+                pts_anomalia3 = []
+                for anom3 in range(int(self.anomalia3_lados.get())):
+                    x_anomalia3 = float(self.x3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.cos((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
+                    y_anomalia3 = float(self.y3_ptoCentral.get()) + float(self.anomalia3_raio.get())*math.sin((2*np.pi*anom3/int(self.anomalia3_lados.get()))+ math.radians(float(self.anomalia3_rotacao.get())))
+                    pts_anomalia3.append(gmsh.model.geo.addPoint(x_anomalia3, y_anomalia3, 0.0,  float(self.lc4.get())))        
   
     
     
@@ -382,7 +393,7 @@ class ConfigDashboard(tk.Tk):
     
         loop_circulo = gmsh.model.geo.addCurveLoop(linhas_circulo)
     
-        if int(self.NrAnomalias.get()) > 0:
+        if int(self.NrAnomalias.get()) == 1:
             
             linhas_anomalia1 = []
             for A in range(int(self.anomalia1_lados.get())):
@@ -390,16 +401,41 @@ class ConfigDashboard(tk.Tk):
                 linhas_anomalia1.append(L_anomalia1)
                 #print('pts_anomalia',pts_anomalia[A])
             loop_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1])
             
+        if int(self.NrAnomalias.get()) == 2:
+            linhas_anomalia1 = []
+            for A in range(int(self.anomalia1_lados.get())):
+                L_anomalia1 = gmsh.model.geo.addLine(pts_anomalia[A], pts_anomalia[(A+1) % int(self.anomalia1_lados.get())])
+                linhas_anomalia1.append(L_anomalia1)
+                #print('pts_anomalia',pts_anomalia[A])
+            loop_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+            #surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1])
             linhas_anomalia2 = []
             for B in range(int(self.anomalia2_lados.get())):
                 L_anomalia2 = gmsh.model.geo.addLine(pts_anomalia2[B], pts_anomalia2[(B+1) % int(self.anomalia2_lados.get())])
                 linhas_anomalia2.append(L_anomalia2)
                 #print('pts_anomalia',pts_anomalia[B])
             loop_anomalia2 = gmsh.model.geo.addCurveLoop(linhas_anomalia2)
+            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1, loop_anomalia2])
             # cuba COM FURO (interface conformal)
-            
-                        
+        
+        if int(self.NrAnomalias.get()) == 3:
+            linhas_anomalia1 = []
+            for A in range(int(self.anomalia1_lados.get())):
+                L_anomalia1 = gmsh.model.geo.addLine(pts_anomalia[A], pts_anomalia[(A+1) % int(self.anomalia1_lados.get())])
+                linhas_anomalia1.append(L_anomalia1)
+                #print('pts_anomalia',pts_anomalia[A])
+            loop_anomalia1 = gmsh.model.geo.addCurveLoop(linhas_anomalia1)
+            #surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1])
+            linhas_anomalia2 = []
+            for B in range(int(self.anomalia2_lados.get())):
+                L_anomalia2 = gmsh.model.geo.addLine(pts_anomalia2[B], pts_anomalia2[(B+1) % int(self.anomalia2_lados.get())])
+                linhas_anomalia2.append(L_anomalia2)
+                #print('pts_anomalia',pts_anomalia[B])
+            loop_anomalia2 = gmsh.model.geo.addCurveLoop(linhas_anomalia2)
+            #surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1, loop_anomalia2])
+            # cuba COM FURO (interface conformal)
             linhas_anomalia3 = []
             for C in range(int(self.anomalia3_lados.get())):
                 L_anomalia3 = gmsh.model.geo.addLine(pts_anomalia3[C], pts_anomalia3[(C+1) % int(self.anomalia3_lados.get())])
@@ -410,47 +446,49 @@ class ConfigDashboard(tk.Tk):
             
             surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo, loop_anomalia1, loop_anomalia2, loop_anomalia3])
 
-            # anomalia preenchendo o buraco
+        # anomalia preenchendo o buraco
+        if int(self.NrAnomalias.get()) == 0:
+            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
+        if int(self.NrAnomalias.get()) == 1:
+            surface_anomalia1 = gmsh.model.geo.addPlaneSurface([loop_anomalia1])
+        if int(self.NrAnomalias.get()) == 2:
+            surface_anomalia1 = gmsh.model.geo.addPlaneSurface([loop_anomalia1])
+            surface_anomalia2 = gmsh.model.geo.addPlaneSurface([loop_anomalia2])
+        if int(self.NrAnomalias.get()) == 3:
             surface_anomalia1 = gmsh.model.geo.addPlaneSurface([loop_anomalia1])
             surface_anomalia2 = gmsh.model.geo.addPlaneSurface([loop_anomalia2])
             surface_anomalia3 = gmsh.model.geo.addPlaneSurface([loop_anomalia3])
 
 
-        #for L in range(int(self.anomalia2_lados.get())):
-        #    L_circulo = gmsh.model.geo.addLine(pts_anomalia2[L], pts_anomalia2[(L+1) % int(self.anomalia2_lados.get())])
-        #    linhas_circulo.append(L_circulo)
 
-        #curva_circulo = gmsh.model.geo.addCurveLoop(linhas_circulo)
-        else:
-            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
 
-        #linhas_anomalia1 = []
-        #for A in range(int(self.anomalia1_lados.get())):
-        #    L_anomalia1 = gmsh.model.geo.addLine(pts_anomalia[A], pts_anomalia[(A+1) % int(self.anomalia1_lados.get())])
-        #    linhas_anomalia1.append(L_anomalia1)
-    
+           
+
 
         # colocando ptoCentral na superfície da cuba
         gmsh.model.geo.removeAllDuplicates()
         gmsh.model.geo.synchronize()
-        #gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-        
+
         # criando physicalGroup da superfície
         physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000)
-        #gmsh.model.setPhysicalName(2, physycal_circulo, "cuba")
+
         
-        if int(self.NrAnomalias.get()) > 0 and surface_anomalia1 is not None:
+        if int(self.NrAnomalias.get()) == 1:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
             gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")
-            if int(self.NrAnomalias.get()) == 2 or int(self.NrAnomalias.get()) == 3:
-                physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
-                gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
-            if int(self.NrAnomalias.get()) == 3:
-                physycal_anomalia3 = gmsh.model.addPhysicalGroup(2, [surface_anomalia3], 1003)
-                gmsh.model.setPhysicalName(2, physycal_anomalia3, "anomalia3")
+        if int(self.NrAnomalias.get()) == 2:
+            physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")    
+            physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
+        if int(self.NrAnomalias.get()) == 3:
+            physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")    
+            physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
+            physycal_anomalia3 = gmsh.model.addPhysicalGroup(2, [surface_anomalia3], 1003)
+            gmsh.model.setPhysicalName(2, physycal_anomalia3, "anomalia3")
         
-        #gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia1)
-        #gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
         
         tipo = self.superficie_PCentral.get()
         print("Superfície escolhida:", tipo)
@@ -470,9 +508,7 @@ class ConfigDashboard(tk.Tk):
                 
         for idx in range(int(self.n_eletrodos.get())):
             gmsh.model.addPhysicalGroup(0, [pts_circulo[idx]], 10000+idx+1, name=f'electrode_{idx+1}')
-        #gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000, name='body')
-        #gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001, name='anomalia1')
-        #gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002, name='anomalia1')
+
 
 
 
@@ -481,6 +517,12 @@ class ConfigDashboard(tk.Tk):
         gmsh.model.mesh.generate(2)
         #gmsh.option.setNumber("Mesh.SaveAll", 0)
         gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
+        
+
+        if '-nopopup' not in sys.argv:
+            gmsh.fltk.run()
+
+
         
         caminho = os.path.join(self.out_dir.get(), self.nome_arquivo.get() + ".msh")
         gmsh.write(caminho)
