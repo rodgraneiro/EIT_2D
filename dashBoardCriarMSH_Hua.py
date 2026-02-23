@@ -63,7 +63,7 @@ class ConfigDashboard(tk.Tk):
         self.y3_ptoCentral = tk.StringVar(value="-0.04")
         self.lc4 = tk.StringVar(value="2e-2")
 
-        self.out_dir = tk.StringVar(value=str(Path.cwd() / "Configs"))
+        self.out_dir = tk.StringVar(value=str(Path.cwd() / "malhasMSH"))
 
         # ====== layout ======
         main = ttk.Frame(self, padding=12)
@@ -314,8 +314,8 @@ class ConfigDashboard(tk.Tk):
         loop_circulo = gmsh.model.geo.addCurveLoop(linhas_circulo)
         
 
-        if int(self.NrAnomalias.get()) == 0:
-            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
+        #if int(self.NrAnomalias.get()) == 0:
+        #    surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
             
         if int(self.NrAnomalias.get()) == 1: 
             linhas_anomalia1 = []
@@ -623,8 +623,8 @@ class ConfigDashboard(tk.Tk):
         linhas_anomalia = None
         loop_anomalia = None
         surface_anomalia = None
-        if int(self.NrAnomalias.get()) == 0:
-            surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
+        #if int(self.NrAnomalias.get()) == 0:
+        #    surface_circulo = gmsh.model.geo.addPlaneSurface([loop_circulo])
             
         if int(self.NrAnomalias.get()) == 1: 
             linhas_anomalia1 = []
@@ -772,9 +772,10 @@ class ConfigDashboard(tk.Tk):
         #gmsh.option.setNumber("Mesh.SaveAll", 0)
         gmsh.option.setNumber("Mesh.MshFileVersion",2.2)   
         
- 
+        caminho = os.path.join(self.out_dir.get(), self.nome_arquivo.get() + ".msh")
+        gmsh.write(caminho)
         
-        gmsh.write(self.nome_arquivo.get()  + '.msh')
+        #gmsh.write(self.nome_arquivo.get()  + '.msh')
         #gmsh.write(self.nome_arquivo.get()  + ".geo_unrolled")
         #os.rename(self.nome_arquivo.get()  + ".geo_unrolled", self.nome_arquivo.get()  + ".geo_unrolled")
         #shutil.move(self.nome_arquivo.get()  + ".geo_unrolled",self.nome_arquivo.get()  + ".geo")
