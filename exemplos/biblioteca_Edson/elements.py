@@ -207,7 +207,7 @@ class LinearLineHua(MyElement):
         # MATRIZ DE RIGIDEZ DO ELEMENTO Hua
         self.KGeo = ((self.Altura2D*lenth_a)/6)*mHua
         #print('KGeo_Hua', self.KGeo)
-
+        #self.KGeo = ((self.Altura2D * lenth_a) / (6.0 * zc)) * mHua
     def CalcCentroid(self):
         if self.Topology is None:
             raise Exception("MyElement(): CalcCentroid(): Topology not defined.")
@@ -269,8 +269,8 @@ class LinearLineEdson(MyElement):
         # MATRIZ DE RIGIDEZ DO ELEMENTO Hua
         self.KGeo = ((self.Altura2D/lenth_a))*mtz
         #print('KGeo \n', self.KGeo)
-
-
+        
+       
 ################################################################################
 ######################## ANISOTROPICO ##########################################
 ################################################################################
