@@ -206,9 +206,9 @@ class LinearLineHua(MyElement):
         mHua = np.array([[2.0,1.0,-3.0],[1.0,2.0,-3.0],[-3.0,-3.0,6.0]])
         
         # MATRIZ DE RIGIDEZ DO ELEMENTO Hua
-        self.KGeo = ((self.Altura2D*lenth_a)/6)*mHua
-        print('KGeo_Hua', self.KGeo)
-        #self.KGeo = ((self.Altura2D * lenth_a) / (6.0 * zc)) * mHua
+        #self.KGeo = ((self.Altura2D*lenth_a)/6)*mHua
+        #print('KGeo_Hua', self.KGeo)
+        self.KGeo = ((self.Altura2D * lenth_a) / (6.0 * zc)) * mHua
     def CalcCentroid(self):
         if self.Topology is None:
             raise Exception("MyElement(): CalcCentroid(): Topology not defined.")
