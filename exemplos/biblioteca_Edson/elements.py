@@ -200,13 +200,14 @@ class LinearLineHua(MyElement):
         # comprimento 'a' sqtr( (x2-x1)^2 + (y2-y1)^2) )
 
         lenth_a = np.sqrt((mtrz_lenth_a[1][0] - mtrz_lenth_a[0][0])**2 +(mtrz_lenth_a[1][1] - mtrz_lenth_a[0][1])**2)            
-        
+        print('lenth_a', lenth_a)
+        print('self.Altura2D', self.Altura2D)
         self.KGeo = np.zeros((3, 3), dtype=float)
         mHua = np.array([[2.0,1.0,-3.0],[1.0,2.0,-3.0],[-3.0,-3.0,6.0]])
         
         # MATRIZ DE RIGIDEZ DO ELEMENTO Hua
         self.KGeo = ((self.Altura2D*lenth_a)/6)*mHua
-        #print('KGeo_Hua', self.KGeo)
+        print('KGeo_Hua', self.KGeo)
         #self.KGeo = ((self.Altura2D * lenth_a) / (6.0 * zc)) * mHua
     def CalcCentroid(self):
         if self.Topology is None:
