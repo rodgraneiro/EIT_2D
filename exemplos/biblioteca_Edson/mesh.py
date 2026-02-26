@@ -112,7 +112,11 @@ class MyMesh:
                     if self.FlagRhoBased:
                         valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
                     else:
-                        valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                        if self.Elements[elem].FlagIsElectrode:
+                            valor = self.Elements[elem].KGeo[i, j]  # NÃO multiplica por Sigma
+                        else:
+                            valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                            #valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
                         #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
             #print('self.KGlobal \n',self.KGlobal)
