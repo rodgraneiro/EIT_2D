@@ -183,6 +183,8 @@ class LinearLineHua(MyElement):
     def __init__(self):
         super().__init__()
         self.FlagIsElectrode = True
+        #self.Sigma = 1.0
+        #self.Rho = 1.0
         
     def CalcKgeo(self):    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
