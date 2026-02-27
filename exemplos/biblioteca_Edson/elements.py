@@ -188,7 +188,7 @@ class LinearLineHua(MyElement):
         
     def CalcKgeo(self):
 
-        zc = 0.01    
+        zc = 0.00000001    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
@@ -213,6 +213,7 @@ class LinearLineHua(MyElement):
         #self.KGeo = ((self.Altura2D*lenth_a)/6)*mHua
         #print('KGeo_Hua', self.KGeo)
         self.KGeo = ((self.Altura2D * lenth_a) / (6.0 * zc)) * mHua
+        print('KGeo_Hua', self.KGeo)
     def CalcCentroid(self):
         if self.Topology is None:
             raise Exception("MyElement(): CalcCentroid(): Topology not defined.")
@@ -314,7 +315,7 @@ class LinearTriangleAnisotropic(MyElement):
         #print("Physical tag:", self.PhysicalEntity)
         if self.PhysicalEntity == 1000:
             Sx = 1.0
-            Sy = 1.0
+            Sy = 0.1
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
