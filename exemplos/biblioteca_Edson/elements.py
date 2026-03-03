@@ -315,7 +315,7 @@ class LinearTriangleAnisotropic(MyElement):
         #print("Physical tag:", self.PhysicalEntity)
         if self.PhysicalEntity == 1000:
             Sx = 1.0
-            Sy = 0.1
+            Sy = 1.0
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
@@ -345,7 +345,7 @@ class LinearTriangleAnisotropic(MyElement):
         
         #print('Xs',x[0], x[1], x[2] )
         #print('Ys',y[0], y[1], y[2] )
-        #print(Sxx,Sxy,Syy)
+        print(Sxx,Sxy,Syy)
         '''
         C_11 = Sxx*B_l**2 + 2*B_l*G_l*Sxy + Syy*G_l**2
         C_12 = B_l*(Sxx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Syy*G_m)        #C_21 = C_12
