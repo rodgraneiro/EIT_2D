@@ -36,6 +36,8 @@ class MyElement:
         self.physical_tags = self.__class__.__name__  # automático
         self.PhysicalEntity = self.__class__.__name__  # automático
 
+        #self.mymesh = mymesh
+    '''
     def SetRho(self, value):
         if value == 0:
             raise Exception("MyElement(): SetRho(): value não pode ser 0.")
@@ -48,7 +50,7 @@ class MyElement:
         self.Sigma = value
         self.Rho = 1.0/value
 
-
+    '''
     def CalcCentroid(self):
         if self.Topology is None:
             raise Exception("MyElement(): CalcCentroid(): Topology not defined.")
@@ -289,6 +291,8 @@ class LinearTriangleAnisotropic(MyElement):
 
     def __init__(self):
         super().__init__()
+
+        #self.mymesh = mymesh
         
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
     # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
@@ -314,8 +318,9 @@ class LinearTriangleAnisotropic(MyElement):
         #print(f"Physical tags found {self.physical_tags}.")
         #print("Physical tag:", self.PhysicalEntity)
         if self.PhysicalEntity == 1000:
-            Sx = 1.0
-            Sy = 0.1
+            Sx = 1.0 #self.mymesh.sigma_vec
+            Sy = 1.0 #self.mymesh.sigma_vec
+            print("Physical tag:", Sx, Sy)
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
@@ -345,7 +350,7 @@ class LinearTriangleAnisotropic(MyElement):
         
         #print('Xs',x[0], x[1], x[2] )
         #print('Ys',y[0], y[1], y[2] )
-        #print(Sxx,Sxy,Syy)
+        print(Sxx,Sxy,Syy)
         '''
         C_11 = Sxx*B_l**2 + 2*B_l*G_l*Sxy + Syy*G_l**2
         C_12 = B_l*(Sxx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Syy*G_m)        #C_21 = C_12

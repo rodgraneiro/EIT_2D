@@ -129,10 +129,11 @@ class forward_problem:
         #self.plotMSH(self.mymesh.sigma_vec)
         print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
+            print('banana self.mymesh.KGlobal is None')
             self.mymesh.CalcKGlobal()
         
         self.apply_boundary_conditions()
-        #print('solve self.KGlobal \n',self.KGlobal)
+        print('solve self.KGlobal \n',self.KGlobal)
         self.Yinversa = np.linalg.inv(self.KGlobal)
 
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)

@@ -81,13 +81,17 @@ class MyMesh:
     # dic[1] = 0.2 
     # dic[2] = 0.1
     def SetSigmaPhysicaEntity(self, dic):
-        self.sigma_vec = np.zeros(self.NumberOfElements, dtype=float)
+        self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
+        print("self.sigma_vec 11111:", self.sigma_vec)
         #print("CHAVES recebidas em dic:", sorted(dic.keys()))
+        
         for idx in range(self.NumberOfElements):
             tag = self.Elements[idx].PhysicalEntity
+            print("tag 11111:", tag)
             sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
+            print("sigma_value 11111:", sigma_value)
             self.Elements[idx].SetSigma(dic[tag])
-            self.sigma_vec[idx] = sigma_value
+            #self.sigma_vec[idx] = sigma_value
         #print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
 
 
@@ -508,9 +512,9 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
         if self.useEdson:
             elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
             elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
-            elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
-            elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
-            elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
+            elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # 
+            #elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # 
+            #elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # 
            
         else:
             elements.LinearTriangle.Coordinates = self.Coordinates
