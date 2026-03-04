@@ -315,7 +315,7 @@ class LinearTriangleAnisotropic(MyElement):
         #print("Physical tag:", self.PhysicalEntity)
         if self.PhysicalEntity == 1000:
             Sx = 1.0
-            Sy = 1.0
+            Sy = 0.10
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
