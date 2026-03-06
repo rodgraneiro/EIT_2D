@@ -775,10 +775,10 @@ class ConfigDashboard(tk.Tk):
         caminho = os.path.join(self.out_dir.get(), self.nome_arquivo.get() + ".msh")
         gmsh.write(caminho)
         
-        #gmsh.write(self.nome_arquivo.get()  + '.msh')
-        #gmsh.write(self.nome_arquivo.get()  + ".geo_unrolled")
-        #os.rename(self.nome_arquivo.get()  + ".geo_unrolled", self.nome_arquivo.get()  + ".geo_unrolled")
-        #shutil.move(self.nome_arquivo.get()  + ".geo_unrolled",self.nome_arquivo.get()  + ".geo")
+        gmsh.write(self.nome_arquivo.get()  + '.msh')
+        gmsh.write(self.nome_arquivo.get()  + ".geo_unrolled")
+        os.rename(self.nome_arquivo.get()  + ".geo_unrolled", self.nome_arquivo.get()  + ".geo_unrolled")
+        shutil.move(self.nome_arquivo.get()  + ".geo_unrolled",self.nome_arquivo.get()  + ".geo")
 
         #if '-nopopup' not in sys.argv:
         #    gmsh.fltk.run()
