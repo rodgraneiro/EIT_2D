@@ -188,7 +188,7 @@ class LinearLineHua(MyElement):
         
     def CalcKgeo(self):
 
-        zc = 0.00000001    
+        zc = 1000.0    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
