@@ -82,9 +82,19 @@ class MyMesh:
     # dic[2] = 0.1
     def SetSigmaPhysicaEntity(self, dic):
         self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
-        print("self.sigma_vec 11111:", self.sigma_vec)
-        #print("CHAVES recebidas em dic:", sorted(dic.keys()))
+        print("self.sigma_vec 11111 SetSigmaPhysicaEntity:", self.sigma_vec)
+        print("CHAVES recebidas em dic SetSigmaPhysicaEntity:", sorted(dic.keys()))
         
+        for idx in range(self.NumberOfElements):
+            tag = self.Elements[idx].PhysicalEntity
+            sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
+            #print("sigma_value 11111:", sigma_value)
+            self.Elements[idx].SetSigma(dic[tag])
+            self.sigma_vec[idx] = sigma_value
+        print(f"Vetor global de condutividades (sigma_vec SetSigmaPhysicaEntity):\n{self.sigma_vec}")
+    
+    def SetSigmaAnisotropicElements(self, dic):
+        self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
         for idx in range(self.NumberOfElements):
             tag = self.Elements[idx].PhysicalEntity
             print("tag 11111:", tag)
@@ -92,13 +102,17 @@ class MyMesh:
             print("sigma_value 11111:", sigma_value)
             self.Elements[idx].SetSigma(dic[tag])
             self.sigma_vec[idx] = sigma_value
-        print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
+        print(f"Vetor global de condutividades (sigma_vec SetSigmaAnisotropicElements):\n{self.sigma_vec}")
 
+        #self.sigma_vec = np.array(sigma_array, dtype=float)
 
+        if self.sigma_vec.shape != (self.NumberOfElements, 3):
+            raise ValueError("sigma_array deve ter dimensão (NumberOfElements, 3)")
+        print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
     def CalcKGlobal(self):
        
-        if self.Elements[0].Rho == 0.0:
-            raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
+        #if self.Elements[0].Rho == 0.0:
+        #    raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
             
         if self.KGlobal is None:
             self.KGlobal = np.zeros((self.NumberOfNodes, self.NumberOfNodes), dtype=float)
@@ -522,9 +536,12 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
         for idx in range(self.NumberOfElements):
             if self.useEdson:
                 self.Elements[idx] = elements.LinearTriangleAnisotropic()
+                print('self.Elements[idx]', self.Elements[idx])
+                self.Elements[idx].ElementIndex = idx
             else:
                 self.Elements[idx] = elements.LinearTriangle()
             
+            #self.Elements[idx] = elements.LinearTriangleAnisotropic()
             self.Elements[idx].mymesh = self
             self.Elements[idx].Topology = self.msh_topology[idx]
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
