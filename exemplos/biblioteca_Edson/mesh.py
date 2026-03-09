@@ -91,8 +91,8 @@ class MyMesh:
             sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
             print("sigma_value 11111:", sigma_value)
             self.Elements[idx].SetSigma(dic[tag])
-            #self.sigma_vec[idx] = sigma_value
-        #print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
+            self.sigma_vec[idx] = sigma_value
+        print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
 
 
     def CalcKGlobal(self):
@@ -524,6 +524,8 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
                 self.Elements[idx] = elements.LinearTriangleAnisotropic()
             else:
                 self.Elements[idx] = elements.LinearTriangle()
+            
+            self.Elements[idx].mymesh = self
             self.Elements[idx].Topology = self.msh_topology[idx]
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
         
@@ -531,7 +533,6 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
             self.Elements[idx].CalcCentroid()
             self.Elements[idx].CalcKgeo()
           
-
 ################################################################################
 ################################################################################
 #    Malhas 2D do Edson onde os eletrodos são definidos por linhas para implementação do modelo Hua.
