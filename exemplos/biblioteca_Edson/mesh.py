@@ -537,7 +537,7 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
         for idx in range(self.NumberOfElements):
             if self.useEdson:
                 self.Elements[idx] = elements.LinearTriangleAnisotropic()
-                print('self.Elements[idx]', self.Elements[idx])
+                #print('self.Elements[idx]', self.Elements[idx])
                 #self.Elements[idx].ElementIndex = idx
             else:
                 self.Elements[idx] = elements.LinearTriangle()

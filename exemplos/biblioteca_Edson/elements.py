@@ -330,7 +330,7 @@ class LinearTriangleAnisotropic(MyElement):
             #Sxy = sigma[1]   # σxy
             #Sy  = sigma[2]   # σyy
 
-            Sx = 1.0
+            Sx = 1.0 # somente para debug - deletar depois
             Sy = 0.1
 
         #print("Physical tag:", self.PhysicalEntity, Sx, Sy)
