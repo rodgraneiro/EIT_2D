@@ -88,7 +88,7 @@ class MyMesh:
             sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
             self.Elements[idx].SetSigma(dic[tag])
             self.sigma_vec[idx] = sigma_value
-        #print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
+        print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
 
 
     def CalcKGlobal(self):
