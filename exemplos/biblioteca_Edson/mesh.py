@@ -92,7 +92,7 @@ class MyMesh:
             self.Elements[idx].SetSigma(dic[tag])
             self.sigma_vec[idx] = sigma_value
         print(f"Vetor global de condutividades (sigma_vec SetSigmaPhysicaEntity):\n{self.sigma_vec}")
-    
+    '''
     def SetSigmaAnisotropicElements(self, dic):
         self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
         for idx in range(self.NumberOfElements):
@@ -109,6 +109,7 @@ class MyMesh:
         if self.sigma_vec.shape != (self.NumberOfElements, 3):
             raise ValueError("sigma_array deve ter dimensão (NumberOfElements, 3)")
         print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
+    '''
     def CalcKGlobal(self):
        
         #if self.Elements[0].Rho == 0.0:
@@ -537,12 +538,12 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
             if self.useEdson:
                 self.Elements[idx] = elements.LinearTriangleAnisotropic()
                 print('self.Elements[idx]', self.Elements[idx])
-                self.Elements[idx].ElementIndex = idx
+                #self.Elements[idx].ElementIndex = idx
             else:
                 self.Elements[idx] = elements.LinearTriangle()
             
             #self.Elements[idx] = elements.LinearTriangleAnisotropic()
-            self.Elements[idx].mymesh = self
+            #self.Elements[idx].mymesh = self
             self.Elements[idx].Topology = self.msh_topology[idx]
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
         

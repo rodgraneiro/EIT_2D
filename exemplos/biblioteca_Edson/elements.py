@@ -37,7 +37,7 @@ class MyElement:
         self.physical_tags = self.__class__.__name__  # automático
         self.PhysicalEntity = self.__class__.__name__  # automático
 
-        self.ElementIndex = None
+        #self.ElementIndex = None
 
         
     '''
@@ -320,14 +320,18 @@ class LinearTriangleAnisotropic(MyElement):
         #print('self.msh_physical_groups',  {self.msh_physical_groups})
         #print(f"Physical tags found {self.physical_tags}.")
         #print("Physical tag:", self.PhysicalEntity)
-        print("LinearTriangleAnisotropic", self.mymesh.sigma_vec[self.ElementIndex])
+
+        #print("LinearTriangleAnisotropic", self.mymesh.sigma_vec[self.ElementIndex])
 
         if self.PhysicalEntity >= 1000:
-            sigma = self.mymesh.sigma_vec[self.ElementIndex]
+            #sigma = self.mymesh.sigma_vec[self.ElementIndex]
 
-            Sx  = sigma[0]   # σxx
-            Sxy = sigma[1]   # σxy
-            Sy  = sigma[2]   # σyy
+            #Sx  = sigma[0]   # σxx
+            #Sxy = sigma[1]   # σxy
+            #Sy  = sigma[2]   # σyy
+
+            Sx = 1.0
+            Sy = 0.1
 
         #print("Physical tag:", self.PhysicalEntity, Sx, Sy)
 
