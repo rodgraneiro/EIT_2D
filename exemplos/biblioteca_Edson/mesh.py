@@ -561,7 +561,7 @@ class HuaElectrodes2DAnisotropic(MyMesh):
         self.thetaAngle = thetaAngle
         self.sigmaX = sigmaX
         self.sigmaY = sigmaY
-
+        
 
 
 
