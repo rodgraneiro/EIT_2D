@@ -186,6 +186,15 @@ class LinearLineHua(MyElement):
         #self.Sigma = 1.0
         #self.Rho = 1.0
         
+        # Modelo completo eletrodo Hua
+        #K_electrode = (b*a)/(6*t*rho) * np.array([  [2, 1, -3],
+        #                                            [1, 2, -3],
+        #                                            [-3, -3, 6]])
+        #- rho = resistividade do material do eletrodo
+        #- t = espessura
+        #- a, b = dimensões geométricas do elemento
+
+
     def CalcKgeo(self):
 
         zc = 100000.0    
