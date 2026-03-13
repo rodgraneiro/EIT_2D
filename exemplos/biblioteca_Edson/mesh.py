@@ -134,8 +134,9 @@ class MyMesh:
                         if self.Elements[elem].FlagIsElectrode:
                             valor = self.Elements[elem].KGeo[i, j]  # NÃO multiplica por Sigma
                         else:
-                            valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                            #print('mesh sigma zzzz', self.Elements[elem].Sigma[0])
                             #valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                            valor = self.Elements[elem].KGeo[i, j]
                         #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
             #print('self.KGlobal \n',self.KGlobal)
@@ -528,6 +529,7 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
             elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
             elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
             elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # 
+            
             #elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # 
             #elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # 
            
@@ -538,18 +540,18 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
             if self.useEdson:
                 self.Elements[idx] = elements.LinearTriangleAnisotropic()
                 #print('self.Elements[idx]', self.Elements[idx])
-                #self.Elements[idx].ElementIndex = idx
+                self.Elements[idx].ElementIndex = idx
             else:
                 self.Elements[idx] = elements.LinearTriangle()
             
             #self.Elements[idx] = elements.LinearTriangleAnisotropic()
-            #self.Elements[idx].mymesh = self
+            self.Elements[idx].mymesh = self
             self.Elements[idx].Topology = self.msh_topology[idx]
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
         
 
             self.Elements[idx].CalcCentroid()
-            self.Elements[idx].CalcKgeo()
+            #self.Elements[idx].CalcKgeo()
           
 ################################################################################
 ################################################################################

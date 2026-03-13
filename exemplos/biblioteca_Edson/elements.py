@@ -37,7 +37,7 @@ class MyElement:
         self.physical_tags = self.__class__.__name__  # automático
         self.PhysicalEntity = self.__class__.__name__  # automático
 
-        #self.ElementIndex = None
+        self.ElementIndex = None
 
         
     '''
@@ -322,16 +322,17 @@ class LinearTriangleAnisotropic(MyElement):
         #print("Physical tag:", self.PhysicalEntity)
 
         #print("LinearTriangleAnisotropic", self.mymesh.sigma_vec[self.ElementIndex])
-
+        #print('banana')
         if self.PhysicalEntity >= 1000:
-            #sigma = self.mymesh.sigma_vec[self.ElementIndex]
+            #print('batata')
+            sigma = self.mymesh.sigma_vec[self.ElementIndex]
+            
+            Sx  = sigma[0]   # σxx
+            Sxy = sigma[1]   # σxy
+            Sy  = sigma[2]   # σyy
 
-            #Sx  = sigma[0]   # σxx
-            #Sxy = sigma[1]   # σxy
-            #Sy  = sigma[2]   # σyy
-
-            Sx = 1.0 # somente para debug - deletar depois
-            Sy = 0.1
+            #Sx = 1.0 # somente para debug - deletar depois
+            #Sy = 0.1
 
         #print("Physical tag:", self.PhysicalEntity, Sx, Sy)
 
@@ -365,7 +366,7 @@ class LinearTriangleAnisotropic(MyElement):
         
         #print('Xs',x[0], x[1], x[2] )
         #print('Ys',y[0], y[1], y[2] )
-        print(Sxx,Sxy,Syy)
+        #print(Sxx,Sxy,Syy)
 
         C_11 = Sxx*B_l**2 + 2.0*Sxy*B_l*G_l + Syy*G_l**2
         C_22 = Sxx*B_m**2 + 2.0*Sxy*B_m*G_m + Syy*G_m**2
