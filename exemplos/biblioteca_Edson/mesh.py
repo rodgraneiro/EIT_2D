@@ -108,7 +108,7 @@ class MyMesh:
 
                 for j in range(len(self.Elements[elem].Topology)): # para cada j (noh local):
                     no_j = self.Elements[elem].Topology[j] # pega noh_j (noh global)
-
+                    '''
                     if self.FlagRhoBased:
                         valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
                     else:
@@ -116,6 +116,14 @@ class MyMesh:
                             valor = self.Elements[elem].KGeo[i, j]  # NÃO multiplica por Sigma
                         else:
                             valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                            #valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                        #print('mesh sigma', self.Elements[elem].Sigma, elem)
+                    self.KGlobal[no_i, no_j] += valor
+                    '''
+                    if self.FlagRhoBased:
+                        valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
+                    else:
+                        valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
                             #valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
                         #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
@@ -157,7 +165,7 @@ class PointElectrodes2DMeshEdson(MyMesh):
         if self.MshFileName == "":
             raise Exception("PointElectrodes2DMeshEdson(): MshFileName not defined.")
 
-        (f"Reading {self.MshFileName}.")
+        print(f"Reading {self.MshFileName}.")
         self.__mshdata = meshio.read(self.MshFileName)
 
         # Check msh dimension

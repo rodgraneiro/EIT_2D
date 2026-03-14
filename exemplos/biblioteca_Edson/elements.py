@@ -158,7 +158,7 @@ class LinearTriangleEdson(MyElement):
         Y_23 =  (y[2]-y[0])*(y[0]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # 
         Y_33 =  (y[0]- y[1])**2 + (x[1]-x[0])**2  
 
-        '''
+        
         self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[Y_11, Y_12, Y_13], 
                                         [Y_12, Y_22, Y_23],      
                                         [Y_13, Y_23, Y_33]       
@@ -168,6 +168,7 @@ class LinearTriangleEdson(MyElement):
                                         [Y_12, Y_22, Y_23],      
                                         [Y_13, Y_23, Y_33]       
                                         ])
+        '''
         #print(noh1,noh2,noh3)
         #print('x',x)
         #print('y',y)
