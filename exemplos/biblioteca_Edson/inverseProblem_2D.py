@@ -15,7 +15,7 @@ import elements
 import gmsh
 import sys
 from datetime import datetime
-
+from matplotlib import cm
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
@@ -282,14 +282,15 @@ class inverse_problem:
             #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
         self.TempJ = np.concatenate(listTempJ, axis=1)
         #print('self.TempJ \n',self.TempJ.shape)
-        JTJ = np.dot(self.TempJ.T, self.TempJ)
-        #print('JTJ \n',JTJ.shape)
+        #JTJ = np.dot(self.TempJ.T, self.TempJ)
+        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
+        #print('JTJ \n', self.JTJ.shape)
     ###############################################################################
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.005, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.007, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
         L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
@@ -342,7 +343,8 @@ class inverse_problem:
         fig.colorbar(surf, shrink=0.5)
         plt.show()
 
-        plt.show()
+        #plt.show(block = false)
+        #plt.pause(0.1)
         return L2
 
     
@@ -381,6 +383,10 @@ class inverse_problem:
         # filtro passa–alta
         L2 = I - L
         
+        i, j =  np.nonzero(L)
+        values = L2[i, j]
+
+
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -389,6 +395,10 @@ class inverse_problem:
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
         plt.show()
+
+        #plt.show(block = false)
+        #plt.pause(0.1)
+
         return L2
 
     ###############################################################################
@@ -410,6 +420,8 @@ class inverse_problem:
         plt.grid(True)
         #plt.tight_layout()
         plt.show()
+        #plt.show(block = false)
+        #plt.pause(0.1)
     ###############################################################################
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
@@ -427,6 +439,7 @@ class inverse_problem:
         #plt.tight_layout()
         plt.show()
         '''
+    
     def plotMSH(self, sigma, iteration = None, save = False):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
@@ -443,16 +456,16 @@ class inverse_problem:
         # ============================================================
         if len(elems_2D) > 0:
             triang = tri.Triangulation(x, y, elems_2D)
-            tpc = ax.tripcolor(
-                triang,
-                facecolors=sigma[:len(elems_2D)],
-                edgecolors='k',
-                cmap='Blues')#,vmin=1.0 )
-            
+            #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+            ntri = triang.triangles.shape[0]
+            fc = sigma.ravel()[:ntri]
+
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#,vmin=1.0 )
+
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity Real (σ) - itr_{iteration}_{timestamp}", fontsize=12)
+                ax.set_title(f"Conductivity Real (σ) - rnd - itr_{iteration}", fontsize=12)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -468,12 +481,40 @@ class inverse_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        if save == True:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
-            dpi=300, bbox_inches='tight')
-        plt.show()    
+        #if save == True:
+        #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+        #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+        #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
+        #    dpi=300, bbox_inches='tight')
+        #plt.show()
+        #plt.show(block = false)
+        #plt.pause(0.1)
+    ###############################################################################    
+    def plot_espectro(self,x, titulo="Espectro (FFT)"):
+        X = np.fft.fft(x)
+        w = np.fft.fftfreq(len(x))
+        
+        X_shifted = np.fft.fftshift(X)
+        w_shifted = np.fft.fftshift(w)
+
+
+
+        plt.figure(figsize=(8,4))
+        #plt.stem(w, np.abs(X))
+        #plt.plot(w, np.abs(X))
+        plt.plot(w_shifted, np.abs(X_shifted))
+        plt.yscale("log")
+        plt.xlim(left=0)
+        plt.ylim(top=1e4) 
+        #plt.ylim(bottom=1e-3) 
+        plt.title(titulo)
+        plt.xlabel("Frequência (w)")
+        plt.ylabel("|X(w)|")
+        plt.grid(True)
+        plt.tight_layout()
+        #plt.show()
+        plt.show(block=False)
+        plt.pause(0.1)      
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
@@ -487,7 +528,7 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        self.plotMSH(self.mymesh.sigma_vec, save = False)
+        #self.plotMSH(self.mymesh.sigma_vec, save = False)
         
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
@@ -497,19 +538,25 @@ class inverse_problem:
         contNorma = 0
         contNeg = 0
         contItr = 0
+        V_measured = V_measured.T
+        V_measured = V_measured.reshape(-1, 1)
+        #print('V_measured', V_measured.shape)
         
         
         sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
-        sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
+        sigmaInicial = sigmaInicial.reshape(-1,1)
+
+        #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
+        self.sigmaStar = (sigmaInicial/sigmaInicial)*2.5
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
-        
+        '''
         ###
         VtempJ = self.CalcTempKGlobal(sigmaOne)                            # calcula derivadas parciais da matriz jacobiana
         
         # ***** Determinação do Valor calculado *****
         VtempJ = self.apply_boundary_conditions(VtempJ)                        # aplica cond contorno na matriz jacobiana
         invVtempJ = np.linalg.inv(VtempJ)                                      # inverte matriz TempKGobal para jacobiana
-        
+        '''
         #######################################################################
         ###################        MAIN LOOP   ################################
         #######################################################################
@@ -524,11 +571,19 @@ class inverse_problem:
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
+
+            V_calc_noh = V_calc_noh.T
+            V_calc_noh = V_calc_noh.reshape(-1, 1)
+
+
+
+
                         # ***** Determinação do resíduo *****
             residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
+
             normaResidue = np.linalg.norm(residue)
             listaItrPlot.append(normaResidue)
-            residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
+            #residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
             #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
             
             self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
@@ -539,37 +594,39 @@ class inverse_problem:
             self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
-            W1=np.eye(self.TempJ.shape[0])
-            JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
-            JTWJ = np.dot(JTW, self.TempJ)
+            #W1=np.eye(self.TempJ.shape[0])
+            #JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
+            #JTWJ = np.dot(JTW, self.TempJ)
             
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
             LTL =np.dot(L2.T, L2)
             termo_L = (Lambda**2)*LTL
             
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
-            firstTerm = JTWJ + termo_L
+            #firstTerm = JTWJ + termo_L
+            firstTerm = self.JTJ + termo_L
             inv_firstTerm = np.linalg.inv(firstTerm)
             
             # ***** Cálculo do termo 2a (JT_W1_residue) *****
             
-            JTW_H = np.dot(JTW,residue)            
+            #JTW_H = np.dot(JTW,residue)      
+            JTW_H = np.dot(self.TempJ.T,residue)      
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
-            regTerm = (sigmaInicial - sigmaStar)* (Lambda**2)
+            regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
 
             regTerm = regTerm.reshape(-1, 1)
-            regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
-            regularization = np.dot(termo_L, regTermC)
+            #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
+            regularization = np.dot(termo_L, regTerm)
                         
             # ***** Cálculo final do termo 2 *****
-            secondTerm = JTW_H - regularization
+            secondTerm = -JTW_H - regularization
             
             
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
 
-            deltaSigma = deltaSigma[:, 0]*alpha
+            #deltaSigma = deltaSigma[:, 0]*alpha
             
             alphaDeltaSigma = alpha*deltaSigma
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
@@ -637,10 +694,27 @@ class inverse_problem:
             #if itr % 500 == 0:   # salva de 1000 em 1000 ...
             #    self.plotMSH(sigmaInicial, itr, save = True)
 
-        print('sigmaInicial \n', sigmaInicial) 
+        #print('sigmaInicial \n', sigmaInicial) 
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        #self.plotMSH(sigmaInicial, itr, save = True)
-        self.plotMSH(sigmaInicial, save = True)
+        self.plotMSH(sigmaInicial, itr, save = True)
+        self.plot_espectro(sigmaInicial)
+
+        s = np.linalg.svd(self.TempJ, compute_uv = False)
+
+        # --- 2) Gráfico tipo semilogy
+        plt.figure()
+        plt.semilogy(s, 'o-')
+        plt.grid(True, which='both')
+        plt.xlabel('índice')
+        plt.ylabel('valor singular (log)')
+        plt.title('Espectro singular do Jacobiano')
+        plt.show()
+        #plt.show(block=False)
+        #plt.pause(0.01)  
+        # --- 3) Rank efetivo (mesma ideia do seu código)
+        tol = 1e-6 * s[0]          # ou outro fator
+        rank_eff = np.sum(s > tol)
+        print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
         
         
