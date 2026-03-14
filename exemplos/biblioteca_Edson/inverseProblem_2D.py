@@ -285,7 +285,7 @@ class inverse_problem:
             #print('termo3 \n', termo3.shape)
             termo3 = termo3[self.mymesh.ElectrodeNodes]
             #print('elemento \n', idx)
-            #print('termo3a \n', termo3.shape)
+            #
             
             termo3 = termo3.reshape(-1,1,  order='F')
             #print('termo3b \n', termo3.shape)
@@ -296,7 +296,7 @@ class inverse_problem:
         #np.savetxt('JacobianoCoarse.txt', self.TempJ, fmt="%.8f")
         #print('self.TempJ \n',self.TempJ)
         self.JTJ = np.dot(self.TempJ.T, self.TempJ)
-        #print('JTJ \n', self.JTJ)
+        #print('JTJ \n', self.JTJ.shape)
     ###############################################################################
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
@@ -653,6 +653,8 @@ class inverse_problem:
             #print('self.vetor_corrente_cond_contorno',self.vetor_corrente_cond_contorno)
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
             #print('V_calc_noh',V_calc_noh.shape)
+
+
             V_calc_noh = V_calc_noh.T
             V_calc_noh = V_calc_noh.reshape(-1, 1)
             #print('V_calc_noh ',V_calc_noh)
