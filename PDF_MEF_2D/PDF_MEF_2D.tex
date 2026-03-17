@@ -583,8 +583,225 @@ As condições de contorno para esses elementos são :
 \label{eq:MEF_eq_0008}
 \end{equation}
 
+ \subsection{Matriz de condutividade do elemento retangular.}
+ 
+ A matriz típica do MEF para condutividade é dada pela equação:
+ \begin{equation}
+ 	[K_{ij}]_n = \int_{A_n} \left( \rho^{-1} \right) 
+ 	\left( \frac{\partial f_i}{\partial x} \frac{\partial f_j}{\partial x} 
+ 	+ \frac{\partial f_i}{\partial y} \frac{\partial f_j}{\partial y} \right) dA 
+ 	\label{eq:MEF_eq_0009}
+ \end{equation}
+onde:
+
+$f_i$ → funções de forma do elemento.
+
+$\rho$ → resistividade.
+
+$A_n$ → área do elemento. \\
+e elemento retangular das figuras \ref{fig:HuaEletrodoVirtual} e  \ref{fig:HuaEletrodoVirtual3D}:
+
+$a$ = largura.  
+
+$t$ = espessura da camada de impedância. 
+
+$b$ = altura do eletrodo.  
+
+Para o elemento retangular, as funções de forma são dadas por:
+\begin{equation}
+	f_i(x,y) =  
+	\frac{1}{4}  
+	(1 \pm \frac{x}{a})  
+	(1 \pm \frac{y}{t})
+	\label{eq:MEF_eq_0010}  
+\end{equation}
 
 
+- para o elemento $I$, os nós são $1,2,5 e 6$:
+\begin{equation*}
+	f_1(x,y)^{(I)}=\frac14\left(1-\frac{x}{a}\right)\left(1-\frac{y}{t}\right)  
+\end{equation*}
+
+\begin{equation*}
+	f_2(x,y)^{(I)}=\frac14\left(1+\frac{x}{a}\right)\left(1-\frac{y}{t}\right)  
+\end{equation*}
+
+\begin{equation*}
+	f_5(x,y)^{(I)}=\frac14\left(1+\frac{x}{a}\right)\left(1+\frac{y}{t}\right)
+\end{equation*}
+
+\begin{equation*}
+	f_6(x,y)^{(I)}=\frac14\left(1-\frac{x}{a}\right)\left(1+\frac{y}{t}\right)
+\end{equation*}
+
+
+
+- para o elemento $II$, os nós são $2,3,4 e 5$:
+
+\begin{equation*}
+	f_2(x,y)^{(II)}=\frac14\left(1-\frac{x}{a}\right)\left(1-\frac{y}{t}\right)  
+\end{equation*}
+
+\begin{equation*}
+	f_3(x,y)^{(II)}=\frac14\left(1+\frac{x}{a}\right)\left(1-\frac{y}{t}\right)
+\end{equation*}
+
+\begin{equation*}
+	f_4(x,y)^{(II)}=\frac14\left(1-\frac{x}{a}\right)\left(1-\frac{y}{t}\right)
+\end{equation*}
+
+\begin{equation*}
+	f_5(x,y)^{(II)}=\frac14\left(1-\frac{x}{a}\right)\left(1+\frac{y}{t}\right)
+\end{equation*}
+
+Derivadas parciais para o elemento $I$.
+
+$$  
+\frac{\partial f_1}{\partial x}^{(I)}
+= \frac{1}{4a}\left(1-\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_1}{\partial y}^{(I)}
+=\frac{1}{4t}\left(1-\frac{x}{a}\right)  
+$$
+
+$$  
+\frac{\partial f_2}{\partial x}^{(I)} =
+\frac{1}{4a}\left(1-\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_2}{\partial y}^{(I)} 
+=\frac{1}{4t}\left(1+\frac{x}{a}\right)  
+$$
+
+$$  
+\frac{\partial f_5}{\partial x}^{(I)}=
+\frac{1}{4a}\left(1+\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_5}{\partial y}^{(I)}=
+\frac{1}{4t}\left(1+\frac{x}{a}\right)  
+$$
+
+$$  
+\frac{\partial f_6}{\partial x}^{(I)}
+=\frac{1}{4a}\left(1+\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_6}{\partial y}^{(I)}=
+\frac{1}{4t}\left(1-\frac{x}{a}\right)  
+$$
+
+
+
+
+
+Derivadas parciais para o elemento $II$.
+
+$$  
+\frac{\partial f_2}{\partial x}^{(II)}
+=\frac{1}{4a}\left(1-\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_2}{\partial y}^{(II)}
+=\frac{1}{4t}\left(1-\frac{x}{a}\right)  
+$$
+$$  
+\frac{\partial f_3}{\partial x}^{(II)}
+= \frac{1}{4a}\left(1-\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_3}{\partial y}^{(II)}
+=\frac{1}{4t}\left(1+\frac{x}{a}\right)  
+$$
+$$  
+\frac{\partial f_4}{\partial x}^{(II)}
+= \frac{1}{4a}\left(1+\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_4}{\partial y}^{(II)}=
+\frac{1}{4t}\left(1+\frac{x}{a}\right)  
+$$
+$$  
+\frac{\partial f_5}{\partial x}^{(II)}
+=\frac{1}{4a}\left(1+\frac{y}{t}\right),  
+\qquad  
+\frac{\partial f_5}{\partial y}^{(II)}=
+\frac{1}{4t}\left(1-\frac{x}{a}\right)  
+$$
+
+
+
+\textbf{Matriz local do elemento $I$}
+$$  
+\mathbf{K}^{(I)} = 
+\frac{b}{\rho}  
+\int_{-a}^{a}\int_{-t}^{t}  
+\left[  
+\left(\frac{\partial \mathbf{f}}{\partial x}\right)  
+\left(\frac{\partial \mathbf{f}}{\partial x}\right)^T  
++  
+\left(\frac{\partial \mathbf{f}}{\partial y}\right)  
+\left(\frac{\partial \mathbf{f}}{\partial y}\right)^T  
+\right]dydx  
+$$
+onde:
+$$  
+\mathbf{K}^{(I)}
+=
+\frac{b}{6at\rho}  
+\begin{bmatrix}  
+	a^2+t^2 & \dfrac{a^2}{2}-t^2 & -\dfrac{a^2+t^2}{2} & -a^2+\dfrac{t^2}{2} \\
+	\dfrac{a^2}{2}-t^2 & a^2+t^2 & -a^2+\dfrac{t^2}{2} & -\dfrac{a^2+t^2}{2} \\ 
+	-\dfrac{a^2+t^2}{2} & -a^2+\dfrac{t^2}{2} & a^2+t^2 & \dfrac{a^2}{2}-t^2 \\
+	-a^2+\dfrac{t^2}{2} & -\dfrac{a^2+t^2}{2} & \dfrac{a^2}{2}-t^2 & a^2+t^2  
+\end{bmatrix}  
+$$
+
+
+\textbf{Matriz local do elemento $II$}
+
+$$  
+\mathbf{K}^{(II)}
+=
+\frac{b}{6at\rho}  
+\begin{bmatrix}  
+	a^2+t^2 & \dfrac{a^2}{2}-t^2 & -\dfrac{a^2+t^2}{2} & -a^2+\dfrac{t^2}{2} \\ 
+	\dfrac{a^2}{2}-t^2 & a^2+t^2 & -a^2+\dfrac{t^2}{2} & -\dfrac{a^2+t^2}{2} \\ 
+	-\dfrac{a^2+t^2}{2} & -a^2+\dfrac{t^2}{2} & a^2+t^2 & \dfrac{a^2}{2}-t^2 \\ 
+	-a^2+\dfrac{t^2}{2} & -\dfrac{a^2+t^2}{2} & \dfrac{a^2}{2}-t^2 & a^2+t^2  
+\end{bmatrix}  
+$$
+
+
+\subsubsection{Condições de contorno.}
+
+O fluxo de corrente imposto pelo eletrodo é dado por:
+
+\begin{equation}
+	[Q_i]_n = \int_{\partial A_n} \phi_v f_i(x,y) ds
+	\label{eq:MEF_eq_0011}    
+\end{equation}
+
+A corrente é aplicada no lado do metal no nós $4$, $5$ e $6$, assim:
+
+- nós 1,2 e 3 → não recebem contribuição\\
+- nós 4,5 e 6 → recebem contribuição
+
+
+Dessa maneira Hua \cite{hua1993finite} monta o vetor de corrente para os seis nós como:
+
+$$  
+\begin{bmatrix}  
+	0\\  
+	0\\  
+	0\\  
+	\int_4^5 \phi_v f_4 ds\\  
+	\int_4^5 \phi_v f_5 ds + \int_5^6 \phi_v f_5 ds\\  
+	\int_5^6 \phi_v f_6 ds  
+\end{bmatrix}  
+$$
+
+
+
+
+
+
+
+	
 %\tiny
 %\scriptsize
 %\footnotesize
