@@ -1,0 +1,21 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Hua et al. 1993]{hua1993finite}
+\abntrefinfo{Hua et al.}{HUA et al.}{1993}
+{HUA, P. et al. Finite element modeling of electrode-skin contact impedance in
+  electrical impedance tomography.
+\emph{IEEE Transactions on Biomedical Engineering}, IEEE, v.~40, n.~4, p.
+  335--343, 1993.}
+
+\bibitem[Rosell et al. 2002]{rosell2002skin}
+\abntrefinfo{Rosell et al.}{ROSELL et al.}{2002}
+{ROSELL, J. et al. Skin impedance from 1 hz to 1 mhz.
+\emph{IEEE Transactions on Biomedical Engineering}, IEEE, v.~35, n.~8, p.
+  649--651, 2002.}
+
+\end{thebibliography}

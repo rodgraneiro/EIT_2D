@@ -20,6 +20,8 @@ sumario=tradicional
 
 
 \begin{document}
+%\bibliographystyle{abntex2-alf}
+%\bibliography{abntex2-modelo-references}
 	
 	\chapter{Método de Elementos Finitos 2D}
 	
@@ -530,6 +532,58 @@ C_{33} &= \beta_n^2\sigma_{xx}+2\gamma_n\beta_n\sigma_{xy}+\gamma_n^2\sigma_{yy}
 		\gamma_n = (x_m - x_l)
 	\end{array}
 \end{equation*}
+
+
+
+	\chapter{Eletrodo Virtual 2D} 
+	
+    \section{Discretização do eletrodo virtual}
+    
+    A TIE monta uma imagem a partir da condutividade (ou resistividade) por meio de medições de tensão e corrente no perímetro do objeto em estudo.  Tanto a injeção de corrente, como, a medição de tensão são realizados por meio de eletrodos metálicos. Entretanto, a corrente é conduzida em um metal por meio de elétrons livres, enquanto que, em tecidos biológicos e eletrólitos é conduzida por íons diluídos no meio. Essa mudança de meios de condução de corrente gera uma impedância de contato que deve ser adicionada ao modelo matemático utilizado no método de elementos finitos. 
+    
+    A figura \ref{fig:HuaImpedandiaContato} apresenta o modelo de eletrodo virtual proposto por Hua \cite{hua1993finite}.   A impedância de contato possui tanto componentes capacitivos $\epsilon$ quanto resistivos $\rho$, entretanto, por simplicidade o modelo de Hua considera o meio puramente resistivo. Mesmo assim, a queda de tensão na impedância de contato entre pele e eletrodo é significativa. Segundo Rosell \cite{rosell2002skin}, a magnitude da impedância de contato é de aproximadamente  800 $\Omega \cdot cm^2$
+    
+ \begin{figure}[htbp]
+ 	\centering
+ 	\includegraphics[width=0.5\textwidth]{HuaImpedandiaContato.png}
+ 	\caption{Impedância de contato (adaptado de \cite{hua1993finite} ).}
+ 	\label{fig:HuaImpedandiaContato}
+ \end{figure}
+     
+     
+     A Fig. \ref{fig:HuaEletrodoVirtual} mostra um diagrama da camada de contato  eletrodo–pele proposto por Hua.  A linha contínua é um eletrodo metálico, um elemento retangular tracejado representa a camada de contato eletrodo–pele com resistividade $\rho$, listras diagonais representam o corpo interno e os elementos retangulares sombreados compõem uma malha FEM. 
+    
+     
+     A fonte de corrente é conectada ao eletrodo metálico. Modelamos a camada de contato usando dois elementos retangulares I e II da figura  \ref{fig:HuaEletrodoVirtual},  onde o  potencial é considerado linear. Assumimos que o potencial em toda a superfície de um eletrodo metálico é igual e impomos que  $\phi_4 = \phi_5 = \phi_6.$
+     
+
+
+ \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{HuaEletrodoVirtual.png}
+	\caption{Modelo de eletrodo virtual (adaptado de \cite{hua1993finite} ).}
+	\label{fig:HuaEletrodoVirtual}
+\end{figure} 
+
+A figura \ref{fig:HuaEletrodoVirtual3D} apresenta uma interpretação em 3D do eletrodo virtual.
+
+
+ \begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.4\textwidth]{HuaEletrodoVirtual3D.png}
+	\caption{Modelo de eletrodo virtual.}
+	\label{fig:HuaEletrodoVirtual3D}
+\end{figure} 
+
+As condições de contorno para esses elementos são :
+
+\begin{equation}
+\int_{s_{4-5-6}} \rho^{-1} \frac{\partial \phi}{\partial n} ds 
+= \int_{s_{4-5-6}} \overline{\phi_v}\, ds = I_i
+\label{eq:MEF_eq_0008}
+\end{equation}
+
+
 
 %\tiny
 %\scriptsize
@@ -1182,5 +1236,6 @@ C_{33} &= \beta_n^2\sigma_{xx}+2\gamma_n\beta_n\sigma_{xy}+\gamma_n^2\sigma_{yy}
 	
 	
 	
-	
+\bibliographystyle{abntex2-alf}
+\bibliography{D:/Git_EIT_2D/EIT_2D/abntex2-modelo-references}
 \end{document}
