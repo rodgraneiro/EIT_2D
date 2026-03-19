@@ -537,7 +537,7 @@ C_{33} &= \beta_n^2\sigma_{xx}+2\gamma_n\beta_n\sigma_{xy}+\gamma_n^2\sigma_{yy}
 
 	\chapter{Eletrodo Virtual 2D} 
 	
-    \section{Discretização do eletrodo virtual}
+    \section{Discretização do eletrodo virtual Hua}
     
     A TIE monta uma imagem a partir da condutividade (ou resistividade) por meio de medições de tensão e corrente no perímetro do objeto em estudo.  Tanto a injeção de corrente, como, a medição de tensão são realizados por meio de eletrodos metálicos. Entretanto, a corrente é conduzida em um metal por meio de elétrons livres, enquanto que, em tecidos biológicos e eletrólitos é conduzida por íons diluídos no meio. Essa mudança de meios de condução de corrente gera uma impedância de contato que deve ser adicionada ao modelo matemático utilizado no método de elementos finitos. 
     
@@ -570,10 +570,20 @@ A figura \ref{fig:HuaEletrodoVirtual3D} apresenta uma interpretação em 3D do e
 
  \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=0.4\textwidth]{HuaEletrodoVirtual3D.png}
-	\caption{Modelo de eletrodo virtual.}
+	\includegraphics[width=0.6\textwidth]{HuaEletrodoVirtual3D.png}
+	\caption{Modelo de eletrodo virtual  (adaptado de \cite{hua1993finite} ).}
 	\label{fig:HuaEletrodoVirtual3D}
 \end{figure} 
+
+Um potencial é imposto em toda a superfície metálica do eletrodo, portanto: 
+\begin{equation*}
+\phi_4 = \phi_5 = \phi_6
+\end{equation*}
+onde:\\
+- $a$ = é meia-largura de um eletrodo na direção do eixo $x$;\\
+- $t$ = é a espessura da interface na direção do eixo $y$;\\
+- $b$ = é a altura na direção do eixo $z$;\\
+- $\phi_i$ = potencial no nó.
 
 As condições de contorno para esses elementos são :
 
@@ -583,7 +593,7 @@ As condições de contorno para esses elementos são :
 \label{eq:MEF_eq_0008}
 \end{equation}
 
- \subsection{Matriz de condutividade do elemento retangular.}
+ \subsection{Matriz local de condutividade do elemento retangular.}
  
  A matriz típica do MEF para condutividade é dada pela equação:
  \begin{equation}
@@ -599,15 +609,9 @@ $f_i$ → funções de forma do elemento.
 $\rho$ → resistividade.
 
 $A_n$ → área do elemento. \\
-e elemento retangular das figuras \ref{fig:HuaEletrodoVirtual} e  \ref{fig:HuaEletrodoVirtual3D}:
 
-$a$ = largura.  
 
-$t$ = espessura da camada de impedância. 
-
-$b$ = altura do eletrodo.  
-
-Para o elemento retangular, as funções de forma são dadas por:
+Para o elemento retangular das figuras \ref{fig:HuaEletrodoVirtual} e \ref{fig:HuaEletrodoVirtual3D} de dimensões $a$, $b$ e $t$, as funções de forma são dadas por:
 \begin{equation}
 	f_i(x,y) =  
 	\frac{1}{4}  
@@ -617,7 +621,7 @@ Para o elemento retangular, as funções de forma são dadas por:
 \end{equation}
 
 
-- para o elemento $I$, os nós são $1,2,5 e 6$:
+- para o elemento $I$, os nós são $1,2,5 \: e \: 6$:
 \begin{equation*}
 	f_1(x,y)^{(I)}=\frac14\left(1-\frac{x}{a}\right)\left(1-\frac{y}{t}\right)  
 \end{equation*}
@@ -636,7 +640,7 @@ Para o elemento retangular, as funções de forma são dadas por:
 
 
 
-- para o elemento $II$, os nós são $2,3,4 e 5$:
+- para o elemento $II$, os nós são $2,3,4 \: e \: 5$:
 
 \begin{equation*}
 	f_2(x,y)^{(II)}=\frac14\left(1-\frac{x}{a}\right)\left(1-\frac{y}{t}\right)  
@@ -785,6 +789,7 @@ A corrente é aplicada no lado do metal no nós $4$, $5$ e $6$, assim:
 Dessa maneira Hua \cite{hua1993finite} monta o vetor de corrente para os seis nós como:
 
 $$  
+ \mathbf{Q}  =
 \begin{bmatrix}  
 	0\\  
 	0\\  
@@ -796,12 +801,186 @@ $$
 $$
 
 
+\subsubsection{Matriz global do eletrodo virtual}
+
+A partir das matrizes locais dos elementos $I$ e $II$ obtemos a seguinte matriz global:
+
+$$
+\mathbf{K} \mathbf{\Phi} = \mathbf{Q} 
+$$
+
+$$
+\frac{(b=1)}{3 a t \rho}
+\begin{bmatrix}
+	a^2 + t^2 & \dfrac{a^2}{2} - t^2 & 0 & 0 & -\dfrac{(a^2 + t^2)}{2} & -a^2 + \dfrac{t^2}{2} \\
+	& 2(a^2 + t^2) & \dfrac{a^2}{2} - t^2 & -\dfrac{(a^2 + t^2)}{2} & -2a^2 + t^2 & -\dfrac{(a^2 + t^2)}{2} \\
+	&               & a^2 + t^2 & -a^2 + \dfrac{t^2}{2} & \dfrac{a^2}{2} -t^2& 0 \\
+	&               &            & a^2 + t^2 & \dfrac{a^2}{2} - t^2 & 0 \\
+	&               &            &            & 2(a^2 + t^2) & \dfrac{a^2}{2} - t^2 \\
+sim.	&               &            &            &                & a^2 + t^2
+\end{bmatrix}
+\begin{bmatrix}
+	\phi_1 \\
+	\phi_2 \\
+	\phi_3 \\
+	\phi_4 \\
+	\phi_5 \\
+	\phi_6
+\end{bmatrix}
+$$
+\begin{equation}
+=
+\begin{bmatrix}
+	0 \\
+	0 \\
+	0 \\
+	\int_4^5 \overline{\phi_v} f_4 \, ds \\
+	\int_4^5 \overline{\phi_v} f_5 \, ds + \int_5^6 \overline{\phi_v} f_5 \, ds \\
+	\int_5^6 \overline{\phi_v} f_6 \, ds
+\end{bmatrix}
+\label{eq:MEF_eq_0012}  
+\end{equation}
+
+Aplicando as condições de contorno, onde $\phi_4 = \phi_5 = \phi_6$, podemos reduzir a matriz de $6 \times 6$ para  $4 \times 4$ somando as correntes de cada nó do lado metálico do eletrodo, ou seja: 
+$$
+I_T = \int_{4}^{5} \overline{\phi_v} f_4 \, ds 
++ \int_{4}^{5} \overline{\phi_v} f_5 \, ds 
++ \int_{5}^{6} \overline{\phi_v} f_5 \, ds 
++ \int_{5}^{6} \overline{\phi_v} f_6 \, ds
+$$
+assim,
+
+\begin{equation}
+	\frac{b}{3 a t \rho}
+	\begin{bmatrix}
+		a^2 + t^2 & \dfrac{a^2}{2} - t^2 & 0 & -\dfrac{3a^2}{2} \\
+		& 2(a^2 + t^2) & \dfrac{a^2}{2} - t^2 & -3a^2 \\
+		&              & a^2 + t^2 & -\dfrac{3a^2}{2} \\
+	sim.	&              &           & 6a^2
+	\end{bmatrix}
+	\begin{bmatrix}
+		\phi_1 \\
+		\phi_2 \\
+		\phi_3 \\
+		\phi_4'
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0 \\
+		0 \\
+		0 \\
+		I_T
+	\end{bmatrix}
+	\label{eq:MEF_eq_0013} 
+\end{equation}
+onde $\phi_4'$ é o potencial no nó virtual.
+
+Para maior simplificação, podemos dividir a matriz pelo termo $a$ do denominador da fração, e também, como a dimensão $t \ll a$ podemos aproximar a equação \ref{eq:MEF_eq_0013} para:
 
 
+\begin{equation}
+	\frac{b}{3t\rho}
+	\begin{bmatrix}
+		a & \dfrac{a}{2} & 0 & -\dfrac{3a}{2} \\
+		& 2a & \dfrac{a}{2} & -3a \\
+		&     & a & -\dfrac{3a}{2} \\
+	sim.	&     &     & 6a
+	\end{bmatrix}
+	\begin{bmatrix}
+		\phi_1 \\
+		\phi_2 \\
+		\phi_3 \\
+		\phi_4'
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0 \\
+		0 \\
+		0 \\
+		I_T
+	\end{bmatrix}
+	\label{eq:MEF_eq_0014}
+\end{equation}
+
+ou também,
+
+\begin{equation}
+	\frac{ba}{3t\rho}
+	\begin{bmatrix}
+		1 & \dfrac{1}{2} & 0 & -\dfrac{3}{2} \\
+		& 2 & \dfrac{1}{2} & -3 \\
+		&     & 1 & -\dfrac{3}{2} \\
+	sim.	&     &     & 6
+	\end{bmatrix}
+	\begin{bmatrix}
+		\phi_1 \\
+		\phi_2 \\
+		\phi_3 \\
+		\phi_4'
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0 \\
+		0 \\
+		0 \\
+		I_T
+	\end{bmatrix}
+	\label{eq:MEF_eq_0015}
+\end{equation}
 
 
+O termo $t\rho$ é considerado a impedância de contado e pode ser representado por $\rho' = zc = t\rho$, assim: 
 
+$$
+\frac{ba}{3\rho'}
+\begin{bmatrix}
+	1 & \dfrac{1}{2} & 0 & -\dfrac{3}{2} \\
+	& 2 & \dfrac{1}{2} & -3 \\
+	&     & 1 & -\dfrac{3}{2} \\
+	sim.	&     &     & 6
+\end{bmatrix}
+\begin{bmatrix}
+	\phi_1 \\
+	\phi_2 \\
+	\phi_3 \\
+	\phi_4'
+\end{bmatrix}
+=
+\begin{bmatrix}
+	0 \\
+	0 \\
+	0 \\
+	I_T
+\end{bmatrix}
+$$
+
+
+\section{Eletrodo virtual Hua simplificado}
+
+Partindo do princípio variacional correspondente à equação de Laplace $\nabla \cdot ( \sigma \nabla \phi) = 0$ para materiais isotrópicos (onde $\sigma = \frac{1}{\rho}$), temos:
 	
+	
+
+\begin{equation}
+	\pi_i =
+	\frac{1}{2}\int_{V_i} \frac{1}{\rho_i}\|E\|^2 dV
+	-
+	\int_{\partial V_i} \phi_i (-J_i \cdot \hat{n}_i) dA
+	\label{eq:MEF_eq_0016}
+\end{equation}
+
+onde $V_i$ é o volume elemento, $\phi_i$ é o potencial elétrico, $\hat{n}_i$ é o versor normal às arestas do elemento e $J_i$ é o vetor densidade de corrente para o variacional no modelo contínuo. Sabendo que $E = - \nabla \phi$, e já considerando o variacional no modelo discreto com as respectivas funções de forma, podemos reescrever a equação \ref{eq:MEF_eq_0016} como:
+
+
+\begin{equation}
+	\pi_i =
+	\frac{1}{2}\int_{V_i} \frac{1}{\rho_i}\|\nabla \phi\|^2 dV
+	-
+	\int_{\partial V_i} \phi_i^T f_i (-J_i \cdot \hat{n}_i) dA
+	\label{eq:MEF_eq_0017}
+\end{equation}
+
+
 %\tiny
 %\scriptsize
 %\footnotesize
