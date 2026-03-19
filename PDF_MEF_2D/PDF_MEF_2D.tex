@@ -771,7 +771,7 @@ $$
 $$
 
 
-\subsubsection{Condições de contorno.}
+\subsection{Condições de contorno.}
 
 O fluxo de corrente imposto pelo eletrodo é dado por:
 
@@ -801,7 +801,7 @@ $$
 $$
 
 
-\subsubsection{Matriz global do eletrodo virtual}
+\subsection{Matriz global do eletrodo virtual}
 
 A partir das matrizes locais dos elementos $I$ e $II$ obtemos a seguinte matriz global:
 
@@ -955,7 +955,7 @@ $$
 $$
 
 
-\section{Eletrodo virtual Hua simplificado}
+\section{Eletrodo virtual Hua/Moura simplificado}
 
 Partindo do princípio variacional correspondente à equação de Laplace $\nabla \cdot ( \sigma \nabla \phi) = 0$ para materiais isotrópicos (onde $\sigma = \frac{1}{\rho}$), temos:
 	
@@ -969,18 +969,80 @@ Partindo do princípio variacional correspondente à equação de Laplace $\nabl
 	\label{eq:MEF_eq_0016}
 \end{equation}
 
-onde $V_i$ é o volume elemento, $\phi_i$ é o potencial elétrico, $\hat{n}_i$ é o versor normal às arestas do elemento e $J_i$ é o vetor densidade de corrente para o variacional no modelo contínuo. Sabendo que $E = - \nabla \phi$, e já considerando o variacional no modelo discreto com as respectivas funções de forma, podemos reescrever a equação \ref{eq:MEF_eq_0016} como:
+onde $V_i$ é o volume elemento, $\phi_i$ é o potencial elétrico, $\hat{n}_i$ é o versor normal às arestas do elemento e $J_i$ é o vetor densidade de corrente para o variacional no modelo contínuo \cite{moura2013estimaccao}. Sabendo que campo elétrico pode ser descrito como $E = - \nabla \phi$, e já considerando o variacional no modelo discreto com as respectivas funções de forma, podemos reescrever a equação \ref{eq:MEF_eq_0016} como:
 
 
 \begin{equation}
 	\pi_i =
-	\frac{1}{2}\int_{V_i} \frac{1}{\rho_i}\|\nabla \phi\|^2 dV
+	\frac{1}{2}\int_{V_i} \frac{1}{\rho_i}\|-\nabla \phi\|^2 dV
 	-
 	\int_{\partial V_i} \phi_i^T f_i (-J_i \cdot \hat{n}_i) dA
 	\label{eq:MEF_eq_0017}
 \end{equation}
+onde gradiente da função potencial elétrico é dado por:
+
+\begin{equation}
+	\nabla \phi_i =
+	\begin{bmatrix}
+		\frac{\partial \phi_i}{\partial x} \\
+		\frac{\partial \phi_i}{\partial y}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		\frac{\partial f_1}{\partial x} & \frac{\partial f_2}{\partial x} & \frac{\partial f_3}{\partial x} \\
+		\frac{\partial f_1}{\partial y} & \frac{\partial f_2}{\partial y} & \frac{\partial f_3}{\partial y}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\phi_1 \\
+		\phi_2 \\
+		\phi_3
+	\end{bmatrix}
+	\label{eq:MEF_eq_0018}
+\end{equation}
+
+Dessa maneira, podemos reescrever a equação \ref{eq:MEF_eq_0017} como:
 
 
+\begin{equation}
+	\pi_i =
+	\frac{1}{2}\phi_i^{T}
+	\left[\int_{V_i}\frac{1}{\rho_i}\nabla\phi_i^{T}\nabla\phi_i dV \right]
+	\phi_i	-
+	\phi_i^{T}
+	\left[\int_{\partial V_i} f_i (-J_i \cdot \hat{n}_i) dA
+	\right]
+	\label{eq:MEF_eq_0019}
+\end{equation}
+onde $\|-\nabla \phi\|^2 = \nabla \phi^{T}\nabla \phi$.
+
+O funcional determina o ponto mínimo  quando é imposto que $\frac{\partial \pi_i}{\partial \phi_i}=0$, assim:
+
+\begin{equation}
+	\pi_i =
+	\frac{1}{2}
+	\left[\int_{V_i}\frac{1}{\rho_i}\nabla\phi_i^{T}\nabla\phi_i dV \right]
+	\phi_i	=
+	\left[\int_{\partial V_i} f_i (-J_i \cdot \hat{n}_i) dA
+	\right]
+	\label{eq:MEF_eq_0020}
+\end{equation}
+que pode ser escrito na forma de matriz:
+\begin{equation}
+	\mathbf{K} \mathbf{\Phi} = \mathbf{Q}
+	\label{eq:MEF_eq_0021} 
+\end{equation}
+onde $\mathbf{K}$ representa a matriz de condutividade local.
+
+\subsection{Modelo de eletrodo virtual 2D Hua/Moura}
+
+Partindo do modelo de eletrodo virtual  de Hua -- que pode ser visto nas figuras \ref{fig:HuaImpedandiaContato}, \ref{fig:HuaEletrodoVirtual} e \ref{fig:HuaEletrodoVirtual3D} -- podemos simplificar o modelo utilizando apenas um elemento retangular.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.3\textwidth]{MouraEletrodoVirtual.png}
+	\caption{Elemento retangular (adaptado de \cite{moura2013estimaccao})}
+	\label{fig:MouraEletrodoVirtual}
+\end{figure}
 %\tiny
 %\scriptsize
 %\footnotesize
