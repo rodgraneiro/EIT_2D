@@ -979,7 +979,7 @@ onde $V_i$ é o volume elemento, $\phi_i$ é o potencial elétrico, $\hat{n}_i$ 
 	\int_{\partial V_i} \phi_i^T f_i (-J_i \cdot \hat{n}_i) dA
 	\label{eq:MEF_eq_0017}
 \end{equation}
-onde gradiente da função potencial elétrico é dado por:
+onde gradiente da função de potencial elétrico de um elemento retangular é dado por:
 
 \begin{equation}
 	\nabla \phi_i =
@@ -989,15 +989,23 @@ onde gradiente da função potencial elétrico é dado por:
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		\frac{\partial f_1}{\partial x} & \frac{\partial f_2}{\partial x} & \frac{\partial f_3}{\partial x} \\
-		\frac{\partial f_1}{\partial y} & \frac{\partial f_2}{\partial y} & \frac{\partial f_3}{\partial y}
+		\frac{\partial f_1}{\partial x} & \frac{\partial f_2}{\partial x} & \frac{\partial f_3}{\partial x} & \frac{\partial f_4}{\partial x}\\
+		\frac{\partial f_1}{\partial y} & \frac{\partial f_2}{\partial y} & \frac{\partial f_3}{\partial y} & \frac{\partial f_4}{\partial y}
 	\end{bmatrix}
 	\begin{bmatrix}
 		\phi_1 \\
 		\phi_2 \\
-		\phi_3
+		\phi_3 \\
+		\phi_4
 	\end{bmatrix}
 	\label{eq:MEF_eq_0018}
+\end{equation}
+
+Ou na forma matricial:
+
+\begin{equation}
+	\mathbf{\nabla\phi_i = \mathbf{F_i} \mathbf{\phi_i} }
+	\label{eq:MEF_eq_0018a}
 \end{equation}
 
 Dessa maneira, podemos reescrever a equação \ref{eq:MEF_eq_0017} como:
@@ -1006,7 +1014,7 @@ Dessa maneira, podemos reescrever a equação \ref{eq:MEF_eq_0017} como:
 \begin{equation}
 	\pi_i =
 	\frac{1}{2}\phi_i^{T}
-	\left[\int_{V_i}\frac{1}{\rho_i}\nabla\phi_i^{T}\nabla\phi_i dV \right]
+	\left[\int_{V_i}\frac{1}{\rho_i}\mathbf{F_i}^{T}\mathbf{F_i} dV \right]
 	\phi_i	-
 	\phi_i^{T}
 	\left[\int_{\partial V_i} f_i (-J_i \cdot \hat{n}_i) dA
@@ -1020,7 +1028,7 @@ O funcional determina o ponto mínimo  quando é imposto que $\frac{\partial \pi
 \begin{equation}
 	\pi_i =
 	\frac{1}{2}
-	\left[\int_{V_i}\frac{1}{\rho_i}\nabla\phi_i^{T}\nabla\phi_i dV \right]
+	\left[\int_{V_i}\frac{1}{\rho_i}\mathbf{F_i}^{T}\mathbf{F_i} dV \right]
 	\phi_i	=
 	\left[\int_{\partial V_i} f_i (-J_i \cdot \hat{n}_i) dA
 	\right]
@@ -1172,27 +1180,121 @@ $$
 
 Agora fatorando:
 
-$$  
-f_1(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} -y\right)  
-$$
 
+\begin{equation}
+	f_1(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} -y\right)
+	\label{eq:MEF_eq_0024} 
+\end{equation}
 
-Analogamente, encontramos as funções de forma de $f_2$,  $f_3$ e  $f_4$:
+Analogamente, encontramos também as funções de forma de $f_2$,  $f_3$ e  $f_4$:
+
+\begin{equation}
+	f_2(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} -y\right)
+	\label{eq:MEF_eq_0025}  
+\end{equation}
+\begin{equation}
+	f_3(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} + y\right)
+	\label{eq:MEF_eq_0026}  
+\end{equation}
+\begin{equation}
+	f_4(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} + y\right)
+	\label{eq:MEF_eq_0027}  
+\end{equation} 
 
  
+ \subsection{Derivadas parciais das funções de forma}
+ 
+ Para determinar o gradiente do potencial elétrico $\nabla \phi$ do elemento conforme equação \ref{eq:MEF_eq_0018}, precisamos calcular as derivadas parciais  $\frac{\partial f_i}{\partial x}$ e $\frac{\partial f_i}{\partial y}$ das funções de forma, assim;
+ 
+ \subsection*{Derivadas parciais de $f_1$}
  $$  
- f_2(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} -y\right)  
+ 	f_1(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} -y\right)
  $$
- 
+ Derivada em relação a $x$
  $$  
- f_3(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} + y\right)  
+\frac{\partial f_1}{\partial x} = \frac{1}{at}(-1)\left(\frac{t}{2} - y\right) 
  $$
- 
+ ou
+ \begin{equation}
+ 	\frac{\partial f_1}{\partial x} = -\frac{1}{at}\left(\frac{t}{2} - y\right)
+ 		\label{eq:MEF_eq_0028}  
+ \end{equation}
+Derivada em relação a $y$
  $$  
- f_4(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} + y\right)  
+\frac{\partial f_1}{\partial y} = \frac{1}{at}(-1)\left(\frac{a}{2} - x\right) 
  $$
- 
+ ou
+\begin{equation}
+	\frac{\partial f_1}{\partial y} = -\frac{1}{at}\left(\frac{a}{2} - x\right) 
+		\label{eq:MEF_eq_0029} 
+\end{equation}
 
+ \subsection*{Derivadas parciais de $f_2$}
+ $$
+ 	f_2(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} -y\right)
+ $$
+  Derivada em relação a $x$
+ $$  
+ \frac{\partial f_2}{\partial x} = \frac{1}{at}(1)\left(\frac{t}{2} - y\right) 
+ $$
+ \begin{equation}
+ 	 \frac{\partial f_2}{\partial x} = \frac{1}{at}\left(\frac{t}{2} - y\right)
+ 	 \label{eq:MEF_eq_0030}  
+ \end{equation}
+ Derivada em relação a $y$
+ $$  
+ \frac{\partial f_2}{\partial y} = \frac{1}{at}(-1)\left(\frac{a}{2} + x\right) 
+ $$
+  \begin{equation}
+ 	\frac{\partial f_2}{\partial y} = -\frac{1}{at}\left(\frac{a}{2} + x\right)
+ 	\label{eq:MEF_eq_0031}  
+ \end{equation}	
+  \subsection*{Derivadas parciais de $f_3$}
+  $$
+  f_3(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} + y\right)
+  $$
+ Derivada em relação a $x$
+ \begin{equation}
+ 	\frac{\partial f_3}{\partial x} = \frac{1}{at}\left(\frac{t}{2} + y\right)
+ 	\label{eq:MEF_eq_0032} 
+ \end{equation}
+ 
+ Derivada em relação a $y$
+ \begin{equation}
+ 	\frac{\partial f_3}{\partial y} = \frac{1}{at}\left(\frac{a}{2} + x\right)
+ 	\label{eq:MEF_eq_0033}
+ \end{equation}
+ 
+ \subsection*{Derivadas parciais de $f_4$}
+ $$
+ f_4(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} + y\right)
+ $$
+ Derivada em relação a $x$
+ \begin{equation}
+ 	 \frac{\partial f_4}{\partial x} = -\frac{1}{at}\left(\frac{t}{2} + y\right)
+ 	 \label{eq:MEF_eq_0034} 
+ \end{equation}
+ Derivada em relação a $y$
+ \begin{equation}
+ 	\frac{\partial f_4}{\partial y} = \frac{1}{at}\left(\frac{a}{2} - x\right) 
+ 	\label{eq:MEF_eq_0035}
+ \end{equation}
+ 
+ 
+ \subsection{Matriz de condutividade local do eletroto Hua/Moura}
+ 
+ Como determinada na equação \ref{eq:MEF_eq_0020}, a matriz de condutividade local para um material isotrópico é dada por: 
+ $$ \mathbf{K} = \int_{V_i}\frac{1}{\rho_i}\mathbf{F_i}^{T}\mathbf{F_i} dV $$
+ 
+ Isolando o eixo $z$ do volume $V$ para fora da integral, podemos escrever a matriz de condutividade/resistividade como 
+ 
+ \begin{equation}
+ 	\mathbf{K} =
+ 	 b
+ 	\int_{-\frac{a}{2}}^{\frac{a}{2}}
+ 	\int_{-\frac{t}{2}}^{\frac{t}{2}}
+ 	\frac{1}{\rho} F_i^{T}F_i\ dy dx
+ \end{equation}
 %\tiny
 %\scriptsize
 %\footnotesize
