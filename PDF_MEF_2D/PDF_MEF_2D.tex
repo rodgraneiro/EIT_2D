@@ -1028,21 +1028,171 @@ O funcional determina o ponto mínimo  quando é imposto que $\frac{\partial \pi
 \end{equation}
 que pode ser escrito na forma de matriz:
 \begin{equation}
-	\mathbf{K} \mathbf{\Phi} = \mathbf{Q}
+	\mathbf{K} \mathbf{\phi} = \mathbf{Q}
 	\label{eq:MEF_eq_0021} 
 \end{equation}
-onde $\mathbf{K}$ representa a matriz de condutividade local.
+onde $\mathbf{K}$ representa a matriz de condutividade local, $\mathbf{\Phi}$ é o vetor de tensões e $\mathbf{Q}$ é o vetor de correntes.
 
 \subsection{Modelo de eletrodo virtual 2D Hua/Moura}
-
-Partindo do modelo de eletrodo virtual  de Hua -- que pode ser visto nas figuras \ref{fig:HuaImpedandiaContato}, \ref{fig:HuaEletrodoVirtual} e \ref{fig:HuaEletrodoVirtual3D} -- podemos simplificar o modelo utilizando apenas um elemento retangular.
-
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.3\textwidth]{MouraEletrodoVirtual.png}
 	\caption{Elemento retangular (adaptado de \cite{moura2013estimaccao})}
 	\label{fig:MouraEletrodoVirtual}
 \end{figure}
+
+Partindo do modelo de eletrodo virtual  de Hua -- que pode ser visto nas figuras \ref{fig:HuaImpedandiaContato}, \ref{fig:HuaEletrodoVirtual} e \ref{fig:HuaEletrodoVirtual3D} -- podemos simplificar o modelo utilizando apenas um elemento retangular apresentado na figura \ref{fig:MouraEletrodoVirtual}.
+
+
+
+Criando um sistema de coordenas $Oxy$ com origem no centro do elemento teremos os nós dos vértices do retângulo com as coordenadas:\\
+- nó 1 = ($-\frac{a}{2}$, $-\frac{t}{2}$);\\
+- nó 2 = ($\frac{a}{2}$, $-\frac{t}{2}$);\\
+- nó 3 = ($\frac{a}{2}$, $\frac{t}{2}$);\\
+- nó 4 = ($-\frac{a}{2}$, $\frac{t}{2}$)\\
+precisamos derivar uma função de forma $f_i(x,y)$ tal que:
+
+
+\begin{equation}
+	f_i =
+	\begin{cases}
+		1, & i = j \\
+		0, & i \neq j
+	\end{cases},
+	\qquad
+	\sum_{i=1}^{4} f_i(x,y) = 1
+	\label{eq:MEF_eq_0022} 
+\end{equation}
+
+A função de forma escolhida é uma função bilinear do tipo: 
+
+\begin{equation}
+	f_i(x,y)=A+Bx+Cy+Dxy
+	\label{eq:MEF_eq_0023}  
+\end{equation}
+onde $A$, $B$, $C$ e $D$ são constantes a determinar.
+
+Para demonstrar a determinação da função de forma dos quatros nós, usaremos como exemplo a função no nó $1$, assim queremos satisfazer que: 
+
+
+$$f_1(-\frac{a}{2}, -\frac{t}{2})=1$$
+$$f_1(\frac{a}{2}, -\frac{t}{2})=0$$
+$$f_1(\frac{a}{2}, \frac{t}{2})=0$$
+$$f_1(-\frac{a}{2}, \frac{t}{2})=0$$
+onde $f_1(x,y)$ vale 1 no nó 1 e 0 nos demais.
+
+
+Dessa maneira, impondo essas condições nodais na equação \ref{eq:MEF_eq_0023}, temos:\\
+- No nó 1: $(-\frac{a}{2}, -\frac{t}{2})$.
+$$  
+f_1(-\frac{a}{2}, -\frac{t}{2})=A-B\frac{a}{2}-C\frac{t}{2}+D\frac{a}{2}\frac{t}{2}=1  
+$$
+- No nó 2: $(a,-t)$.
+$$  
+f_1(\frac{a}{2},-\frac{t}{2})=A+B\frac{a}{2}-C\frac{t}{2}-D\frac{a}{2} \frac{t}{2}=0  
+$$
+- No nó 3: $(\frac{a}{2},\frac{t}{2})$.
+$$  
+f_1(\frac{a}{2},\frac{t}{2})=A+B\frac{a}{2}+C\frac{t}{2}+D\frac{a}{2}\frac{t}{2}=0  
+$$
+- No nó 4: $(-\frac{a}{2},t)$
+$$  
+f_1(-\frac{a}{2},\frac{t}{2})=A-B\frac{a}{2}+C\frac{t}{2}-D\frac{a}{2}\frac{t}{2}=0  
+$$
+
+Então obtemos o sistema:
+$$
+\begin{cases}
+	A - \frac{a}{2}B - \frac{t}{2}C + \frac{at}{4}D = 1 \\
+	A + \frac{a}{2}B - \frac{t}{2}C - \frac{at}{4}D = 0 \\
+	A + \frac{a}{2}B + \frac{t}{2}C + \frac{at}{4}D = 0 \\
+	A - \frac{a}{2}B + \frac{t}{2}C - \frac{at}{4}D = 0
+\end{cases}
+$$
+
+Somando as equações encontramos o valor de $A$, ou seja:
+
+$$A = \frac{1}{4}$$
+
+
+Somando as equações dos nós 1 e 4  encontramos $B$:
+
+$$  
+(A - \frac{a}{2}B - \frac{t}{2}C + \frac{at}{4}D)+(A - \frac{a}{2}B + \frac{t}{2}C - \frac{at}{4}D)=1+0  
+$$
+
+$$  
+2A-Ba=1  
+$$
+
+Substituindo $A=\frac{1}{4}$:
+
+$$  
+2\frac{1}{4} -Ba=1  
+$$
+portanto,
+$$  
+B=-\frac{1}{2a}  
+$$
+Somando as equações dos nós 1 e 2  encontramos $C$:
+
+$$  
+(A - \frac{a}{2}B - \frac{t}{2}C + \frac{at}{4}D)+(A + \frac{a}{2}B - \frac{t}{2}C - \frac{at}{4}D)=1+0  
+$$
+$$  
+2A-Ct=1  
+$$
+Substituindo $A=\frac14$, temos:
+$$  
+C=-\frac{1}{2t}  
+$$
+Usando a equação do nó 3 encontramos $D$:
+
+$$  
+	A + \frac{a}{2}B + \frac{t}{2}C + \frac{at}{4}D=0  
+$$
+
+Substituindo os valores já encontrados:
+
+$$  
+\frac{1}{4} +\left(-\frac{1}{2a}\right)\frac{a}{2} +\left(-\frac{1}{2t}\right)\frac{t}{2} +Dat =0  
+$$
+portanto,
+$$ D = \frac{1}{at}$$
+
+Substituindo em na equação \ref{eq:MEF_eq_0023} temos:
+$$  
+f_1(x,y)=\frac{1}{4}-\frac{x}{2a}-\frac{y}{2t}+\frac{xy}{at}  
+$$
+
+Colocando $\frac{1}{4}$ em evidência:
+$$  
+f_1(x,y)=\frac{1}{4}\left(1-\frac{x}{a}-\frac{y}{t}+\frac{xy}{at}\right)  
+$$
+
+Agora fatorando:
+
+$$  
+f_1(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} -y\right)  
+$$
+
+
+Analogamente, encontramos as funções de forma de $f_2$,  $f_3$ e  $f_4$:
+
+ 
+ $$  
+ f_2(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} -y\right)  
+ $$
+ 
+ $$  
+ f_3(x,y)=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2} + y\right)  
+ $$
+ 
+ $$  
+ f_4(x,y)=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2} + y\right)  
+ $$
+ 
+
 %\tiny
 %\scriptsize
 %\footnotesize
