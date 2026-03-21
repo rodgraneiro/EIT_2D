@@ -1294,7 +1294,331 @@ Derivada em relação a $y$
  	\int_{-\frac{a}{2}}^{\frac{a}{2}}
  	\int_{-\frac{t}{2}}^{\frac{t}{2}}
  	\frac{1}{\rho} F_i^{T}F_i\ dy dx
+ 	\label{eq:MEF_eq_0036}
  \end{equation}
+ onde,
+ 
+ $$
+  \mathbf{F_i} = 
+ \begin{bmatrix}
+ 	-\frac{1}{at}\left(\frac{t}{2} - y\right) & \frac{1}{at}\left(\frac{t}{2} - y\right) & \frac{1}{at}\left(\frac{t}{2} + y\right) & -\frac{1}{at}\left(\frac{t}{2} + y\right) \\
+ 	-\frac{1}{at}\left(\frac{a}{2} - x\right) & -\frac{1}{at}\left(\frac{a}{2} + x\right) & \frac{1}{at}\left(\frac{a}{2} + x\right) & \frac{1}{at}\left(\frac{a}{2} - x\right)
+ \end{bmatrix}
+ $$
+ 
+ \subsubsection{Cálculo da matriz de condutividade/resistividade $\mathbf{K}$}
+ 
+ Para um material isotrópico a resistividade $\rho$ é constante e pode sair da integral, assim, 
+ $$  
+ \mathbf{K} = \frac{b}{\rho} \int_{-a/2}^{a/2} \int_{-t/2}^{t/2} F_i^T F_i  dy dx  
+ $$
+ 
+ Podemos separar $\mathbf{F_i}$ em duas linhas $g_x$ e $g_y$, então:
+ $$ \tiny 
+ g_x =  
+ \begin{bmatrix}  
+ 	-\dfrac{1}{at}\left(\dfrac{t}{2} - y\right) &  
+ 	\dfrac{1}{at}\left(\dfrac{t}{2} - y\right) &  
+ 	\dfrac{1}{at}\left(\dfrac{t}{2} + y\right) &  
+ 	-\dfrac{1}{at}\left(\dfrac{t}{2} + y\right)  
+ \end{bmatrix}  
+ $$
+ $$ \tiny  
+ g_y =  
+ \begin{bmatrix}  
+ 	-\dfrac{1}{at}\left(\dfrac{a}{2} - x\right) &  
+ 	-\dfrac{1}{at}\left(\dfrac{a}{2} + x\right) &  
+ 	\dfrac{1}{at}\left(\dfrac{a}{2} + x\right) &  
+ 	\dfrac{1}{at}\left(\dfrac{a}{2} - x\right)  
+ \end{bmatrix}  
+ $$
+ dessa maneira:
+ $$  
+ F_i^T F_i = g_x^T g_x + g_y^T g_y  
+ $$
+ Logo,
+ \begin{equation} 
+  \mathbf{K} = \frac{b}{\rho}  
+ \left[\int_{-a/2}^{a/2} \int_{-t/2}^{t/2} g_x^T g_x  dydx  
+ +  
+ \int_{-a/2}^{a/2} \int_{-t/2}^{t/2} g_y^T g_y  dydx \right] 
+ \label{eq:MEF_eq_0037}
+ \end{equation}
+ 
+ \subsubsection{Termo associado a $g_x$. }
+ $$ \tiny  
+ g_x^T g_x = \frac{1}{a^2 t^2}  
+ \begin{bmatrix}  
+ 	-\left(\dfrac{t}{2} - y\right) \\  
+ 	\left(\dfrac{t}{2} - y\right) \\  
+ 	\left(\dfrac{t}{2} + y\right) \\  
+ 	-\left(\dfrac{t}{2} + y\right)  
+ \end{bmatrix}  
+ \begin{bmatrix}  
+ 	-\left(\dfrac{t}{2} - y\right) &  
+ 	\left(\dfrac{t}{2} - y\right) &  
+ 	\left(\dfrac{t}{2} + y\right) &  
+ 	-\left(\dfrac{t}{2} + y\right)  
+ \end{bmatrix}  
+ $$
+ 
+ 
+ \begin{equation*}\tiny
+ g_x^T g_x =  
+ \frac{1}{a^2 t^2}  
+ \begin{bmatrix}  
+ 	\left(\dfrac{t}{2} - y\right)^2 &  
+ 	-\left(\dfrac{t}{2} - y\right)^2 &  
+ 	-\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) &  
+ 	\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) \\  
+ 	-\left(\dfrac{t}{2} - y\right)^2 &  
+ 	\left(\dfrac{t}{2} - y\right)^2 &  
+ 	\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) &  
+ 	-\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) \\  
+ 	-\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) &  
+ 	\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) &  
+ 	\left(\dfrac{t}{2} + y\right)^2 &  
+ 	-\left(\dfrac{t}{2} + y\right)^2 \\  
+ 	\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) &  
+ 	-\left(\dfrac{t}{2} - y\right)\left(\dfrac{t}{2} + y\right) &  
+ 	-\left(\dfrac{t}{2} + y\right)^2 &  
+ 	\left(\dfrac{t}{2} + y\right)^2  
+ \end{bmatrix}  
+\end{equation*}
+ 
+\textbf{Integrando o termo $(\frac{t}{2} - y)^2$ em $y$}.
+ \begin{equation*}\tiny 
+\int_{-t/2}^{t/2} \left(\frac{t}{2} - y\right)^2 dy 
+\end{equation*}
+ \begin{equation*}\tiny 
+\int_{-t/2}^{t/2} \left(\frac{t^2}{4} - t y + y^2 \right) dy
+= \int_{-t/2}^{t/2} \frac{t^2}{4}  dy
+-
+\int_{-t/2}^{t/2} t y  dy  
++  
+\int_{-t/2}^{t/2} y^2  dy  
+\end{equation*}
+\textit{Primeiro termo}:
+$$  
+\int_{-t/2}^{t/2} \frac{t^2}{4}  dy
+=\frac{t^2}{4} \cdot \left(\frac{t}{2}-(-\frac{t}{2}) \right)
+=
+\frac{t^3}{4}  
+$$
+\textit{Segundo termo}:
+$$  
+\int_{-t/2}^{t/2} t y  dy
+=
+t \int_{-t/2}^{t/2} y  dy  
+$$
+então:
+$$  
+t \int_{-t/2}^{t/2} y  dy
+=
+t \left[\frac{y^2}{2}\right]_{-t/2}^{t/2}  = t\left(\frac{t^2}{8} - \frac{t^2}{8}\right)  
+$$
+portanro,
+$$\int_{-t/2}^{t/2} t y  dy = 0$$
+\textit{Terceiro termo}:
+$$  
+\int_{-t/2}^{t/2} y^2 dy
+= \left[\frac{y^3}{3}\right]_{-t/2}^{t/2}
+= \frac{1}{3}\left(\frac{t^3}{8} - \left(-\frac{t^3}{8}\right)\right)
+=
+\frac{t^3}{12}  
+$$
+somando tudo:
+$$ t \int_{-t/2}^{t/2} y  dy
+= 
+\frac{t^3}{4} + 0 + \frac{t^3}{12}
+= \frac{3t^3}{12} + \frac{t^3}{12}
+= \frac{4t^3}{12}
+=
+\frac{t^3}{3}  
+$$
+
+\begin{equation}
+\int_{-t/2}^{t/2} \left(\frac{t}{2} - y\right)^2 dy = \frac{t^3}{3}
+\label{eq:MEF_eq_0038}  
+\end{equation}
+\textbf{Integrando o termo  e $(\frac{t}{2} + y)^2$ em $y$}.
+
+Analogamente, calculamos a integral de $(\frac{t}{2} + y)^2$ em $y$, assim:
+\begin{equation}
+\int_{-t/2}^{t/2} \left(\frac{t}{2} + y\right)^2 dy = \frac{t^3}{3}
+	\label{eq:MEF_eq_0039}  
+\end{equation}
+Juntando os dois termos temos:
+
+\begin{equation}
+\int_{-t/2}^{t/2} \left(\frac{t}{2} - y\right)\left(\frac{t}{2} + y\right) dy
+= \int_{-t/2}^{t/2} \left(\frac{t^2}{4} - y^2\right) dy
+=
+\frac{t^3}{6}  
+	\label{eq:MEF_eq_0040}  
+\end{equation}
+
+Retomando a equação \ref{eq:MEF_eq_0037} temos:
+$$  
+\int_{-t/2}^{t/2} g_x^T g_x  dy
+=
+\frac{1}{a^2 t^2}  
+\begin{bmatrix}  
+	\frac{t^3}{3} & -\frac{t^3}{3} & -\frac{t^3}{6} & \frac{t^3}{6} \\  
+	-\frac{t^3}{3} & \frac{t^3}{3} & \frac{t^3}{6} & -\frac{t^3}{6} \\  
+	-\frac{t^3}{6} & \frac{t^3}{6} & \frac{t^3}{3} & -\frac{t^3}{3} \\  
+	\frac{t^3}{6} & -\frac{t^3}{6} & -\frac{t^3}{3} & \frac{t^3}{3}  
+\end{bmatrix}  
+$$
+ou seja,
+$$  
+\int_{-t/2}^{t/2} g_x^T g_x  dy
+=
+\frac{t}{a^2}  
+\begin{bmatrix}  
+	\frac{1}{3} & -\frac{1}{3} & -\frac{1}{6} & \frac{1}{6} \\  
+	-\frac{1}{3} & \frac{1}{3} & \frac{1}{6} & -\frac{1}{6} \\  
+	-\frac{1}{6} & \frac{1}{6} & \frac{1}{3} & -\frac{1}{3} \\  
+	\frac{1}{6} & -\frac{1}{6} & -\frac{1}{3} & \frac{1}{3}  
+\end{bmatrix}  
+$$
+Como esse termo não depende de $x$:
+$$
+\int_{-a/2}^{a/2} dx = [x]_{-\frac{a}{2}}^{-\frac{a}{2}} = a
+$$
+dessa foram,
+$$  
+\int_{-a/2}^{a/2} \int_{-t/2}^{t/2} g_x^T g_x  dydx
+=
+a \cdot  
+\frac{t}{a^2}  
+\begin{bmatrix}  
+	\dfrac{1}{3} & -\dfrac{1}{3} & -\dfrac{1}{6} & \dfrac{1}{6} \\  
+	-\dfrac{1}{3} & \dfrac{1}{3} & \dfrac{1}{6} & -\dfrac{1}{6} \\  
+	-\dfrac{1}{6} & \dfrac{1}{6} & \dfrac{1}{3} & -\dfrac{1}{3} \\  
+	\dfrac{1}{6} & -\dfrac{1}{6} & -\dfrac{1}{3} & \dfrac{1}{3}  
+\end{bmatrix}  
+$$
+
+Portanto para o resultado do \textbf{termo associado a $g_x$}, temos:
+
+\begin{equation}
+	\int_{-a/2}^{a/2} \int_{-t/2}^{t/2} g_x^T g_x  dy dx
+	=
+	\frac{t}{a}  
+	\begin{bmatrix}  
+		\dfrac{1}{3} & -\dfrac{1}{3} & -\dfrac{1}{6} & \dfrac{1}{6} \\  
+		-\dfrac{1}{3} & \dfrac{1}{3} & \dfrac{1}{6} & -\dfrac{1}{6} \\  
+		-\dfrac{1}{6} & \dfrac{1}{6} & \dfrac{1}{3} & -\dfrac{1}{3} \\  
+		\dfrac{1}{6} & -\dfrac{1}{6} & -\dfrac{1}{3} & \dfrac{1}{3}  
+	\end{bmatrix} 
+	\label{eq:MEF_eq_0041}  
+\end{equation}
+
+
+
+\subsubsection{Termo associado a $g_y$. }
+
+Calculando analogamente $\textbf{termo associado a $g_y$}$ conforme calculado para o termo $g_x$, temos:
+\begin{equation}
+\int_{-a/2}^{a/2} \int_{-t/2}^{t/2} g_y^T g_y  dy dx
+=
+\frac{a}{t}  
+\begin{bmatrix}  
+	\frac{1}{3} & \frac{1}{6} & -\frac{1}{6} & -\frac{1}{3} \\  
+	\frac{1}{6} & \frac{1}{3} & -\frac{1}{3} & -\frac{1}{6} \\  
+	-\frac{1}{6} & -\frac{1}{3} & \frac{1}{3} & \frac{1}{6} \\  
+	-\frac{1}{3} & -\frac{1}{6} & \frac{1}{6} & \frac{1}{3}  
+	\end{bmatrix}   
+	\label{eq:MEF_eq_0042}  
+\end{equation}
+
+\subsubsection{Soma dos Termo associado a $g_y$ é $g_y$. }
+
+Retomando a equação \ref{eq:MEF_eq_0037} determinamos a matriz de condutividade/resistividade $\mathbf{K}$, então:
+$$  
+K = \frac{b}{\rho}  
+\left[  
+\frac{t}{a}  
+\begin{bmatrix}  
+	\frac{1}{3} & -\frac{1}{3} & -\frac{1}{6} & \frac{1}{6} \\  
+	-\frac{1}{3} & \frac{1}{3} & \frac{1}{6} & -\frac{1}{6} \\  
+	-\frac{1}{6} & \frac{1}{6} & \frac{1}{3} & -\frac{1}{3} \\  
+	\frac{1}{6} & -\frac{1}{6} & -\frac{1}{3} & \frac{1}{3}  
+\end{bmatrix}  
++  
+\frac{a}{t}  
+\begin{bmatrix}  
+	\frac{1}{3} & \frac{1}{6} & -\frac{1}{6} & -\frac{1}{3} \\  
+	\frac{1}{6} & \frac{1}{3} & -\frac{1}{3} & -\frac{1}{6} \\  
+	-\frac{1}{6} & -\frac{1}{3} & \frac{1}{3} & \frac{1}{6} \\  
+	-\frac{1}{3} & -\frac{1}{6} & \frac{1}{6} & \frac{1}{3}  
+\end{bmatrix}  
+\right]  
+$$
+assim,
+$$  
+\mathbf{K} =  
+\frac{b}{\rho}  
+\begin{bmatrix}  
+	\frac{a}{3t}+\frac{t}{3a} &  
+	\frac{a}{6t}-\frac{t}{3a} &  
+	-\frac{a}{6t}-\frac{t}{6a} &  
+	-\frac{a}{3t}+\frac{t}{6a} \\
+	\frac{a}{6t}-\frac{t}{3a} &  
+	\frac{a}{3t}+\frac{t}{3a} &  
+	-\frac{a}{3t}+\frac{t}{6a} &  
+	-\frac{a}{6t}-\frac{t}{6a} \\
+	-\frac{a}{6t}-\frac{t}{6a} &  
+	-\frac{a}{3t}+\frac{t}{6a} &  
+	\frac{a}{3t}+\frac{t}{3a} &  
+	\frac{a}{6t}-\frac{t}{3a} \\ 
+	-\frac{a}{3t}+\frac{t}{6a} &  
+	-\frac{a}{6t}-\frac{t}{6a} &  
+	\frac{a}{6t}-\frac{t}{3a} &  
+	\frac{a}{3t}+\frac{t}{3a}  
+\end{bmatrix}  
+$$
+Fatorando a matriz por $(\frac{b}{6\rho at})$, obtemos:
+
+
+\begin{equation}
+    \mathbf{K} =  
+	\frac{b}{6\rho at}  
+	\begin{bmatrix}  
+		2(a^2+t^2) & a^2-2t^2 & -(a^2+t^2) & -2a^2+t^2 \\  
+		a^2-2t^2 & 2(a^2+t^2) & -2a^2+t^2 & -(a^2+t^2) \\  
+		-(a^2+t^2) & -2a^2+t^2 & 2(a^2+t^2) & a^2-2t^2 \\  
+		-2a^2+t^2 & -(a^2+t^2) & a^2-2t^2 & 2(a^2+t^2)  
+	\end{bmatrix}  
+	\label{eq:MEF_eq_0043}
+\end{equation}
+
+Podemos simplificar a equação \ref{eq:MEF_eq_0043} eliminando a variável $t$ da matriz uma vez que $t \ll a$, assim \cite{moura2013estimaccao}:
+
+\begin{equation}
+	\mathbf{K} =  
+	\frac{b}{6\rho at}  
+	\begin{bmatrix}  
+		2a^2 & a^2 & -a^2 & -2a^2 \\  
+		a^2 & 2a^2 & -2a^2 & -a^2 \\  
+		-a^2 & -2a^2 & 2a^2 & a^2 \\  
+		-2a^2 & -a^2 & a^2 & 2a^2  
+	\end{bmatrix}  
+	\label{eq:MEF_eq_0044}
+\end{equation}
+ou
+\begin{equation}
+	\mathbf{K} = \frac{ab}{6t\rho} \begin{bmatrix} 2 & 1 & -1 & -2 \\ 
+		1 & 2 & -2 & -1 \\ 
+		-1 & -2 & 2 & 1 \\ 
+		-2 & -1 & 1 & 2 \end{bmatrix}
+	\label{eq:MEF_eq_0045}
+\end{equation}
+
+
+Então:
+
 %\tiny
 %\scriptsize
 %\footnotesize
