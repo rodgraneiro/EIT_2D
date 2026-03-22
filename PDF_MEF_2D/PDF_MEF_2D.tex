@@ -1202,7 +1202,7 @@ Analogamente, encontramos também as funções de forma de $f_2$,  $f_3$ e  $f_4
 \end{equation} 
 
  
- \subsection{Derivadas parciais das funções de forma}
+ \subsubsection{Derivadas parciais das funções de forma}
  
  Para determinar o gradiente do potencial elétrico $\nabla \phi$ do elemento conforme equação \ref{eq:MEF_eq_0018}, precisamos calcular as derivadas parciais  $\frac{\partial f_i}{\partial x}$ e $\frac{\partial f_i}{\partial y}$ das funções de forma, assim;
  
@@ -1281,7 +1281,7 @@ Derivada em relação a $y$
  \end{equation}
  
  
- \subsection{Matriz de condutividade local do eletroto Hua/Moura}
+ \section{Determinação da matriz local do eletrodo Hua/Moura}
  
  Como determinada na equação \ref{eq:MEF_eq_0020}, a matriz de condutividade local para um material isotrópico é dada por: 
  $$ \mathbf{K} = \int_{V_i}\frac{1}{\rho_i}\mathbf{F_i}^{T}\mathbf{F_i} dV $$
@@ -1306,7 +1306,7 @@ Derivada em relação a $y$
  \end{bmatrix}
  $$
  
- \subsubsection{Cálculo da matriz de condutividade/resistividade $\mathbf{K}$}
+ \subsection{Cálculo da matriz de condutividade/resistividade $\mathbf{K}$}
  
  Para um material isotrópico a resistividade $\rho$ é constante e pode sair da integral, assim, 
  $$  
@@ -1336,7 +1336,7 @@ Derivada em relação a $y$
  $$  
  F_i^T F_i = g_x^T g_x + g_y^T g_y  
  $$
- Logo,
+ logo,
  \begin{equation} 
   \mathbf{K} = \frac{b}{\rho}  
  \left[\int_{-a/2}^{a/2} \int_{-t/2}^{t/2} g_x^T g_x  dydx  
@@ -1482,7 +1482,7 @@ $$
 	\frac{1}{6} & -\frac{1}{6} & -\frac{1}{3} & \frac{1}{3}  
 \end{bmatrix}  
 $$
-Como esse termo não depende de $x$:
+Como o termo $\left(\frac{t}{2} - y\right)$ não depende de $x$:
 $$
 \int_{-a/2}^{a/2} dx = [x]_{-\frac{a}{2}}^{-\frac{a}{2}} = a
 $$
@@ -1615,9 +1615,225 @@ ou
 		-2 & -1 & 1 & 2 \end{bmatrix}
 	\label{eq:MEF_eq_0045}
 \end{equation}
+\subsection{Vetor de corrente do eletrodo}
 
+O vetor de correntes é determinado a partir da integração do termo da direita da equação \ref{eq:MEF_eq_0020}, reescrita aqui para facilitação:
 
-Então:
+\begin{equation*}
+	\pi_i =
+	\frac{1}{2}
+	\left[\int_{V_i}\frac{1}{\rho_i}\mathbf{F_i}^{T}\mathbf{F_i} dV \right]
+	\phi_i	=
+	\left[\int_{\partial V_i} f_i (-J_i \cdot \hat{n}_i) dA \right]
+\end{equation*} 
+
+A corrente elétrica é imposta no lado metálico do eletrodo representado pelo segmento de reta dado pelos nós $3$ e $4$, dessa maneira a integral do vetor de corrente pode ser representada por: 
+
+\begin{equation}
+	\mathbf{I}_i = b \int_{-a/2}^{a/2} f_i(x, y)(-J_i \hat{n}) dx
+	\label{eq:MEF_eq_0046}
+\end{equation}
+onde $y=\frac{t}{2}$, e como a corrente é perpendicular ao eletrodo (paralelo ao vetor $\hat{n}$)   $(-J \hat{n} = \pm J)$. Considera-se que a densidade de corrente uniforme ao longo de  aresta $3 - 4$.
+ 
+Para o elemento retangular as funções de forma são dadas pelas equações de \ref{eq:MEF_eq_0024} à \ref{eq:MEF_eq_0027}, e considerando o vetor de funções como:
+
+$$  
+f_i(x,y)=  
+\begin{bmatrix}  
+	f_1(x,y)\\  
+	f_2(x,y)\\  
+	f_3(x,y)\\  
+	f_4(x,y)  
+\end{bmatrix}  
+$$ 
+
+\subsubsection{Analisando aresta $3$-$4$ para $y = \frac{t}{2}$}
+
+Substituindo $y=\frac{t}{2}$ em cada função:\\
+Para $f_1$
+$$  
+f_1(x,\frac{t}{2})=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2}-\frac{t}{2}\right)=0  
+$$
+Para $f_2$
+$$  
+f_2(x,\frac{t}{2})=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2}-\frac{t}{2}\right)=0  
+$$
+Para $f_3$
+$$  
+f_3(x,\frac{t}{2})=\frac{1}{at}\left(\frac{a}{2}+x\right)\left(\frac{t}{2}+\frac{t}{2}\right)  
+$$
+como
+$$  
+\frac{t}{2}+\frac{t}{2}=t,  
+$$
+então
+$$  
+f_3(x,\frac{t}{2})=\frac{1}{at}\left(\frac{a}{2}+x\right)t  
+$$
+$$  
+f_3(x,\frac{t}{2})=\frac{1}{a}\left(\frac{a}{2}+x\right)  
+$$
+$$  
+f_3(x,\frac{t}{2})=\frac{1}{2}+\frac{x}{a}  
+$$
+Para $f_4$
+$$  
+f_4(x,\frac{t}{2})=\frac{1}{at}\left(\frac{a}{2}-x\right)\left(\frac{t}{2}+\frac{t}{2}\right)  
+$$
+$$  
+f_4(x,\frac{t}{2})=\frac{1}{at}\left(\frac{a}{2}-x\right)t  
+$$
+$$  
+f_4(x,\frac{t}{2})=\frac{1}{a}\left(\frac{a}{2}-x\right)  
+$$
+$$  
+f_4(x,\frac{t}{2})=\frac{1}{2}-\frac{x}{a}  
+$$
+
+Portanto,
+
+\begin{equation}
+	f_i(x,\frac{t}{2})=  
+	\begin{bmatrix}  
+		0\\  
+		0\\  
+		\frac{1}{2}+\frac{x}{a}\\  
+		\frac{1}{2}-\frac{x}{a}  
+	\end{bmatrix}
+	\label{eq:MEF_eq_0047}
+\end{equation}
+
+\subsubsection{Substituindo na integral}
+
+Agora substituímos em \ref{eq:MEF_eq_0046}, temos:
+$$  
+\mathbf{I}_i = b \int_{-a/2}^{a/2}  
+\begin{bmatrix}  
+	0&  
+	0&  
+	(\frac{1}{2}+\frac{x}{a})&  
+	(\frac{1}{2}-\frac{x}{a}) 
+\end{bmatrix}^{T} (-\mathbf{J}\cdot\hat{n})  
+dx  
+$$
+como $(-\mathbf{J}\cdot\hat{n})$ é constante, podemos tirar da integral.
+$$  
+\mathbf{I}_i = b (-\mathbf{J}\cdot\hat{n})  \int_{-a/2}^{a/2}  
+\begin{bmatrix}  
+	0&  
+	0&  
+	(\frac{1}{2}+\frac{x}{a})&  
+	(\frac{1}{2}-\frac{x}{a}) 
+\end{bmatrix}^{T} 
+dx  
+$$
+ou
+
+$$  
+\mathbf{I}_i = b(-\mathbf{J}\cdot\hat{n})  
+\begin{bmatrix}  
+	\int_{-a/2}^{a/2}0 \: dx \\  
+	\int_{-a/2}^{a/2}0 \: dx \\  
+	\int_{-a/2}^{a/2}\left(\frac{1}{2}+\frac{x}{a}\right) dx \\ 
+	\int_{-a/2}^{a/2}\left(\frac{1}{2}-\frac{x}{a}\right) dx  
+\end{bmatrix} =
+\begin{bmatrix}  
+	0 \\  
+	0 \\  
+	\int_{-a/2}^{a/2}\left(\frac{1}{2}+\frac{x}{a}\right) dx \\ 
+	\int_{-a/2}^{a/2}\left(\frac{1}{2}-\frac{x}{a}\right) dx  
+\end{bmatrix}  
+$$
+
+\textbf{Terceiro termo da matriz $\mathbf{I}_i$}
+$$  
+\int_{-a/2}^{a/2}\left(\frac{1}{2}+\frac{x}{a}\right) dx =
+\int_{-a/2}^{a/2}\frac{1}{2} dx  
++  
+\int_{-a/2}^{a/2}\frac{x}{a} dx  
+$$
+primeira integral,
+$$  
+\int_{-a/2}^{a/2}\frac{1}{2},dx
+= \frac{1}{2}\left[a\right]
+=
+\frac{a}{2}  
+$$
+segunda integral,
+ $$\int_{-a/2}^{a/2}\frac{x}{a} dx= \frac{1}{a}\int_{-a/2}^{a/2}x dx $$
+$$  
+\int_{-a/2}^{a/2} xdx
+= \frac{1}{a}
+\left[\frac{x^2}{2}\right]_{-a/2}^{a/2}  
+$$
+$$
+\int_{-a/2}^{a/2}\frac{x}{a} dx= 
+= \frac{1}{a}\left[\frac{a^2}{8}-\frac{a^2}{8}\right]
+=
+0  
+$$
+portanto o Terceiro termo da matriz $\mathbf{I}_i$ é:
+$$  
+\int_{-a/2}^{a/2}\left(\frac{1}{2}+\frac{x}{a}\right) dx = \frac{a}{2}
+$$
+
+\textbf{Quarto termo da matriz $\mathbf{I}_i$}
+
+$$  
+\int_{-a/2}^{a/2}\left(\frac{1}{2}-\frac{x}{a}\right)dx
+= \int_{-a/2}^{a/2}\frac{1}{2}dx-
+\int_{-a/2}^{a/2}\frac{x}{a}dx  
+$$
+Analogamente ao terceiro termo temos:
+$$
+\int_{-a/2}^{a/2}\left(\frac{1}{2}-\frac{x}{a}\right)dx = 
+\frac{a}{2} - \frac{a}{2} (0)  
+$$
+logo,
+ $$  
+\int_{-a/2}^{a/2} f_i(x,\frac{t}{2}) dx =
+\begin{bmatrix}  
+	0\\  
+	0\\  
+	\frac{a}{2}\\  
+	\frac{a}{2}  
+\end{bmatrix}  
+$$
+
+Dessa maneira, podemos determinar o vetor $\mathbf{I}_i$, como;
+
+$$  
+\mathbf{I}_i=
+b(-\mathbf{J}\cdot\hat{n})  
+\begin{bmatrix}  
+	0\\  
+	0\\  
+	\frac{a}{2}\\  
+	\frac{a}{2}  
+\end{bmatrix} 
+$$
+Colocando $\frac{a}{2}$ em evidência, temos:
+\begin{equation} 
+	\mathbf{I}_i=
+	\pm \frac{Jab}{2}  
+	\begin{bmatrix}  
+		0\\  
+		0\\  
+		1\\  
+		1  
+	\end{bmatrix}=
+	\pm \frac{I}{2}  
+	\begin{bmatrix}  
+		0\\  
+		0\\  
+		1\\  
+		1  
+	\end{bmatrix}
+\end{equation}
+ 
+
+\subsection{Criação do nó virtual}
+
 
 %\tiny
 %\scriptsize
