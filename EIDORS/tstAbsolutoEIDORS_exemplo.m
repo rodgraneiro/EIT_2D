@@ -9,13 +9,18 @@
 % Observação importante:
 %   - isso é ABSOLUTO (usa vi), NÃO diferencial (vh-vi).
 %===========================================================
-%graphics_toolkit fltk
+
 clear all; close all; clc;
 % Ajuste o caminho do seu EIDORS se necessário
 run('D:\EIDORS\eidors-v3.10\eidors\startup.m');
 addpath('D:\EIDORS\eidors-v3.10\eidors\examples');
 eidors_cache clear;
 graphics_toolkit fltk
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PARTE 1: GERAÇÃO DE MEDIDAS SIMULADAS (solução do problema direto)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 %-----------------------------
 % 1) Modelo FEM + eletrodos
 %-----------------------------
@@ -43,7 +48,7 @@ fmdl.stimulation = stim;
 %-----------------------------
 % 3) Gerar "dados medidos" absolutos (vi)
 %-----------------------------
-% Fundo absoluto
+% Fundo absoluto (atribuição de distribuição uniforme de condutividade sigma0 à malha fmdl)
 sigma0 = 3.0;  % S/m (exemplo)
 
 img0 = mk_image(fmdl, sigma0);
@@ -100,6 +105,9 @@ else
 end
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PARTE 2: GERAÇÃO DA IMAGEM DE EIT (solução do problema inverso)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %-----------------------------
 % 4) Configurar inversão ABSOLUTA (Gauss-Newton)
@@ -107,11 +115,8 @@ end
 imdl_base = mk_common_model('c2d0c', 16);
 fmdl_base = imdl_base.fwd_model;
 
-
 #imdl_base = eidors_obj('inv_model', 'ABS_GN_minimo');
 imdl_base.fwd_model = fmdl_base;
-
-
 
 % Solver Gauss-Newton (absoluto)
 imdl_base.solve = @inv_solve_gn;            % iterativo GN
@@ -129,6 +134,7 @@ imdl_base.jacobian_bkgnd.value = sigma0;
 imdl_base.inv_solve_gn.max_iterations = 20;
 imdl_base.inv_solve_gn.tol = 1e-10;
 imdl_base.inv_solve_gn.verbose = 2;
+
 %-----------------------------
 % 5) Reconstrução ABSOLUTA
 %-----------------------------
