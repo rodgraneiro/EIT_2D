@@ -27,7 +27,7 @@ nome = '../../malhasMSH/c2d2c_EIDORS_4e.msh'
 
 
 
-MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 0.100)
+MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 1.00)
 
 #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
