@@ -92,24 +92,24 @@ class MyMesh:
             self.Elements[idx].SetSigma(dic[tag])
             self.sigma_vec[idx] = sigma_value
         print(f"Vetor global de condutividades (sigma_vec SetSigmaPhysicaEntity):\n{self.sigma_vec}")
-    '''
+    
     def SetSigmaAnisotropicElements(self, dic):
         self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
         for idx in range(self.NumberOfElements):
             tag = self.Elements[idx].PhysicalEntity
-            print("tag 11111:", tag)
+            #print("tag 11111:", tag)
             sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
-            print("sigma_value 11111:", sigma_value)
+            #print("sigma_value 11111:", sigma_value)
             self.Elements[idx].SetSigma(dic[tag])
             self.sigma_vec[idx] = sigma_value
-        print(f"Vetor global de condutividades (sigma_vec SetSigmaAnisotropicElements):\n{self.sigma_vec}")
+        #print(f"Vetor global de condutividades (sigma_vec SetSigmaAnisotropicElements):\n{self.sigma_vec}")
 
         #self.sigma_vec = np.array(sigma_array, dtype=float)
 
         if self.sigma_vec.shape != (self.NumberOfElements, 3):
             raise ValueError("sigma_array deve ter dimensão (NumberOfElements, 3)")
-        print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
-    '''
+        #print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
+    
     def CalcKGlobal(self):
        
         #if self.Elements[0].Rho == 0.0:
@@ -675,13 +675,20 @@ class HuaElectrodes2DAnisotropic(MyMesh):
         elements.LinearLineHua.Altura2D = self.altura2D # define a altura padrão como 1cm
 
         # Pegando elementos triangulares:
+        #for idx in range(n_elementos_msh):
+        #    self.Elements[idx] = elements.LinearTriangleAnisotropic()
+        #    self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
+        #    self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
+        #    self.Elements[idx].CalcCentroid()
+        #    self.Elements[idx].CalcKgeo()
+        
         for idx in range(n_elementos_msh):
-            self.Elements[idx] = elements.LinearTriangleAnisotropic()
-            self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
-            self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
+            self.Elements[idx] = elements.LinearTriangleAnisotropic(self)
+            self.Elements[idx].ElementIndex = idx
+            self.Elements[idx].Topology = self.msh_topology[idx]
+            self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]
             self.Elements[idx].CalcCentroid()
-            self.Elements[idx].CalcKgeo()
-
+            #self.Elements[idx].CalcKgeo()
         # Pegando elementos dos eletrodos:
         for idy in range(n_elementos_eletrodos): # idy começa em zero
             idx = idy + n_elementos_msh          # idx continua a partir de n_elementos_msh

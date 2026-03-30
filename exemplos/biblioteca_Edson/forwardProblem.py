@@ -127,17 +127,17 @@ class forward_problem:
         plt.pause(0.1)  
     def Solve(self, forceKGolbalCalc=False):
         #self.plotMSH(self.mymesh.sigma_vec)
-        print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
+        print('self.mymesh.sigma_vec \n',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
-            print('banana self.mymesh.KGlobal is None')
+            print('self.mymesh.KGlobal is None')
             self.mymesh.CalcKGlobal()
         
         self.apply_boundary_conditions()
-        print('solve self.KGlobal \n',self.KGlobal)
+        #print('solve self.KGlobal \n',self.KGlobal)
         self.Yinversa = np.linalg.inv(self.KGlobal)
 
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
-        print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
+        #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
         #print('solve vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno)
 

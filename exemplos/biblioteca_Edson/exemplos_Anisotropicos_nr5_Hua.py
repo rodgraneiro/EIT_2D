@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ8_anom4_tst_Hua_v4_1_lc_0_01.msh'
 #nome = '../../malhasMSH/circ8_anom4_tst_Hua_v2_2_lc_especial.msh'
 #nome = '../../malhasMSH/circ8_anomZero_Hua.msh'
-nome = '../../malhasMSH/circ16_anomZero_Hua.msh'
+#nome = '../../malhasMSH/circ16_anomZero_Hua.msh'
 #nome = '../../malhasMSH/circ16_anom1_Hua.msh'
 
 #nome = '../../malhasMSH/Hua_quadrado_2e.msh'
@@ -24,8 +24,10 @@ nome = '../../malhasMSH/circ16_anomZero_Hua.msh'
 #nome = '../../malhasMSH/Hua_quadrado_4eletrodos_new.msh'
 #nome = '../../malhasMSH/circ16_anom1_Square_Hua.msh'
 
+nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
 
-MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 0.1000)
+
+MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 0.1000)
 
 #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
@@ -39,28 +41,19 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 
 meus_sigmas = {
-1000 : 1.0e0,    
-1001 : 1.0e0,
-5001 : 1.0e0, 
-5002 : 1.0e0, 
-5003 : 1.0e0, 
-5004 : 1.0e0, 
-
-5005 : 1.0e0, 
-5006 : 1.0e0, 
-5007 : 1.0e0, 
-5008 : 1.0e0,
-5009 : 1.0e0, 
-5010 : 1.0e0, 
-5011 : 1.0e0, 
-5012 : 1.0e0, 
-5013 : 1.0e0, 
-5014 : 1.0e0, 
-5015 : 1.0e0, 
-5016 : 1.0e0,    
+    1000: [1.0, 0.0, 1.0],
+    1001: [0.010, 0.0, 0.001],
+    5001: [1000000.0, 0.0, 1000000.0],
+    5002: [1000000.0, 0.0, 1000000.0],
+    5003: [1000000.0, 0.0, 1000000.0],
+    5004: [1000000.0, 0.0, 1000000.0]
 }
 
+MinhaMalha.SetSigmaAnisotropicElements(meus_sigmas)
 
+for idx in range(MinhaMalha.NumberOfElements):
+    if not MinhaMalha.Elements[idx].FlagIsElectrode:
+        MinhaMalha.Elements[idx].CalcKgeo()
 
 
 #meus_sigmas= np.loadtxt("circ16_anom1_Hua_Sigma_v6.txt")
@@ -68,10 +61,12 @@ meus_sigmas = {
 #meus_sigmas= np.loadtxt("circ16_anom1_Square_Hua_Sigma.txt")
 
 
-MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
+#MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
 
 #MinhaMalha.SetSigmaElements(meus_sigmas)
 
+
+#MinhaMalha.SetSigmaAnisotropicElements(meus_sigmas)
 
 MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
@@ -86,7 +81,7 @@ MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 #print(f'n_nodes = {MinhaMalha.NumberOfNodes}')
 
 
-fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=7, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=1, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
 #fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True)   # __init__ roda aqui
 

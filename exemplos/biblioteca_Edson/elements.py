@@ -209,8 +209,8 @@ class LinearLineHua(MyElement):
         # comprimento 'a' sqtr( (x2-x1)^2 + (y2-y1)^2) )
 
         lenth_a = np.sqrt((mtrz_lenth_a[1][0] - mtrz_lenth_a[0][0])**2 +(mtrz_lenth_a[1][1] - mtrz_lenth_a[0][1])**2)            
-        print('lenth_a', lenth_a)
-        print('self.Altura2D', self.Altura2D)
+        #print('lenth_a', lenth_a)
+        #print('self.Altura2D', self.Altura2D)
         self.KGeo = np.zeros((3, 3), dtype=float)
         mHua = np.array([[2.0,1.0,-3.0],[1.0,2.0,-3.0],[-3.0,-3.0,6.0]])
         
@@ -218,7 +218,7 @@ class LinearLineHua(MyElement):
         #self.KGeo = ((self.Altura2D*lenth_a)/6)*mHua
         #print('KGeo_Hua', self.KGeo)
         self.KGeo = ((self.Altura2D * lenth_a) / (6.0 * zc)) * mHua
-        print('KGeo_Hua', self.KGeo)
+        #print('KGeo_Hua', self.KGeo)
     def CalcCentroid(self):
         if self.Topology is None:
             raise Exception("MyElement(): CalcCentroid(): Topology not defined.")
@@ -292,8 +292,9 @@ class LinearLineEdson(MyElement):
 class LinearTriangleAnisotropic(MyElement):
     #Altura2D = 1.0
 
-    def __init__(self):
+    def __init__(self, mymesh=None):
         super().__init__()
+        self.mymesh = mymesh
 
         #self.mymesh = mymesh
         
