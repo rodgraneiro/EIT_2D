@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
 
 
-MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 0.1000)
+MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 1.0000)
 
 #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
@@ -42,14 +42,29 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 meus_sigmas = {
     1000: [1.0, 0.0, 1.0],
-    1001: [0.010, 0.0, 0.001],
-    5001: [1000000.0, 0.0, 1000000.0],
-    5002: [1000000.0, 0.0, 1000000.0],
-    5003: [1000000.0, 0.0, 1000000.0],
-    5004: [1000000.0, 0.0, 1000000.0]
+    1001: [0.0100, 0.0, 0.001],
+    5001: [1.0, 0.0, 1.0],
+    5002: [1.0, 0.0, 1.0],
+    5003: [1.0, 0.0, 1.0],
+    5004: [1.0, 0.0, 1.0],
+    5005: [1.0, 0.0, 1.0],
+    5006: [1.0, 0.0, 1.0],
+    5007: [1.0, 0.0, 1.0],
+    5008: [1.0, 0.0, 1.0],
+    5009: [1.0, 0.0, 1.0],
+    5010: [1.0, 0.0, 1.0],
+    5011: [1.0, 0.0, 1.0],
+    5012: [1.0, 0.0, 1.0],
+    5013: [1.0, 0.0, 1.0],
+    5014: [1.0, 0.0, 1.0],
+    5015: [1.0, 0.0, 1.0],
+    5016: [1.0, 0.0, 1.0]
 }
 
+#MinhaMalha.SetSigmaAnisotropicElements(meus_sigmas)
 MinhaMalha.SetSigmaAnisotropicElements(meus_sigmas)
+
+
 
 for idx in range(MinhaMalha.NumberOfElements):
     if not MinhaMalha.Elements[idx].FlagIsElectrode:
