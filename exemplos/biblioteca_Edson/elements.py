@@ -46,7 +46,7 @@ class MyElement:
         if value == 0:
             raise Exception("MyElement(): SetRho(): value não pode ser 0.")
         self.Sigma = value
-        self.Rho = 1.0/value
+        #self.Rho = 1.0/value
 
 
     def CalcCentroid(self):
@@ -297,9 +297,9 @@ class LinearLineEdson(MyElement):
 class LinearTriangleAnisotropic(MyElement):
     #Altura2D = 1.0
 
-    def __init__(self):
+    def __init__(self, mymesh=None):
         super().__init__()
-        
+        self.mymesh = mymesh
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
     # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
     # Seção 6.2.2. Veja equacionamento  em  "Método Elementos Finitos 2D - Triângulos.pdf"
@@ -323,6 +323,19 @@ class LinearTriangleAnisotropic(MyElement):
         #print('self.msh_physical_groups',  {self.msh_physical_groups})
         #print(f"Physical tags found {self.physical_tags}.")
         #print("Physical tag:", self.PhysicalEntity)
+        
+        if self.PhysicalEntity >= 1000:
+            #print('batata')
+            sigma = self.mymesh.sigma_vec[self.ElementIndex]
+            
+            Sx  = sigma[0]   # σxx
+            Sxy = sigma[1]   # σxy
+            Sy  = sigma[2]   # σyy
+
+        
+
+
+        '''
         if self.PhysicalEntity == 1000:
             Sx = 1.0
             Sy = 1.0
@@ -331,7 +344,7 @@ class LinearTriangleAnisotropic(MyElement):
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
             Sx = self.sigmaX
             Sy = self.sigmaY
-
+        '''
         #print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         x = [self.Coordinates[noh1][0], self.Coordinates[noh2][0], self.Coordinates[noh3][0]]
         y = [self.Coordinates[noh1][1], self.Coordinates[noh2][1], self.Coordinates[noh3][1]]
