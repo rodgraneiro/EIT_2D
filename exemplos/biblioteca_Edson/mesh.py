@@ -90,11 +90,56 @@ class MyMesh:
             self.sigma_vec[idx] = sigma_value
         print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
 
+    def SetSigmaAnisotropicPhysicaEntity(self, dic):
+        for idx in range(self.NumberOfElements):
+            elem = self.Elements[idx]
+            tag = elem.PhysicalEntity
 
+            if tag not in dic:
+                continue
+
+            valor = dic[tag]
+
+            # eletrodos linha: pode manter sigma escalar alto
+            if elem.FlagIsElectrode:
+                if isinstance(valor, (list, tuple, np.ndarray)):
+                    elem.Sigma = float(valor[0])
+                else:
+                    elem.Sigma = float(valor)
+                elem.Rho = 1.0 / elem.Sigma
+                continue
+
+            # triângulos anisotrópicos: espera [Sxx, Sxy, Syy]
+            if isinstance(valor, (list, tuple, np.ndarray)) and len(valor) == 3:
+                Sxx, Sxy, Syy = valor
+                elem.SigmaTensor = np.array([[Sxx, Sxy],
+                                            [Sxy, Syy]], dtype=float)
+                elem.Sigma = 1.0
+                elem.Rho = 1.0
+            else:
+                raise ValueError(f"Tag {tag}: esperado [Sxx, Sxy, Syy], recebido {valor}")
+   
+    def SetSigmaAnisotropicElements(self, dic):
+        self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
+        for idx in range(self.NumberOfElements):
+            tag = self.Elements[idx].PhysicalEntity
+            #print("tag 11111:", tag)
+            sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
+            #print("sigma_value 11111:", sigma_value)
+            self.Elements[idx].SetSigma(dic[tag])
+            self.sigma_vec[idx] = sigma_value
+        #print(f"Vetor global de condutividades (sigma_vec SetSigmaAnisotropicElements):\n{self.sigma_vec}")
+
+        #self.sigma_vec = np.array(sigma_array, dtype=float)
+
+        if self.sigma_vec.shape != (self.NumberOfElements, 3):
+            raise ValueError("sigma_array deve ter dimensão (NumberOfElements, 3)")
+        #print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
+    
     def CalcKGlobal(self):
        
-        if self.Elements[0].Rho == 0.0:
-            raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
+        #if self.Elements[0].Rho == 0.0:
+        #    raise Exception("MyMesh:CalcKGlobal(): Valor de Rho/Sigma nao definido.")
             
         if self.KGlobal is None:
             self.KGlobal = np.zeros((self.NumberOfNodes, self.NumberOfNodes), dtype=float)
@@ -106,25 +151,24 @@ class MyMesh:
             for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
 
+            
+        for elem in range(self.NumberOfElements): # para cada elemento:
+            #print(f' elemento_{elem} {self.Elements[elem].Topology}')
+            for i in range(len(self.Elements[elem].Topology)): # para cada i (noh local):
+                no_i = self.Elements[elem].Topology[i] # pega noh_i (noh global)
+
                 for j in range(len(self.Elements[elem].Topology)): # para cada j (noh local):
                     no_j = self.Elements[elem].Topology[j] # pega noh_j (noh global)
-                    '''
+
                     if self.FlagRhoBased:
                         valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
                     else:
                         if self.Elements[elem].FlagIsElectrode:
                             valor = self.Elements[elem].KGeo[i, j]  # NÃO multiplica por Sigma
                         else:
-                            valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                            #print('mesh sigma zzzz', self.Elements[elem].Sigma[0])
                             #valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
-                        #print('mesh sigma', self.Elements[elem].Sigma, elem)
-                    self.KGlobal[no_i, no_j] += valor
-                    '''
-                    if self.FlagRhoBased:
-                        valor = self.Elements[elem].KGeo[i, j] / self.Elements[elem].Rho
-                    else:
-                        valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
-                            #valor = self.Elements[elem].KGeo[i, j] * self.Elements[elem].Sigma
+                            valor = self.Elements[elem].KGeo[i, j]
                         #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
             #print('self.KGlobal \n',self.KGlobal)
@@ -651,8 +695,8 @@ class HuaElectrodes2DAnisotropic(MyMesh):
         elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
         elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
         elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
-        elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
-        elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
+        #elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
+        #elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
 
         elements.LinearLineHua.Coordinates = self.Coordinates
         elements.LinearLineHua.Altura2D = self.altura2D # define a altura padrão como 1cm
@@ -660,10 +704,12 @@ class HuaElectrodes2DAnisotropic(MyMesh):
         # Pegando elementos triangulares:
         for idx in range(n_elementos_msh):
             self.Elements[idx] = elements.LinearTriangleAnisotropic()
+            self.Elements[idx].mymesh = self
+            self.Elements[idx].ElementIndex = idx
             self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
             self.Elements[idx].CalcCentroid()
-            self.Elements[idx].CalcKgeo()
+            #self.Elements[idx].CalcKgeo()
 
         # Pegando elementos dos eletrodos:
         for idy in range(n_elementos_eletrodos): # idy começa em zero
