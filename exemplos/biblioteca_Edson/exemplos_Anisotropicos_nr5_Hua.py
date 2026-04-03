@@ -9,7 +9,7 @@ import numpy as np
 import mesh
 import forwardProblem
 import inverseProblem
-import inverseProblem_2D
+import inverseProblem_2D_Anisotropic
 import matplotlib.pyplot as plt
 
 #nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
@@ -109,15 +109,15 @@ mtz_Vmedido = fwd.Solve()
 #print(f'Vmedido \n {fwd.Vmedido[:,0]}')
 
 nome_arquivo = 'ParaVernoGmshPto'
-fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+#fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 
-fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+#fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
 V_measured = fwd.Vmedido_eletrodos
 
 print(f'V_mesured \n {V_measured}')
 
 
-#invProblem_2D = inverseProblem_2D.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
-#invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =2.5,  Lambda = 0.50, max_iter=1,Tol=5.0e-4)
+invProblem_2D = inverseProblem_2D_Anisotropic.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
+invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =2.5,  Lambda = 0.50, max_iter=1,Tol=5.0e-4)
 #print('Y_jacobian',invProblem.Y_jacobian)
