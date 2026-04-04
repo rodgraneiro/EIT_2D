@@ -91,7 +91,8 @@ class inverse_problem:
     def calc_Y_jacobian(self):   # função para calcular a matriz global
         self.Y_jacobian = np.zeros((int(self.mymesh.NumberOfNodes),int(self.mymesh.NumberOfNodes)))
         self.listJacobian = []
-        for i in range(0, self.mymesh.NumberOfElements):        # laço para montar a matriz global
+        #for i in range(0, self.mymesh.NumberOfElements):        # laço para montar a matriz global
+        for i in range(0, self.mymesh.msh_topology.shape[0]):
         #for i in range(0, 1):        # laço para montar a matriz global
             #print('nro_elementos_J',i)
             node_l = int(self.mymesh.msh_topology[i][0]) +1       # pegar dados da matriz elementos
@@ -115,7 +116,7 @@ class inverse_problem:
             C_33 =  (y1-y2)**2 + (x2-x1)**2  
 
             
-            Y_local = (1/(4*area_triangle))*np.array([[C_11, C_12, C_13], 
+            Y_local = ( self.mymesh.Altura2D /(4*area_triangle))*np.array([[C_11, C_12, C_13], 
                                             [C_12, C_22, C_23],      
                                             [C_13, C_23, C_33]]      
                                             )
@@ -530,8 +531,8 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        #self.plotMSH(self.mymesh.sigma_vec, save = False)
-        
+        self.plotMSH(self.mymesh.sigma_vec, save = False)
+        print('lalala')
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
@@ -563,7 +564,7 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(itr_start,max_iter):
-            np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
+            #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
@@ -590,11 +591,11 @@ class inverse_problem:
             
             self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
     
-            '''
+            
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
             #self.Calc_J(invVtempJ)
             self.Calc_J(invVtemp)
-            
+            '''
             # ***** Cálculo do termo 1a JT_W1_J *****
             #W1=np.eye(self.TempJ.shape[0])
             #JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos

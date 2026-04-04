@@ -171,7 +171,7 @@ class MyMesh:
                             valor = self.Elements[elem].KGeo[i, j]
                         #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
-            #print('self.KGlobal \n',self.KGlobal)
+        print('self.KGlobal \n',self.KGlobal.shape)
 
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
@@ -608,7 +608,7 @@ class HuaElectrodes2DAnisotropic(MyMesh):
         else:
             raise Exception("PointElectrodes2DMeshAnisotropic(): Invalid NumberOfEletrodes.")
 
-        self.altura2D = altura2D
+        self.Altura2D = altura2D
         self.useEdson = useEdson
         self.thetaAngle = thetaAngle
         self.sigmaX = sigmaX
@@ -693,13 +693,13 @@ class HuaElectrodes2DAnisotropic(MyMesh):
 
         # Setando variáveis das classes elemento (a mesma variável para toda a classe)
         elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
-        elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
+        elements.LinearTriangleAnisotropic.Altura2D = self.Altura2D # define a altura padrão como 1cm
         elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
         #elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
         #elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
 
         elements.LinearLineHua.Coordinates = self.Coordinates
-        elements.LinearLineHua.Altura2D = self.altura2D # define a altura padrão como 1cm
+        elements.LinearLineHua.Altura2D = self.Altura2D # define a altura padrão como 1cm
 
         # Pegando elementos triangulares:
         for idx in range(n_elementos_msh):
