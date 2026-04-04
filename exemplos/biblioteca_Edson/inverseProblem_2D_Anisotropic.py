@@ -64,7 +64,7 @@ class inverse_problem:
         
         #global comprimento
         #comprimento = np.zeros(nro_elementos_J)
-        print('batatatatatata')
+        
     #def calc_Y_local_1D(self, xl, xm, Area, sigma): # função p/ calc a matriz local p/ elemento 1D
     #  return ((Area*sigma)/(xm-xl))*np.array([[1, -1], [-1, 1]])
     ###############################################################################
@@ -319,6 +319,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
+        '''
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -345,6 +346,7 @@ class inverse_problem:
 
         #plt.show(block = false)
         #plt.pause(0.1)
+        '''
         return L2
 
     
@@ -588,7 +590,7 @@ class inverse_problem:
             
             self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
     
-    
+            '''
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
             #self.Calc_J(invVtempJ)
             self.Calc_J(invVtemp)
@@ -665,6 +667,7 @@ class inverse_problem:
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
             '''
+            '''
             if any(v < 0 for v in sigmaPlusOne):                
                 alpha = alpha*fatorAlpha
                 sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
@@ -678,7 +681,7 @@ class inverse_problem:
             '''
             
                 
-           
+            '''
             if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
                print(f'Encontrou norma lastResidue maior  que a anterior.')
@@ -716,5 +719,5 @@ class inverse_problem:
         tol = 1e-6 * s[0]          # ou outro fator
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
-        
+        '''
         
