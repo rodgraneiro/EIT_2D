@@ -8,7 +8,7 @@ Created on Fri Mar 27 11:11:19 2026
 import numpy as np
 import mesh
 import forwardProblem
-import inverseProblem
+#import inverseProblem
 import inverseProblem_2D_Anisotropic
 import matplotlib.pyplot as plt
 
@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/Hua_quadrado_4eletrodos_new.msh'
 #nome = '../../malhasMSH/circ16_anom1_Square_Hua.msh'
 
-nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
+nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
 
 
 MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0, sigmaX = 1.00, sigmaY = 1.0000)
