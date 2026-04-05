@@ -250,9 +250,9 @@ class inverse_problem:
 
 
     def CalcTempKGlobal(self, SigmaTemp):
-        self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+        self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float)
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
-        for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
+        for elem in range(self.mymesh.msh_topology.shape[0]): # para cada elemento:
             #print(f' SigmaTemp {SigmaTemp}')
             for i in range(len(self.mymesh.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.mymesh.Elements[elem].Topology[i] # pega noh_i (noh global)
@@ -268,10 +268,12 @@ class inverse_problem:
     ###############################################################################
     def Calc_J(self, invVtemp):
         listTempJ=[]
-        for idx in range(self.mymesh.NumberOfElements):
+        #for idx in range(self.mymesh.NumberOfElements):
+        for idx in range(0, self.mymesh.msh_topology.shape[0]):
             termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
-            #print('termo1 \n', termo1)
+            #print('termo1 \n', termo1.shape)
             termo2 = np.dot(self.listJacobian[idx], termo1)
+            #print('idx', idx)
             #print('termo2 \n', termo2)
             termo3 = -np.dot(invVtemp, termo2)
             termo3 = termo3[self.mymesh.ElectrodeNodes]
@@ -294,14 +296,14 @@ class inverse_problem:
     def calc_L2_gauss_2D(self, centroids_2D, std=0.007, tol=1e-9):
         
         #nelements = centroids_2D.shape[0]
-        L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
+        L2 = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=np.float32)
     
-        for i in range(self.mymesh.NumberOfElements):
+        for i in range(self.mymesh.msh_topology.shape[0]):
             ci = centroids_2D[i]
             soma = 0.0
     
             # --- primeira passada: calcula fatores gaussianos ---
-            for j in range(self.mymesh.NumberOfElements):
+            for j in range(self.mymesh.msh_topology.shape[0]):
                 cj = centroids_2D[j]
                 #print(f'cj = {cj}')
                 dist = np.linalg.norm(ci - cj)  # distância Euclidiana
@@ -313,7 +315,7 @@ class inverse_problem:
                     L2[i, j] = fator
     
             # --- segunda passada: normaliza e transforma em passa-alta ---
-            for j in range(self.mymesh.NumberOfElements):
+            for j in range(self.mymesh.msh_topology.shape[0]):
                 if soma > 0:
                     if i == j:
                         aux = 1.0 - L2[i, j] / soma
@@ -546,7 +548,7 @@ class inverse_problem:
         #print('V_measured', V_measured.shape)
         
         
-        sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
+        sigmaInicial = np.ones(self.mymesh.msh_topology.shape[0])*initialEstimate
         sigmaInicial = sigmaInicial.reshape(-1,1)
 
         #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
@@ -567,9 +569,10 @@ class inverse_problem:
             #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
-            
+            print('Vtemp_1',Vtemp.shape)
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
+            print('Vtemp_2',Vtemp.shape)
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
@@ -595,7 +598,7 @@ class inverse_problem:
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
             #self.Calc_J(invVtempJ)
             self.Calc_J(invVtemp)
-            '''
+            
             # ***** Cálculo do termo 1a JT_W1_J *****
             #W1=np.eye(self.TempJ.shape[0])
             #JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
@@ -604,6 +607,8 @@ class inverse_problem:
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
             LTL =np.dot(L2.T, L2)
             termo_L = (Lambda**2)*LTL
+            #print('termo_L',termo_L.shape)
+            #print('self.JTJ',self.JTJ.shape)
             
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
             #firstTerm = JTWJ + termo_L
@@ -617,11 +622,12 @@ class inverse_problem:
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
             regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
-
+            print('sigmaInicial',sigmaInicial)
             regTerm = regTerm.reshape(-1, 1)
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
-            regularization = np.dot(termo_L, regTerm)
-                        
+            print('regTerm',regTerm.shape)
+            #regularization = np.dot(termo_L, regTerm)
+            '''            
             # ***** Cálculo final do termo 2 *****
             secondTerm = -JTW_H - regularization
             
