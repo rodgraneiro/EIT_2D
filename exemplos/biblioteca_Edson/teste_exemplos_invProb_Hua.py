@@ -18,68 +18,70 @@ import inverseProblem
 import inverseProblem_2D
 import matplotlib.pyplot as plt
 
-###############################################################################
-#nome = '../../malhasMSH/quatro_triangulos_03nov2025.msh'
-#nome = '../../malhasMSH/circ16_3_anomalia6_v2208.msh'
-#nome = '../../malhasMSH/dezesseis_triangulos_22jan25.msh'
-#nome = '../../malhasMSH/circ16_3_anomalia6_coarse_v2208.msh'
-#nome = '../../malhasMSH/circ16_anomalia6_plus.msh'
-
-#nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
 nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
+#nome = '../../malhasMSH/circ8_anom4_tst_Hua_v4_1_lc_0_01.msh'
 
-
-#MinhaMalha = mesh.PointElectrodes2DMeshEdson(16, nome_msh=nome, altura2D = 0.02)
-MinhaMalha = mesh.HuaElectrodes2DIsotropic(2, nome_msh=nome, altura2D = 0.02)
+#MinhaMalha = mesh.HuaElectrodes2DMeshEdson(8, nome_msh=nome, altura2D = 0.02)
+MinhaMalha = mesh.HuaElectrodes2DMeshEdson(2, nome_msh=nome, altura2D = 0.02)
 MinhaMalha.ReadMesh() 
 
-#print(MinhaMalhaPto2.Elements[2])
-#print(f"Centroid: {MinhaMalhaPto2.Elements[2].Centroid}")
-#print(f"KGeo: \n{MinhaMalhaPto2.Elements[2].KGeo}")
-#sigma_inicial = np.full(MinhaMalhaPto2.NumberOfElements, 1.0)          # Monta vetor sigma inicial
-#PcorrenteReal = np.loadtxt("padraoCC_3objetos.txt")
+print(MinhaMalha.Elements[2])
+print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
+print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
 
 
 meus_sigmas = {
-1000 : 2.0,   
-1001 : 2.0,
-5001 : 2.0,
-5002 : 2.0,
-5003 : 2.0,
-5004 : 2.0}
+1000 : 0.1,    
+#1001 : 0.01,
+5001 : 0.2, 
+5002 : 0.2, 
+#5003 : 0.2, 
+#5004 : 0.2, 
+#5005 : 0.2, 
+#5006 : 0.2, 
+#5007 : 0.2, 
+#5008 : 0.2,  
+}
+
+MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
+
+#MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
+
+#coordenadas = MinhaMalha.Coordinates
+#topologia = MinhaMalha.msh_topology
+
+#MinhaMalha.KGlobal
+
+#KGlobal =  MinhaMalha.KGlobal
 
 
-MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas)
+print(f'n_nodes = {MinhaMalha.NumberOfNodes}')
 
 
-MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=0, VirtualNode = True)   # __init__ roda aqui
 
 
-#print(f'MinhaMalhaPto2.KGlobal =  {MinhaMalhaPto2.KGlobal.shape}')
+print(f'Pcorrente \n {fwd.corrente[MinhaMalha.NumberOfNodes-MinhaMalha.NumberOfElectrodes: MinhaMalha.NumberOfNodes]}')
 
-#fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=PcorrenteReal, SkipPattern=None, I =1.0e-3)   # __init__ roda aqui
-fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=0, I =1.0e-3)   # __init__ roda aqui
-
-#print(f'Pcorrente \n {fwd.corrente[MinhaMMinhaMalhaalhaPto.NumberOfNodes-MinhaMalhaPto.NumberOfElectrodes: MinhaMalhaPto.NumberOfNodes]}')
-#print(f'Pcorrente \n {fwd.corrente[:16]}')
-
-#print(f'Pcorrente \n {fwd.corrente.shape}')
+print(f'Pcorrente \n {fwd.corrente.shape}')
 
 mtz_Vmedido = fwd.Solve()
-#print(f'Vmedido \n {fwd.Vmedido[:,0]}')
+print(f'Vmedido \n {fwd.Vmedido[:,0]}')
 
-nome_arquivo = 'ParaVernoGmshPto'
-#nome_arquivo = 'banana'
+nome_arquivo = 'circ8_anom4_tst_Hua_v4_1_lc_0_01'
 fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 
 fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
-#print(f'self.Yinversa banana\n {fwd.Yinversa}')
-
 V_measured = fwd.Vmedido_eletrodos
 
-
 print(f'V_mesured \n {V_measured}')
+
+
+#invProblem_2D = inverseProblem_2D.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
+#invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =2.5,  Lambda = 0.50, max_iter=1,Tol=5.0e-4)
+#print('Y_jacobian',invProblem.Y_jacobian)
+
 
 '''
 ###############################################################################
