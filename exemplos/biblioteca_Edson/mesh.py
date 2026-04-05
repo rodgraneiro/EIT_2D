@@ -291,7 +291,7 @@ class HuaElectrodes2DIsotropic(MyMesh):
         if type(NumberOfEletrodes) == int:
             self.NumberOfElectrodes = NumberOfEletrodes
         else:
-            raise Exception("HuaElectrodes2DMeshEdson(): Invalid NumberOfEletrodes.")
+            raise Exception("HuaElectrodes2HuaElectrodes2DIsotropicDMeshEdson(): Invalid NumberOfEletrodes.")
 
         self.altura2D = altura2D
     
@@ -303,7 +303,7 @@ class HuaElectrodes2DIsotropic(MyMesh):
     '''
     def ReadMesh(self):
         if self.MshFileName == "":
-            raise Exception("HuaElectrodes2DMeshEdson(): MshFileName not defined.")
+            raise Exception("HuaElectrodes2DIsotropic(): MshFileName not defined.")
 
         print(f"Reading {self.MshFileName}.")
         self.__mshdata = meshio.read(self.MshFileName)
@@ -311,20 +311,20 @@ class HuaElectrodes2DIsotropic(MyMesh):
         # Check msh dimension
         if 'gmsh:physical' in self.__mshdata.cell_data_dict.keys():
             if 'tetra' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
-                raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error. Should be 2D mesh.")
+                raise Exception("HuaElectrodes2DIsotropic(): dimension identification error. Should be 2D mesh.")
                 
             elif 'triangle' in self.__mshdata.cell_data_dict["gmsh:physical"].keys():
                 self.dim = 2 # 2D mesh
                 self.element_type = 'triangle'
             else:
-                raise Exception("HuaElectrodes2DMeshEdson(): dimension identification error.")
+                raise Exception("HuaElectrodes2DIsotropic(): dimension identification error.")
                 
         else:
-            raise Exception("HuaElectrodes2DMeshEdson(): invalid mesh (no physical entities found).")  
+            raise Exception("HuaElectrodes2DIsotropic(): invalid mesh (no physical entities found).")  
             
         # Verifica se tem as linhas dos eletrodos
         if not ('line' in self.__mshdata.cell_data_dict["gmsh:physical"].keys()):
-            raise Exception("HuaElectrodes2DMeshEdson(): Não encontrei as linhas.")    
+            raise Exception("HuaElectrodes2DIsotropic(): Não encontrei as linhas.")    
         
         self.Coordinates = self.__mshdata.points
         self.msh_topology = self.__mshdata.cells_dict[self.element_type]   # só dos triângulos
@@ -342,7 +342,7 @@ class HuaElectrodes2DIsotropic(MyMesh):
 
         # Verifica se o physical do GND está no arquivo msh
         if not (10000 in physical_tags_points):
-            raise Exception("HuaElectrodes2DMeshEdson(): GND vertex not found.")  
+            raise Exception("HuaElectrodes2DIsotropic(): GND vertex not found.")  
 
         n_electrodes = len(physical_tags_lines)
         print(f"{n_electrodes} electrodes found.")

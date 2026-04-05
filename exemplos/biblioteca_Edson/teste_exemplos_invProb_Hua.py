@@ -25,11 +25,12 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ16_3_anomalia6_coarse_v2208.msh'
 #nome = '../../malhasMSH/circ16_anomalia6_plus.msh'
 
-nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+#nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
 
 
 #MinhaMalha = mesh.PointElectrodes2DMeshEdson(16, nome_msh=nome, altura2D = 0.02)
-MinhaMalha = mesh.HuaElectrodes2DIsotropic(4, nome_msh=nome, altura2D = 0.02)
+MinhaMalha = mesh.HuaElectrodes2DIsotropic(2, nome_msh=nome, altura2D = 0.02)
 MinhaMalha.ReadMesh() 
 
 #print(MinhaMalhaPto2.Elements[2])
@@ -41,11 +42,11 @@ MinhaMalha.ReadMesh()
 
 meus_sigmas = {
 1000 : 2.0,   
-1001 : 10.0,
+1001 : 2.0,
 5001 : 2.0,
 5002 : 2.0,
 5003 : 2.0,
-1004 : 2.0}
+5004 : 2.0}
 
 
 MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas)
@@ -57,7 +58,7 @@ MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 #print(f'MinhaMalhaPto2.KGlobal =  {MinhaMalhaPto2.KGlobal.shape}')
 
 #fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=PcorrenteReal, SkipPattern=None, I =1.0e-3)   # __init__ roda aqui
-fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=1, I =1.0e-3)   # __init__ roda aqui
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=0, I =1.0e-3)   # __init__ roda aqui
 
 #print(f'Pcorrente \n {fwd.corrente[MinhaMMinhaMalhaalhaPto.NumberOfNodes-MinhaMalhaPto.NumberOfElectrodes: MinhaMalhaPto.NumberOfNodes]}')
 #print(f'Pcorrente \n {fwd.corrente[:16]}')

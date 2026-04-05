@@ -198,7 +198,7 @@ class LinearLineHua(MyElement):
 
     def CalcKgeo(self):
 
-        zc = 100000.0    
+        zc = 1.0    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
@@ -206,7 +206,7 @@ class LinearLineHua(MyElement):
         for i in range(2):
             mtrz_lenth_a[i][0] =self.Coordinates[self.Topology[i]][0]
             mtrz_lenth_a[i][1] =self.Coordinates[self.Topology[i]][1]
-            node1 = self.Topology[i]
+            #node1 = self.Topology[i]
             #self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
             #print('self.msh_physical_groups ???', self.msh_physical_groups)
             #print('nodes', node1)
