@@ -284,7 +284,7 @@ class PointElectrodes2DMeshEdson(MyMesh):
     - Os eletrodos são physical_group 5001, 5002, 5003 etc...
     - O gnd está o physical_group 10000.
 '''
-class HuaElectrodes2DMeshEdson(MyMesh):
+class HuaElectrodes2DIsotropic(MyMesh):
     def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1):
         super().__init__(nome_msh)
 
