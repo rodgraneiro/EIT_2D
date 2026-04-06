@@ -16,8 +16,10 @@ class MyElement:
     sigmaX = None
     sigmaY = None
     #element_type = None
-    
-    def __init__(self):
+       
+        
+    def __init__(self, mymesh=None):
+        self.mymesh = mymesh
         self.Centroid = None
         self.ElementType = 0
         self.PhysicalEntity = None
@@ -198,7 +200,8 @@ class LinearLineHua(MyElement):
 
     def CalcKgeo(self):
 
-        zc = 0.001    
+        #zc = 0.001
+        zc = self.mymesh.sigma_vec[-1]    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
