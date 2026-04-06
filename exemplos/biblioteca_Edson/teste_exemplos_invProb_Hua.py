@@ -14,15 +14,22 @@
 import numpy as np
 import mesh
 import forwardProblem
-import inverseProblem
-import inverseProblem_2D
+#import inverseProblem
+#import inverseProblem_2D
+import inverseProblem_2D_Hua
 import matplotlib.pyplot as plt
 
-nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
+#nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
 #nome = '../../malhasMSH/circ8_anom4_tst_Hua_v4_1_lc_0_01.msh'
+#nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
+nome = '../../malhasMSH/circ4_Um_objetoGrande_Hua.msh'
+#nome = '../../malhasMSH/Hua_cruz_editado.msh'
+
+
+
 
 #MinhaMalha = mesh.HuaElectrodes2DMeshEdson(8, nome_msh=nome, altura2D = 0.02)
-MinhaMalha = mesh.HuaElectrodes2DMeshEdson(2, nome_msh=nome, altura2D = 0.02)
+MinhaMalha = mesh.HuaElectrodes2DMeshEdson(4, nome_msh=nome, altura2D = 0.02)
 MinhaMalha.ReadMesh() 
 
 print(MinhaMalha.Elements[2])
@@ -32,11 +39,11 @@ print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
 
 meus_sigmas = {
 1000 : 1.0,    
-#1001 : 0.01,
+1001 : 1.0,
 5001 : 1.0, 
 5002 : 1.0, 
-#5003 : 0.2, 
-#5004 : 0.2, 
+5003 : 1.0, 
+5004 : 1.0, 
 #5005 : 0.2, 
 #5006 : 0.2, 
 #5007 : 0.2, 
@@ -58,7 +65,7 @@ MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculan
 print(f'n_nodes = {MinhaMalha.NumberOfNodes}')
 
 
-fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=0, VirtualNode = True)   # __init__ roda aqui
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=1, VirtualNode = True)   # __init__ roda aqui
 
 
 print(f'Pcorrente \n {fwd.corrente[MinhaMalha.NumberOfNodes-MinhaMalha.NumberOfElectrodes: MinhaMalha.NumberOfNodes]}')
@@ -78,8 +85,8 @@ V_measured = fwd.Vmedido_eletrodos
 print(f'V_mesured \n {V_measured}')
 
 
-invProblem_2D = inverseProblem_2D.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
-invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =2.5,  Lambda = 0.50, max_iter=1,Tol=5.0e-4)
+#invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
+#invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =2.5,  Lambda = 0.50, max_iter=1,Tol=5.0e-4)
 #print('Y_jacobian',invProblem.Y_jacobian)
 
 
