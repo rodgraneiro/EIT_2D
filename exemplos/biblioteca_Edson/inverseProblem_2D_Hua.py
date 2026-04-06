@@ -319,6 +319,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
+        '''
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -345,6 +346,7 @@ class inverse_problem:
 
         #plt.show(block = false)
         #plt.pause(0.1)
+        '''
         return L2
 
     
