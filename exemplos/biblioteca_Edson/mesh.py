@@ -336,6 +336,7 @@ class HuaElectrodes2DMeshEdson(MyMesh):
         # Pegando elementos triangulares:
         for idx in range(n_elementos_msh):
             self.Elements[idx] = elements.LinearTriangle()
+            self.Elements[idx].mymesh = self
             self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
             self.Elements[idx].CalcCentroid()
@@ -345,6 +346,7 @@ class HuaElectrodes2DMeshEdson(MyMesh):
         for idy in range(n_elementos_eletrodos): # idy começa em zero
             idx = idy + n_elementos_msh          # idx continua a partir de n_elementos_msh
             self.Elements[idx] = elements.LinearLineHua()
+            self.Elements[idx].mymesh = self
             self.Elements[idx].PhysicalEntity = physical_groups_lines[idy]
             noh_virtual = self.ElectrodeNodes[self.Elements[idx].PhysicalEntity - 5001]
             self.Elements[idx].Topology = np.append(electrodes_topology[idy], noh_virtual)
