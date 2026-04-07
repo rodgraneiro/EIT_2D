@@ -93,6 +93,8 @@ class inverse_problem:
         self.listJacobian = []
         for i in range(0, self.mymesh.NumberOfElements):        # laço para montar a matriz global
         #for i in range(0, 1):        # laço para montar a matriz global
+            if self.mymesh.Elements[i].FlagIsElectrode:
+                continue   # pula elementos Hua/eletrodo
             #print('nro_elementos_J',i)
             node_l = int(self.mymesh.msh_topology[i][0]) +1       # pegar dados da matriz elementos
             node_m = int(self.mymesh.msh_topology[i][1]) +1
@@ -269,9 +271,9 @@ class inverse_problem:
         listTempJ=[]
         for idx in range(self.mymesh.NumberOfElements):
             termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
-            #print('termo1 \n', termo1)
+            #print('termo1 \n', termo1.shape)
             termo2 = np.dot(self.listJacobian[idx], termo1)
-            #print('termo2 \n', termo2)
+            #print('termo2 \n', termo2.shape)
             termo3 = -np.dot(invVtemp, termo2)
             termo3 = termo3[self.mymesh.ElectrodeNodes]
             #print('termo3 \n', termo3.shape)
