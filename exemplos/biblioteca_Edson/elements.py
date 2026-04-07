@@ -200,8 +200,9 @@ class LinearLineHua(MyElement):
 
     def CalcKgeo(self):
 
-        #zc = 0.001
-        zc = self.mymesh.sigma_vec[-1]    
+        zc = 0.001
+        #zc = self.mymesh.z_contact_eletrode 
+        print('zc =', zc)
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
@@ -328,7 +329,7 @@ class LinearTriangleAnisotropic(MyElement):
         #print("Physical tag:", self.PhysicalEntity)
         
         if self.PhysicalEntity >= 1000:
-            #print('batata')
+            
             sigma = self.mymesh.sigma_vec[self.ElementIndex]
             
             Sx  = sigma[0]   # σxx

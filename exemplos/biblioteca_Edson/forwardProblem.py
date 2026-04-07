@@ -126,8 +126,8 @@ class forward_problem:
         plt.show(block=False)
         plt.pause(0.1)  
     def Solve(self, forceKGolbalCalc=False):
-        #self.plotMSH(self.mymesh.sigma_vec)
-        print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
+        self.plotMSH(self.mymesh.sigma_vec)
+        #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
             self.mymesh.CalcKGlobal()
         
@@ -136,7 +136,7 @@ class forward_problem:
         self.Yinversa = np.linalg.inv(self.KGlobal)
 
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
-        print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
+        #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
         #print('solve vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno)
 
@@ -231,6 +231,7 @@ class forward_problem:
 ###############################################################################
     def abrir_Gmsh_pos(self,nome_arquivo, runGmsh = False):
         gmsh.initialize()
+        gmsh.option.setNumber("General.Terminal", 0)
         for pos in range(self.n_PCurrent):
             # Inicialize o Gmsh
             #gmsh.initialize()
