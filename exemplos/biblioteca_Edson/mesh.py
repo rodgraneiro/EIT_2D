@@ -35,6 +35,7 @@ class MyMesh:
         self.msh_physical_groups = None
         self.msh_topology = None
         self.sigma_vec = None
+        self.z_contact_eletrode = None
 
 
     # Ajusta um valor por elemento
@@ -86,11 +87,62 @@ class MyMesh:
         for idx in range(self.NumberOfElements):
             tag = self.Elements[idx].PhysicalEntity
             sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
+            if tag == 5001:
+                self.z_contact_eletrode = sigma_value
+                #print('tag',sigma_value)
             self.Elements[idx].SetSigma(dic[tag])
+            banana = self.Elements[idx].SetSigma(dic[tag])
+            
             self.sigma_vec[idx] = sigma_value
         print(f"Vetor global de condutividades (sigma_vec):\n{self.sigma_vec}")
 
 
+    def SetSigmaAnisotropicPhysicaEntity(self, dic):
+        for idx in range(self.NumberOfElements):
+            elem = self.Elements[idx]
+            tag = elem.PhysicalEntity
+
+            if tag not in dic:
+                continue
+
+            valor = dic[tag]
+
+            # eletrodos linha: pode manter sigma escalar alto
+            if elem.FlagIsElectrode:
+                if isinstance(valor, (list, tuple, np.ndarray)):
+                    elem.Sigma = float(valor[0])
+                else:
+                    elem.Sigma = float(valor)
+                elem.Rho = 1.0 / elem.Sigma
+                continue
+
+            # triângulos anisotrópicos: espera [Sxx, Sxy, Syy]
+            if isinstance(valor, (list, tuple, np.ndarray)) and len(valor) == 3:
+                Sxx, Sxy, Syy = valor
+                elem.SigmaTensor = np.array([[Sxx, Sxy],
+                                            [Sxy, Syy]], dtype=float)
+                elem.Sigma = 1.0
+                elem.Rho = 1.0
+            else:
+                raise ValueError(f"Tag {tag}: esperado [Sxx, Sxy, Syy], recebido {valor}")
+   
+    def SetSigmaAnisotropicElements(self, dic):
+        self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
+        for idx in range(self.NumberOfElements):
+            tag = self.Elements[idx].PhysicalEntity
+            #print("tag 11111:", tag)
+            sigma_value = dic.get(tag, 0.0)  # retorna 0.0 se tag não existir
+            #print("sigma_value 11111:", sigma_value)
+            self.Elements[idx].SetSigma(dic[tag])
+            self.sigma_vec[idx] = sigma_value
+        #print(f"Vetor global de condutividades (sigma_vec SetSigmaAnisotropicElements):\n{self.sigma_vec}")
+
+        #self.sigma_vec = np.array(sigma_array, dtype=float)
+
+        if self.sigma_vec.shape != (self.NumberOfElements, 3):
+            raise ValueError("sigma_array deve ter dimensão (NumberOfElements, 3)")
+        #print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
+        
     def CalcKGlobal(self):
        
         #if self.Elements[0].Rho == 0.0:
@@ -665,7 +717,7 @@ class HuaElectrodes2DAnisotropic(MyMesh):
             self.Elements[idx].Topology = self.msh_topology[idx]                           # só dos triângulos
             self.Elements[idx].PhysicalEntity = self.msh_physical_groups[idx]         # só dos triângulos
             self.Elements[idx].CalcCentroid()
-            self.Elements[idx].CalcKgeo()
+            #self.Elements[idx].CalcKgeo()
 
         # Pegando elementos dos eletrodos:
         for idy in range(n_elementos_eletrodos): # idy começa em zero

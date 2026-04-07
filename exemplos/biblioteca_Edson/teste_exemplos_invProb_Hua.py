@@ -34,16 +34,16 @@ MinhaMalha.ReadMesh()
 
 print(MinhaMalha.Elements[2])
 print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
-print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
+#print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
 
 
 meus_sigmas = {
 1000 : 1.0,    
-1001 : 1.0,
-5001 : 0.001, 
-5002 : 0.001, 
-5003 : 0.001, 
-5004 : 0.001, 
+1001 : 0.001,
+5001 : 1.0, 
+5002 : 1.0, 
+5003 : 1.0, 
+5004 : 1.0, 
 #5005 : 0.2, 
 #5006 : 0.2, 
 #5007 : 0.2, 
@@ -51,7 +51,15 @@ meus_sigmas = {
 }
 
 MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
+'''
+for idx in range(MinhaMalha.NumberOfElements):
+    if not MinhaMalha.Elements[idx].FlagIsElectrode:
+        MinhaMalha.Elements[idx].CalcKgeo()
 
+for idx in range(MinhaMalha.NumberOfElements):
+    if MinhaMalha.Elements[idx].FlagIsElectrode:
+        MinhaMalha.Elements[idx].CalcKgeo()
+'''
 #MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
 #coordenadas = MinhaMalha.Coordinates
@@ -62,20 +70,20 @@ MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculan
 #KGlobal =  MinhaMalha.KGlobal
 
 
-print(f'n_nodes = {MinhaMalha.NumberOfNodes}')
+#print(f'n_nodes = {MinhaMalha.NumberOfNodes}')
 
 
 fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=1, VirtualNode = True)   # __init__ roda aqui
 
 
-print(f'Pcorrente \n {fwd.corrente[MinhaMalha.NumberOfNodes-MinhaMalha.NumberOfElectrodes: MinhaMalha.NumberOfNodes]}')
+#print(f'Pcorrente \n {fwd.corrente[MinhaMalha.NumberOfNodes-MinhaMalha.NumberOfElectrodes: MinhaMalha.NumberOfNodes]}')
 
-print(f'Pcorrente \n {fwd.corrente.shape}')
+#print(f'Pcorrente \n {fwd.corrente.shape}')
 
 mtz_Vmedido = fwd.Solve()
-print(f'Vmedido \n {fwd.Vmedido[:,0]}')
+#print(f'Vmedido \n {fwd.Vmedido[:,0]}')
 
-nome_arquivo = 'circ8_anom4_tst_Hua_v4_1_lc_0_01'
+nome_arquivo = 'ParaVernoGmshPto'
 fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 
 fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
