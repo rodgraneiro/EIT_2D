@@ -200,9 +200,9 @@ class LinearLineHua(MyElement):
 
     def CalcKgeo(self):
 
-        zc = 0.001
+        zc = 0.0000001
         #zc = self.mymesh.z_contact_eletrode 
-        print('zc =', zc)
+        #print('zc =', zc)
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
