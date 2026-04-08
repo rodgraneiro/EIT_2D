@@ -254,6 +254,8 @@ class inverse_problem:
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
         for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
+            #if self.mymesh.Elements[elem].FlagIsElectrode:
+            #    continue   # pula elementos Hua/eletrodo
             #print(f' SigmaTemp {SigmaTemp}')
             for i in range(len(self.mymesh.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.mymesh.Elements[elem].Topology[i] # pega noh_i (noh global)
@@ -565,12 +567,16 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(itr_start,max_iter):
-            np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
+            #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
             
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
+            print('Vtemp', Vtemp.shape)
+            np.savetxt("matrizVtemp.txt", Vtemp, fmt="%.6f")
+            #Vtemp = Vtemp[:-4, :-4]
+            #print('VtempReduzida', Vtemp.shape)
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado

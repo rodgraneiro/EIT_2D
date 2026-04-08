@@ -180,6 +180,7 @@ class MyMesh:
                         #print('mesh sigma', self.Elements[elem].Sigma, elem)
                     self.KGlobal[no_i, no_j] += valor
             #print('self.KGlobal \n',self.KGlobal)
+            #np.savetxt("matrizKGlobal.txt", self.KGlobal, fmt="%.6f")
 
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")

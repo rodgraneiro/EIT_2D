@@ -22,9 +22,10 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
 #nome = '../../malhasMSH/circ8_anom4_tst_Hua_v4_1_lc_0_01.msh'
 #nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
-nome = '../../malhasMSH/circ4_Um_objetoGrande_Hua.msh'
+#nome = '../../malhasMSH/circ4_Um_objetoGrande_Hua.msh'
 #nome = '../../malhasMSH/Hua_cruz_editado.msh'
-
+#nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
 
 
 
@@ -39,7 +40,7 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 meus_sigmas = {
 1000 : 1.0,    
-1001 : 0.001,
+1001 : 1.0,
 5001 : 1.0, 
 5002 : 1.0, 
 5003 : 1.0, 
