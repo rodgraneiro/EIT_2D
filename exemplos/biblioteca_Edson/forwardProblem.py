@@ -134,7 +134,7 @@ class forward_problem:
         self.apply_boundary_conditions()
         #print('solve self.KGlobal \n',self.KGlobal)
         self.Yinversa = np.linalg.inv(self.KGlobal)
-
+        np.savetxt("self.Yinversa_fwd.txt", self.Yinversa, fmt="%.6f")
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
         #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         

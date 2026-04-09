@@ -29,9 +29,18 @@ class inverse_problem:
             raise TypeError("Parâmetro incorreto: mymesh.")
 
         self.mymesh = mymesh
+        self.KGlobalBoundary = self.CalcKGlobalBoundary()
         self.Vmedido = None
         self.TempJ = None
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+
+        self.KGlobal= self.mymesh.KGlobal
+        print('self.KGlobal_tst',self.KGlobal)
+        
+
+
+
+
 
         if V_imposto is None:
             V_imposto = [[mymesh.GndNode, 0.0]]
@@ -80,6 +89,49 @@ class inverse_problem:
     #      ∂σ_i                                                            
     ###############################################################################
     #################
+    
+
+    ###############################################################################
+    def CalcKGlobalBoundary(self):
+        KGlobalBoundary = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+
+        for elem in range(self.mymesh.NumberOfElements):
+            if not self.mymesh.Elements[elem].FlagIsElectrode:
+                continue
+
+            topo = self.mymesh.Elements[elem].Topology
+            Ke = self.mymesh.Elements[elem].KGeo
+
+            for i in range(len(topo)):
+                no_i = topo[i]
+                for j in range(len(topo)):
+                    no_j = topo[j]
+                    KGlobalBoundary[no_i, no_j] += Ke[i, j]
+        #np.savetxt("matrizKGlobalBoundary.txt", KGlobalBoundary, fmt="%.6f")
+        return KGlobalBoundary
+    ###############################################################################
+
+    def CalcKGlobalTriangle(self, sigma_tri):
+        KGlobalTriangle = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+
+        idx_sigma = 0
+        for elem in range(self.mymesh.NumberOfElements):
+            if self.mymesh.Elements[elem].FlagIsElectrode:
+                continue
+
+            topo = self.mymesh.Elements[elem].Topology
+            Ke = self.mymesh.Elements[elem].KGeo * sigma_tri[idx_sigma]
+
+            for i in range(len(topo)):
+                no_i = topo[i]
+                for j in range(len(topo)):
+                    no_j = topo[j]
+                    KGlobalTriangle[no_i, no_j] += Ke[i, j]
+
+            idx_sigma += 1
+        #np.savetxt("matrizKGlobalTriangle.txt", KGlobalTriangle, fmt="%.6f")
+        return KGlobalTriangle
+
     def area_triangulo(x1, y1, x2, y2, x3, y3):                      # calcula a área do triângulo com 3 pontos
         matriz = [ [1, x1, y1], [1, x2, y2], [1, x3, y3]]
 
@@ -269,6 +321,7 @@ class inverse_problem:
         #print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
         return self.KGlobalTemp
     ###############################################################################
+    '''
     def Calc_J(self, invVtemp):
         listTempJ=[]
         for idx in range(self.mymesh.NumberOfElements):
@@ -290,21 +343,39 @@ class inverse_problem:
         self.JTJ = np.dot(self.TempJ.T, self.TempJ)
         #print('JTJ \n', self.JTJ.shape)
     ###############################################################################
+    '''
+    def Calc_J(self, invVtemp):
+        listTempJ = []
+        termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno)
+
+        for idx in range(len(self.listJacobian)):
+            termo2 = np.dot(self.listJacobian[idx], termo1)
+            termo3 = -np.dot(invVtemp, termo2)
+            termo3 = termo3[self.mymesh.ElectrodeNodes]
+            termo3 = termo3.reshape(-1, 1, order='F')
+            listTempJ.append(termo3)
+
+        self.TempJ = np.concatenate(listTempJ, axis=1)
+        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
+
+
+
+
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
     def calc_L2_gauss_2D(self, centroids_2D, std=0.007, tol=1e-9):
-        
-        #nelements = centroids_2D.shape[0]
-        L2 = np.zeros((self.mymesh.NumberOfElements, self.mymesh.NumberOfElements), dtype=np.float32)
-    
-        for i in range(self.mymesh.NumberOfElements):
+        ne = len(centroids_2D)
+        L2 = np.zeros((ne, ne), dtype=np.float32)       
+        #L2 = np.zeros((self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes, self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes), dtype=np.float32)   
+        #for i in range(self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes):
+        for i in range(ne):
             ci = centroids_2D[i]
-            soma = 0.0
-    
+            soma = 0.0   
             # --- primeira passada: calcula fatores gaussianos ---
-            for j in range(self.mymesh.NumberOfElements):
+            #for j in range(self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes):
+            for j in range(ne):
                 cj = centroids_2D[j]
                 #print(f'cj = {cj}')
                 dist = np.linalg.norm(ci - cj)  # distância Euclidiana
@@ -313,10 +384,10 @@ class inverse_problem:
                     #print(f'dist if = {2.0 * std}')
                     fator = 1.0 if i == j else np.exp(-dist**2 / (2 * std**2))
                     soma += fator
-                    L2[i, j] = fator
-    
+                    L2[i, j] = fator   
             # --- segunda passada: normaliza e transforma em passa-alta ---
-            for j in range(self.mymesh.NumberOfElements):
+            #for j in range(self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes):
+            for j in range(ne):
                 if soma > 0:
                     if i == j:
                         aux = 1.0 - L2[i, j] / soma
@@ -331,25 +402,17 @@ class inverse_problem:
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
-
         N = L2.shape[0]
-        X, Y = np.meshgrid(np.arange(N), np.arange(N))
-        
+        X, Y = np.meshgrid(np.arange(N), np.arange(N))      
         fig = plt.figure(figsize=(9, 7))
-        ax = fig.add_subplot(111, projection='3d')
-        
-        surf = ax.plot_surface( X, Y, L2, cmap='viridis',  linewidth=0, antialiased=True )
-        
+        ax = fig.add_subplot(111, projection='3d')   
+        surf = ax.plot_surface( X, Y, L2, cmap='viridis',  linewidth=0, antialiased=True      
         ax.set_xlabel('Coluna')
         ax.set_ylabel('Linha')
         #ax.set_zlabel('L[i,j]')
-        ax.set_title('HPFilter – Superfície 3D')
-        
+        ax.set_title('HPFilter – Superfície 3D')       
         fig.colorbar(surf, shrink=0.5)
-        plt.show()
-
-        #plt.show(block = false)
-        #plt.pause(0.1)
+        plt.show()    #plt.show(block = false)     #plt.pause(0.1)
         '''
         return L2
 
@@ -535,8 +598,10 @@ class inverse_problem:
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
         #self.plotMSH(self.mymesh.sigma_vec, save = False)
-        
+        tri_elements = [elem for elem in self.mymesh.Elements if not elem.FlagIsElectrode]
+        centroids_2D = np.array([elem.Centroid for elem in tri_elements])
         L2 = self.calc_L2_gauss_2D(centroids_2D)
+        #L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
         normaDeltaTemp = 0
@@ -549,7 +614,9 @@ class inverse_problem:
         #print('V_measured', V_measured.shape)
         
         
-        sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
+        #sigmaInicial = np.ones(self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes)*initialEstimate
+        sigmaInicial = np.ones(len(centroids_2D))*initialEstimate
+        
         sigmaInicial = sigmaInicial.reshape(-1,1)
 
         #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
@@ -569,12 +636,16 @@ class inverse_problem:
         for itr in range(itr_start,max_iter):
             #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
-            Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
+            #Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
+
+            Komega = self.CalcKGlobalTriangle(sigmaInicial)
+            Vtemp = Komega + self.KGlobalBoundary
+            Vtemp = self.apply_boundary_conditions(Vtemp)
             
             # ***** Determinação do Valor calculado *****
-            Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
+            #Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
             print('Vtemp', Vtemp.shape)
-            np.savetxt("matrizVtemp.txt", Vtemp, fmt="%.6f")
+            #np.savetxt("matrizVtemp.txt", Vtemp, fmt="%.6f")
             #Vtemp = Vtemp[:-4, :-4]
             #print('VtempReduzida', Vtemp.shape)
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
@@ -626,6 +697,8 @@ class inverse_problem:
             regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
 
             regTerm = regTerm.reshape(-1, 1)
+            print('regTerm',regTerm.shape)
+            print('termo_L',termo_L.shape)
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
             regularization = np.dot(termo_L, regTerm)
                         
