@@ -361,7 +361,7 @@ class inverse_problem:
    
         d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
         std = 0.05*d_media
-        print(f'std = {std}')
+        #print(f'std = {std}')
         ne = centroids_2D.shape[0]
         L = np.zeros((ne, ne), dtype=np.float64)
     
@@ -524,7 +524,7 @@ class inverse_problem:
     # Essa função calcula o problema inverso
     ###############################################################################
     def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
-        print(f'lastIteration 2222 {iteration}')
+        #print(f'lastIteration 2222 {iteration}')
         itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
@@ -534,7 +534,7 @@ class inverse_problem:
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
         self.plotMSH(self.mymesh.sigma_vec, save = False)
-        print('lalala')
+        #print('lalala')
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
@@ -569,10 +569,10 @@ class inverse_problem:
             #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
             Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
-            print('Vtemp_1',Vtemp.shape)
+            #print('Vtemp_1',Vtemp.shape)
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
-            print('Vtemp_2',Vtemp.shape)
+            #print('Vtemp_2',Vtemp.shape)
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
@@ -622,10 +622,10 @@ class inverse_problem:
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
             regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
-            print('sigmaInicial',sigmaInicial)
+            #print('sigmaInicial',sigmaInicial)
             regTerm = regTerm.reshape(-1, 1)
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
-            print('regTerm',regTerm.shape)
+            #print('regTerm',regTerm.shape)
             #regularization = np.dot(termo_L, regTerm)
             '''            
             # ***** Cálculo final do termo 2 *****

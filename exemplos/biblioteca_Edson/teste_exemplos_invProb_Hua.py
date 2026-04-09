@@ -21,11 +21,11 @@ import matplotlib.pyplot as plt
 
 #nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
 #nome = '../../malhasMSH/circ8_anom4_tst_Hua_v4_1_lc_0_01.msh'
-#nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
+nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
 #nome = '../../malhasMSH/circ4_Um_objetoGrande_Hua.msh'
 #nome = '../../malhasMSH/Hua_cruz_editado.msh'
 #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
-nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
+#nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
 
 
 
@@ -39,8 +39,8 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 
 meus_sigmas = {
-1000 : 1.0,    
-1001 : 1.0,
+1000 : 2.5,    
+1001 : 1.00,
 5001 : 1.0, 
 5002 : 1.0, 
 5003 : 1.0, 
@@ -85,9 +85,9 @@ mtz_Vmedido = fwd.Solve()
 #print(f'Vmedido \n {fwd.Vmedido[:,0]}')
 
 nome_arquivo = 'ParaVernoGmshPto'
-fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+#fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 
-fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+#fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
 V_measured = fwd.Vmedido_eletrodos
 
@@ -95,7 +95,7 @@ print(f'V_mesured \n {V_measured}')
 
 
 invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
-invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =2.5,  Lambda = 0.50, max_iter=1,Tol=5.0e-4)
+invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =0.1,  Lambda = 0.50, max_iter=10,Tol=1.0e-9)
 #print('Y_jacobian',invProblem.Y_jacobian)
 
 
