@@ -365,7 +365,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.007, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.05000, tol=1e-9):
         ne = len(centroids_2D)
         L2 = np.zeros((ne, ne), dtype=np.float32)       
         #L2 = np.zeros((self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes, self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes), dtype=np.float32)   
@@ -394,7 +394,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-        '''
+        
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -406,14 +406,14 @@ class inverse_problem:
         X, Y = np.meshgrid(np.arange(N), np.arange(N))      
         fig = plt.figure(figsize=(9, 7))
         ax = fig.add_subplot(111, projection='3d')   
-        surf = ax.plot_surface( X, Y, L2, cmap='viridis',  linewidth=0, antialiased=True      
+        surf = ax.plot_surface( X, Y, L2, cmap='viridis',  linewidth=0, antialiased=True)      
         ax.set_xlabel('Coluna')
         ax.set_ylabel('Linha')
         #ax.set_zlabel('L[i,j]')
         ax.set_title('HPFilter – Superfície 3D')       
         fig.colorbar(surf, shrink=0.5)
         plt.show()    #plt.show(block = false)     #plt.pause(0.1)
-        '''
+        
         return L2
 
     
@@ -588,7 +588,7 @@ class inverse_problem:
     # Essa função calcula o problema inverso
     ###############################################################################
     def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
-        print(f'lastIteration 2222 {iteration}')
+        #print(f'lastIteration 2222 {iteration}')
         itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
@@ -644,7 +644,7 @@ class inverse_problem:
             
             # ***** Determinação do Valor calculado *****
             #Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
-            print('Vtemp', Vtemp.shape)
+            #print('Vtemp', Vtemp.shape)
             #np.savetxt("matrizVtemp.txt", Vtemp, fmt="%.6f")
             #Vtemp = Vtemp[:-4, :-4]
             #print('VtempReduzida', Vtemp.shape)
@@ -697,8 +697,8 @@ class inverse_problem:
             regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
 
             regTerm = regTerm.reshape(-1, 1)
-            print('regTerm',regTerm.shape)
-            print('termo_L',termo_L.shape)
+            #print('regTerm',regTerm.shape)
+            #print('termo_L',termo_L.shape)
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
             regularization = np.dot(termo_L, regTerm)
                         
@@ -740,7 +740,7 @@ class inverse_problem:
               break
 
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
-            sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 0.99, 3.01)
             sigmaInicial = sigmaPlusOne
             
             
