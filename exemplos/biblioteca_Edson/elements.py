@@ -200,7 +200,7 @@ class LinearLineHua(MyElement):
 
     def CalcKgeo(self):
 
-        zc = 0.000001
+        zc = 1.00000
         #zc = self.mymesh.z_contact_eletrode 
         #print('zc =', zc)
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
