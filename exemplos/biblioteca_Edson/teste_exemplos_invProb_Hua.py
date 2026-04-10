@@ -39,8 +39,8 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 
 meus_sigmas = {
-1000 : 2.5,    
-1001 : 1.00,
+1000 : 3.0,    
+1001 : 2.50,
 5001 : 1.0, 
 5002 : 1.0, 
 5003 : 1.0, 
@@ -95,7 +95,7 @@ print(f'V_mesured \n {V_measured}')
 
 
 invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
-invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =0.1,  Lambda = 0.50, max_iter=10,Tol=1.0e-9)
+invProblem_2D.solve(V_measured, initialEstimate=2.9,alpha =1.0,  Lambda = 1.0, max_iter=100,Tol=1.0e-9)
 #print('Y_jacobian',invProblem.Y_jacobian)
 
 

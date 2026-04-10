@@ -365,7 +365,7 @@ class inverse_problem:
     # Essa função calcula FPA com distância de cada elemento
     ############################################################################### 
     
-    def calc_L2_gauss_2D(self, centroids_2D, std=0.05000, tol=1e-9):
+    def calc_L2_gauss_2D(self, centroids_2D, std=0.0055000, tol=1e-9):
         ne = len(centroids_2D)
         L2 = np.zeros((ne, ne), dtype=np.float32)       
         #L2 = np.zeros((self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes, self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes), dtype=np.float32)   
@@ -394,7 +394,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-        
+        '''
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -413,7 +413,7 @@ class inverse_problem:
         ax.set_title('HPFilter – Superfície 3D')       
         fig.colorbar(surf, shrink=0.5)
         plt.show()    #plt.show(block = false)     #plt.pause(0.1)
-        
+        '''
         return L2
 
     
@@ -781,10 +781,10 @@ class inverse_problem:
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial, itr, save = True)
-        self.plot_espectro(sigmaInicial)
+        #self.plot_espectro(sigmaInicial)
 
         s = np.linalg.svd(self.TempJ, compute_uv = False)
-
+        '''
         # --- 2) Gráfico tipo semilogy
         plt.figure()
         plt.semilogy(s, 'o-')
@@ -796,7 +796,9 @@ class inverse_problem:
         #plt.show(block=False)
         #plt.pause(0.01)  
         # --- 3) Rank efetivo (mesma ideia do seu código)
+        '''
         tol = 1e-6 * s[0]          # ou outro fator
+        
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
         
