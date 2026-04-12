@@ -295,7 +295,8 @@ class inverse_problem:
         inv_primeiroTermo = np.linalg.inv(primeiroTermo)
 
         JTW_zh = zJTW @ residue
-        ztermo_reg = (sigma_inicial - self.sigmaStar)
+        #ztermo_reg = (sigma_inicial - self.sigmaStar)
+        ztermo_reg = (sigma_inicial)# - self.sigmaStar)
         zregularizacao = (Lambda**2)*zLTL @ ztermo_reg
         segundoTermo = JTW_zh - zregularizacao
         return -alpha*(inv_primeiroTermo @ segundoTermo)
@@ -394,7 +395,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-        '''
+        
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -413,7 +414,7 @@ class inverse_problem:
         ax.set_title('HPFilter – Superfície 3D')       
         fig.colorbar(surf, shrink=0.5)
         plt.show()    #plt.show(block = false)     #plt.pause(0.1)
-        '''
+        
         return L2
 
     
@@ -620,7 +621,7 @@ class inverse_problem:
         sigmaInicial = sigmaInicial.reshape(-1,1)
 
         #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
-        self.sigmaStar = (sigmaInicial/sigmaInicial)*2.5
+        #self.sigmaStar = (sigmaInicial/sigmaInicial)*2.5
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         '''
         ###
@@ -638,8 +639,8 @@ class inverse_problem:
             contItr = contItr + 1
             #Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
 
-            Komega = self.CalcKGlobalTriangle(sigmaInicial)
-            Vtemp = Komega + self.KGlobalBoundary
+            K_cuba = self.CalcKGlobalTriangle(sigmaInicial)
+            Vtemp = K_cuba + self.KGlobalBoundary
             Vtemp = self.apply_boundary_conditions(Vtemp)
             
             # ***** Determinação do Valor calculado *****
@@ -740,7 +741,7 @@ class inverse_problem:
               break
 
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
-            sigmaPlusOne = np.clip(sigmaPlusOne, 0.99, 3.01)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 0.99, 4.01)
             sigmaInicial = sigmaPlusOne
             
             
