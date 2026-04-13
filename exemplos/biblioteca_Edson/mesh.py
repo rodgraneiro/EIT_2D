@@ -234,7 +234,7 @@ class MyMesh:
                         valor = Ke[i, j]
 
                     self.KGlobal[no_i, no_j] += valor
-        np.savetxt("matrizKGlobalAnisotropica.txt", self.KGlobal, fmt="%.6f")
+        #np.savetxt("matrizKGlobalAnisotropica.txt", self.KGlobal, fmt="%.6f")
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
 
