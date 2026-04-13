@@ -322,7 +322,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-        '''
+        
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -330,6 +330,10 @@ class inverse_problem:
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
+
 
         N = L2.shape[0]
         X, Y = np.meshgrid(np.arange(N), np.arange(N))
@@ -345,11 +349,14 @@ class inverse_problem:
         ax.set_title('HPFilter – Superfície 3D')
         
         fig.colorbar(surf, shrink=0.5)
-        plt.show()
-
-        #plt.show(block = false)
         #plt.pause(0.1)
-        '''
+        #plt.show()
+        #plt.pause(0.1)
+        #plt.show(block = False)
+        #plt.pause(0.1)
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
         return L2
 
     
@@ -398,11 +405,11 @@ class inverse_problem:
         plt.title('HPFilter matrix sparsity pattern', fontsize=15)
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
-        #plt.tight_layout()
+        plt.tight_layout()
         plt.show()
 
-        #plt.show(block = false)
-        #plt.pause(0.1)
+        plt.show(block = False)
+        plt.pause(0.1)
 
         return L2
 
@@ -423,10 +430,11 @@ class inverse_problem:
         plt.title("Optimization", fontsize=15)
         plt.legend()
         plt.grid(True)
-        #plt.tight_layout()
-        plt.show()
-        #plt.show(block = false)
-        #plt.pause(0.1)
+        plt.tight_layout()
+        
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
     ###############################################################################
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
@@ -491,9 +499,10 @@ class inverse_problem:
         #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
         #    dpi=300, bbox_inches='tight')
-        #plt.show()
-        #plt.show(block = false)
-        #plt.pause(0.1)
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
+     
     ###############################################################################    
     def plot_espectro(self,x, titulo="Espectro (FFT)"):
         X = np.fft.fft(x)
@@ -573,6 +582,7 @@ class inverse_problem:
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
             #print('Vtemp_2',Vtemp.shape)
+            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
