@@ -533,7 +533,7 @@ class inverse_problem:
     # Essa função calcula o problema inverso
     ###############################################################################
     def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
-        #print(f'lastIteration 2222 {iteration}')
+        #print(f'lastIteration {iteration}')
         itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
@@ -542,8 +542,8 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        self.plotMSH(self.mymesh.sigma_vec, save = False)
-        #print('lalala')
+        #self.plotMSH(self.mymesh.sigma_vec, save = False)
+        
         L2 = self.calc_L2_gauss_2D(centroids_2D)
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
@@ -581,8 +581,8 @@ class inverse_problem:
             #print('Vtemp_1',Vtemp.shape)
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
-            #print('Vtemp_2',Vtemp.shape)
-            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
+            print('Vtemp_2',Vtemp.shape)
+            np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
