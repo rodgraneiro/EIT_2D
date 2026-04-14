@@ -556,7 +556,7 @@ class inverse_problem:
         #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
         #    dpi=300, bbox_inches='tight')
-        #plt.show()
+        plt.show()
         #plt.show(block = false)
         #plt.pause(0.1)
     ###############################################################################    

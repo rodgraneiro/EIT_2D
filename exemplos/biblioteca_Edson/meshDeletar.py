@@ -4,6 +4,7 @@ Created on Tue Sep 16 20:35:29 2025
 
 @author: rodgr
 """
+
 import numpy as np
 import meshio
 import elements
