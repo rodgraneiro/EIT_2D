@@ -110,7 +110,8 @@ print(f'V_mesured \n {V_measured}')
 
 
 invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha, Pcorrente=fwd.corrente)
-invProblem_2D.solve(V_measured, initialEstimate=3.5,alpha =1.0,  Lambda = 0.010, max_iter=10,Tol=1.0e-9)#print('Y_jacobian',invProblem.Y_jacobian)
+invProblem_2D.solve(V_measured, initialEstimate=3.5,alpha =1.0,  Lambda = 0.010, max_iter=20,Tol=1.0e-9)
+#print('Y_jacobian',invProblem.Y_jacobian)
 
 
 '''
