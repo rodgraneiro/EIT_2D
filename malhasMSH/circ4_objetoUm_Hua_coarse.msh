@@ -2,12 +2,13 @@ $MeshFormat
 2.2 0 8
 $EndMeshFormat
 $PhysicalNames
-6
+7
 0 10000 "central_node"
 1 5001 "curvaElectrode_1"
 1 5002 "curvaElectrode_2"
 1 5003 "curvaElectrode_3"
 1 5004 "curvaElectrode_4"
+2 1000 "cuba"
 2 1001 "anomalia1"
 $EndPhysicalNames
 $Nodes
