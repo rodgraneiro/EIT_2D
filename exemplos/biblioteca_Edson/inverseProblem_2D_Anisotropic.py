@@ -582,9 +582,10 @@ class inverse_problem:
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
             print('Vtemp_2',Vtemp.shape)
-            np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
+            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
+            '''
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
-            
+             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
 
@@ -637,7 +638,7 @@ class inverse_problem:
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
             #print('regTerm',regTerm.shape)
             #regularization = np.dot(termo_L, regTerm)
-            '''            
+                       
             # ***** Cálculo final do termo 2 *****
             secondTerm = -JTW_H - regularization
             
