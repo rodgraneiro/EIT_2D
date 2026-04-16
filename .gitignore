@@ -2,7 +2,7 @@
 #*.msh
 *.geo
 *.geo_unrolled
-*.png
+#*.png
 
 lastIteration.txt
 sigma_inicial_cont.txt
