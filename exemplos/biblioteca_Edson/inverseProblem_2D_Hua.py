@@ -4,7 +4,7 @@ Created on Sun Oct 26 13:56:12 2025
 
 @author: rodgr
 """
-# este comentário está no branch test
+
 
 
 import numpy as np
@@ -413,8 +413,10 @@ class inverse_problem:
         #ax.set_zlabel('L[i,j]')
         ax.set_title('HPFilter – Superfície 3D')       
         fig.colorbar(surf, shrink=0.5)
-        plt.show()    #plt.show(block = false)     #plt.pause(0.1)
-        
+        #plt.show()    #plt.show(block = false)     #plt.pause(0.1)
+        plt.show(block=False)   # NÃO bloqueia
+        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        plt.close('all')        # fecha tudo automaticamente
         return L2
 
     
@@ -489,9 +491,9 @@ class inverse_problem:
         plt.legend()
         plt.grid(True)
         #plt.tight_layout()
-        plt.show()
-        #plt.show(block = false)
-        #plt.pause(0.1)
+        plt.show(block=False)   # NÃO bloqueia
+        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        plt.close('all')        # fecha tudo automaticamente
     ###############################################################################
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
@@ -556,9 +558,9 @@ class inverse_problem:
         #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
         #    dpi=300, bbox_inches='tight')
-        plt.show()
-        #plt.show(block = false)
-        #plt.pause(0.1)
+        plt.show(block=False)   # NÃO bloqueia
+        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        plt.close('all')        # fecha tudo automaticamente
     ###############################################################################    
     def plot_espectro(self,x, titulo="Espectro (FFT)"):
         X = np.fft.fft(x)
@@ -582,9 +584,9 @@ class inverse_problem:
         plt.ylabel("|X(w)|")
         plt.grid(True)
         plt.tight_layout()
-        #plt.show()
-        plt.show(block=False)
-        plt.pause(0.1)      
+        plt.show(block=False)   # NÃO bloqueia
+        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        plt.close('all')        # fecha tudo automaticamente
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
