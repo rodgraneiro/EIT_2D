@@ -558,9 +558,10 @@ class inverse_problem:
         #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
         #    dpi=300, bbox_inches='tight')
-        plt.show(block=False)   # NÃO bloqueia
-        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
-        plt.close('all')        # fecha tudo automaticamente
+        plt.show()
+        #plt.show(block=False)   # NÃO bloqueia
+        #plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        #plt.close('all')        # fecha tudo automaticamente
     ###############################################################################    
     def plot_espectro(self,x, titulo="Espectro (FFT)"):
         X = np.fft.fft(x)
