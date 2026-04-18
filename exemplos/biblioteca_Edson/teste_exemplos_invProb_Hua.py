@@ -14,50 +14,78 @@
 import numpy as np
 import mesh
 import forwardProblem
-import inverseProblem
-import inverseProblem_2D
+#import inverseProblem
+#import inverseProblem_2D
+import inverseProblem_2D_Hua
 import matplotlib.pyplot as plt
 
-###############################################################################
-#nome = '../../malhasMSH/quatro_triangulos_03nov2025.msh'
-nome = '../../malhasMSH/circ16_3_anomalia6_v2208.msh'
-#nome = '../../malhasMSH/dezesseis_triangulos_22jan25.msh'
-#nome = '../../malhasMSH/circ16_3_anomalia6_coarse_v2208.msh'
-#nome = '../../malhasMSH/circ16_anomalia6_plus.msh'
+#nome = '../../malhasMSH/circ2_tst_Hua_v2_2_lc_especial.msh'
+#nome = '../../malhasMSH/circ8_anom4_tst_Hua_v4_1_lc_0_01.msh'
+#nome = '../../malhasMSH/circ4_objetoUm_Hua.msh'
+#nome = '../../malhasMSH/circ4_Um_objetoGrande_Hua.msh'
+#nome = '../../malhasMSH/Hua_cruz_editado.msh'
+#nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+#nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
+
+#nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
+nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
+
+#nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
 
 
 
-MinhaMalhaPto2 = mesh.PointElectrodes2DMeshEdson(16, nome_msh=nome, altura2D = 0.02)
-#MinhaMalhaPto2 = mesh.PointElectrodes2DMeshEdson(4, nome_msh=nome, altura2D = 0.02)
-MinhaMalhaPto2.ReadMesh() 
 
-#print(MinhaMalhaPto2.Elements[2])
-#print(f"Centroid: {MinhaMalhaPto2.Elements[2].Centroid}")
-#print(f"KGeo: \n{MinhaMalhaPto2.Elements[2].KGeo}")
-#sigma_inicial = np.full(MinhaMalhaPto2.NumberOfElements, 1.0)          # Monta vetor sigma inicial
-#PcorrenteReal = np.loadtxt("padraoCC_3objetos.txt")
+#MinhaMalha = mesh.HuaElectrodes2DMeshEdson(8, nome_msh=nome, altura2D = 0.02)
+MinhaMalha = mesh.HuaElectrodes2DMeshEdson(16, nome_msh=nome, altura2D = 0.02)
+MinhaMalha.ReadMesh() 
+
+print(MinhaMalha.Elements[2])
+print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
+#print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
 
 
 meus_sigmas = {
-1000 : 3.0,   
-1001 : 2.0,
+1000 : 3.0,    
+1001 : 0.0001,
 1002 : 2.0,
-1003 : 2.0}
+1003 : 2.0,
+5001 : 1.0, 
+5002 : 1.0, 
+5003 : 1.0, 
+5004 : 1.0, 
+5005 : 1.0, 
+5006 : 1.0, 
+5007 : 1.0, 
+5008 : 1.0,
+5009 : 1.0, 
+5010 : 1.0, 
+5011 : 1.0, 
+5012 : 1.0, 
+5013 : 1.0, 
+5014 : 1.0, 
+5015 : 1.0, 
+5016 : 1.0
+}
+
+MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
+
+#MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
+
+#coordenadas = MinhaMalha.Coordinates
+#topologia = MinhaMalha.msh_topology
+
+#MinhaMalha.KGlobal
+
+#KGlobal =  MinhaMalha.KGlobal
 
 
-MinhaMalhaPto2.SetSigmaPhysicaEntity(meus_sigmas)
+#print(f'n_nodes = {MinhaMalha.NumberOfNodes}')
 
 
-MinhaMalhaPto2.CalcKGlobal() # calculando KGlobal usando Sigmas
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True)   # __init__ roda aqui
 
 
-#print(f'MinhaMalhaPto2.KGlobal =  {MinhaMalhaPto2.KGlobal.shape}')
-
-#fwd = forwardProblem.forward_problem(MinhaMalhaPto2, Pcorrente=PcorrenteReal, SkipPattern=None, I =1.0e-3)   # __init__ roda aqui
-fwd = forwardProblem.forward_problem(MinhaMalhaPto2, Pcorrente=None, SkipPattern=3, I =1.0e-3)   # __init__ roda aqui
-
-#print(f'Pcorrente \n {fwd.corrente[MinhaMalhaPto.NumberOfNodes-MinhaMalhaPto.NumberOfElectrodes: MinhaMalhaPto.NumberOfNodes]}')
-#print(f'Pcorrente \n {fwd.corrente[:16]}')
+#print(f'Pcorrente \n {fwd.corrente[MinhaMalha.NumberOfNodes-MinhaMalha.NumberOfElectrodes: MinhaMalha.NumberOfNodes]}')
 
 #print(f'Pcorrente \n {fwd.corrente.shape}')
 
@@ -65,81 +93,71 @@ mtz_Vmedido = fwd.Solve()
 #print(f'Vmedido \n {fwd.Vmedido[:,0]}')
 
 nome_arquivo = 'ParaVernoGmshPto'
-#nome_arquivo = 'banana'
-fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+#fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 
-fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+#fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
-#print(f'self.Yinversa banana\n {fwd.Yinversa}')
-
-V_measured = fwd.Vmedido_eletrodos
-
-
-print(f'V_mesured \n {V_measured}')
-
-'''
-###############################################################################
-####################### Problema Inverso ######################################
-###############################################################################
+V_measured_phaton = fwd.Vmedido_eletrodos
+#np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
+#print(f'V_mesured\n {V_measured_phaton}')
 
 
-#import numpy as np
-#import mesh
-#import forwardProblem
-#import inverseProblem
-#import inverseProblem_2D
-#import matplotlib.pyplot as plt
+
+########################################################################################################
+########################################################################################################
+########################################################################################################
+nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
+
+#dados = np.load('V_measured_phaton.npy', allow_pickle=True)
+#print('dados:\n', dados)
+
+#MinhaMalha = mesh.HuaElectrodes2DMeshEdson(8, nome_msh=nome, altura2D = 0.02)
+MinhaMalha_base = mesh.HuaElectrodes2DMeshEdson(16, nome_msh=nome, altura2D = 0.02)
+MinhaMalha_base.ReadMesh() 
+
+print(MinhaMalha_base.Elements[2])
+print(f"Centroid: {MinhaMalha_base.Elements[2].Centroid}")
+#print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
 
 
-#######################################################
-#nome = '../../malhasMSH/circ16_base_coarse.msh'
-#nome = '../../malhasMSH/quatro_base_22jan25.msh'
-nome = '../../malhasMSH/circ16_base_v2208.msh'
-#nome = '../../malhasMSH/circ16_3_anomalia6_coarse_v2208.msh'
-
-#nome = '../../malhasMSH/circ16_anomalia6B.msh'
-
-MinhaMalhaBase16 = mesh.PointElectrodes2DMeshEdson(16, nome_msh=nome, altura2D = 0.02)
-#MinhaMalhaPto2 = mesh.PointElectrodes2DMeshEdson(4, nome_msh=nome, altura2D = 0.02)
-MinhaMalhaBase16.ReadMesh() 
-
-#meus_sigmas = {1000 : 1.0}
 meus_sigmas = {
-1000 : 1.0,   
-1001 : 1.0}#,
-#1002 : 1.0,
-#1003 : 1.0}
+1000 : 1.0,    
+#1001 : 2.0,
+1002 : 2.0,
+1003 : 2.0,
+5001 : 1.0, 
+5002 : 1.0, 
+5003 : 1.0, 
+5004 : 1.0, 
+5005 : 1.0, 
+5006 : 1.0, 
+5007 : 1.0, 
+5008 : 1.0,
+5009 : 1.0, 
+5010 : 1.0, 
+5011 : 1.0, 
+5012 : 1.0, 
+5013 : 1.0, 
+5014 : 1.0, 
+5015 : 1.0, 
+5016 : 1.0
+}
 
-MinhaMalhaBase16.SetSigmaPhysicaEntity(meus_sigmas)
+MinhaMalha_base.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
 
-
-MinhaMalhaBase16.CalcKGlobal() # calculando KGlobal usando Sigmas
-
-
-#print(f'MinhaMalhaPto2.KGlobal =  {MinhaMalhaBase16.KGlobal.shape}')
-#PcorrenteBase = np.loadtxt("padrao128CC_392.txt")
-fwd = forwardProblem.forward_problem(MinhaMalhaBase16, Pcorrente=None, SkipPattern=3, I =1.0e-3)   # __init__ roda aqui
-
-
-#print(MinhaMalhaBase16.Elements[2])
-#print(f"Centroid: {MinhaMalhaBase16.Elements[2].Centroid}")
-#print(f"KGeo: \n{MinhaMalhaBase16.Elements[2].KGeo}")
-
-
-#iteration= np.loadtxt("lastIteration.txt")
-iteration=0
-
-#sigma_inicial_rnd = np.random.uniform(2.6, 2.9, MinhaMalhaBase16.NumberOfElements)
-#print('x0', sigma_inicial_rnd)
-
-
-#sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
-invProblem_2D = inverseProblem_2D.inverse_problem(MinhaMalhaBase16, Pcorrente=fwd.corrente)
-#invProblem_2D = inverseProblem_2D.inverse_problem(MinhaMalhaBase16, Pcorrente=PcorrenteBase)
+fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=3, VirtualNode = True)   # __init__ roda aqui
 
 
-#invProblem_2D.solve(V_measured,initialEstimate=sigma_inicial_rnd, alpha =0.1,  Lambda = 0.50, max_iter=3, Tol=1.0e-20, iteration=iteration)
-invProblem_2D.solve(V_measured,initialEstimate=3.5, alpha =0.2500,  Lambda = 1.0e-3, max_iter=3, Tol=1.0e-9, iteration=iteration)
-#print('Y_jacobian',invProblem.Y_jacobian)
+mtz_Vmedido_base = fwd.Solve()
+#print(f'Vmedido \n {fwd.Vmedido[:,0]}')
 
-'''
+nome_arquivo = 'ParaVernoGmshPto'
+#fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+
+#fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+
+
+invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
+invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = 10.001, max_iter=50,Tol=1.0e-9)
+
+

@@ -16,10 +16,8 @@ class MyElement:
     sigmaX = None
     sigmaY = None
     #element_type = None
-       
-        
-    def __init__(self, mymesh=None):
-        self.mymesh = mymesh
+    
+    def __init__(self):
         self.Centroid = None
         self.ElementType = 0
         self.PhysicalEntity = None
@@ -48,7 +46,7 @@ class MyElement:
         if value == 0:
             raise Exception("MyElement(): SetRho(): value não pode ser 0.")
         self.Sigma = value
-        #self.Rho = 1.0/value
+        self.Rho = 1.0/value
 
 
     def CalcCentroid(self):
@@ -200,9 +198,7 @@ class LinearLineHua(MyElement):
 
     def CalcKgeo(self):
 
-        zc = 0.001
-        #zc = self.mymesh.z_contact_eletrode 
-        #print('zc =', zc)
+        zc = 100000.0    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
@@ -210,7 +206,7 @@ class LinearLineHua(MyElement):
         for i in range(2):
             mtrz_lenth_a[i][0] =self.Coordinates[self.Topology[i]][0]
             mtrz_lenth_a[i][1] =self.Coordinates[self.Topology[i]][1]
-            #node1 = self.Topology[i]
+            node1 = self.Topology[i]
             #self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
             #print('self.msh_physical_groups ???', self.msh_physical_groups)
             #print('nodes', node1)
@@ -301,9 +297,9 @@ class LinearLineEdson(MyElement):
 class LinearTriangleAnisotropic(MyElement):
     #Altura2D = 1.0
 
-    def __init__(self, mymesh=None):
+    def __init__(self):
         super().__init__()
-        self.mymesh = mymesh
+        
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
     # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
     # Seção 6.2.2. Veja equacionamento  em  "Método Elementos Finitos 2D - Triângulos.pdf"
@@ -327,28 +323,15 @@ class LinearTriangleAnisotropic(MyElement):
         #print('self.msh_physical_groups',  {self.msh_physical_groups})
         #print(f"Physical tags found {self.physical_tags}.")
         #print("Physical tag:", self.PhysicalEntity)
-        
-        if self.PhysicalEntity >= 1000:
-            
-            sigma = self.mymesh.sigma_vec[self.ElementIndex]
-            
-            Sx  = sigma[0]   # σxx
-            Sxy = sigma[1]   # σxy
-            Sy  = sigma[2]   # σyy
-
-        
-
-
-        '''
         if self.PhysicalEntity == 1000:
             Sx = 1.0
-            Sy = 1.0
+            Sy = 0.10
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
             Sx = self.sigmaX
             Sy = self.sigmaY
-        '''
+
         #print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
         x = [self.Coordinates[noh1][0], self.Coordinates[noh2][0], self.Coordinates[noh3][0]]
         y = [self.Coordinates[noh1][1], self.Coordinates[noh2][1], self.Coordinates[noh3][1]]
