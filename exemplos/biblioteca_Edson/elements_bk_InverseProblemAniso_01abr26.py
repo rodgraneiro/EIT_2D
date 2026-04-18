@@ -8,6 +8,7 @@ Created on Tue Sep 16 20:33:28 2025
 import numpy as np
 
 
+
 class MyElement:
     Coordinates = None
     Altura2D = None
@@ -16,10 +17,8 @@ class MyElement:
     sigmaX = None
     sigmaY = None
     #element_type = None
-       
-        
-    def __init__(self, mymesh=None):
-        self.mymesh = mymesh
+    
+    def __init__(self):
         self.Centroid = None
         self.ElementType = 0
         self.PhysicalEntity = None
@@ -38,19 +37,23 @@ class MyElement:
         self.physical_tags = self.__class__.__name__  # automático
         self.PhysicalEntity = self.__class__.__name__  # automático
 
+        self.ElementIndex = None
+
+        
+    '''
     def SetRho(self, value):
         if value == 0:
             raise Exception("MyElement(): SetRho(): value não pode ser 0.")
         self.Rho = value
         self.Sigma = 1.0/value
-
+    '''
     def SetSigma(self, value):
         if value == 0:
             raise Exception("MyElement(): SetRho(): value não pode ser 0.")
         self.Sigma = value
         #self.Rho = 1.0/value
 
-
+    
     def CalcCentroid(self):
         if self.Topology is None:
             raise Exception("MyElement(): CalcCentroid(): Topology not defined.")
@@ -160,7 +163,7 @@ class LinearTriangleEdson(MyElement):
         Y_23 =  (y[2]-y[0])*(y[0]- y[1])+(x[0]-x[2])*(x[1]-x[0])          # 
         Y_33 =  (y[0]- y[1])**2 + (x[1]-x[0])**2  
 
-        
+        '''
         self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[Y_11, Y_12, Y_13], 
                                         [Y_12, Y_22, Y_23],      
                                         [Y_13, Y_23, Y_33]       
@@ -170,7 +173,6 @@ class LinearTriangleEdson(MyElement):
                                         [Y_12, Y_22, Y_23],      
                                         [Y_13, Y_23, Y_33]       
                                         ])
-        '''
         #print(noh1,noh2,noh3)
         #print('x',x)
         #print('y',y)
@@ -189,20 +191,9 @@ class LinearLineHua(MyElement):
         #self.Sigma = 1.0
         #self.Rho = 1.0
         
-        # Modelo completo eletrodo Hua
-        #K_electrode = (b*a)/(6*t*rho) * np.array([  [2, 1, -3],
-        #                                            [1, 2, -3],
-        #                                            [-3, -3, 6]])
-        #- rho = resistividade do material do eletrodo
-        #- t = espessura
-        #- a, b = dimensões geométricas do elemento
-
-
     def CalcKgeo(self):
 
-        zc = 0.001
-        #zc = self.mymesh.z_contact_eletrode 
-        #print('zc =', zc)
+        zc = 1.0e6    
         mtrz_lenth_a = np.zeros((2, 2), dtype=float)
         coeficientes = np.zeros((2,2), dtype=float)
         #self.Topology = np.append(self.Topology, (17))
@@ -210,7 +201,7 @@ class LinearLineHua(MyElement):
         for i in range(2):
             mtrz_lenth_a[i][0] =self.Coordinates[self.Topology[i]][0]
             mtrz_lenth_a[i][1] =self.Coordinates[self.Topology[i]][1]
-            #node1 = self.Topology[i]
+            node1 = self.Topology[i]
             #self.msh_physical_groups = self.__mshdata.cell_data_dict["gmsh:physical"][self.element_type]
             #print('self.msh_physical_groups ???', self.msh_physical_groups)
             #print('nodes', node1)
@@ -304,6 +295,9 @@ class LinearTriangleAnisotropic(MyElement):
     def __init__(self, mymesh=None):
         super().__init__()
         self.mymesh = mymesh
+
+        #self.mymesh = mymesh
+        
     # Gera a matriz local dos elementos triangulares lineares com 3 nohs
     # Equacionamento deduzido no livro "Numerical techniques in electromagnetics-Sadiku(2000)"
     # Seção 6.2.2. Veja equacionamento  em  "Método Elementos Finitos 2D - Triângulos.pdf"
@@ -327,22 +321,23 @@ class LinearTriangleAnisotropic(MyElement):
         #print('self.msh_physical_groups',  {self.msh_physical_groups})
         #print(f"Physical tags found {self.physical_tags}.")
         #print("Physical tag:", self.PhysicalEntity)
-        
+
+        #print("LinearTriangleAnisotropic", self.mymesh.sigma_vec[self.ElementIndex])
+        #print('banana')
         if self.PhysicalEntity >= 1000:
-            
+            #print('batata')
             sigma = self.mymesh.sigma_vec[self.ElementIndex]
             
             Sx  = sigma[0]   # σxx
             Sxy = sigma[1]   # σxy
             Sy  = sigma[2]   # σyy
 
-        
+            #Sx = 1.0 # somente para debug - deletar depois
+            #Sy = 0.1
 
+        #print("Physical tag:", self.PhysicalEntity, Sx, Sy)
 
         '''
-        if self.PhysicalEntity == 1000:
-            Sx = 1.0
-            Sy = 1.0
         if self.PhysicalEntity > 5000:
             print("banana 5000")
         if self.PhysicalEntity > 1000 & self.PhysicalEntity < 5000:
@@ -362,8 +357,8 @@ class LinearTriangleAnisotropic(MyElement):
         G_l = (x[2]-x[1])
         G_m = (x[0]-x[2])
         G_n = (x[1]-x[0])
-        #Sx = self.sigmaX
-        #Sy = self.sigmaY
+        #Sx = 0
+        #Sy = 0
         atheta_deg = self.thetaAngle
         atheta =  np.deg2rad(atheta_deg)
         Sxx =  Sx*np.cos(atheta)**2 + Sy*np.sin(atheta)**2
@@ -373,17 +368,7 @@ class LinearTriangleAnisotropic(MyElement):
         #print('Xs',x[0], x[1], x[2] )
         #print('Ys',y[0], y[1], y[2] )
         #print(Sxx,Sxy,Syy)
-        '''
-        C_11 = Sxx*B_l**2 + 2*B_l*G_l*Sxy + Syy*G_l**2
-        C_12 = B_l*(Sxx*B_m + Sxy*G_m) + G_l*(Sxy*B_m + Syy*G_m)        #C_21 = C_12
-        C_13 = B_l*(Sxx*B_n + Sxy*G_n) + G_l*(Sxy*B_n + Syy*G_n)        #C_31 = C_13
-        C_21 = B_m*(Sxx*B_l + Sxy*G_l) + G_m*(Sxy*B_l + Syy*G_l)
-        C_22 = Sxx*B_m**2 + 2*B_m*G_m*Sxy + Syy*G_m**2
-        C_23 = B_m*(Sxx*B_n + Sxy*G_n) + G_m*(Sxy*B_n + Syy*G_n)        #C_32 = C_23
-        C_31 = B_n*(Sxx*B_l + Sxy*G_l) + G_n*(Sxy*B_l + Syy*G_l)       
-        C_32 = B_n*(Sxx*B_m + Sxy*G_m) + G_n*(Sxy*B_m + Syy*G_m)
-        C_33 = Sxx*B_n**2 + 2*B_n*G_n*Sxy + Syy*G_n**2
-        '''
+
         C_11 = Sxx*B_l**2 + 2.0*Sxy*B_l*G_l + Syy*G_l**2
         C_22 = Sxx*B_m**2 + 2.0*Sxy*B_m*G_m + Syy*G_m**2
         C_33 = Sxx*B_n**2 + 2.0*Sxy*B_n*G_n + Syy*G_n**2

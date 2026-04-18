@@ -4,6 +4,7 @@ Created on Thu Oct  2 14:17:52 2025
 
 @author: rodgr
 """
+# criar pull request
 
 import numpy as np
 import mesh

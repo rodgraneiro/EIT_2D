@@ -4,6 +4,7 @@ Created on Thu Oct  2 14:17:52 2025
 
 @author: rodgr
 """
+# criar pull request
 
 import numpy as np
 import mesh
@@ -126,14 +127,15 @@ class forward_problem:
         plt.pause(0.1)  
     def Solve(self, forceKGolbalCalc=False):
         #self.plotMSH(self.mymesh.sigma_vec)
-        #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
+        print('self.mymesh.sigma_vec \n',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
+            print('self.mymesh.KGlobal is None')
             self.mymesh.CalcKGlobal()
         
         self.apply_boundary_conditions()
         #print('solve self.KGlobal \n',self.KGlobal)
         self.Yinversa = np.linalg.inv(self.KGlobal)
-        #np.savetxt("self.Yinversa_fwd.txt", self.Yinversa, fmt="%.6f")
+
         self.Vmedido = np.dot(self.Yinversa, self.vetor_corrente_cond_contorno)
         #print(f' Tensões medidas em todos os nós \n {self.Vmedido})')
         
@@ -230,7 +232,6 @@ class forward_problem:
 ###############################################################################
     def abrir_Gmsh_pos(self,nome_arquivo, runGmsh = False):
         gmsh.initialize()
-        gmsh.option.setNumber("General.Terminal", 0)
         for pos in range(self.n_PCurrent):
             # Inicialize o Gmsh
             #gmsh.initialize()
