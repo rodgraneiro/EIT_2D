@@ -24,7 +24,7 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
 class inverse_problem: 
-    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3, name = None, pLambda = None):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
 
@@ -33,7 +33,8 @@ class inverse_problem:
         self.Vmedido = None
         self.TempJ = None
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
-
+        self.name = name
+        self.pLambda = pLambda
         self.KGlobal= self.mymesh.KGlobal
         print('self.KGlobal_tst',self.KGlobal)
         
@@ -322,29 +323,7 @@ class inverse_problem:
         #print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
         return self.KGlobalTemp
     ###############################################################################
-    '''
-    def Calc_J(self, invVtemp):
-        listTempJ=[]
-        for idx in range(self.mymesh.NumberOfElements):
-            termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
-            #print('termo1 \n', termo1.shape)
-            termo2 = np.dot(self.listJacobian[idx], termo1)
-            #print('termo2 \n', termo2.shape)
-            termo3 = -np.dot(invVtemp, termo2)
-            termo3 = termo3[self.mymesh.ElectrodeNodes]
-            #print('termo3 \n', termo3.shape)
-            termo3 = termo3.reshape(-1,1,  order='F')
-            #print('termo3b \n', termo3.shape)
-            listTempJ.append(termo3)
-            listTempJa = np.array(listTempJ)
-            #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
-        self.TempJ = np.concatenate(listTempJ, axis=1)
-        #print('self.TempJ \n',self.TempJ.shape)
-        #JTJ = np.dot(self.TempJ.T, self.TempJ)
-        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
-        #print('JTJ \n', self.JTJ.shape)
-    ###############################################################################
-    '''
+
     def Calc_J(self, invVtemp):
         listTempJ = []
         termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno)
@@ -358,9 +337,6 @@ class inverse_problem:
 
         self.TempJ = np.concatenate(listTempJ, axis=1)
         self.JTJ = np.dot(self.TempJ.T, self.TempJ)
-
-
-
 
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
@@ -395,7 +371,7 @@ class inverse_problem:
                     else:
                         aux = -L2[i, j] / soma
                     L2[i, j] = aux if np.abs(aux) > tol else 0.0
-        
+        '''
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -413,10 +389,11 @@ class inverse_problem:
         #ax.set_zlabel('L[i,j]')
         ax.set_title('HPFilter – Superfície 3D')       
         fig.colorbar(surf, shrink=0.5)
-        #plt.show()    #plt.show(block = false)     #plt.pause(0.1)
+        plt.show()    #plt.show(block = false)     #plt.pause(0.1)
         plt.show(block=False)   # NÃO bloqueia
         plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
         plt.close('all')        # fecha tudo automaticamente
+        '''
         return L2
 
     
@@ -466,7 +443,7 @@ class inverse_problem:
         plt.xlabel('Colun', fontsize=12)
         plt.ylabel('Line', fontsize=12)
         #plt.tight_layout()
-        plt.show()
+        #plt.show()
 
         #plt.show(block = false)
         #plt.pause(0.1)
@@ -491,26 +468,14 @@ class inverse_problem:
         plt.legend()
         plt.grid(True)
         #plt.tight_layout()
-        plt.show(block=False)   # NÃO bloqueia
-        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
-        plt.close('all')        # fecha tudo automaticamente
+        #plt.show(block=False)   # NÃO bloqueia
+        #plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        #plt.close('all')        # fecha tudo automaticamente
     ###############################################################################
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
-    '''
-    def plotMSH(self,sigma):
-        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
-        triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
-        fig, ax = plt.subplots(figsize=(6, 5))
-        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues')#, vmin=0, vmax=6)#'Greys')
-        fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
-        ax.set_title("Conductivity Real (σ)", fontsize=15)
-        plt.xlabel("[m]", fontsize=12)
-        plt.ylabel("[m]", fontsize=12)
-        #plt.tight_layout()
-        plt.show()
-        '''
+
     
     def plotMSH(self, sigma, iteration = None, save = False):
 
@@ -537,7 +502,7 @@ class inverse_problem:
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity Real (σ) - rnd - itr_{iteration}", fontsize=12)
+                ax.set_title(f"Conductivity Real (σ) - Lambda_{self.pLambda:.2e} - itr_{iteration}", fontsize=12)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -555,13 +520,13 @@ class inverse_problem:
         plt.tight_layout()
         #if save == True:
         #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-        #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
-        #    dpi=300, bbox_inches='tight')
-        plt.show()
-        #plt.show(block=False)   # NÃO bloqueia
-        #plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
-        #plt.close('all')        # fecha tudo automaticamente
+        nome_arquivo = f"../../imagens/{self.name}_lambda_{self.pLambda:.4f}.png"
+        plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')
+        #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",     dpi=300, bbox_inches='tight')
+        #plt.show()
+        plt.show(block=False)   # NÃO bloqueia
+        plt.pause(0.1)            # tempo que o gráfico fica na tela (segundos)
+        plt.close('all')        # fecha tudo automaticamente
     ###############################################################################    
     def plot_espectro(self,x, titulo="Espectro (FFT)"):
         X = np.fft.fft(x)
@@ -585,14 +550,17 @@ class inverse_problem:
         plt.ylabel("|X(w)|")
         plt.grid(True)
         plt.tight_layout()
-        plt.show(block=False)   # NÃO bloqueia
-        plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
-        plt.close('all')        # fecha tudo automaticamente
+        #plt.show(block=False)   # NÃO bloqueia
+        #plt.pause(3)            # tempo que o gráfico fica na tela (segundos)
+        #plt.close('all')        # fecha tudo automaticamente
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
-    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
-        #print(f'lastIteration 2222 {iteration}')
+    #def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
+    def solve(self, V_measured, initialEstimate=1.0, alpha=1.0,Lambda=0.50, max_iter=500,Tol=1.0e-6, iteration=0, name=None, pLambda=None):
+        self.name = name
+        self.pLambda = pLambda
+
         itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
@@ -601,12 +569,11 @@ class inverse_problem:
         listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
-        #self.plotMSH(self.mymesh.sigma_vec, save = False)
+
         tri_elements = [elem for elem in self.mymesh.Elements if not elem.FlagIsElectrode]
         centroids_2D = np.array([elem.Centroid for elem in tri_elements])
         L2 = self.calc_L2_gauss_2D(centroids_2D)
-        #L2 = self.calc_L2_gauss_2D(centroids_2D)
-        #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
+
         difResidue = 0
         normaDeltaTemp = 0
         fatorAlpha = 0.99
@@ -615,16 +582,12 @@ class inverse_problem:
         contItr = 0
         V_measured = V_measured.T
         V_measured = V_measured.reshape(-1, 1)
-        #print('V_measured', V_measured.shape)
-        
-        
-        #sigmaInicial = np.ones(self.mymesh.NumberOfElements-self.mymesh.NumberOfElectrodes)*initialEstimate
+
         sigmaInicial = np.ones(len(centroids_2D))*initialEstimate
         
         sigmaInicial = sigmaInicial.reshape(-1,1)
 
-        #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
-        #self.sigmaStar = (sigmaInicial/sigmaInicial)*2.5
+
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         '''
         ###
@@ -638,20 +601,15 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(itr_start,max_iter):
-            #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
-            contItr = contItr + 1
-            #Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
 
+            contItr = contItr + 1
+            
             K_cuba = self.CalcKGlobalTriangle(sigmaInicial)
             Vtemp = K_cuba + self.KGlobalBoundary
             Vtemp = self.apply_boundary_conditions(Vtemp)
             
             # ***** Determinação do Valor calculado *****
-            #Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
-            #print('Vtemp', Vtemp.shape)
-            #np.savetxt("matrizVtemp.txt", Vtemp, fmt="%.6f")
-            #Vtemp = Vtemp[:-4, :-4]
-            #print('VtempReduzida', Vtemp.shape)
+
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
@@ -668,8 +626,7 @@ class inverse_problem:
 
             normaResidue = np.linalg.norm(residue)
             listaItrPlot.append(normaResidue)
-            #residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
-            #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
+
             
             self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
     
@@ -679,31 +636,24 @@ class inverse_problem:
             self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
-            #W1=np.eye(self.TempJ.shape[0])
-            #JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
-            #JTWJ = np.dot(JTW, self.TempJ)
             
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
             LTL =np.dot(L2.T, L2)
             termo_L = (Lambda**2)*LTL
             
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
-            #firstTerm = JTWJ + termo_L
+
             firstTerm = self.JTJ + termo_L
             inv_firstTerm = np.linalg.inv(firstTerm)
             
             # ***** Cálculo do termo 2a (JT_W1_residue) *****
-            
-            #JTW_H = np.dot(JTW,residue)      
+                 
             JTW_H = np.dot(self.TempJ.T,residue)      
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
             regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
 
             regTerm = regTerm.reshape(-1, 1)
-            #print('regTerm',regTerm.shape)
-            #print('termo_L',termo_L.shape)
-            #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
             regularization = np.dot(termo_L, regTerm)
                         
             # ***** Cálculo final do termo 2 *****
@@ -713,7 +663,6 @@ class inverse_problem:
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
 
-            #deltaSigma = deltaSigma[:, 0]*alpha
             
             alphaDeltaSigma = alpha*deltaSigma
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
@@ -730,7 +679,7 @@ class inverse_problem:
             if len(lastResidue) > 2:
                 lastResidue.pop(0)
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
-            #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
+
             print(f'{normaResidue} - {normaDelta} - {itr}')
            
             if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
@@ -744,34 +693,23 @@ class inverse_problem:
               break
 
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
-            sigmaPlusOne = np.clip(sigmaPlusOne, 0.99, 4.01)
+            sigmaPlusOne = np.clip(sigmaPlusOne, 0.1, 5.01)
             sigmaInicial = sigmaPlusOne
             
             
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
-            '''
-            if any(v < 0 for v in sigmaPlusOne):                
-                alpha = alpha*fatorAlpha
-                sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
-                sigmaPlusOne[sigmaPlusOne < 0] = 0.001 
- 
-                print(f'Encontrou sigma negativo.')
 
-                
-                convergencia = True
-                break
-            '''
             
                 
            
             if lastResidue[2] > lastResidue[1]:
-               #contNorma =  contNorma + 1
+
                print(f'Encontrou norma lastResidue maior  que a anterior.')
-               
-               #self.plotMSH(sigmaInicial,itr, save = True)
-               #alpha = alpha*fatorAlpha
+               np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
+               self.plotMSH(sigmaInicial, itr, save = True)
+
                break
                
 
@@ -783,7 +721,7 @@ class inverse_problem:
 
         #print('sigmaInicial \n', sigmaInicial) 
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-        self.plotar_iteracoes(listXplot, listaItrPlot)
+        #self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial, itr, save = True)
         #self.plot_espectro(sigmaInicial)
 
