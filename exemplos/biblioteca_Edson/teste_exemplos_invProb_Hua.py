@@ -158,6 +158,6 @@ nome_arquivo = 'ParaVernoGmshPto'
 
 
 invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = 10.001, max_iter=50,Tol=1.0e-9)
+invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = 10.001, max_iter=11,Tol=1.0e-9)
 
 
