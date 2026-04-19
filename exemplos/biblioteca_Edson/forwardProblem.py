@@ -18,13 +18,15 @@ import datetime
 
 
 class forward_problem: 
-    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3, name = None,  imageSave = False):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
 
         self.mymesh = mymesh
         self.Vmedido = None
         self.Yinversa = None
+        self.name = name
+        self.imageSave = imageSave
 
         if V_imposto is None:
             V_imposto = [[mymesh.GndNode, 0.0]]
@@ -120,12 +122,16 @@ class forward_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        
-        #plt.show()    
+        nome_arquivo = f"../../docs/figures/{self.name}.png"
+        #plt.show() 
+        plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')   
         plt.show(block=False)
+
         plt.pause(0.1)  
+
     def Solve(self, forceKGolbalCalc=False):
-        #self.plotMSH(self.mymesh.sigma_vec)
+        if self.imageSave == True:
+            self.plotMSH(self.mymesh.sigma_vec)
         #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
             self.mymesh.CalcKGlobal()
