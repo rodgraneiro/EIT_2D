@@ -31,11 +31,11 @@ def safe_int(s, default=0):
 class ConfigDashboard(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Gerador de Malhas (.msh) - EIT")
+        self.title("Mesh Generator (.msh) - EIT")
         self.geometry("420x860")
 
         # ====== variáveis ======
-        self.nome_arquivo = tk.StringVar(value="testeHua_01")
+        self.nome_arquivo = tk.StringVar(value="test_Hua_01")
         self.raio = tk.StringVar(value="0.15")
         self.n_eletrodos = tk.StringVar(value="16")
         self.lc1 = tk.StringVar(value="2e-2")
@@ -80,12 +80,12 @@ class ConfigDashboard(tk.Tk):
 
         # ====== campos ======
         r = 0
-        r = self._row(form, r, "Nome do arquivo :", self.nome_arquivo)
-        r = self._row(form, r, "Raio:", self.raio)
-        r = self._row(form, r, "Nº eletrodos:", self.n_eletrodos)
-        r = self._row(form, r, "lc (cuba):", self.lc1)
-        r = self._row(form, r, "Nr anomalias", self.NrAnomalias)
-        r = self._row(form, r, "Comprimento eletrodo", self.lenth_e)
+        r = self._row(form, r, "File name :", self.nome_arquivo)
+        r = self._row(form, r, "Radius:", self.raio)
+        r = self._row(form, r, "Nº electrodes:", self.n_eletrodos)
+        r = self._row(form, r, "lc (domain):", self.lc1)
+        r = self._row(form, r, "Nr objects", self.NrAnomalias)
+        r = self._row(form, r, "Electrode length", self.lenth_e)
         ttk.Separator(form, orient="horizontal").grid(
             row=r, column=0, columnspan=2, sticky="ew", pady=8
         )
@@ -93,29 +93,29 @@ class ConfigDashboard(tk.Tk):
 
         r += 1
 
-        r = self._row(form, r, "Anomalia1 - nº de lados:", self.anomalia1_lados)
-        r = self._row(form, r, "Raio:", self.anomalia1_raio)
+        r = self._row(form, r, "Object 1 - nr of sides:", self.anomalia1_lados)
+        r = self._row(form, r, "Radius:", self.anomalia1_raio)
         r = self._row(form, r, "lc:", self.lc2)
-        r = self._row(form, r, "Rotação (graus):", self.anomalia1_rotacao)
+        r = self._row(form, r, "Rotation (degrees):", self.anomalia1_rotacao)
         r = self._row(form, r, "x_ptoCentral:", self.x1_ptoCentral)
         r = self._row(form, r, "y_ptoCentral:", self.y1_ptoCentral)
         ttk.Separator(form, orient="horizontal").grid(
             row=r, column=0, columnspan=2, sticky="ew", pady=8)
         
         r += 1
-        r = self._row(form, r, "Anomalia2 - nº de lados:", self.anomalia2_lados)
-        r = self._row(form, r, "Raio:", self.anomalia2_raio)
+        r = self._row(form, r, "Object 2 - nr of sides:", self.anomalia2_lados)
+        r = self._row(form, r, "Radius:", self.anomalia2_raio)
         r = self._row(form, r, "lc:", self.lc3)
-        r = self._row(form, r, "Rotação (graus):", self.anomalia2_rotacao)
+        r = self._row(form, r, "Rotation (degrees):", self.anomalia2_rotacao)
         r = self._row(form, r, "x_ptoCentral:", self.x2_ptoCentral)
         r = self._row(form, r, "y_ptoCentral:", self.y2_ptoCentral)
         ttk.Separator(form, orient="horizontal").grid(
             row=r, column=0, columnspan=2, sticky="ew", pady=16)
         r += 1
-        r = self._row(form, r, "Anomalia3 - nº de lados:", self.anomalia3_lados)
-        r = self._row(form, r, "Raio:", self.anomalia3_raio)
+        r = self._row(form, r, "Object 2 - nr of sides:", self.anomalia3_lados)
+        r = self._row(form, r, "Radius:", self.anomalia3_raio)
         r = self._row(form, r, "lc :", self.lc4)
-        r = self._row(form, r, "Rotação (graus):", self.anomalia3_rotacao)
+        r = self._row(form, r, "Rotation (degrees):", self.anomalia3_rotacao)
         r = self._row(form, r, "x_ptoCentral:", self.x3_ptoCentral)
         r = self._row(form, r, "y_ptoCentral:", self.y3_ptoCentral)
         
@@ -125,27 +125,27 @@ class ConfigDashboard(tk.Tk):
         out_frame.grid(row=r, column=0, columnspan=2, sticky="ew", pady=(10, 0))
         out_frame.columnconfigure(1, weight=1)
 
-        ttk.Label(out_frame, text="Pasta de saída:").grid(row=0, column=0, sticky="w")
+        ttk.Label(out_frame, text="Output folder:").grid(row=0, column=0, sticky="w")
         self.out_entry = ttk.Entry(out_frame, textvariable=self.out_dir)
         self.out_entry.grid(row=0, column=1, sticky="ew", padx=(6, 6))
-        ttk.Button(out_frame, text="Escolher...", command=self.choose_dir).grid(row=0, column=2, sticky="e")
+        ttk.Button(out_frame, text="Choose...", command=self.choose_dir).grid(row=0, column=2, sticky="e")
 
         # botões
         btns = ttk.Frame(form)
         btns.grid(row=r + 1, column=0, columnspan=2, sticky="ew", pady=(12, 0))
-        ttk.Button(btns, text="Atualizar prévia", command=self.update_preview).pack(side="left")
-        ttk.Button(btns, text="Salvar malha", command=self.save_file).pack(side="left", padx=(10, 0))
+        ttk.Button(btns, text="Update preview", command=self.update_preview).pack(side="left")
+        ttk.Button(btns, text="Save mesh", command=self.save_file).pack(side="left", padx=(10, 0))
         ########opcao_var = tk.StringVar(value="Laplace")
 
         
         
         # combobox 
-        self.superficie_PCentral = tk.StringVar(value="Cuba")
-        ttk.Label(btns, text="Pto Central em:").pack(side="left", padx=(6, 4))
+        self.superficie_PCentral = tk.StringVar(value="Domain")
+        ttk.Label(btns, text="Central Point in:").pack(side="left", padx=(6, 4))
         self.cmb_reg = ttk.Combobox(
             btns,  # <- pai correto
             textvariable=self.superficie_PCentral,
-            values=["Cuba", "Anomalia 1", "Anomalia 2", "Anomalia 3"],
+            values=["Domain", "Object 1", "Object 2", "Object 3"],
             state="readonly",
             width=14
         )
@@ -160,7 +160,7 @@ class ConfigDashboard(tk.Tk):
         return r + 1
 
     def choose_dir(self):
-        d = filedialog.askdirectory(title="Escolher pasta de saída")
+        d = filedialog.askdirectory(title="Choose output folder")
         if d:
             self.out_dir.set(d)
    
@@ -168,7 +168,7 @@ class ConfigDashboard(tk.Tk):
 
         gmsh.initialize()
 
-        gmsh.model.add("Cuba_Hua")
+        gmsh.model.add("Domain_Hua")
 
         pts_circulo = []
         
@@ -230,7 +230,7 @@ class ConfigDashboard(tk.Tk):
         # criando os pontos da "anomalia"
         ###############################################################################
         if int(self.NrAnomalias.get()) > 3: # verifica nr máximo de  objetos.
-            raise TypeError("O número máximo de anomalias é 3")
+            raise TypeError("The maximum number of anomalies is 3.")
         if int(self.NrAnomalias.get()) == 1: 
             pts_anomalia1 = []
             for anom in range(int(self.anomalia1_lados.get())):
@@ -400,42 +400,43 @@ class ConfigDashboard(tk.Tk):
 
         # criando physicalGroup da superfície
         physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000)
-
+        gmsh.model.setPhysicalName(2, physycal_circulo, "Domain")
+        
         if int(self.NrAnomalias.get()) == 1:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
-            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "Object_1")
             
             
         if int(self.NrAnomalias.get()) == 2:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
-            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")            
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "Object_1")            
             physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
-            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "Object_2")
                 
                 
         if int(self.NrAnomalias.get()) == 3:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
-            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")            
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "Object_1")            
             physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
-            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")          
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "Object_2")          
             physycal_anomalia3 = gmsh.model.addPhysicalGroup(2, [surface_anomalia3], 1003)
-            gmsh.model.setPhysicalName(2, physycal_anomalia3, "anomalia3")
+            gmsh.model.setPhysicalName(2, physycal_anomalia3, "Object_3")
         
         
         tipo = self.superficie_PCentral.get()
         print("Superfície escolhida:", tipo)
         
         match tipo:
-            case "Cuba":
+            case "Domain":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_circulo)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-            case "Anomalia 1":
+            case "Object 1":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia1)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-            case "Anomalia 2":
+            case "Object 2":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia2)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-            case "Anomalia 3":
+            case "Object 3":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia3)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
                 
@@ -479,7 +480,7 @@ class ConfigDashboard(tk.Tk):
 
         gmsh.initialize()
 
-        gmsh.model.add("Cuba_Hua")
+        gmsh.model.add("Domain_Hua")
 
         pts_circulo = []
         
@@ -541,7 +542,7 @@ class ConfigDashboard(tk.Tk):
         # criando os pontos da "anomalia"
         ###############################################################################
         if int(self.NrAnomalias.get()) > 3: # verifica nr máximo de  objetos.
-            raise TypeError("O número máximo de anomalias é 3")
+            raise TypeError("The maximum number of anomalies is 3.")
         if int(self.NrAnomalias.get()) == 1: 
             pts_anomalia1 = []
             for anom in range(int(self.anomalia1_lados.get())):
@@ -709,42 +710,43 @@ class ConfigDashboard(tk.Tk):
 
         # criando physicalGroup da superfície
         physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000)
+        gmsh.model.setPhysicalName(2, physycal_circulo, "Domain")
 
 
         if int(self.NrAnomalias.get()) == 1:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
-            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "Object_1")
             
             
         if int(self.NrAnomalias.get()) == 2:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
-            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")            
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "Object_1")            
             physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
-            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "Object_2")
                 
                 
         if int(self.NrAnomalias.get()) == 3:
             physycal_anomalia1 = gmsh.model.addPhysicalGroup(2, [surface_anomalia1], 1001)
-            gmsh.model.setPhysicalName(2, physycal_anomalia1, "anomalia1")            
+            gmsh.model.setPhysicalName(2, physycal_anomalia1, "Object_1")            
             physycal_anomalia2 = gmsh.model.addPhysicalGroup(2, [surface_anomalia2], 1002)
-            gmsh.model.setPhysicalName(2, physycal_anomalia2, "anomalia2")          
+            gmsh.model.setPhysicalName(2, physycal_anomalia2, "Object_2")          
             physycal_anomalia3 = gmsh.model.addPhysicalGroup(2, [surface_anomalia3], 1003)
-            gmsh.model.setPhysicalName(2, physycal_anomalia3, "anomalia3")
+            gmsh.model.setPhysicalName(2, physycal_anomalia3, "Object_3")
         
         
         tipo = self.superficie_PCentral.get()
         print("Superfície escolhida:", tipo)
         
         match tipo:
-            case "Cuba":
+            case "Domain":
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-            case "Anomalia 1":
+            case "Object 1":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia1)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-            case "Anomalia 2":
+            case "Object 2":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia2)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
-            case "Anomalia 3":
+            case "Object 3":
                 gmsh.model.mesh.embed(0, [ptoCentral], 2, surface_anomalia3)
                 gmsh.model.addPhysicalGroup(0, [ptoCentral], 10000, name='central_node')
 
