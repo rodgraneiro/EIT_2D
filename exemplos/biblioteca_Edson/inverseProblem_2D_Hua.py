@@ -520,7 +520,7 @@ class inverse_problem:
         plt.tight_layout()
         #if save == True:
         #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        nome_arquivo = f"../../imagens/{self.name}_lambda_{self.pLambda:.4f}.png"
+        nome_arquivo = f"../../docs/figures/{self.name}_lambda_{self.pLambda:.4f}.png"
         plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",     dpi=300, bbox_inches='tight')
         #plt.show()
