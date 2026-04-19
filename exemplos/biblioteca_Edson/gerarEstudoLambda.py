@@ -32,7 +32,7 @@ def rodar_simulacao(lambda_val):
     ########################################################################################################
     ########################################################################################################
     nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
-    nome_malha = 'Hua_cuba16eletrodos_base'
+    nome_malha = 'Hua_cuba16eletrodos_base_2'
 
     V_measured_phaton = np.load('V_measured_phaton.npy', allow_pickle=True)
     print('dados:\n', V_measured_phaton)

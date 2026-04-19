@@ -27,8 +27,8 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
 #nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
 
-#nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
-nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
+nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh'
+#nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
 
 #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
 
@@ -67,7 +67,7 @@ meus_sigmas = {
 5016 : 1.0
 }
 
-nome_malha = 'Hua_cuba16eletrodos_1objeto_denso'
+nome_malha = 'Hua_cuba16eletrodos_3objetos_denso_v1'
 MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
 
 fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, name = nome_malha, imageSave = True )   # __init__ roda aqui
@@ -75,9 +75,9 @@ fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, 
 mtz_Vmedido = fwd.Solve()
 
 nome_arquivo = 'ParaVernoGmshPto'
-#fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 
-#fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
 V_measured_phaton = fwd.Vmedido_eletrodos
 np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário

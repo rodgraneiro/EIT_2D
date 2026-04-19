@@ -122,7 +122,7 @@ class forward_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        nome_arquivo = f"../../imagens/{self.name}.png"
+        nome_arquivo = f"../../docs/figures/{self.name}.png"
         #plt.show() 
         plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')   
         plt.show(block=False)
