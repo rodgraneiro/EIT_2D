@@ -500,7 +500,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=1.0,vmax=4.0 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=1.5,vmax=3.75 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -524,7 +524,7 @@ class inverse_problem:
         #if save == True:
         #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         if self.saveVideo == False:
-            nome_arquivo = f"../../docs/figures/{self.name}_lambda_{self.pLambda:.4f}.png"
+            nome_arquivo = f"../../docs/figures/{self.name}_{self.pLambda:.4f}.png"
         if self.saveVideo == True:
             self.contsaveVideo = self.contsaveVideo + 1
             nome_arquivo = f"../../docs/figures/{self.name}_video_{self.contsaveVideo:03d}.png"
@@ -610,8 +610,8 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(itr_start,max_iter):
-            if itr == 0:
-                self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
+            #if itr == 0:
+            #    self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
             contItr = contItr + 1
             
             K_cuba = self.CalcKGlobalTriangle(sigmaInicial)
