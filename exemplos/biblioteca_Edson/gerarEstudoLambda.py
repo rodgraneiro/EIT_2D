@@ -32,7 +32,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     ########################################################################################################
     ########################################################################################################
     nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
-    nome_malha = 'Hua_cuba16eletrodos_base_lambda'
+    nome_malha = 'Hua_cuba16eletrodos_base_2_lambda'
 
     V_measured_phaton = np.load('V_measured_phaton.npy', allow_pickle=True)
     print('dados:\n', V_measured_phaton)
@@ -78,7 +78,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     #nome_malha = 'Hua_cuba16eletrodos_base'
 
     invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = lambda_val, name = nome_malha, pLambda = lambda_val, max_iter=100,Tol=1.0e-5, iteration=0, saveVideo = False)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = lambda_val, name = nome_malha, pLambda = lambda_val, max_iter=101,Tol=1.0e-5, iteration=0, saveVideo = False)
     #invProblem_2D.solve(V_measured_phaton, initialEstimate=sigma_saved,alpha =1.0,  Lambda = lambda_val, name = nome_malha, pLambda = lambda_val, max_iter=501,Tol=1.0e-9, iteration=201, saveVideo = True)
     return invProblem_2D  # ou o que quiser salvar
 
