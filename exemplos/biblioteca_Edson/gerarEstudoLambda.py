@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 
 
 
-def rodar_simulacao(lambda_val):
+def rodar_simulacao(lambda_val, sigma_saved):
     
     # ======= SEU CÓDIGO =======
     # leitura da malha
@@ -32,7 +32,7 @@ def rodar_simulacao(lambda_val):
     ########################################################################################################
     ########################################################################################################
     nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
-    nome_malha = 'Hua_cuba16eletrodos_base_2'
+    nome_malha = 'Hua_cuba16eletrodos_base_1'
 
     V_measured_phaton = np.load('V_measured_phaton.npy', allow_pickle=True)
     print('dados:\n', V_measured_phaton)
@@ -78,15 +78,23 @@ def rodar_simulacao(lambda_val):
     #nome_malha = 'Hua_cuba16eletrodos_base'
 
     invProblem_2D = inverseProblem_2D_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = lambda_val, name = nome_malha, pLambda = lambda_val, max_iter=21,Tol=1.0e-9)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=3.5,alpha =1.0,  Lambda = lambda_val, name = nome_malha, pLambda = lambda_val, max_iter=500,Tol=1.0e-5, iteration=0, saveVideo = True)
+    #invProblem_2D.solve(V_measured_phaton, initialEstimate=sigma_saved,alpha =1.0,  Lambda = lambda_val, name = nome_malha, pLambda = lambda_val, max_iter=501,Tol=1.0e-9, iteration=201, saveVideo = True)
     return invProblem_2D  # ou o que quiser salvar
 
+sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
+#print(sigma_inicial_cont)
 lambdas = np.logspace(-4, 2, 10)
+#lambdas [1.00000000e-04 4.64158883e-04 2.15443469e-03 1.00000000e-02
+# 4.64158883e-02 2.15443469e-01 1.00000000e+00 4.64158883e+00
+# 2.15443469e+01 1.00000000e+02]
 
 resultados = {}
-
+'''
 for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
     resultados[lam] = rodar_simulacao(lam)
+'''
+rodar_simulacao(4.64158883e-04, sigma_inicial_cont)
 

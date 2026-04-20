@@ -124,7 +124,7 @@ class forward_problem:
         plt.tight_layout()
         nome_arquivo = f"../../docs/figures/{self.name}.png"
         #plt.show() 
-        plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')   
+        plt.savefig(nome_arquivo, dpi=100, bbox_inches='tight')   
         plt.show(block=False)
 
         plt.pause(0.1)  
