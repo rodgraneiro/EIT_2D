@@ -24,7 +24,7 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
 class inverse_problem: 
-    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3, name = None, pLambda = None):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3, name = None, pLambda = None, saveVideo = False):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
 
@@ -35,6 +35,8 @@ class inverse_problem:
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
         self.name = name
         self.pLambda = pLambda
+        self.saveVideo = saveVideo
+        self.contsaveVideo = 0
         self.KGlobal= self.mymesh.KGlobal
         print('self.KGlobal_tst',self.KGlobal)
         
@@ -477,8 +479,9 @@ class inverse_problem:
     ###############################################################################
 
     
-    def plotMSH(self, sigma, iteration = None, save = False):
-
+    def plotMSH(self, sigma, iteration = None, save = False, saveVideo = False):
+        self.saveVideo = saveVideo
+        
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
     
@@ -493,11 +496,11 @@ class inverse_problem:
         # ============================================================
         if len(elems_2D) > 0:
             triang = tri.Triangulation(x, y, elems_2D)
-            #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+            #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues'#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#,vmin=1.0 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=1.0,vmax=4.0 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -520,8 +523,13 @@ class inverse_problem:
         plt.tight_layout()
         #if save == True:
         #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        nome_arquivo = f"../../docs/figures/{self.name}_lambda_{self.pLambda:.4f}.png"
-        plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')
+        if self.saveVideo == False:
+            nome_arquivo = f"../../docs/figures/{self.name}_lambda_{self.pLambda:.4f}.png"
+        if self.saveVideo == True:
+            self.contsaveVideo = self.contsaveVideo + 1
+            nome_arquivo = f"../../docs/figures/{self.name}_video_{self.contsaveVideo:03d}.png"
+        plt.savefig(nome_arquivo, dpi=100, bbox_inches='tight')
+
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",     dpi=300, bbox_inches='tight')
         #plt.show()
         plt.show(block=False)   # NÃO bloqueia
@@ -557,9 +565,10 @@ class inverse_problem:
     # Essa função calcula o problema inverso
     ###############################################################################
     #def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
-    def solve(self, V_measured, initialEstimate=1.0, alpha=1.0,Lambda=0.50, max_iter=500,Tol=1.0e-6, iteration=0, name=None, pLambda=None):
+    def solve(self, V_measured, initialEstimate=1.0, alpha=1.0,Lambda=0.50, max_iter=500,Tol=1.0e-6, iteration=0, name=None, pLambda=None, saveVideo = False):
         self.name = name
         self.pLambda = pLambda
+        self.saveVideo = saveVideo
 
         itr_start = int(iteration)
         ultimos10 = []
@@ -601,7 +610,8 @@ class inverse_problem:
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(itr_start,max_iter):
-
+            if itr == 0:
+                self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
             contItr = contItr + 1
             
             K_cuba = self.CalcKGlobalTriangle(sigmaInicial)
@@ -708,7 +718,7 @@ class inverse_problem:
 
                print(f'Encontrou norma lastResidue maior  que a anterior.')
                np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-               self.plotMSH(sigmaInicial, itr, save = True)
+               self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
 
                break
                
@@ -716,13 +726,14 @@ class inverse_problem:
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
-            #if itr % 500 == 0:   # salva de 1000 em 1000 ...
-            #    self.plotMSH(sigmaInicial, itr, save = True)
+            
+            if self.saveVideo == True and  itr % 20 == 0:   # salva de 1000 em 1000 ...
+                self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
 
         #print('sigmaInicial \n', sigmaInicial) 
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         #self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial, itr, save = True)
+        self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
         #self.plot_espectro(sigmaInicial)
 
         s = np.linalg.svd(self.TempJ, compute_uv = False)
