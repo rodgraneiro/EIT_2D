@@ -500,7 +500,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=1.5,vmax=3.75 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=1.75,vmax=3.55 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -527,7 +527,7 @@ class inverse_problem:
             nome_arquivo = f"../../docs/figures/{self.name}_{self.pLambda:.4f}.png"
         if self.saveVideo == True:
             self.contsaveVideo = self.contsaveVideo + 1
-            nome_arquivo = f"../../docs/figures/{self.name}_video_{self.contsaveVideo:03d}.png"
+            nome_arquivo = f"../../docs/figures/{self.name}_{self.contsaveVideo:03d}.png"
         plt.savefig(nome_arquivo, dpi=100, bbox_inches='tight')
 
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",     dpi=300, bbox_inches='tight')
@@ -727,7 +727,7 @@ class inverse_problem:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
             
-            if self.saveVideo == True and  itr % 20 == 0:   # salva de 1000 em 1000 ...
+            if self.saveVideo == True and  itr % 4 == 0:   # salva de 1000 em 1000 ...
                 self.plotMSH(sigmaInicial, itr, save = True, saveVideo = self.saveVideo)
 
         #print('sigmaInicial \n', sigmaInicial) 
