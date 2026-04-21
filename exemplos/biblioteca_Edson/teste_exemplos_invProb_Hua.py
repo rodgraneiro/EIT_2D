@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
 #nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
 
-nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso_v2.msh'
+nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh'
 #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
 
 #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
@@ -45,10 +45,10 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 
 meus_sigmas = {
-1000 : 3.0,    
-1001 : 2.0,
+1000 : 4.0,    
+1001 : 3.0,
 1002 : 2.0,
-1003 : 2.0,
+1003 : 1.0,
 5001 : 1.0, 
 5002 : 1.0, 
 5003 : 1.0, 
@@ -67,10 +67,10 @@ meus_sigmas = {
 5016 : 1.0
 }
 
-nome_malha = 'Hua_cuba16eletrodos_3objetos_denso_v2'
+nome_malha = 'Hua_cuba16eletrodos_3objetos_3sigma'
 MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
 
-fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, name = nome_malha, imageSave = False )   # __init__ roda aqui
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, name = nome_malha, imageSave = True )   # __init__ roda aqui
 
 mtz_Vmedido = fwd.Solve()
 
