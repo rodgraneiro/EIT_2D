@@ -500,7 +500,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=1.75,vmax=3.55 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.75,vmax=4.5 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
