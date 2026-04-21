@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
 #nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
 
-nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh'
+nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso_v2.msh'
 #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
 
 #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
@@ -67,7 +67,7 @@ meus_sigmas = {
 5016 : 1.0
 }
 
-nome_malha = 'Hua_cuba16eletrodos_3objetos_denso_v1'
+nome_malha = 'Hua_cuba16eletrodos_3objetos_denso_v2'
 MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
 
 fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, name = nome_malha, imageSave = False )   # __init__ roda aqui
