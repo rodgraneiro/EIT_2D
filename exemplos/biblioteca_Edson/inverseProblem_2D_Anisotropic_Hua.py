@@ -718,7 +718,7 @@ class inverse_problem:
         print('sigmaInicial',sigmaInicial)
         
         #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
-        self.sigmaStar = (sigmaInicial/sigmaInicial)*2.5
+        self.sigmaStar = (sigmaInicial)*2.5
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         '''
         ###
