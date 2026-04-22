@@ -62,6 +62,7 @@ class forward_problem:
         #print(f'Vetor de corrente: \n {self.vetor_corrente_cond_contorno}')
 
         self.KGlobal = self.mymesh.KGlobal.copy()       # Criar matriz solução
+        np.savetxt("FWD_KGlobal.txt", self.KGlobal, fmt="%e")
         #print(f' AppCC self.KGlobal: \n {self.KGlobal}')
         # atualiza vetor de correntes:
         for [noh_cond_contorno,valor_cond_contorno] in self.V_imposto:   # Necessário quando valor imposto é diferente de zero

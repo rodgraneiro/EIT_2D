@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 
 def runFWD_InverseProblemAnisotropicHua():
 
-    #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
-    nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
+    nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+    #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
 
 
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
@@ -30,8 +30,8 @@ def runFWD_InverseProblemAnisotropicHua():
 
 
     meus_sigmas = {
-        1000: [10.0, 0.0, 10.0],
-        1001: [1.0, 0.0, 0.01],
+        1000: [4.0, 0.0, 4.0],
+        1001: [3.0, 0.0, 1.0],
         1002: [1.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
@@ -69,7 +69,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
     MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=0, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=1, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     print(f'Vmedido \n {fwd.Vmedido[:10]}')
