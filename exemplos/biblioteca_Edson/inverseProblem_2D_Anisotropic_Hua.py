@@ -251,6 +251,7 @@ class inverse_problem:
 
     def CalcTempKGlobal(self, SigmaTemp):
         self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float)
+        
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
         for elem in range(self.mymesh.msh_topology.shape[0]): # para cada elemento:
         #for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
@@ -273,17 +274,38 @@ class inverse_problem:
     ###############################################################################
     def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
         print('SigmaTemp', SigmaTemp.shape)
-        self.KGlobalTemp = np.zeros(
-            (self.mymesh.msh_topology.shape[0],
-             self.mymesh.msh_topology.shape[0]),
-            dtype=float
-        )
-    
+        #self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float  )
+        self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
         #sigma_xx, sigma_xy, sigma_yy = SigmaTemp
 
         sigma_xx = SigmaTemp[:, 0]
         sigma_xy = SigmaTemp[:, 1]
         sigma_yy = SigmaTemp[:, 2]
+
+        k_phys = 0
+
+        for elem in range(self.mymesh.NumberOfElements):    
+            if self.mymesh.Elements[elem].FlagIsElectrode:
+                continue
+
+            sigma_xx, sigma_xy, sigma_yy = SigmaTemp[k_phys]
+
+            Kxx = self.mymesh.Elements[elem].Kxx
+            Kxy = self.mymesh.Elements[elem].Kxy
+            Kyy = self.mymesh.Elements[elem].Kyy
+
+            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
+
+            for i in range(len(self.mymesh.Elements[elem].Topology)):
+                no_i = self.mymesh.Elements[elem].Topology[i]
+
+                for j in range(len(self.mymesh.Elements[elem].Topology)):
+                    no_j = self.mymesh.Elements[elem].Topology[j]
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+
+            k_phys += 1
+        np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
+        return self.KGlobalTemp
         '''
         for elem in range(self.mymesh.NumberOfElements):
     
@@ -306,29 +328,6 @@ class inverse_problem:
     
         #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
         '''
-        k_phys = 0
-
-        for elem in range(self.mymesh.NumberOfElements):
-            if self.mymesh.Elements[elem].FlagIsElectrode:
-                continue
-
-            sigma_xx, sigma_xy, sigma_yy = SigmaTemp[k_phys]
-
-            Kxx = self.mymesh.Elements[elem].Kxx
-            Kxy = self.mymesh.Elements[elem].Kxy
-            Kyy = self.mymesh.Elements[elem].Kyy
-
-            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
-
-            for i in range(len(self.mymesh.Elements[elem].Topology)):
-                no_i = self.mymesh.Elements[elem].Topology[i]
-
-                for j in range(len(self.mymesh.Elements[elem].Topology)):
-                    no_j = self.mymesh.Elements[elem].Topology[j]
-                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
-
-            k_phys += 1
-        return self.KGlobalTemp
     ###############################################################################
     
     def Calc_J(self, invVtemp):
@@ -736,11 +735,15 @@ class inverse_problem:
         #sigmaInicial = np.ones(self.mymesh.msh_topology.shape[0])*initialEstimate
         #sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
         #sigmaInicial = sigmaInicial.reshape(-1,1)
-        n_elem_initialEstimate = self.mymesh.NumberOfElements
+
+        #n_elem_initialEstimate = self.mymesh.NumberOfElements
+        n_elem_initialEstimate = self.mymesh.NumberOfNodes
         initialEstimate = np.array(initialEstimate, dtype=float)
 
         physical_elements_idx = [
-            idx for idx in range(self.mymesh.NumberOfElements)
+            #idx for idx in range(self.mymesh.NumberOfElements)
+            idx for idx in range(self.mymesh.NumberOfNodes)
+
             if not self.mymesh.Elements[idx].FlagIsElectrode
         ]
 
@@ -779,10 +782,10 @@ class inverse_problem:
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
             print('Vtemp_2',Vtemp.shape)
-            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%e")
-            '''
-            invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
+            #np.savetxt("VtempMatriz_runInvP.txt", Vtemp, fmt="%e")
             
+            invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
+            '''
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
 
