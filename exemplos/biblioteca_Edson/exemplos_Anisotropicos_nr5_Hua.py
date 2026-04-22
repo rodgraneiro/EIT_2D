@@ -141,7 +141,7 @@ def runInverseProblemAnisotropicHua():
             MinhaMalha.Elements[idx].CalcKgeo()
     '''
 
-
+    banana = [1.0, 0.0, 1.0]
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
@@ -158,7 +158,7 @@ def runInverseProblemAnisotropicHua():
     
 
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=11,alpha =1.0,  Lambda = 0.01, max_iter=1,Tol=5.0e-4)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=banana,alpha =1.0,  Lambda = 0.01, max_iter=1,Tol=5.0e-4)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 

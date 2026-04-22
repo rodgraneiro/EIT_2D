@@ -253,6 +253,7 @@ class inverse_problem:
         self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float)
         #print(f'(self.mymesh.Elements.KGeo {self.Elements.KGeo})')
         for elem in range(self.mymesh.msh_topology.shape[0]): # para cada elemento:
+        #for elem in range(self.mymesh.NumberOfElements): # para cada elemento:
             #print(f' SigmaTemp {SigmaTemp}')
             for i in range(len(self.mymesh.Elements[elem].Topology)): # para cada i (noh local):
                 no_i = self.mymesh.Elements[elem].Topology[i] # pega noh_i (noh global)
@@ -263,9 +264,47 @@ class inverse_problem:
                     #print(f' self.Elements.KGeo {self.mymesh.Elements[elem].KGeo}')
                     #print(f' valorTemp \n {valorTemp}')
                     self.KGlobalTemp[no_i, no_j]  += valorTemp
-        #print(f' self.KGlobalTemp \n {self.KGlobalTemp}')
+        print(f' self.KGlobalTemp \n {self.KGlobalTemp.shape}')
+        np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
         return self.KGlobalTemp
     ###############################################################################
+    
+    
+    ###############################################################################
+    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
+        print('SigmaTemp', SigmaTemp)
+        self.KGlobalTemp = np.zeros(
+            (self.mymesh.msh_topology.shape[0],
+             self.mymesh.msh_topology.shape[0]),
+            dtype=float
+        )
+    
+        sigma_xx, sigma_xy, sigma_yy = SigmaTemp
+    
+        for elem in range(self.mymesh.NumberOfElements):
+    
+            # Matrizes separadas (você precisa ter isso no elemento!)
+            Kxx = self.mymesh.Elements[elem].Kxx
+            Kxy = self.mymesh.Elements[elem].Kxy
+            Kyy = self.mymesh.Elements[elem].Kyy
+    
+            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
+    
+            for i in range(len(self.mymesh.Elements[elem].Topology)):
+                no_i = self.mymesh.Elements[elem].Topology[i]
+    
+                for j in range(len(self.mymesh.Elements[elem].Topology)):
+                    no_j = self.mymesh.Elements[elem].Topology[j]
+    
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+    
+        #print(f'KGlobalTemp \n {self.KGlobalTemp.shape}')
+    
+        #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
+    
+        return self.KGlobalTemp
+    ###############################################################################
+    
     def Calc_J(self, invVtemp):
         listTempJ=[]
         #for idx in range(self.mymesh.NumberOfElements):
@@ -668,9 +707,16 @@ class inverse_problem:
         #print('V_measured', V_measured.shape)
         
         
-        sigmaInicial = np.ones(self.mymesh.msh_topology.shape[0])*initialEstimate
-        sigmaInicial = sigmaInicial.reshape(-1,1)
-
+        #sigmaInicial = np.ones(self.mymesh.msh_topology.shape[0])*initialEstimate
+        #sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
+        #sigmaInicial = sigmaInicial.reshape(-1,1)
+        
+        
+        n_elem_initialEstimate = self.mymesh.NumberOfElements
+        initialEstimate = np.array(initialEstimate, dtype=float)
+        sigmaInicial = np.tile(initialEstimate, (n_elem_initialEstimate, 1))
+        print('sigmaInicial',sigmaInicial)
+        
         #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
         self.sigmaStar = (sigmaInicial/sigmaInicial)*2.5
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
@@ -688,13 +734,17 @@ class inverse_problem:
         for itr in range(itr_start,max_iter):
             #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
-            Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
+            ''' 
+            #Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
+            Vtemp = self.CalcTempKGlobalAnisotropicHua(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
+            
+            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
             #print('Vtemp_1',Vtemp.shape)
             # ***** Determinação do Valor calculado *****
             Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
             print('Vtemp_2',Vtemp.shape)
-            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
-            ''' 
+            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%e")
+            
             invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
             
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
