@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 
 def runFWD_InverseProblemAnisotropicHua():
 
-    nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
-    #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
+    #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+    nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
 
 
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
