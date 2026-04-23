@@ -556,7 +556,7 @@ class inverse_problem:
 
         N = L2.shape[0]
         X, Y = np.meshgrid(np.arange(N), np.arange(N))
-        
+        '''
         fig = plt.figure(figsize=(9, 7))
         ax = fig.add_subplot(111, projection='3d')
         
@@ -576,6 +576,7 @@ class inverse_problem:
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
+        '''
         return L2
 
     
@@ -713,7 +714,7 @@ class inverse_problem:
 
         N = L2.shape[0]
         X, Y = np.meshgrid(np.arange(N), np.arange(N))
-        
+        '''
         fig = plt.figure(figsize=(9, 7))
         ax = fig.add_subplot(111, projection='3d')
         
@@ -733,7 +734,7 @@ class inverse_problem:
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
-
+        '''
         return L2, idx_dom, std
     ###############################################################################
     # Essa função plota o gráfico convergência das iterações
@@ -1064,10 +1065,10 @@ class inverse_problem:
         np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial, itr, save = True)
-        self.plot_espectro(sigmaInicial)
-
+        #self.plot_espectro(sigmaInicial)
+        print('sigmaInicial',sigmaInicial)
         s = np.linalg.svd(self.TempJ, compute_uv = False)
-
+        '''
         # --- 2) Gráfico tipo semilogy
         plt.figure()
         plt.semilogy(s, 'o-')
@@ -1079,6 +1080,7 @@ class inverse_problem:
         #plt.show(block=False)
         #plt.pause(0.01)  
         # --- 3) Rank efetivo (mesma ideia do seu código)
+        '''
         tol = 1e-6 * s[0]          # ou outro fator
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
