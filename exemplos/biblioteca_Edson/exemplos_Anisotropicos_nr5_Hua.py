@@ -13,13 +13,14 @@ import matplotlib.pyplot as plt
 
 def runFWD_InverseProblemAnisotropicHua():
 
-    nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+    #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
 
 
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
+    nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
 
-    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha.ReadMesh() 
@@ -30,8 +31,8 @@ def runFWD_InverseProblemAnisotropicHua():
 
 
     meus_sigmas = {
-        1000: [4.0, 0.0, 4.0],
-        1001: [3.0, 0.0, 1.0],
+        1000: [1.0, 0.0, 0.10],
+        1001: [1.0, 0.0, 1.0],
         1002: [1.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
@@ -69,7 +70,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
     MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=1, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=7, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     print(f'Vmedido \n {fwd.Vmedido[:10]}')
@@ -89,13 +90,14 @@ def runFWD_InverseProblemAnisotropicHua():
 
 def runInverseProblemAnisotropicHua():
 
-    nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+    #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
 
 
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
+    nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
 
-    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(4, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha_base.ReadMesh() 
@@ -141,11 +143,11 @@ def runInverseProblemAnisotropicHua():
             MinhaMalha.Elements[idx].CalcKgeo()
     '''
 
-    banana = [1.0, 0.0, 1.0]
+    banana = [10.0, 0.0, 10.0]
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=0, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     #print(f'Vmedido \n {fwd.Vmedido[:10]}')
@@ -158,7 +160,7 @@ def runInverseProblemAnisotropicHua():
     
 
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=banana,alpha =1.0,  Lambda = 0.01, max_iter=1,Tol=5.0e-4)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=banana,alpha =0.001,  Lambda = 0.01, max_iter=3,Tol=5.0e-4)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 
