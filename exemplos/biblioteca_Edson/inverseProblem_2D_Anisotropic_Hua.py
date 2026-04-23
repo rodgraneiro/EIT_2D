@@ -116,7 +116,7 @@ class inverse_problem:
             C_33 =  (y1-y2)**2 + (x2-x1)**2  
 
             
-            Y_local = ( self.mymesh.Altura2D /(4*area_triangle))*np.array([[C_11, C_12, C_13], 
+            Y_local = ( self.mymesh.altura2D /(4*area_triangle))*np.array([[C_11, C_12, C_13], 
                                             [C_12, C_22, C_23],      
                                             [C_13, C_23, C_33]]      
                                             )
@@ -142,6 +142,54 @@ class inverse_problem:
         #print('self.listJacobian.append \n',self.listJacobian)
         #return Y_jacobiano
     ###############################################################################
+
+    def calc_Y_jacobian_anisotropic_hua(self):
+        """
+        Monta uma lista de derivadas parciais globais:
+        uma para cada parâmetro reconstruído.
+        
+        Ordem sugerida das colunas:
+        [elem0_sxx, elem0_sxy, elem0_syy,
+        elem1_sxx, elem1_sxy, elem1_syy, ...]
+        """
+
+        self.listJacobian = []
+
+        for elem_idx in range(self.mymesh.NumberOfElements):
+            elem = self.mymesh.Elements[elem_idx]
+
+            # eletrodo Hua não é parâmetro do inverso
+            if elem.FlagIsElectrode:
+                continue
+
+            topo = elem.Topology
+
+            # três derivadas locais
+            dKe_list = [elem.Kxx, elem.Kxy, elem.Kyy]
+
+            for dKe in dKe_list:
+                dK_global = np.zeros(
+                    (self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes),
+                    dtype=float
+                )
+
+                for i in range(len(topo)):
+                    no_i = int(topo[i])
+                    for j in range(len(topo)):
+                        no_j = int(topo[j])
+                        dK_global[no_i, no_j] += dKe[i, j]
+
+                dK_global_cc = self.apply_boundary_conditions(dK_global.copy())
+                self.listJacobian.append(dK_global_cc)
+
+        print("Número de derivadas parciais =", len(self.listJacobian))
+
+
+
+
+
+
+
     ###############################################################################
     # Esta função aplica condições de contorno conforme exemplo abaixo:
     #
@@ -273,6 +321,93 @@ class inverse_problem:
     
     ###############################################################################
     def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
+        """
+        Monta a matriz global completa:
+        - triângulos físicos: dependem de SigmaTemp
+        - eletrodos Hua: entram com KGeo constante
+        """
+
+        #print("SigmaTemp.shape =", SigmaTemp.shape)
+
+        self.KGlobalTemp = np.zeros(
+            (self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes),
+            dtype=float
+        )
+
+        k_phys = 0
+
+        for elem_idx in range(self.mymesh.NumberOfElements):
+            elem = self.mymesh.Elements[elem_idx]
+
+            # =========================
+            # Elemento Hua
+            # =========================
+            if elem.FlagIsElectrode:
+                Ke = elem.KGeo
+
+            # =========================
+            # Triângulo físico anisotrópico
+            # =========================
+            else:
+                sxx, sxy, syy = SigmaTemp[k_phys]
+
+                Kxx = elem.Kxx
+                Kxy = elem.Kxy
+                Kyy = elem.Kyy
+
+                Ke = sxx * Kxx + sxy * Kxy + syy * Kyy
+
+                k_phys += 1
+
+            # =========================
+            # Montagem global
+            # =========================
+            topo = elem.Topology
+            for i in range(len(topo)):
+                no_i = int(topo[i])
+
+                for j in range(len(topo)):
+                    no_j = int(topo[j])
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+
+        linhas_zeradas = np.where(~self.KGlobalTemp.any(axis=1))[0]
+        colunas_zeradas = np.where(~self.KGlobalTemp.any(axis=0))[0]
+
+        #print("KGlobalTemp.shape =", self.KGlobalTemp.shape)
+        #print("Linhas zeradas:", linhas_zeradas)
+        #print("Colunas zeradas:", colunas_zeradas)
+
+        #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
+
+        return self.KGlobalTemp
+    '''
+    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
+        self.KGlobalTemp = np.zeros(
+            (self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes),
+            dtype=float
+        )
+
+        k_phys = 0
+
+        for elem in range(self.mymesh.NumberOfElements):
+            elemento = self.mymesh.Elements[elem]
+
+            if elemento.FlagIsElectrode:
+                Ke = elemento.KGeo
+            else:
+                sxx, sxy, syy = SigmaTemp[k_phys]
+                Ke = sxx * elemento.Kxx + sxy * elemento.Kxy + syy * elemento.Kyy
+                k_phys += 1
+
+            for i in range(len(elemento.Topology)):
+                no_i = int(elemento.Topology[i])
+                for j in range(len(elemento.Topology)):
+                    no_j = int(elemento.Topology[j])
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+
+        return self.KGlobalTemp
+    
+    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
         print('SigmaTemp', SigmaTemp.shape)
         #self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float  )
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
@@ -306,7 +441,7 @@ class inverse_problem:
             k_phys += 1
         np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
         return self.KGlobalTemp
-        '''
+        
         for elem in range(self.mymesh.NumberOfElements):
     
             # Matrizes separadas (você precisa ter isso no elemento!)
@@ -329,7 +464,26 @@ class inverse_problem:
         #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
         '''
     ###############################################################################
-    
+    def Calc_J(self, invVtemp):
+        listTempJ = []
+
+        for idx in range(len(self.listJacobian)):
+            termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno)
+            termo2 = np.dot(self.listJacobian[idx], termo1)
+            termo3 = -np.dot(invVtemp, termo2)
+
+            # mantém apenas os nós de eletrodo medidos
+            termo3 = termo3[self.mymesh.ElectrodeNodes]
+            termo3 = termo3.reshape(-1, 1, order='F')
+
+            listTempJ.append(termo3)
+
+        self.TempJ = np.concatenate(listTempJ, axis=1)
+        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
+
+        #print("TempJ.shape =", self.TempJ.shape)
+        #print("JTJ.shape =", self.JTJ.shape)
+    '''
     def Calc_J(self, invVtemp):
         listTempJ=[]
         #for idx in range(self.mymesh.NumberOfElements):
@@ -352,6 +506,7 @@ class inverse_problem:
         #JTJ = np.dot(self.TempJ.T, self.TempJ)
         self.JTJ = np.dot(self.TempJ.T, self.TempJ)
         #print('JTJ \n', self.JTJ.shape)
+    '''
     ###############################################################################
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
@@ -717,8 +872,8 @@ class inverse_problem:
 
         L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D)
 
-        print(f"Filtro gaussiano: std = {std_auto:.6e}")
-        print(f"Número de elementos no domínio físico = {len(idx_dom)}")
+        #print(f"Filtro gaussiano: std = {std_auto:.6e}")
+        #print(f"Número de elementos no domínio físico = {len(idx_dom)}")
 
         #L2 = self.calc_L2_gauss_mean_2D(centroids_2D)
         difResidue = 0
@@ -731,7 +886,7 @@ class inverse_problem:
         V_measured = V_measured.reshape(-1, 1)
         #print('V_measured', V_measured.shape)
         
-        
+        '''
         #sigmaInicial = np.ones(self.mymesh.msh_topology.shape[0])*initialEstimate
         #sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
         #sigmaInicial = sigmaInicial.reshape(-1,1)
@@ -760,44 +915,45 @@ class inverse_problem:
         self.sigmaStar = (sigmaInicial)*2.5
         sigmaOne = np.ones(self.mymesh.NumberOfElements)
         '''
-        ###
-        VtempJ = self.CalcTempKGlobal(sigmaOne)                            # calcula derivadas parciais da matriz jacobiana
-        
-        # ***** Determinação do Valor calculado *****
-        VtempJ = self.apply_boundary_conditions(VtempJ)                        # aplica cond contorno na matriz jacobiana
-        invVtempJ = np.linalg.inv(VtempJ)                                      # inverte matriz TempKGobal para jacobiana
-        '''
+
+
+        initialEstimate = np.array(initialEstimate, dtype=float)
+
+        n_elem_phys = self.mymesh.NumberOfPhysicalElements
+        sigmaInicial = np.tile(initialEstimate, (n_elem_phys, 1))
+
+        self.sigmaStar = np.tile(initialEstimate, (n_elem_phys, 1))
+
+        #sigmaInicial_vec = sigmaInicial.reshape(-1, 1, order='C')
+        #sigmaStar_vec    = self.sigmaStar.reshape(-1, 1, order='C')
+
         #######################################################################
         ###################        MAIN LOOP   ################################
         #######################################################################
         for itr in range(itr_start,max_iter):
             #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
+            Vtemp = self.CalcTempKGlobalAnisotropicHua(sigmaInicial)
+            Vtemp = self.apply_boundary_conditions(Vtemp.copy())
+
+            #print("posto Vtemp =", np.linalg.matrix_rank(Vtemp))
+            #print("shape Vtemp =", Vtemp.shape)
+
+            invVtemp = np.linalg.inv(Vtemp)
+
             
-            #Vtemp = self.CalcTempKGlobal(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
-            Vtemp = self.CalcTempKGlobalAnisotropicHua(sigmaInicial)                         # calcula derivadas parciais da matriz jacobiana
-             
-            #np.savetxt("VtempMatriz.txt", Vtemp, fmt="%d")
-            #print('Vtemp_1',Vtemp.shape)
-            # ***** Determinação do Valor calculado *****
-            Vtemp = self.apply_boundary_conditions(Vtemp)                      # aplica cond contorno na matriz jacobiana
-            print('Vtemp_2',Vtemp.shape)
-            #np.savetxt("VtempMatriz_runInvP.txt", Vtemp, fmt="%e")
-            
-            invVtemp = np.linalg.inv(Vtemp)                                    # inverte matriz TempKGobal para jacobiana                    
-            '''
             V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
-
+            
             V_calc_noh = V_calc_noh.T
             V_calc_noh = V_calc_noh.reshape(-1, 1)
-
+            
 
 
 
                         # ***** Determinação do resíduo *****
             residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
-
+            #print('V_calc_noh',V_calc_noh)
             normaResidue = np.linalg.norm(residue)
             listaItrPlot.append(normaResidue)
             #residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
@@ -834,10 +990,10 @@ class inverse_problem:
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
             regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
             #print('sigmaInicial',sigmaInicial)
-            regTerm = regTerm.reshape(-1, 1)
+            #regTerm = regTerm.reshape(-1, 1)
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
             #print('regTerm',regTerm.shape)
-            #regularization = np.dot(termo_L, regTerm)
+            regularization = np.dot(termo_L, regTerm)
                        
             # ***** Cálculo final do termo 2 *****
             secondTerm = -JTW_H - regularization
@@ -845,7 +1001,7 @@ class inverse_problem:
             
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
-
+            
             #deltaSigma = deltaSigma[:, 0]*alpha
             
             alphaDeltaSigma = alpha*deltaSigma
@@ -853,7 +1009,7 @@ class inverse_problem:
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             listXplot.append(itr)                                              # Armazena o índice da iteração
                                              # Armazena o valor a ser plotado
-
+            
             ultimaNorma.append(normaDelta)
             if len(ultimaNorma) > 2:
                 ultimaNorma.pop(0)
@@ -865,17 +1021,17 @@ class inverse_problem:
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
             print(f'{normaResidue} - {normaDelta} - {itr}')
-           
+            '''
             if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               convergencia = True
-              break
+              #break
                                                                         # interrompe o processo de iteração
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               convergencia = True
-              break
-
+              #break
+            '''
             sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
             sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)
             sigmaInicial = sigmaPlusOne
@@ -884,19 +1040,8 @@ class inverse_problem:
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
-            '''
-            '''
-            if any(v < 0 for v in sigmaPlusOne):                
-                alpha = alpha*fatorAlpha
-                sigmaPlusOne = np.mean(ultimos10, axis=0)*0.9
-                sigmaPlusOne[sigmaPlusOne < 0] = 0.001 
- 
-                print(f'Encontrou sigma negativo.')
+            
 
-                
-                convergencia = True
-                break
-            '''
             
                 
             '''
@@ -906,8 +1051,8 @@ class inverse_problem:
                
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
-               break
-               
+               #break
+            '''   
 
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
@@ -937,5 +1082,5 @@ class inverse_problem:
         tol = 1e-6 * s[0]          # ou outro fator
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
-        '''
+        
         

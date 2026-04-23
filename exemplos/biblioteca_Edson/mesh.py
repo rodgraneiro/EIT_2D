@@ -142,7 +142,7 @@ class MyMesh:
         if self.sigma_vec.shape != (self.NumberOfElements, 3):
             raise ValueError("sigma_array deve ter dimensão (NumberOfElements, 3)")
         #print('SetSigmaAnisotropicElements sigma_vec', self.sigma_vec)
-
+    '''
     def SetSigmaAnisotropicElementsHua(self, dic):
         self.sigma_vec = np.zeros((self.NumberOfElements, 3), dtype=float)
 
@@ -171,7 +171,7 @@ class MyMesh:
             elem.Rho = 1.0
 
         #print("sigma_vec =\n", self.sigma_vec)
-
+    '''
 
     '''
     def CalcKGlobal(self):
@@ -217,6 +217,61 @@ class MyMesh:
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
 
     '''
+    
+    def SetSigmaAnisotropicElementsHua(self, dic):
+        """
+        Guarda sigma apenas dos elementos físicos triangulares.
+        Eletrodos Hua não entram como parâmetro de reconstrução.
+        """
+
+        self.physical_elements_idx = []
+
+        for idx in range(self.NumberOfElements):
+            elem = self.Elements[idx]
+
+            if not elem.FlagIsElectrode:
+                self.physical_elements_idx.append(idx)
+
+        n_elem_phys = len(self.physical_elements_idx)
+        self.sigma_vec = np.zeros((n_elem_phys, 3), dtype=float)
+
+        k_phys = 0
+        for idx in self.physical_elements_idx:
+            elem = self.Elements[idx]
+            tag = elem.PhysicalEntity
+
+            if tag not in dic:
+                raise ValueError(f"Tag física {tag} não encontrada no dicionário de sigmas.")
+
+            valor = np.asarray(dic[tag], dtype=float)
+
+            if valor.shape != (3,):
+                raise ValueError(
+                    f"Para a tag {tag}, esperado [sxx, sxy, syy], recebido {valor}"
+                )
+
+            self.sigma_vec[k_phys] = valor
+
+            # No problema anisotrópico, KGeo do triângulo será montado separadamente
+            # por combinação de Kxx, Kxy, Kyy no inverso.
+            elem.Sigma = 1.0
+            elem.Rho = 1.0
+
+            k_phys += 1
+
+        # Eletrodos Hua não entram em sigma_vec
+        for idx in range(self.NumberOfElements):
+            elem = self.Elements[idx]
+            if elem.FlagIsElectrode:
+                elem.Sigma = 1.0
+                elem.Rho = 1.0
+
+        self.NumberOfPhysicalElements = n_elem_phys
+
+        print("Número de elementos físicos =", self.NumberOfPhysicalElements)
+        print("sigma_vec.shape =", self.sigma_vec.shape)
+
+
 
     def CalcKGlobal(self):
         if self.KGlobal is None:
@@ -240,7 +295,7 @@ class MyMesh:
                         valor = Ke[i, j]
 
                     self.KGlobal[no_i, no_j] += valor
-        np.savetxt("matrizKGlobalAnisotropica.txt", self.KGlobal, fmt="%.6f")
+        #np.savetxt("matrizKGlobalAnisotropica.txt", self.KGlobal, fmt="%.6f")
     def ReadMesh(self):
         raise NotImplementedError("A função ReadMesh() tem que ser implementada na subclasse.")
 
