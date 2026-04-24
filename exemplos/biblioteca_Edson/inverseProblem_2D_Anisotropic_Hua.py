@@ -796,7 +796,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#,vmin=1.0 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.0, vmax=5.1 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -1086,7 +1086,8 @@ class inverse_problem:
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial_vec, itr, save = True)
+        self.plotMSH(sigmaInicial[:, 0], itr, save = True)
+        self.plotMSH(sigmaInicial[:, 2], itr, save = True)
         #self.plot_espectro(sigmaInicial)
         #print('sigmaInicial',sigmaInicial_vec)
         np.savetxt("sigmaInicial_result.txt", sigmaInicial)  # formato binário
