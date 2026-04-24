@@ -70,7 +70,7 @@ meus_sigmas = {
 nome_malha = 'Hua_cuba16eletrodos_3objetos_3sigma'
 MinhaMalha.SetSigmaPhysicaEntity(meus_sigmas) # Informando sigma (e já calculando o rho de cada elemento)
 
-fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, name = nome_malha, imageSave = True )   # __init__ roda aqui
+fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, name = nome_malha, imageSave = False )   # __init__ roda aqui
 
 mtz_Vmedido = fwd.Solve()
 
