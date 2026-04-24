@@ -182,7 +182,7 @@ class inverse_problem:
                 dK_global_cc = self.apply_boundary_conditions(dK_global.copy())
                 self.listJacobian.append(dK_global_cc)
 
-        print("Número de derivadas parciais =", len(self.listJacobian))
+        #print("Número de derivadas parciais =", len(self.listJacobian))
 
 
 
@@ -948,8 +948,8 @@ class inverse_problem:
             
             V_calc_noh = V_calc_noh.T
             V_calc_noh = V_calc_noh.reshape(-1, 1)
-            
-
+            #print('V_calc_noh',V_calc_noh.shape)
+            #print('V_measured',V_measured.shape)
 
 
                         # ***** Determinação do resíduo *****
@@ -957,10 +957,11 @@ class inverse_problem:
             #print('V_calc_noh',V_calc_noh)
             normaResidue = np.linalg.norm(residue)
             listaItrPlot.append(normaResidue)
-            #residue = np.repeat(residue, self.mymesh.NumberOfElectrodes, axis=0)       # rearranja vetor resíduo para dim do jacobiano
-            #residue = np.vstack([residue] * self.mymesh.NumberOfElectrodes) 
+            #print('residue',residue.shape)
+            #print('normaResidue',normaResidue)
+            #self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
+            self.calc_Y_jacobian_anisotropic_hua()      # Calcula (dY/dσ_k) do Jacobiano
             
-            self.calc_Y_jacobian()      # Calcula (dY/dσ_k) do Jacobiano
     
             
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
@@ -968,46 +969,62 @@ class inverse_problem:
             self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
-            #W1=np.eye(self.TempJ.shape[0])
-            #JTW = np.dot(self.TempJ.T, W1)                                     # pega somente valores dos eletrodos
-            #JTWJ = np.dot(JTW, self.TempJ)
-            
+
+            L2_aniso = np.kron(np.eye(3), L2)
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
-            LTL =np.dot(L2.T, L2)
-            termo_L = (Lambda**2)*LTL
+            #LTL =np.dot(L2.T, L2)
+            LTL = L2_aniso.T @ L2_aniso
+            termo_L = (Lambda**2) * LTL
+            #firstTerm = self.JTJ + termo_L
+            #ztermo_reg = (sigma_inicial - self.sigmaStar)
+            
+            sigmaInicial_vec = sigmaInicial.reshape(-1, 1, order='C')
+            sigmaStar_vec = self.sigmaStar.reshape(-1, 1, order='C')
+
+            #zregularizacao = (Lambda**2)*zLTL @ ztermo_reg            
+            
+
             #print('termo_L',termo_L.shape)
             #print('self.JTJ',self.JTJ.shape)
             
+            
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
-            #firstTerm = JTWJ + termo_L
             firstTerm = self.JTJ + termo_L
+            
             inv_firstTerm = np.linalg.inv(firstTerm)
             
             # ***** Cálculo do termo 2a (JT_W1_residue) *****
-            
-            #JTW_H = np.dot(JTW,residue)      
+    
             JTW_H = np.dot(self.TempJ.T,residue)      
             
             # ***** Cálculo do termo 2b (Lambda^2 * LTL*residue) *****
-            regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
+            #regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
+            regTerm = (sigmaInicial_vec)# - sigmaInicial_vec)
+            
             #print('sigmaInicial',sigmaInicial)
             #regTerm = regTerm.reshape(-1, 1)
             #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
             #print('regTerm',regTerm.shape)
-            regularization = np.dot(termo_L, regTerm)
-                       
+            
+
+            #regularization = np.dot(termo_L, regTerm)
+            regularization = (Lambda**2)*LTL @ regTerm               
             # ***** Cálculo final do termo 2 *****
             secondTerm = -JTW_H - regularization
             
             
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
-            
+            deltaSigma[1::3] = 0.0 # zerar Δσxy
+            #print('deltaSigma', deltaSigma)#[:1])
             #deltaSigma = deltaSigma[:, 0]*alpha
             
             alphaDeltaSigma = alpha*deltaSigma
+            sigmaInicial[:,1] = 0
+            #print('alphaDeltaSigma',alphaDeltaSigma[:1])
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
+            #print('normaDelta',normaDelta)
             listXplot.append(itr)                                              # Armazena o índice da iteração
                                              # Armazena o valor a ser plotado
             
@@ -1022,7 +1039,7 @@ class inverse_problem:
                 difResidue =  lastResidue[2]- lastResidue[1]                                           # Armazena 3 últimos valores da norma lastResidue
             #print(f'{itr} - nDelta = {normaDelta}, nResidue = {normaResidue}, alfa = {alpha} ')
             print(f'{normaResidue} - {normaDelta} - {itr}')
-            '''
+            
             if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               convergencia = True
@@ -1032,12 +1049,17 @@ class inverse_problem:
               print(f'Convergência atingida após {itr} iterações.')
               convergencia = True
               #break
-            '''
-            sigmaPlusOne = (sigmaInicial + alphaDeltaSigma)
-            sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)
-            sigmaInicial = sigmaPlusOne
             
-            
+            #print('sigmaInicial_antes', sigmaInicial[:1])
+            sigmaPlusOne = (sigmaInicial_vec + alphaDeltaSigma)
+            #sigmaPlusOne = np.clip(sigmaPlusOne, 1.99, 3.01)
+            sigmaInicial_vec = sigmaPlusOne
+            #print('sigmaInicial_depois', sigmaInicial_vec[:3])
+            sigmaInicial = sigmaInicial_vec.reshape(-1, 3, order='C')
+            sigmaInicial[:,1] = 0 # zerar σxy
+            # Impõe condutividade mínima
+            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, None)  # σxx
+            sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, None)  # σyy
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
@@ -1062,11 +1084,12 @@ class inverse_problem:
             #    self.plotMSH(sigmaInicial, itr, save = True)
 
         #print('sigmaInicial \n', sigmaInicial) 
-        np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
+        #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial, itr, save = True)
+        self.plotMSH(sigmaInicial_vec, itr, save = True)
         #self.plot_espectro(sigmaInicial)
-        print('sigmaInicial',sigmaInicial)
+        #print('sigmaInicial',sigmaInicial_vec)
+        np.savetxt("sigmaInicial_result.txt", sigmaInicial)  # formato binário
         s = np.linalg.svd(self.TempJ, compute_uv = False)
         '''
         # --- 2) Gráfico tipo semilogy

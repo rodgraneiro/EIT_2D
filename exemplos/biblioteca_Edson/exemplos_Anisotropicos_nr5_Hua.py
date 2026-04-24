@@ -156,11 +156,11 @@ def runInverseProblemAnisotropicHua():
     #fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
     #fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
     V_measured_phaton = fwd.Vmedido_eletrodos
-    print(f'V_mesured\n {V_measured_phaton}')
+    print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
 
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=banana,alpha =0.1,  Lambda = 0.0001, max_iter=20,Tol=5.0e-4)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=banana,alpha =0.001,  Lambda = 0.0001, max_iter=50,Tol=1.0e-4)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 
