@@ -796,7 +796,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.0, vmax=5.1 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.5, vmax=5.1 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -1058,8 +1058,8 @@ class inverse_problem:
             sigmaInicial = sigmaInicial_vec.reshape(-1, 3, order='C')
             sigmaInicial[:,1] = 0 # zerar σxy
             # Impõe condutividade mínima
-            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, None)  # σxx
-            sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, None)  # σyy
+            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, 5.0)  # σxx
+            sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, 5.0)  # σyy
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
             if len(ultimos10) > 5:
                 ultimos10.pop(0)

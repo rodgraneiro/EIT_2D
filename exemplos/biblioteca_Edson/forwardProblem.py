@@ -124,7 +124,7 @@ class forward_problem:
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
         nome_arquivo = f"../../docs/figures/{self.name}.png"
-        #plt.show() 
+        plt.show() 
         plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')   
         plt.show(block=False)
 
@@ -146,7 +146,8 @@ class forward_problem:
         
         #print('solve vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno)
 
-
+        self.plotMSH(self.mymesh.sigma_vec)
+        self.plotMSH(self.mymesh.sigma_vec)
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
         #print(f' Tensões nos eletrodos \n {self.Vmedido_eletrodos})')
 
