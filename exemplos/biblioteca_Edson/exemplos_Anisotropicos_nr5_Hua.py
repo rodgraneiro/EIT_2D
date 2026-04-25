@@ -32,7 +32,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
     meus_sigmas = {
         1000: [4.0, 0.0, 4.0],
-        1001: [2.0, 0.0, 1.0],
+        1001: [1.0, 0.0, 1.0],
         1002: [1.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
@@ -143,7 +143,7 @@ def runInverseProblemAnisotropicHua():
             MinhaMalha.Elements[idx].CalcKgeo()
     '''
 
-    start = [5.0, 0.0, 5.0]
+    start = [3.0, 0.0, 3.0]
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
@@ -160,15 +160,15 @@ def runInverseProblemAnisotropicHua():
     
 
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.01,  Lambda = 0.01, max_iter=200,Tol=1.0e-4)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.001,  Lambda = 0.0001, max_iter=1000,Tol=1.0e-6)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 
 
 
-runFWD_InverseProblemAnisotropicHua()
+#runFWD_InverseProblemAnisotropicHua()
 
-#runInverseProblemAnisotropicHua()
+runInverseProblemAnisotropicHua()
 
 
 
