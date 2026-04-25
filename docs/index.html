@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REGULARIZATION PARAMETERS</title>
+    <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
+    <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
+    <title>EIT 2D - Electrical Impedance Tomography</title>
 
     <style>
         body {
@@ -68,11 +70,18 @@
     <hr>
 
 
-    <p>Lambda values ​​are obtained by: 'lambdas = np.logspace(-4, 2, 10)'</p>
-    <i> Results obtained for a maximum of 20 iterations.</i>
+    <p>Lambda values ​​are obtained by: 'lambdas = np.logspace(-4, 2, 10)'. &nbsp;&nbsp;&nbsp;    
+    <a href="https://numpy.org/doc/2.1/reference/generated/numpy.logspace.html">
+    link: Documentation of numpy.logspace
+    </a>  
+    </p>
+
+    <p><b>Results obtained for a maximum of 100 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Same scale for all graphs.</b></p>
 
     <hr>
-    <h4>Domain with an object</h4>
+    <h4>Domain 3 [S] with an object 2 [S]. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
 
     <table>
         <tr>
@@ -147,11 +156,24 @@
             </td>
     </table>
 
-
+    <td>     
+        <a href="videos/domain1Object_v2A.mp4" >
+            <img src="figures/Hua_cuba16eletrodos_base_lambda_0.0022.png" style="width: 60px;">
+        </a>&nbsp;&nbsp;&nbsp;
+        <i>Video of the best result -> &lambda; = 4.64e-04.</i>
+    </td>
+    <!--
+    <td>
+    <video width="300" controls>
+        <source src="videos/domain_3Object_v1A.mp4" type="video/mp4">
+        Seu navegador não suporta vídeo.
+    </video> -->
     <hr>
-    <h4>Domain with 3 objects version 1</h4>
+</td>
+    <h4>Domain with 3 objects version 1. Domain 3 [S]. Objects 2 [S]. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2660 elements - base with 910 elements</h4>
 
     <table>
+        
         <tr>
             <td>&lambda; = 1.00e-04 </td>
             <td>&lambda; = 4.64e-04 </td>
@@ -165,9 +187,9 @@
             <td>&lambda; = 1.00e+02  </td>
             <td>Phanton </td>
         </tr>
-
+        
         <tr>
-<td>
+        <td>
                 <a href="figures/Hua_cuba16eletrodos_base_2_lambda_0.0001.png">
                     <img src="figures/Hua_cuba16eletrodos_base_2_lambda_0.0001.png" alt="lambda 1">
                 </a>
@@ -224,12 +246,20 @@
             </td>
     </table>
 
+    <td>     
+        <a href="videos/domain_3Object_v1A.mp4" >
+            <img src="figures/Hua_cuba16eletrodos_base_2_lambda_0.0022.png" style="width: 60px;">
+        </a>&nbsp;&nbsp;&nbsp;
+        <i>Video of the best result -> &lambda; = 4.64e-04.</i>
+    </td>
 
 
-<hr>
-    <h4>Domain with 3 objects version 2</h4>
+
+    <hr>
+    <h4>Domain with 3 objects version 2. Domain 3 [S]. Objects 2 [S]. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2892 elements - base with 910 elements</h4>
 
     <table>
+        
         <tr>
             <td>&lambda; = 1.00e-04 </td>
             <td>&lambda; = 4.64e-04 </td>
@@ -243,9 +273,9 @@
             <td>&lambda; = 1.00e+02  </td>
             <td>Phanton </td>
         </tr>
-
+        
         <tr>
-<td>
+        <td>
                 <a href="figures/Hua_cuba16eletrodos_base_3_lambda_0.0001.png">
                     <img src="figures/Hua_cuba16eletrodos_base_3_lambda_0.0001.png" alt="lambda 1">
                 </a>
@@ -301,14 +331,106 @@
                 </a>
             </td>
     </table>
+    <td>     
+        <a href="videos/domain_3Object_v2A.mp4" >
+            <img src="figures/Hua_cuba16eletrodos_base_3_lambda_0.0022.png" style="width: 60px;">
+        </a>&nbsp;&nbsp;&nbsp;
+        <i>Video of the best result -> &lambda; = 4.64e-04.</i>
+    </td>
 
 
 
 
 
 
+    <hr>
+    <h4>Mesh with 4 conductivities. Domain 4 [S]. Objects 1, 2, and 3 [S] respectively. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2660 elements - base with 910 elements</h4>
+
+    <table>
+        <tr>
+            <td>&lambda; = 1.00e-04 </td>
+            <td>&lambda; = 4.64e-04 </td>
+            <td>&lambda; = 2.15e-03 </td>
+            <td>&lambda; = 1.00e-02</td>
+            <td>&lambda; = 4.64e-02 </td>
+            <td>&lambda; = 2.15e-01</td>
+            <td>&lambda; = 1.00e+00 </td>
+            <td>&lambda; = 4.64e+00 </td>
+            <td>&lambda; = 2.15e+01  </td>
+            <td>&lambda; = 1.00e+02  </td>
+            <td>Phanton </td>
+        </tr>
+        
+        <tr>
+        <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_0.0001.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_0.0001.png" alt="lambda 1">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_0.0005.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_0.0005.png" alt="lambda 2">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_0.0022.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_0.0022.png" alt="lambda 3">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_0.0100.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_0.0100.png" alt="lambda 4">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_0.0464.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_0.0464.png" alt="lambda 5">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_0.2154.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_0.2154.png" alt="lambda 6">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_1.0000.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_1.0000.png" alt="lambda 7">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_4.6416.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_4.6416.png" alt="lambda 8">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_21.5443.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_21.5443.png" alt="lambda 9">
+                </a>
+            </td>
+           <td>
+                <a href="figures/Hua_cuba16eletrodos_3sigmas_100.0000.png">
+                    <img src="figures/Hua_cuba16eletrodos_3sigmas_100.0000.png" alt="lambda 10">
+                </a>
+            </td>
+          <td>
+                <a href="figures/Hua_cuba16eletrodos_3objetos_3sigma.png">
+                    <img src="figures/Hua_cuba16eletrodos_3objetos_3sigma.png" alt="lambda_original">
+                </a>
+            </td>
+    </table>
+    <td>     
+        <a href="videos/domain_3Object_3Sigma.mp4" >
+            <img src="figures/Hua_cuba16eletrodos_3sigmas_0.0022.png" style="width: 60px;">
+        </a>&nbsp;&nbsp;&nbsp;
+        <i>Video of the best result -> &lambda; = 2.15e-03.</i>
+    </td>
 
 
+
+
+
+    <hr>
+    <hr>
 
 
 
