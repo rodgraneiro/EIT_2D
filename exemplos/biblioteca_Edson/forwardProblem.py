@@ -146,8 +146,7 @@ class forward_problem:
         
         #print('solve vetor_corrente_cond_contorno \n', self.vetor_corrente_cond_contorno)
 
-        self.plotMSH(self.mymesh.sigma_vec)
-        self.plotMSH(self.mymesh.sigma_vec)
+
         self.Vmedido_eletrodos = self.Vmedido[self.mymesh.ElectrodeNodes]
         #print(f' Tensões nos eletrodos \n {self.Vmedido_eletrodos})')
 

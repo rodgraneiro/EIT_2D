@@ -1080,8 +1080,9 @@ class inverse_problem:
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
-            #if itr % 500 == 0:   # salva de 1000 em 1000 ...
-            #    self.plotMSH(sigmaInicial, itr, save = True)
+            if itr % 20 == 0:   # salva de 1000 em 1000 ...
+                self.plotMSH(sigmaInicial[:, 0], itr, save = True)
+                self.plotMSH(sigmaInicial[:, 2], itr, save = True)
 
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
