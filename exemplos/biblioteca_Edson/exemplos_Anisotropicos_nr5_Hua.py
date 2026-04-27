@@ -31,8 +31,8 @@ def runFWD_InverseProblemAnisotropicHua():
 
 
     meus_sigmas = {
-        1000: [4.0, 0.0, 4.0],
-        1001: [1.0, 0.0, 1.0],
+        1000: [4.8, 0.0, 0.2],
+        1001: [4.8, 0.0, 0.2],
         1002: [1.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
@@ -147,7 +147,7 @@ def runInverseProblemAnisotropicHua():
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=0, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     #print(f'Vmedido \n {fwd.Vmedido[:10]}')
@@ -160,15 +160,15 @@ def runInverseProblemAnisotropicHua():
     
 
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.001,  Lambda = 0.0001, max_iter=1000,Tol=1.0e-6)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.01,  Lambda = 0.001, max_iter=10,Tol=1.0e-6)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 
 
 
-#runFWD_InverseProblemAnisotropicHua()
+runFWD_InverseProblemAnisotropicHua()
 
-runInverseProblemAnisotropicHua()
+#runInverseProblemAnisotropicHua()
 
 
 

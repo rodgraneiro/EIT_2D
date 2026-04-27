@@ -290,7 +290,7 @@ class inverse_problem:
         inv_primeiroTermo = np.linalg.inv(primeiroTermo)
 
         JTW_zh = zJTW @ residue
-        ztermo_reg = (sigma_inicial - self.sigmaStar)
+        ztermo_reg = (sigma_inicial)# - self.sigmaStar)
         zregularizacao = (Lambda**2)*zLTL @ ztermo_reg
         segundoTermo = JTW_zh - zregularizacao
         return -alpha*(inv_primeiroTermo @ segundoTermo)
@@ -483,6 +483,15 @@ class inverse_problem:
 
         #print("TempJ.shape =", self.TempJ.shape)
         #print("JTJ.shape =", self.JTJ.shape)
+        J = self.TempJ
+
+        corr_xx_yy = np.corrcoef(
+            J[:, 0::3].ravel(),
+            J[:, 2::3].ravel()
+            )[0, 1]
+        
+
+        print("corr σxx-σyy =", corr_xx_yy)
     '''
     def Calc_J(self, invVtemp):
         listTempJ=[]
@@ -635,7 +644,7 @@ class inverse_problem:
 
     '''
 
-    def calc_L2_gauss_2D_only_domain(self, centroids_2D, std=None, tol=1e-9, raio=4.0):
+    def calc_L2_gauss_2D_only_domain(self, centroids_2D, std=None, tol=1e-9, raio=1.5):
         """
         Filtro passa-alta gaussiano apenas no domínio físico.
         Exclui elementos de eletrodo Hua.
@@ -671,6 +680,7 @@ class inverse_problem:
 
             dmed = np.mean(dmins)
             std = 1.5 * dmed
+            print('std', std)
 
         # ------------------------------------------------------------
         # monta gaussiana normalizada
@@ -699,7 +709,7 @@ class inverse_problem:
         L2 = np.eye(n_dom) - W
 
 
-       
+        '''
         # plot  matrix sparsity 
         plt.figure(figsize=(6, 5))
         plt.spy(L2, markersize=1)
@@ -714,6 +724,8 @@ class inverse_problem:
 
         N = L2.shape[0]
         X, Y = np.meshgrid(np.arange(N), np.arange(N))
+        '''
+        
         '''
         fig = plt.figure(figsize=(9, 7))
         ax = fig.add_subplot(111, projection='3d')
@@ -762,19 +774,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
-    '''
-    def plotMSH(self,sigma):
-        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
-        triang = tri.Triangulation(x, y, self.mymesh.msh_topology)
-        fig, ax = plt.subplots(figsize=(6, 5))
-        tpc = ax.tripcolor(triang, facecolors=sigma, edgecolors='k', cmap= 'Blues')#, vmin=0, vmax=6)#'Greys')
-        fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
-        ax.set_title("Conductivity Real (σ)", fontsize=15)
-        plt.xlabel("[m]", fontsize=12)
-        plt.ylabel("[m]", fontsize=12)
-        #plt.tight_layout()
-        plt.show()
-        '''
+
     
     def plotMSH(self, sigma, iteration = None, save = False):
 
@@ -796,7 +796,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.5, vmax=5.1 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#,vmin=0.5, vmax=5.1 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
@@ -970,7 +970,8 @@ class inverse_problem:
             
             # ***** Cálculo do termo 1a JT_W1_J *****
 
-            L2_aniso = np.kron(np.eye(3), L2)
+            #L2_aniso = np.kron(np.eye(3), L2)
+            L2_aniso = np.kron(L2, np.eye(3))
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
             #LTL =np.dot(L2.T, L2)
             LTL = L2_aniso.T @ L2_aniso
@@ -1076,14 +1077,14 @@ class inverse_problem:
                #alpha = alpha*fatorAlpha
                #break
             '''   
-
+            '''
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
             if itr % 20 == 0:   # salva de 1000 em 1000 ...
                 self.plotMSH(sigmaInicial[:, 0], itr, save = True)
                 self.plotMSH(sigmaInicial[:, 2], itr, save = True)
-
+            '''
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
