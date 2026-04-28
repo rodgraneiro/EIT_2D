@@ -796,12 +796,12 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#,vmin=0.5, vmax=5.1 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.5, vmax=5.1 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity (σ)- Lb_{Lambda:.1e}-it_{iteration}", fontsize=11)
+                ax.set_title(f"Conductivity (σ)- Lambda_{Lambda:.1e}-it_{iteration}", fontsize=12)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -1085,15 +1085,15 @@ class inverse_problem:
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
                #break
-            '''   
-            '''
+
             if contItr ==50:
                 np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
                 contItr = 0
-            if itr % 20 == 0:   # salva de 1000 em 1000 ...
-                self.plotMSH(sigmaInicial[:, 0], itr, save = True)
-                self.plotMSH(sigmaInicial[:, 2], itr, save = True)
             '''
+            #if itr % 10 == 0:   # salva de 1000 em 1000 ...
+            #    self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True)
+            #    self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True)
+            
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
