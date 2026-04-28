@@ -97,17 +97,31 @@ def rodar_simulacao(lambda_val, sigma_saved):
 sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
 #print(sigma_inicial_cont)
 #lambdas = np.logspace(-4, 2, 10)
+#lambdas [1.00000000e-04 4.64158883e-04 2.15443469e-03 1.00000000e-02
+#4.64158883e-02 2.15443469e-01 1.00000000e+00 4.64158883e+00
+# 2.15443469e+01 1.00000000e+02]
+
+
 lambdas = np.logspace(-4, 1, 10)
+#lambdas [1.00000000e-04 3.59381366e-04 1.29154967e-03 4.64158883e-03
+# 1.66810054e-02 5.99484250e-02 2.15443469e-01 7.74263683e-01
+# 2.78255940e+00 1.00000000e+01]
+
+
+
+#lambdas = np.logspace(-5, 0, 10)
 #e-5
 #lambdas [1.00000000e-05 3.59381366e-05 1.29154967e-04 4.64158883e-04
 # 1.66810054e-03 5.99484250e-03 2.15443469e-02 7.74263683e-02
 # 2.78255940e-01 1.00000000e+00]
 
+#lambdas = np.logspace(-6, 0, 10)
 #e-6
 #lambdas [1.00000000e-06 4.64158883e-06 2.15443469e-05 1.00000000e-04
 # 4.64158883e-04 2.15443469e-03 1.00000000e-02 4.64158883e-02
 # 2.15443469e-01 1.00000000e+00]
 
+#lambdas = np.logspace(-7, 0, 10)
 #e-7
 #lambdas [1.00000000e-07 5.99484250e-07 3.59381366e-06 2.15443469e-05
 # 1.29154967e-04 7.74263683e-04 4.64158883e-03 2.78255940e-02
@@ -119,6 +133,6 @@ for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
     resultados[lam] = rodar_simulacao(lam, None)
- 
-#rodar_simulacao(1.66810054e-03, None)
+
+#rodar_simulacao(5.99484250e-02, None)
 
