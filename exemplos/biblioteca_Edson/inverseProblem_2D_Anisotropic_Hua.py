@@ -776,7 +776,7 @@ class inverse_problem:
     ###############################################################################
 
     
-    def plotMSH(self, sigma, iteration = None, save = False):
+    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -801,7 +801,7 @@ class inverse_problem:
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity Real (σ) - rnd - itr_{iteration}", fontsize=12)
+                ax.set_title(f"Conductivity (σ)- Lb_{Lambda:.1e}-it_{iteration}", fontsize=11)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -1008,20 +1008,27 @@ class inverse_problem:
             #print('regTerm',regTerm.shape)
             
 
-            #regularization = np.dot(termo_L, regTerm)
-            regularization = (Lambda**2)*LTL @ regTerm               
+            regularization = np.dot(termo_L, regTerm)
+            
+            #regularization = (Lambda**2)*LTL @ regTerm     ????????
+            #regularization = (Lambda**2)*LTL @ regTerm     ????????
+            
             # ***** Cálculo final do termo 2 *****
             secondTerm = -JTW_H - regularization
             
             
             # ***** Produto entre termo 1 e termo 2 *****
             deltaSigma = np.dot(inv_firstTerm, secondTerm)
-            deltaSigma[1::3] = 0.0 # zerar Δσxy
+            
+            ######## deltaSigma[1::3] = 0.0 # zerar Δσxy   # tentar usa sigma XY
+            
             #print('deltaSigma', deltaSigma)#[:1])
             #deltaSigma = deltaSigma[:, 0]*alpha
             
             alphaDeltaSigma = alpha*deltaSigma
-            sigmaInicial[:,1] = 0
+            
+            ###### sigmaInicial[:,1] = 0  # tentar usa sigma XY
+            
             #print('alphaDeltaSigma',alphaDeltaSigma[:1])
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
             plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
@@ -1057,7 +1064,9 @@ class inverse_problem:
             sigmaInicial_vec = sigmaPlusOne
             #print('sigmaInicial_depois', sigmaInicial_vec[:3])
             sigmaInicial = sigmaInicial_vec.reshape(-1, 3, order='C')
-            sigmaInicial[:,1] = 0 # zerar σxy
+            
+            ########### sigmaInicial[:,1] = 0 # zerar σxy  # tentar usa sigma XY
+            
             # Impõe condutividade mínima
             sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, 5.0)  # σxx
             sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, 5.0)  # σyy
@@ -1088,8 +1097,8 @@ class inverse_problem:
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial[:, 0], itr, save = True)
-        self.plotMSH(sigmaInicial[:, 2], itr, save = True)
+        self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True)
+        self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True)
         #self.plot_espectro(sigmaInicial)
         #print('sigmaInicial',sigmaInicial_vec)
         np.savetxt("sigmaInicial_result.txt", sigmaInicial)  # formato binário
