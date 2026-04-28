@@ -85,18 +85,19 @@ def rodar_simulacao(lambda_val, sigma_saved):
     nome_arquivo = 'ParaVernoGmshPto'
     #fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
     #fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
-    V_measured_phaton = fwd.Vmedido_eletrodos
+    #V_measured_phaton = fwd.Vmedido_eletrodos
+    V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
 
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.01,  Lambda = lambda_val, max_iter=20,Tol=1.0e-6)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=5,Tol=1.0e-6)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
 #print(sigma_inicial_cont)
 #lambdas = np.logspace(-4, 2, 10)
-lambdas = np.logspace(-7, 0, 10)
+lambdas = np.logspace(-4, 1, 10)
 #e-5
 #lambdas [1.00000000e-05 3.59381366e-05 1.29154967e-04 4.64158883e-04
 # 1.66810054e-03 5.99484250e-03 2.15443469e-02 7.74263683e-02
@@ -119,5 +120,5 @@ for lam in lambdas:
     
     resultados[lam] = rodar_simulacao(lam, None)
  
-#rodar_simulacao(1.0e-07, None)
+#rodar_simulacao(1.66810054e-03, None)
 
