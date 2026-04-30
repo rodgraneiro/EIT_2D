@@ -766,7 +766,7 @@ class inverse_problem:
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
-        
+        plt.ticklabel_format(style='plain')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -776,7 +776,7 @@ class inverse_problem:
     ###############################################################################
 
     
-    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False):
+    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -796,12 +796,12 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues',vmin=0.5, vmax=5.1 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-1.0, vmax=5.0 )
 
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity (σ)- Lambda_{Lambda:.1e}-it_{iteration}", fontsize=12)
+                ax.set_title(f"Conductivity (σ{SigmaXXXYYY}) - λ_{Lambda:.1e}-it_{iteration}", fontsize=11)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -817,6 +817,7 @@ class inverse_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
+        plt.ticklabel_format(style='plain')
         #if save == True:
         #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
@@ -1097,8 +1098,9 @@ class inverse_problem:
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True)
-        self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True)
+        self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True, SigmaXXXYYY='xx')
+        self.plotMSH(sigmaInicial[:, 1],Lambda, itr, save = True, SigmaXXXYYY='xy')
+        self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True, SigmaXXXYYY='yy')
         #self.plot_espectro(sigmaInicial)
         #print('sigmaInicial',sigmaInicial_vec)
         np.savetxt("sigmaInicial_result.txt", sigmaInicial)  # formato binário

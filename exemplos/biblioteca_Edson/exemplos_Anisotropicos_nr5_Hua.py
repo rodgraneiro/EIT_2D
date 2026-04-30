@@ -70,7 +70,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
     MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3, name = None, imageSave = False)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3, name = None, imageSave = True)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     print(f'Vmedido \n {fwd.Vmedido[:10]}')
