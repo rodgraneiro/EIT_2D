@@ -801,7 +801,7 @@ class inverse_problem:
             fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity (σ{SigmaXXXYYY}) - λ_{Lambda:.1e}-it_{iteration}", fontsize=11)
+                ax.set_title(f"Conductivity (σ{SigmaXXXYYY}) - λ_{Lambda:.2e}-it_{iteration}", fontsize=11)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -1097,10 +1097,14 @@ class inverse_problem:
             
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
+        DifAnisotropia = sigmaInicial[:, 0] - sigmaInicial[:, 2]
         self.plotar_iteracoes(listXplot, listaItrPlot)
         self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True, SigmaXXXYYY='xx')
         self.plotMSH(sigmaInicial[:, 1],Lambda, itr, save = True, SigmaXXXYYY='xy')
         self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True, SigmaXXXYYY='yy')
+        self.plotMSH(DifAnisotropia,Lambda, itr, save = True, SigmaXXXYYY='DifAniso')
+
+        
         #self.plot_espectro(sigmaInicial)
         #print('sigmaInicial',sigmaInicial_vec)
         np.savetxt("sigmaInicial_result.txt", sigmaInicial)  # formato binário
