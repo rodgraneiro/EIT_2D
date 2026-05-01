@@ -89,9 +89,9 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-
+    htmlName = 'Tst_zeroObject_DomainAni301_Scale_zc_1_ang30'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=5,Tol=1.0e-6)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=1,Tol=1.0e-6, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -127,13 +127,13 @@ def rodar_simulacao(lambda_val, sigma_saved):
 # 1.29154967e-04 7.74263683e-04 4.64158883e-03 2.78255940e-02
 # 1.66810054e-01 1.00000000e+00]
 
-#lambdas = np.logspace(-9, 1, 20)
-#lambdas = [1.00000000e-09, 3.35981829e-09, 1.12883789e-08, 3.79269019e-08,
+lambdas = np.logspace(-9, 1, 20)
+#lambdas = [1.00000000e-09, 3.35981829e-09]#, 1.12883789e-08, 3.79269019e-08,
 # 1.27427499e-07, 4.28133240e-07, 1.43844989e-06, 4.83293024e-06,
 # 1.62377674e-05, 5.45559478e-05]# 
-lambdas = [1.83298071e-04, 6.15848211e-04,
- 2.06913808e-03, 6.95192796e-03, 2.33572147e-02, 7.84759970e-02,
- 2.63665090e-01, 8.85866790e-01, 2.97635144e+00, 1.00000000e+01]
+#lambdas = [1.83298071e-04, 6.15848211e-04,
+# 2.06913808e-03, 6.95192796e-03, 2.33572147e-02, 7.84759970e-02,
+# 2.63665090e-01, 8.85866790e-01, 2.97635144e+00, 1.00000000e+01]
 
 #lambdas = np.logspace(-9, 1, 10)
 #lambdas [1.00000000e-09 1.29154967e-08 1.66810054e-07 2.15443469e-06
@@ -153,5 +153,5 @@ for lam in lambdas:
     
     resultados[lam] = rodar_simulacao(lam, None)
 
-#rodar_simulacao(1.00000000e-09, None)
+#rodar_simulacao(1.00000000e-02, None)
 

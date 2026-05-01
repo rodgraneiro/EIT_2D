@@ -367,7 +367,7 @@ class LinearTriangleAnisotropic(MyElement):
                                 [C_13, C_23, C_33]       
                                 ])
         '''
-    
+    '''
     def CalcKgeo(self):
         noh1 = int(self.Topology[0])
         noh2 = int(self.Topology[1])
@@ -499,4 +499,4 @@ class LinearTriangleAnisotropic(MyElement):
 
 
         #print('KGeo1', self.KGeo)
-    '''
+    
