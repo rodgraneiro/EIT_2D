@@ -14,6 +14,7 @@ import mesh
 import elements
 import gmsh
 import sys
+import plotly.graph_objects as go
 from datetime import datetime
 from matplotlib import cm
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
@@ -752,7 +753,7 @@ class inverse_problem:
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
 
-    def plotar_iteracoes(self,lista_indice, lista_valor):
+    def plotar_iteracoes(self,lista_indice, lista_valor):#, nome = None):
         plt.figure(figsize=(6, 5))
         plt.plot(lista_indice,
                 lista_valor,
@@ -767,6 +768,7 @@ class inverse_problem:
         plt.grid(True)
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
+        #plt.savefig(f"{nome}.png", dpi=300, bbox_inches='tight')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -776,7 +778,7 @@ class inverse_problem:
     ###############################################################################
 
     
-    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None):
+    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -798,10 +800,10 @@ class inverse_problem:
 
             tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-1.0, vmax=5.0 )
 
-            fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
+            fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity (σ{SigmaXXXYYY}) - λ_{Lambda:.2e}-it_{iteration}", fontsize=11)
+                ax.set_title(f"Conductivity (σ{SigmaXXXYYY}) - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -818,15 +820,82 @@ class inverse_problem:
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
-        #if save == True:
-        #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-        #    #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-        #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",
-        #    dpi=300, bbox_inches='tight')
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
-     
+    ###############################################################################
+
+    ###############################################################################
+    # Essa função plota o resultado do sigma calculado no problema inverso
+    ############################################################################### 
+    '''
+    def plot_sigma(self, sigmaResult, titulo="Problema Inverso Anisotrópico"):
+        # Carrega os dados
+        #data = np.loadtxt(filename)
+        data = sigmaResult
+    
+        # Separa as componentes
+        sigma_xx = data[:, 0]
+        sigma_xy = data[:, 1]
+        sigma_yy = data[:, 2]
+    
+        # Eixo x (índice dos elementos)
+        x = np.arange(len(sigma_xx))
+    
+        # Cria o gráfico
+        plt.figure(figsize=(10, 5))
+    
+        plt.plot(x, sigma_xx, label='σxx', linewidth=1.5)
+        plt.plot(x, sigma_xy, label='σxy', linewidth=1.5)
+        plt.plot(x, sigma_yy, label='σyy', linewidth=1.5)
+    
+        # Estilo semelhante ao seu exemplo
+        plt.title(titulo, fontsize=14)
+        plt.xlabel('Elemento', fontsize=12)
+        plt.ylabel('Condutividade', fontsize=12)
+    
+        plt.grid(True, linestyle='--', alpha=0.5)
+        plt.legend()
+    
+        plt.tight_layout()
+        plt.show()
+    ''' 
+    def plot_sigma(self, sigmaResult, titulo="Results of the calculated conductivities σxx, σxy, σyy and σxx-σyy", salvar=False, nome_arquivo="plot_sigma.png"):
+    
+        data = sigmaResult
+    
+        sigma_xx = data[:, 0]
+        sigma_xy = data[:, 1]
+        sigma_yy = data[:, 2]
+    
+        x = np.arange(len(sigma_xx))
+    
+        plt.figure(figsize=(10, 5))
+    
+        plt.plot(x, sigma_xx, label='σxx', linewidth=1.5)
+        plt.plot(x, sigma_xy, label='σxy', linewidth=1.5)
+        plt.plot(x, sigma_yy, label='σyy', linewidth=1.5)
+    
+        plt.title(titulo, fontsize=14)
+        plt.xlabel('Element', fontsize=12)
+        plt.ylabel('Conductivity [S/m]', fontsize=12)
+    
+        plt.grid(True, linestyle='--', alpha=0.5)
+        plt.legend()
+    
+        plt.tight_layout()
+        
+        
+        if salvar:
+            plt.savefig(nome_arquivo, dpi=300)
+            plt.show() 
+            plt.close()   # importante
+        else:
+            plt.show()    
     ###############################################################################    
     def plot_espectro(self,x, titulo="Espectro (FFT)"):
         X = np.fft.fft(x)
@@ -853,10 +922,52 @@ class inverse_problem:
         #plt.show()
         plt.show(block=False)
         plt.pause(0.1)      
+        
+
+    ###############################################################################
+    # Essa função salva arqui html do resultado doproblema inverso
+    ###############################################################################         
+
+    '''
+    def salvar_html(self, lista_imagens, nome_html="resultado.html"):
+        with open(nome_html, "w", encoding="utf-8") as f:
+            f.write("<html>\n<head>\n<title>Resultados TIE</title>\n</head>\n<body>\n")
+    
+            f.write("<h1>Resultados do Problema Inverso</h1>\n")
+    
+            for img in lista_imagens:
+                f.write(f"""
+                <div style="margin-bottom:30px;">
+                    <img src="{img}" width="80">
+                </div>
+                """)
+    
+            f.write("</body>\n</html>")
+     '''       
+    def salvar_html(self, lista_imagens, nome_html="resultado.html"):
+        with open(nome_html, "w", encoding="utf-8") as f:
+            f.write("""
+            <html>
+            <head>
+            <title>Resultados TIE</title>
+            </head>
+            <body>
+            """)
+    
+            f.write("<h1>Results of the Anisotropic Inverse Problem</h1>\n")
+    
+            f.write('<div style="display:flex; gap:20px;">\n')
+    
+            for img in lista_imagens:
+                f.write(f'<img src="{img}" width="300">\n')
+    
+            f.write('</div>\n')
+    
+            f.write("</body>\n</html>")
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
-    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0):
+    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0, html_name = None):
         #print(f'lastIteration {iteration}')
         itr_start = int(iteration)
         ultimos10 = []
@@ -1098,11 +1209,48 @@ class inverse_problem:
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         DifAnisotropia = sigmaInicial[:, 0] - sigmaInicial[:, 2]
+        DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
         self.plotar_iteracoes(listXplot, listaItrPlot)
-        self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True, SigmaXXXYYY='xx')
-        self.plotMSH(sigmaInicial[:, 1],Lambda, itr, save = True, SigmaXXXYYY='xy')
-        self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True, SigmaXXXYYY='yy')
-        self.plotMSH(DifAnisotropia,Lambda, itr, save = True, SigmaXXXYYY='DifAniso')
+        #self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med)
+        #self.plotMSH(sigmaInicial[:, 1],Lambda, itr, save = True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med)
+        #self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med)
+        #self.plotMSH(DifAnisotropia,Lambda, itr, save = True, SigmaXXXYYY='_DifAniso', DifAniso = DifAnisotropia_Med) #SigmaXXXYYY=' DifAniso')
+        #self.plot_sigma(sigmaInicial, titulo="Problema Inverso Anisotrópico")
+        
+        lista_imgs = []
+
+        # σxx, σxy, σyy (MSH)
+        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda}.png' 
+        self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
+        lista_imgs.append(nome1)
+        
+        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda}.png' 
+        self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
+        lista_imgs.append(nome2)
+        
+        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda}.png'  
+        self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
+        lista_imgs.append(nome3)
+        
+        # Diferença anisotrópica
+        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.png' 
+        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='Dif', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
+        lista_imgs.append(nome4)
+        
+        # Gráfico tipo linha (o que você mandou)
+        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda}.png'
+        self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
+        lista_imgs.append(nome5)
+        
+        #nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.png'
+        #self.plotar_iteracoes(listXplot, listaItrPlot, nome = nome6)
+        #lista_imgs.append(nome6)
+        
+        # Criar HTML
+        #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
+        nome_html = f'../../docs/figureTemp/{html_name}_{Lambda}.html'
+        self.salvar_html(lista_imgs, nome_html)
+        
 
         
         #self.plot_espectro(sigmaInicial)
