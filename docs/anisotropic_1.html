@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
+    <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
+    <title>EIT 2D - Electrical Impedance Tomography</title>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: white;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        h4 {
+            color: #8888ff;
+            margin-top: 20px;
+        }
+
+        pre {
+            color: red;
+            font-size: 12px;
+        }
+
+        b {
+            color: #00ff00;
+        }
+
+        i {
+            color: red;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        img {
+            width: 300px;
+        }
+
+        hr {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
+    <hr>
+
+    
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle -30°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/phantonSxx.png" width="300">
+    <img src="../docs/figureTemp/phantonSxy.png" width="300">
+    <img src="../docs/figureTemp/phantonSyy.png" width="300">
+    </div>
+    <hr>
+    <h4>Electric field of anisotropy - angle -30°</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/malha_aniso_compoEletrico_1B.png" width="300">
+    <img src="../docs/figureTemp/malha_aniso_compoEletrico_2B.png" width="300">
+    <img src="../docs/figureTemp/malha_aniso_compoEletrico_3B.png" width="300">
+    <img src="../docs/figureTemp/malha_aniso_compoEletrico_4B.png" width="300">
+    <img src="../docs/figureTemp/malha_aniso_compoEletrico_5B.png" width="300">
+    </div>
+
+    <hr>
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Same scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_1e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_1e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_1e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_1e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_1e-09.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_3.359818286283788e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_3.359818286283788e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_3.359818286283788e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_3.359818286283788e-09.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_3.359818286283788e-09.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_1.1288378916846883e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_1.1288378916846883e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_1.1288378916846883e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_1.1288378916846883e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_1.1288378916846883e-08.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_3.792690190732254e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_3.792690190732254e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_3.792690190732254e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_3.792690190732254e-08.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_3.792690190732254e-08.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_1.274274985703132e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_1.274274985703132e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_1.274274985703132e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_1.274274985703132e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_1.274274985703132e-07.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_4.281332398719396e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_4.281332398719396e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_4.281332398719396e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_4.281332398719396e-07.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_4.281332398719396e-07.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_1.438449888287663e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_1.438449888287663e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_1.438449888287663e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_1.438449888287663e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_1.438449888287663e-06.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_4.832930238571752e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_4.832930238571752e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_4.832930238571752e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_4.832930238571752e-06.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_4.832930238571752e-06.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_1.623776739188721e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_1.623776739188721e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_1.623776739188721e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_1.623776739188721e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_1.623776739188721e-05.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_5.4555947811685143e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_5.4555947811685143e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_5.4555947811685143e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_5.4555947811685143e-05.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_5.4555947811685143e-05.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.00018329807108324338.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.00018329807108324338.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.00018329807108324338.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.00018329807108324338.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.00018329807108324338.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.0006158482110660254.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.0006158482110660254.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.0006158482110660254.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.0006158482110660254.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.0006158482110660254.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.00206913808111479.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.00206913808111479.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.00206913808111479.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.00206913808111479.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.00206913808111479.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.0069519279617756054.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.0069519279617756054.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.0069519279617756054.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.0069519279617756054.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.0069519279617756054.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.023357214690901212.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.023357214690901212.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.023357214690901212.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.023357214690901212.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.023357214690901212.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.07847599703514607.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.07847599703514607.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.07847599703514607.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.07847599703514607.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.07847599703514607.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.26366508987303555.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.26366508987303555.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.26366508987303555.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.26366508987303555.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.26366508987303555.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_0.8858667904100832.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_0.8858667904100832.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_0.8858667904100832.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_0.8858667904100832.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_0.8858667904100832.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_2.976351441631313.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_2.976351441631313.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_2.976351441631313.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_2.976351441631313.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_2.976351441631313.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_10.0.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_10.0.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_10.0.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_10.0.png" width="300">
+    <img src="../docs/figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_10.0.png" width="300">
+    </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
