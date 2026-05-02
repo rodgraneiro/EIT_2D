@@ -798,7 +798,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-1.0, vmax=5.0 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#, vmin=-1.0, vmax=5.0 )
 
             fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             if save == True:
