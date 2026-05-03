@@ -91,7 +91,9 @@ class forward_problem:
         elems_2D = np.array([el for el in topo if len(el) == 3])
         elems_1D = np.array([el for el in topo if len(el) == 2])
     
-        fig, ax = plt.subplots(figsize=(6, 5))
+        #fig, ax = plt.subplots(figsize=(6, 5))
+        fig, ax = plt.subplots(figsize=(8,5))
+        ax.set_aspect('equal')
     
         # ============================================================
         #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)

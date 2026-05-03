@@ -787,8 +787,9 @@ class inverse_problem:
         elems_2D = np.array([el for el in topo if len(el) == 3])
         elems_1D = np.array([el for el in topo if len(el) == 2])
     
-        fig, ax = plt.subplots(figsize=(6, 5))
-    
+        #fig, ax = plt.subplots(figsize=(6, 5))
+        fig, ax = plt.subplots(figsize=(8,5))
+        ax.set_aspect('equal')
         # ============================================================
         #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
         # ============================================================
@@ -798,7 +799,7 @@ class inverse_problem:
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues')#, vmin=-1.0, vmax=5.0 )
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-1.0, vmax=5.0 )
 
             fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             if save == True:
@@ -818,6 +819,7 @@ class inverse_problem:
         # ------------------------------------------------------------
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
+        
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
         if save == True:
