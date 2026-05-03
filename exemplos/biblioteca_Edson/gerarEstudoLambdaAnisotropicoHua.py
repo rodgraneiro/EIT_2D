@@ -31,7 +31,9 @@ def rodar_simulacao(lambda_val, sigma_saved):
 
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
-    nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
+    #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
+    nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
+    
 
 
     MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
@@ -91,7 +93,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zero'
+    htmlName = 'test_Olavo_Hua_Ani301_NoScale_zc_1_ang_30Neg'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
     invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=5,Tol=1.0e-6, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
