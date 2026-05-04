@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
+    <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
+    <title>EIT 2D - Electrical Impedance Tomography</title>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: white;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        h4 {
+            color: #8888ff;
+            margin-top: 20px;
+        }
+
+        pre {
+            color: red;
+            font-size: 12px;
+        }
+
+        b {
+            color: #00ff00;
+        }
+
+        i {
+            color: red;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        img {
+            width: 300px;
+        }
+
+        hr {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
+    <h1> Anisotropic rectangular domain - Zero Objects - Angle 0° - Auto scale</h1>
+
+    <hr>
+
+    
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle 0°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/phantonSxxOlavo.png" width="300">
+    <img src="figureTemp/phantonSxyOlavo.png" width="300">
+    <img src="figureTemp/phantonSyyOlavo.png" width="300">
+    </div>
+    <hr>
+    <h4>Electric field of anisotropy - angle 0°</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/phanton_Olavo_1.png" width="300">
+    <img src="figureTemp/phanton_Olavo_2.png" width="300">
+
+    </div>
+
+    <hr>
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Same scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xx_1e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xy_1e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_yy_1e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_Dif_1e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zero_sigma_linhas_1e-09.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xx_3.359818286283788e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xy_3.359818286283788e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_yy_3.359818286283788e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_Dif_3.359818286283788e-09.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zero_sigma_linhas_3.359818286283788e-09.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xx_1.1288378916846883e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xy_1.1288378916846883e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_yy_1.1288378916846883e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_Dif_1.1288378916846883e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zero_sigma_linhas_1.1288378916846883e-08.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xx_3.792690190732254e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xy_3.792690190732254e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_yy_3.792690190732254e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_Dif_3.792690190732254e-08.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zero_sigma_linhas_3.792690190732254e-08.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xx_1.274274985703132e-07.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_xy_1.274274985703132e-07.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_yy_1.274274985703132e-07.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zerosigma_Dif_1.274274985703132e-07.png" width="300">
+    <img src="figureTemp/test_Olavo_Hua_Ani301_NoScale_zc_1_ang_zero_sigma_linhas_1.274274985703132e-07.png" width="300">
+    </div>
+    <br>
+
+    <br>
+
+    <br>
+
+    <br>
+
+    <br>
+
+
+    <br>
+    <br>
+    <br>
+    <br>
+
+
+    
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
