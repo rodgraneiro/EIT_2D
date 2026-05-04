@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
+    <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
+    <title>EIT 2D - Electrical Impedance Tomography</title>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: white;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        h4 {
+            color: #8888ff;
+            margin-top: 20px;
+        }
+
+        pre {
+            color: red;
+            font-size: 12px;
+        }
+
+        b {
+            color: #00ff00;
+        }
+
+        i {
+            color: red;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        img {
+            width: 300px;
+        }
+
+        hr {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
+    <h1> Anisotropic domain - Zero Objects - Angle 0°</h1>
+
+    <hr>
+
+    
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle 0°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/phantonSxx.png" width="300">
+    <img src="figureTemp/phantonSxy.png" width="300">
+    <img src="figureTemp/phantonSyy.png" width="300">
+    </div>
+    <hr>
+    <h4>Electric field of anisotropy - angle 0°</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/phanthonSxxZeroGrau_CE_1.png" width="300">
+    <img src="figureTemp/phanthonSxxZeroGrau_CE_2.png" width="300">
+    <img src="figureTemp/phanthonSxxZeroGrau_CE_3.png" width="300">
+    <img src="figureTemp/phanthonSxxZeroGrau_CE_4.png" width="300">
+    <img src="figureTemp/phanthonSxxZeroGrau_CE_5.png" width="300">
+    </div>
+
+    <hr>
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Same scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xx_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_xy_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_yy_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30sigma_Dif_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_Scale_zc_1_ang30_sigma_linhas_1e-09.png" width="300">
+    </div>
+    <br>
+   
+
+    <br>
+    <br>
+    <br>
+    <br>
+<hr>
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+<hr>
+
+   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_NoScale_zc_1_ang30sigma_xx_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_NoScale_zc_1_ang30sigma_xy_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_NoScale_zc_1_ang30sigma_yy_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_NoScale_zc_1_ang30sigma_Dif_1e-09.png" width="300">
+    <img src="figureTemp/Tst_zeroObject_DomainAni301_NoScale_zc_1_ang30_sigma_linhas_1e-09.png" width="300">
+    </div>
+  
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
