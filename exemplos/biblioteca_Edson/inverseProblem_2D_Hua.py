@@ -524,10 +524,10 @@ class inverse_problem:
         #if save == True:
         #    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
         if self.saveVideo == False:
-            nome_arquivo = f"../../docs/figures/{self.name}_{self.pLambda:.4f}.png"
+            nome_arquivo = f"figures/{self.name}_{self.pLambda:.4f}.png"
         if self.saveVideo == True:
             self.contsaveVideo = self.contsaveVideo + 1
-            nome_arquivo = f"../../docs/figures/{self.name}_{self.contsaveVideo:03d}.png"
+            nome_arquivo = f"figures/{self.name}_{self.contsaveVideo:03d}.png"
         plt.savefig(nome_arquivo, dpi=100, bbox_inches='tight')
 
         #    plt.savefig(f"cond3_obj_skip2_v2_{timestamp}.png",     dpi=300, bbox_inches='tight')
