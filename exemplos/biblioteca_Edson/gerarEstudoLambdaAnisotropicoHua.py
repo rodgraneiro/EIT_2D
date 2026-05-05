@@ -32,7 +32,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
-    nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
+    nome = '../../malhasMSH/test_Olavo_30graus.msh'
     #nome = '../../malhasMSH/test_Olavo_60grausNeg.msh'
 
     
@@ -79,7 +79,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
             MinhaMalha_base.Elements[idx].CalcKgeo()
 
 
-    start = [5.0, 5.0, 5.0]
+    start = [5.0, 0.0, 5.0]
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
@@ -95,7 +95,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'best_result_Olavo_Ani301_55gi5_Scale_zc_1_ang_30p_100iteration'
+    htmlName = 'best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
     invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=100,Tol=1.0e-6, html_name = htmlName)
