@@ -1264,40 +1264,40 @@ class inverse_problem:
         lista_imgs = []
 
         # σxx, σxy, σyy (MSH)
-        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda}.png' 
+        nome1 =  f'figureTemp/{html_name}sigma_xx_{Lambda}.png' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda}.png' 
+        nome2 =  f'figureTemp/{html_name}sigma_xy_{Lambda}.png' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda}.png'  
+        nome3 = f'figureTemp/{html_name}sigma_yy_{Lambda}.png'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
         
         # Diferença anisotrópica
-        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.png' 
+        nome4 =  f'figureTemp/{html_name}sigma_Dif_{Lambda}.png' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='xx-σyy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
         # Gráfico tipo linha (o que você mandou)
-        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda}.png'
+        nome5 = f'figureTemp/{html_name}_sigma_linhas_{Lambda}.png'
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
-        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.png'
+        nome6 = f'figureTemp/{html_name}_iterations_{Lambda}.png'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome6)
         lista_imgs.append(nome6)
 
         # Gráfico tipo linha (o que você mandou)
-        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.png'
+        nome7 = f'figureTemp/{html_name}_theta_{Lambda}.png'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome7)
         lista_imgs.append(nome7)
         
         # Criar HTML
-        #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
-        nome_html = f'../../docs/figureTemp/{html_name}_{Lambda}.html'
+        #nome_html = 'figureTemp/{html_name}_{Lambda}.html'
+        nome_html = f'figureTemp/{html_name}_{Lambda}.html'
         self.salvar_html(lista_imgs, nome_html)
         
 
