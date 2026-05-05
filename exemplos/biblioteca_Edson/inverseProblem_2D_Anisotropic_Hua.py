@@ -753,7 +753,7 @@ class inverse_problem:
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
 
-    def plotar_iteracoes(self,lista_indice, lista_valor):#, nome = None):
+    def plotar_iteracoes(self,lista_indice, lista_valor,  nome_arquivo="Optimization.png"):#, nome = None):
         plt.figure(figsize=(6, 5))
         plt.plot(lista_indice,
                 lista_valor,
@@ -768,7 +768,7 @@ class inverse_problem:
         plt.grid(True)
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
-        #plt.savefig(f"{nome}.png", dpi=300, bbox_inches='tight')
+        plt.savefig(f"{nome_arquivo}", dpi=300, bbox_inches='tight')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -873,7 +873,8 @@ class inverse_problem:
         sigma_xx = data[:, 0]
         sigma_xy = data[:, 1]
         sigma_yy = data[:, 2]
-    
+        sigma_Dif = sigma_xx - sigma_yy
+        
         x = np.arange(len(sigma_xx))
     
         plt.figure(figsize=(10, 5))
@@ -881,10 +882,41 @@ class inverse_problem:
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.5)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.5)
         plt.plot(x, sigma_yy, label='σyy', linewidth=1.5)
+        plt.plot(x, sigma_Dif, label='σxx-σyy', linewidth=1.5)
     
         plt.title(titulo, fontsize=14)
         plt.xlabel('Element', fontsize=12)
         plt.ylabel('Conductivity [S/m]', fontsize=12)
+    
+        plt.grid(True, linestyle='--', alpha=0.5)
+        plt.legend()
+    
+        plt.tight_layout()
+        
+        
+        if salvar:
+            plt.savefig(nome_arquivo, dpi=300)
+            plt.show() 
+            plt.close()   # importante
+        else:
+            plt.show()    
+    ###############################################################################        
+            
+    def plot_theta_deg(self, theta_deg, titulo="Results of the calculated θ angle ", salvar=False, nome_arquivo="plot_theta.png"):
+    
+        data_theta = theta_deg
+    
+        x = np.arange(len(data_theta))
+    
+        plt.figure(figsize=(10, 5))
+    
+
+        plt.plot(x, data_theta, label='θ', linewidth=1.5)
+    
+        plt.title(titulo, fontsize=14)
+        plt.xlabel('Element', fontsize=12)
+        plt.ylabel('Angle θ [°]', fontsize=12)
+        plt.ylim(-65, 65)   # exemplo: de -65° a 66°
     
         plt.grid(True, linestyle='--', alpha=0.5)
         plt.legend()
@@ -1180,10 +1212,17 @@ class inverse_problem:
             sigmaInicial = sigmaInicial_vec.reshape(-1, 3, order='C')
             
             ########### sigmaInicial[:,1] = 0 # zerar σxy  # tentar usa sigma XY
-            
+
             # Impõe condutividade mínima
-            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, 5.0)  # σxx
+            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, 5.0)  # σxx           
             sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, 5.0)  # σyy
+
+            alphaFator = 0.9
+            limite = alphaFator * np.sqrt(sigmaInicial[:, 0] * sigmaInicial[:, 2])        
+            sigmaInicial[:, 1] = np.clip(sigmaInicial[:, 1], -limite, limite)
+            
+
+            
             ultimos10.append(sigmaPlusOne)                                     # Armazena 10 últimos valores de sigmaPlusOne
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
@@ -1212,13 +1251,16 @@ class inverse_problem:
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         DifAnisotropia = sigmaInicial[:, 0] - sigmaInicial[:, 2]
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
-        self.plotar_iteracoes(listXplot, listaItrPlot)
+        #self.plotar_iteracoes(listXplot, listaItrPlot)
         #self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med)
         #self.plotMSH(sigmaInicial[:, 1],Lambda, itr, save = True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med)
         #self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med)
         #self.plotMSH(DifAnisotropia,Lambda, itr, save = True, SigmaXXXYYY='_DifAniso', DifAniso = DifAnisotropia_Med) #SigmaXXXYYY=' DifAniso')
         #self.plot_sigma(sigmaInicial, titulo="Problema Inverso Anisotrópico")
         
+        theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], DifAnisotropia)
+        theta_deg = np.rad2deg(theta_rad)
+            
         lista_imgs = []
 
         # σxx, σxy, σyy (MSH)
@@ -1244,9 +1286,14 @@ class inverse_problem:
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
-        #nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.png'
-        #self.plotar_iteracoes(listXplot, listaItrPlot, nome = nome6)
-        #lista_imgs.append(nome6)
+        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.png'
+        self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome6)
+        lista_imgs.append(nome6)
+
+        # Gráfico tipo linha (o que você mandou)
+        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.png'
+        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome5)
+        lista_imgs.append(nome7)
         
         # Criar HTML
         #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
