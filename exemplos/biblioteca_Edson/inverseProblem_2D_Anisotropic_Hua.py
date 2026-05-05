@@ -1278,7 +1278,7 @@ class inverse_problem:
         
         # Diferença anisotrópica
         nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.png' 
-        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='Dif', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
+        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='xx-σyy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
         # Gráfico tipo linha (o que você mandou)
@@ -1292,7 +1292,7 @@ class inverse_problem:
 
         # Gráfico tipo linha (o que você mandou)
         nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.png'
-        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome5)
+        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome7)
         lista_imgs.append(nome7)
         
         # Criar HTML
