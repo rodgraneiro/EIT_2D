@@ -32,8 +32,8 @@ def rodar_simulacao(lambda_val, sigma_saved):
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
-    #nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
-    nome = '../../malhasMSH/test_Olavo_60grausNeg.msh'
+    nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
+    #nome = '../../malhasMSH/test_Olavo_60grausNeg.msh'
 
     
 
@@ -79,7 +79,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
             MinhaMalha_base.Elements[idx].CalcKgeo()
 
 
-    start = [5.0, 0.0, 5.0]
+    start = [5.0, 5.0, 5.0]
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
@@ -95,9 +95,10 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'test_Olavo_Hua_Ani301_Scale_zc_1_ang_60Neg'
+    htmlName = 'best_result_Olavo_Ani301_555_Scale_zc_1_ang_30p_100iteration'
+    #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=5,Tol=1.0e-6, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=100,Tol=1.0e-6, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -133,7 +134,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
 # 1.29154967e-04 7.74263683e-04 4.64158883e-03 2.78255940e-02
 # 1.66810054e-01 1.00000000e+00]
 
-lambdas = np.logspace(-9, 1, 20)
+#lambdas = np.logspace(-9, 1, 20)
 #lambdas = [1.00000000e-09, 3.35981829e-09]#, 1.12883789e-08, 3.79269019e-08,
 # 1.27427499e-07, 4.28133240e-07, 1.43844989e-06, 4.83293024e-06,
 # 1.62377674e-05, 5.45559478e-05]# 
@@ -153,11 +154,11 @@ lambdas = np.logspace(-9, 1, 20)
 
 
 resultados = {}
-
+'''
 for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
     resultados[lam] = rodar_simulacao(lam, None)
-
-#rodar_simulacao(1.00000000e-02, None)
+'''
+rodar_simulacao(2.33572147e-02, None)
 
