@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
+    <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
+    <title>EIT 2D - Electrical Impedance Tomography</title>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: white;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+        }
+
+        h4 {
+            color: #8888ff;
+            margin-top: 20px;
+        }
+
+        pre {
+            color: red;
+            font-size: 12px;
+        }
+
+        b {
+            color: #00ff00;
+        }
+
+        i {
+            color: red;
+        }
+
+        a {
+            color: red;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        td {
+            padding: 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        img {
+            width: 250px;
+        }
+
+        hr {
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
+    <h1>Anisotropic domain with an Square object phantom -  Angle 0° - Auto scale</h1>
+
+    <hr>
+
+    
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle 0°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2004 elements - base with 710 elements</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/phantonSxxOlavo.png" width="300">
+    <img src="figureTemp/phantonSxyOlavo.png" width="300">
+    <img src="figureTemp/phantonSyyOlavo.png" width="300">
+    </div>
+    <hr>
+    <h4>Electric field of anisotropy - angle 0°</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/phanton_Olavo_1.png" width="300">
+    <img src="figureTemp/phanton_Olavo_2.png" width="300">
+    </div>
+
+    <br>
+
+    <br>
+<hr>
+<hr>
+    <br>
+    <h1> Solution to the inverse problem. Base - 1 Square Object - Angle 0° -  Auto scale</h1>
+    <br>
+
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+<hr>   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_1e-09.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_1e-09.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_1e-09.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_1e-09.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_1e-09.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_1e-09.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_1e-09.png" width="300">
+    </div>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_1.2915496650148827e-08.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_1.2915496650148827e-08.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_1.2915496650148827e-08.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_1.2915496650148827e-08.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_1.2915496650148827e-08.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_1.2915496650148827e-08.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_1.2915496650148827e-08.png" width="300">
+    </div>
+     <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_1.668100537200059e-07.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_1.668100537200059e-07.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_1.668100537200059e-07.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_1.668100537200059e-07.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_1.668100537200059e-07.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_1.668100537200059e-07.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_1.668100537200059e-07.png" width="300">
+    </div>
+     <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_2.1544346900318865e-06.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_2.1544346900318865e-06.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_2.1544346900318865e-06.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_2.1544346900318865e-06.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_2.1544346900318865e-06.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_2.1544346900318865e-06.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_2.1544346900318865e-06.png" width="300">
+    </div>
+     <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_2.782559402207126e-05.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_2.782559402207126e-05.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_2.782559402207126e-05.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_2.782559402207126e-05.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_2.782559402207126e-05.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_2.782559402207126e-05.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_2.782559402207126e-05.png" width="300">
+    </div>
+     <br>
+
+     <br>
+
+     <br>
+
+     <br>
+
+     <br>
+
+     <br>
+
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle 30° -  Auto scale</h1>
+    <br>
+
+
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+ <hr>  
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+
+
+<div style="display:flex; gap:20px;">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xx_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_yy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_Dif_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_sigma_linhas_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_iterations_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_theta_0.0233572147.png" width="300">
+</div>
+
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle -30° </h1>
+    <br>
+
+<hr>
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xx_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xy_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_yy_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_Dif_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_sigma_linhas_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_iterations_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_theta_0.0233572147.png" width="300">
+    </div> 
+    <br>
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle 60° -  Auto scale</h1>
+    <br>
+
+
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+<hr>   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+
+    <br>
+<div style="display:flex; gap:20px;">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xx_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_yy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_Dif_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_sigma_linhas_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_iterations_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_theta_0.0233572147.png" width="300">
+</div> 
+<br>
+
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle -60° -  Auto scale</h1>
+    <br>
+
+
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+ <hr>  
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+
+<div style="display:flex; gap:20px;">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xx_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_yy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_Dif_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_sigma_linhas_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_iterations_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_theta_0.0233572147.png" width="300">
+</div>
+
+
+</body>
+</html>
+
