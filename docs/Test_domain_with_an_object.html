@@ -61,6 +61,14 @@
             margin-top: 20px;
             margin-bottom: 20px;
         }
+        /* NOVA CLASSE */
+    .titulo {
+        display: grid;
+        grid-template-columns: 250px 250px 250px 250px 250px 250px 250px;
+        text-align: center;
+        align-items: center;
+        column-gap: 20px;
+        }
     </style>
 </head>
 
@@ -72,17 +80,20 @@
 
     
     <h2>Phanton</h2>
-    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle 0°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2004 elements - base with 710 elements</h4>
+    <h4>Domain - &sigma;<sub>[3-0-3]</sub> [S/m]. Object &sigma;<sub>[3-0-1]</sub> [S/m] and angle 0° for all.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 1992 elements - base with 910 elements</h4>
     <div style="display:flex; gap:20px;">
-    <img src="figureTemp/phantonSxxOlavo.png" width="300">
-    <img src="figureTemp/phantonSxyOlavo.png" width="300">
-    <img src="figureTemp/phantonSyyOlavo.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_Sxx.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_Sxy.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_Syy.png" width="300">
     </div>
     <hr>
     <h4>Electric field of anisotropy - angle 0°</h4>
     <div style="display:flex; gap:20px;">
-    <img src="figureTemp/phanton_Olavo_1.png" width="300">
-    <img src="figureTemp/phanton_Olavo_2.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE1.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE2.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE3.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE4.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE5.png" width="300">
     </div>
 
     <br>
@@ -91,17 +102,26 @@
 <hr>
 <hr>
     <br>
-    <h1> Solution to the inverse problem. Base - 1 Square Object - Angle 0° -  Auto scale</h1>
+    <h1> Solution to the inverse problem. Base - 1 Square Object - Angle 0° -  Same scale</h1>
     <br>
 
-    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+    <p><b>Results obtained for a maximum of 25 iterations. &nbsp;&nbsp;&nbsp;</b>
 
-    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
-<hr>   
-    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
-        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <b>Same scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+<hr>
+
+    <h1 class="titulo">
+        <span>&sigma;<sub>xx</sub></span>
+        <span>&sigma;<sub>xy</sub></span>
+        <span>&sigma;<sub>yy</sub></span>
+        <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
+        <span>Summary</span>
+        <span>Optimization</span>
+        <span>Angle</span>
+    </h1>
+
+
+
     <br>
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_1e-09.png" width="300">
@@ -153,20 +173,60 @@
     <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_2.782559402207126e-05.png" width="300">
     </div>
      <br>
-
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_0.00035938136638046257.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_0.00035938136638046257.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_0.00035938136638046257.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_0.00035938136638046257.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_0.00035938136638046257.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_0.00035938136638046257.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_0.00035938136638046257.png" width="300">
+    </div>
      <br>
-
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_0.004641588833612782.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_0.004641588833612782.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_0.004641588833612782.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_0.004641588833612782.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_0.004641588833612782.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_0.004641588833612782.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_0.004641588833612782.png" width="300">
+    </div>
      <br>
-
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_0.05994842503189421.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_0.05994842503189421.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_0.05994842503189421.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_0.05994842503189421.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_0.05994842503189421.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_0.05994842503189421.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_0.05994842503189421.png" width="300">
+    </div>
      <br>
-
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_0.7742636826811278.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_0.7742636826811278.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_0.7742636826811278.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_0.7742636826811278.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_0.7742636826811278.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_0.7742636826811278.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_0.7742636826811278.png" width="300">
+    </div>
      <br>
-
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xx_10.0.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_xy_10.0.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_yy_10.0.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0sigma_Dif_10.0.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_sigma_linhas_10.0.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_iterations_10.0.png" width="300">
+    <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_Scale_zc_1_ang0_theta_10.0.png" width="300">
+    </div>
      <br>
 
 <hr>
 <hr>
-    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle 30° -  Auto scale</h1>
+    <h1>  Solution to the inverse problem. Base - 1 Square Object - Angle 0° -  Auto scale</h1>
     <br>
 
 
@@ -174,11 +234,15 @@
 
     <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
  <hr>  
-    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
-        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
-    <br>
+    <h1 class="titulo">
+        <span>&sigma;<sub>xx</sub></span>
+        <span>&sigma;<sub>xy</sub></span>
+        <span>&sigma;<sub>yy</sub></span>
+        <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
+        <span>Summary</span>
+        <span>Optimization</span>
+        <span>Angle</span>
+    </h1>
 
 
 <div style="display:flex; gap:20px;">
@@ -201,10 +265,15 @@
 
     <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
    
-    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
-        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <h1 class="titulo">
+        <span>&sigma;<sub>xx</sub></span>
+        <span>&sigma;<sub>xy</sub></span>
+        <span>&sigma;<sub>yy</sub></span>
+        <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
+        <span>Summary</span>
+        <span>Optimization</span>
+        <span>Angle</span>
+    </h1>
     <br>
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xx_0.0233572147.png" width="300">
