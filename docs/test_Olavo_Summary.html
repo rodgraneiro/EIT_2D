@@ -54,7 +54,7 @@
         }
 
         img {
-            width: 300px;
+            width: 250px;
         }
 
         hr {
@@ -66,13 +66,13 @@
 
 <body>
     <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
-    <h1> Anisotropic rectangular domain - Zero Objects - Angle 0° - Auto scale</h1>
+    <h1>Anisotropic domain of the rectangular phantom - Zero Objects - Angle 0° - Auto scale</h1>
 
     <hr>
 
     
     <h2>Phanton</h2>
-    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle 0°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
+    <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle 0°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2004 elements - base with 710 elements</h4>
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/phantonSxxOlavo.png" width="300">
     <img src="figureTemp/phantonSxyOlavo.png" width="300">
@@ -83,26 +83,70 @@
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/phanton_Olavo_1.png" width="300">
     <img src="figureTemp/phanton_Olavo_2.png" width="300">
-
     </div>
 
-    <hr>
+    <br>
+
+    <br>
+<hr>
+<hr>
+    <br>
+    <h1> Solution to the inverse problem. Base - Zero Objects - Angle 0° -  Auto scale</h1>
+    <br>
+
     <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
 
     <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
-   
+<hr>   
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_xx_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_xy_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_yy_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_Dif_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iteration_sigma_linhas_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iteration_iterations_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iteration_theta_0.0233572147.png" width="300">
+</div>
+    <br>
+
+     <br>
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle 30° -  Auto scale</h1>
+    <br>
+
+
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+ <hr>  
     <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
         &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
     <br>
 
-    <br>
+
+<div style="display:flex; gap:20px;">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xx_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_yy_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_Dif_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_sigma_linhas_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_iterations_0.0233572147.png" width="300">
+<img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iteration_theta_0.0233572147.png" width="300">
+</div>
+
 <hr>
 <hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle -30° -  Auto scale</h1>
     <br>
-    <h1> Anisotropic rectangular domain - Zero Objects - Angle 30° - Auto scale</h1>
-    <br>
+
 <hr>
     <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
 
@@ -114,39 +158,31 @@
         (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
     <br>
     <div style="display:flex; gap:20px;">
-    <img src="figureTemp/best_result_Olavo_Ani301_Scale_zc_1_ang_zero_100iterationsigma_xx_0.0233572147.png" width="300">
-    <img src="figureTemp/best_result_Olavo_Ani301_Scale_zc_1_ang_zero_100iterationsigma_xy_0.0233572147.png" width="300">
-    <img src="figureTemp/best_result_Olavo_Ani301_Scale_zc_1_ang_zero_100iterationsigma_yy_0.0233572147.png" width="300">
-    <img src="figureTemp/best_result_Olavo_Ani301_Scale_zc_1_ang_zero_100iterationsigma_Dif_0.0233572147.png" width="300">
-    <img src="figureTemp/best_result_Olavo_Ani301_Scale_zc_1_ang_zero_100iteration_sigma_linhas_0.0233572147.png" width="300">
-    </div>
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xx_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xy_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_yy_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_Dif_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_sigma_linhas_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_iterations_0.0233572147.png" width="300">
+    <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_theta_0.0233572147.png" width="300">
+    </div> 
+    <br>
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle 60° -  Auto scale</h1>
     <br>
 
-     <br>
-<hr>
-<hr>
-    <h1> Anisotropic rectangular domain - Zero Objects - Angle 60° - Auto scale</h1>
-    <br>
 
-<hr>
     <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
 
     <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
-   
+<hr>   
     <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
         &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
     <br>
-<div style="display:flex; gap:20px;">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_xx_0.0233572147.png" width="300">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_xy_0.0233572147.png" width="300">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_yy_0.0233572147.png" width="300">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iterationsigma_Dif_0.0233572147.png" width="300">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iteration_sigma_linhas_0.0233572147.png" width="300">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iteration_iterations_0.0233572147.png" width="300">
-<img src="figureTemp/best_result_Olavo_b_Ani301_555_Scale_zc_1_ang_zero_100iteration_theta_0.0233572147.png" width="300">
-</div>
+
     <br>
 <div style="display:flex; gap:20px;">
 <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iterationsigma_xx_0.0233572147.png" width="300">
@@ -158,6 +194,23 @@
 <img src="figureTemp/best_result_Olavo_Ani301_555_Scale_zc_1_ang_30Neg_100iteration_theta_0.0233572147.png" width="300">
 </div> 
 <br>
+
+<hr>
+<hr>
+    <h1>  Solution to the inverse problem. Base - Zero Objects - Angle -60° -  Auto scale</h1>
+    <br>
+
+
+    <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
+
+    <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 10)'. </b>
+ <hr>  
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &sigma;<sub>xx</sub>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&sigma;<sub>xy</sub>   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
+        &sigma;<sub>yy</sub>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        (&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Summary</h1>
+    <br>
+
 <div style="display:flex; gap:20px;">
 <img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xx_0.0233572147.png" width="300">
 <img src="figureTemp/best_result_Olavo_Ani301_505_Scale_zc_1_ang_30p_100iterationsigma_xy_0.0233572147.png" width="300">
