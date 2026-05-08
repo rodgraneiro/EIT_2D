@@ -17,6 +17,7 @@ import sys
 import plotly.graph_objects as go
 from datetime import datetime
 from matplotlib import cm
+from matplotlib.colors import TwoSlopeNorm
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
@@ -798,8 +799,15 @@ class inverse_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
+            
+            if SigmaXXXYYY == 'xy':
+                norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+            if not SigmaXXXYYY == 'xy':
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
 
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
+        
 
             fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             if save == True:

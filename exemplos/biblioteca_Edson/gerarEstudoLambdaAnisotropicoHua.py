@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 
 
 
+
 def rodar_simulacao(lambda_val, sigma_saved):
     
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
@@ -95,10 +96,10 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'Teste_10lbda_1Objeto301_esquerda_ang0_DominioIso303_Scale_zc_10000_ang0'
+    htmlName = 'Test_12lbda_1Obj301_Left_ag0_Dominio303_Scale_zc_1_ag0_RdBu_r_'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=25,Tol=1.0e-6, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=2,Tol=1.0e-6, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -150,15 +151,17 @@ def rodar_simulacao(lambda_val, sigma_saved):
 
 #lambdas = np.logspace(-9, 0, 10)
 #lambdas [1.e-09 1.e-08 1.e-07 1.e-06 1.e-05 1.e-04 1.e-03 1.e-02 1.e-01 1.e+00]
-
-
+lambdas = np.logspace(-9, 1, 12)
+#lambdas [1.00000000e-09 8.11130831e-09 6.57933225e-08 5.33669923e-07
+# 4.32876128e-06 3.51119173e-05 2.84803587e-04 2.31012970e-03
+# 1.87381742e-02 1.51991108e-01 1.23284674e+00 1.00000000e+01]
 
 resultados = {}
-'''
+
 for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
     resultados[lam] = rodar_simulacao(lam, None)
-'''
-rodar_simulacao(1.00000000e+01, None)
+
+#rodar_simulacao(7.74263683e-01, None)
 
