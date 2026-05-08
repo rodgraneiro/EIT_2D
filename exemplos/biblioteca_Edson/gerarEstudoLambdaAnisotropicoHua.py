@@ -142,7 +142,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
 # 2.06913808e-03, 6.95192796e-03, 2.33572147e-02, 7.84759970e-02,
 # 2.63665090e-01, 8.85866790e-01, 2.97635144e+00, 1.00000000e+01]
 
-lambdas = np.logspace(-9, 1, 10)
+#lambdas = np.logspace(-9, 1, 10)
 #lambdas [1.00000000e-09 1.29154967e-08 1.66810054e-07 2.15443469e-06
 # 2.78255940e-05 3.59381366e-04 4.64158883e-03 5.99484250e-02
 # 7.74263683e-01 1.00000000e+01]
@@ -154,11 +154,11 @@ lambdas = np.logspace(-9, 1, 10)
 
 
 resultados = {}
-
+'''
 for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
     resultados[lam] = rodar_simulacao(lam, None)
-
-#rodar_simulacao(2.33572147e-02, None)
+'''
+rodar_simulacao(1.00000000e+01, None)
 
