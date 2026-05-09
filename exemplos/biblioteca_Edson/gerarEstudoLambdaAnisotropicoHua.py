@@ -99,7 +99,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     htmlName = 'Test_12lbda_1Obj301_Left_ag0_Dominio303_Scale_zc_1_ag0_RdBu_r_'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=2,Tol=1.0e-6, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=25,Tol=1.0e-6, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -155,6 +155,12 @@ lambdas = np.logspace(-9, 1, 12)
 #lambdas [1.00000000e-09 8.11130831e-09 6.57933225e-08 5.33669923e-07
 # 4.32876128e-06 3.51119173e-05 2.84803587e-04 2.31012970e-03
 # 1.87381742e-02 1.51991108e-01 1.23284674e+00 1.00000000e+01]
+
+lambdas = np.logspace(-6, 1, 12)
+#lambdas [1.00000000e-06 4.32876128e-06 1.87381742e-05 8.11130831e-05
+# 3.51119173e-04 1.51991108e-03 6.57933225e-03 2.84803587e-02
+# 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
+
 
 resultados = {}
 
