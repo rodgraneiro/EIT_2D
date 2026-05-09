@@ -113,7 +113,10 @@
     Number of elements in the base mesh: 910<br>
     Maximum iterations: 25<br>
     Regularization: Gaussian HPF<br>
-    Virtual electrode model: Hua
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-9, 1, 10)<br>
+    [1.00000000e-09 1.29154967e-08 1.66810054e-07 2.15443469e-06 2.78255940e-05<br> 
+    3.59381366e-04 4.64158883e-03 5.99484250e-02 7.74263683e-01 1.00000000e+01]<br>
 
     </div>
     <p>
@@ -679,7 +682,7 @@
     Number of elements in the base mesh: 910<br>
     Maximum iterations: 25<br>
     Regularization: Gaussian HPF<br>
-    Virtual electrode model: Hua
+    Virtual electrode model: Hua<br>
     lambdas = np.logspace(-6, 1, 12)<br>
     [1.00000000e-06 4.32876128e-06 1.87381742e-05 8.11130831e-05 3.51119173e-04 1.51991108e-03<br> 
     6.57933225e-03 2.84803587e-02 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
@@ -695,7 +698,31 @@
     <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_Sxy.png" width="300">
     <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_Syy.png" width="300">
     </div>
-
+    
+    <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution for σxx = 3 [S/m]. Object with the same conductivity as the domain on the X-axis
+    <br>
+    Figure 2 — Phantom conductivity distribution for σxy = 0 [S/m].
+    <br>
+    Figure 2 — Phantom conductivity distribution for σyy. Object with conductivity different from the domain on the Y-axis. Domnain σyy = 3 and Object σyy = 1 [S/m].
+    </p>
+    <hr>
+    <h4>Electric field of anisotropy - angle 0°</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_CE1.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_CE2.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_CE3.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_CE4.png" width="300">
+    <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_CE5.png" width="300">
+    </div>
+    <br>
+    <div class="explanation">
+    <br>
+    Above are some examples of simulated electric fields in the phantom.
+    <br>
+    </div>
+ <hr> 
     <p><b>Results obtained for a maximum of 25 iterations. &nbsp;&nbsp;&nbsp;</b>
 
     <b>Same scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-6, 1, 12)'. </b>
