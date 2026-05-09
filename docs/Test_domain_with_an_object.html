@@ -94,9 +94,6 @@
     This page presents the results of the anisotropic inverse problem 
     using the Hua virtual electrode model in Electrical Impedance Tomography (EIT).
 
-    The phantom domain presents anisotropic conductivity with:
-    σxx = 3 S/m and σyy = 1 S/m.
-
     The figures below show:
     <ul>
     <li>The conductivity distribution of the phantom;</li>
@@ -110,13 +107,14 @@
 
     Current pattern: Skip - 3<br>
     Electrodes: 16<br>
-    Domain conductivity: σxx = 3 and σyy = 3 S/m.<br>
-    Object conductivity: σxx = 3 and σyy = 1 S/m.<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
+    Object conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
     Number of phantom elements mesh: 1992<br>
     Number of elements in the base mesh: 910<br>
     Maximum iterations: 25<br>
     Regularization: Gaussian HPF<br>
     Virtual electrode model: Hua
+
     </div>
     <p>
     The anisotropic conductivity tensor is represented by:
@@ -668,13 +666,30 @@
     <br>
 <hr>
 <hr>
-    <h1> Solution to the inverse problem. Base - 1 Square Object left [301] S/m Angle 0° -  Same scale - Colour RdBu_r</h1>
-    <br>
+    <h1> Solution to the inverse problem. Base - 1 Square Object left [301] S/m Angle 0° -  Same scale - Color RdBu_r</h1>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
+    Object conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
+    Number of phantom elements mesh: 2590<br>
+    Number of elements in the base mesh: 910<br>
+    Maximum iterations: 25<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua
+    lambdas = np.logspace(-6, 1, 12)<br>
+    [1.00000000e-06 4.32876128e-06 1.87381742e-05 8.11130831e-05 3.51119173e-04 1.51991108e-03<br> 
+    6.57933225e-03 2.84803587e-02 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
+    </div>
+    <p>
     <hr>
 
     
     <h2>Phanton</h2>
-    <h4>Domain - &sigma;<sub>[3-0-3]</sub> [S/m]. Object &sigma;<sub>[3-0-1]</sub> [S/m] and angle 0° for all.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 1992 elements - base with 910 elements</h4>
+    <h4>Domain - &sigma;<sub>[3-0-3]</sub> [S/m]. Object &sigma;<sub>[3-0-1]</sub> [S/m] and angle 0° for all.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2590 elements - base with 910 elements</h4>
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_Sxx.png" width="300">
     <img src="figureTemp/Phanton_1Objeto301_esquerda_ang0_Dominio303_Scale_zc_1_ang0_Sxy.png" width="300">
