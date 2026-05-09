@@ -6,7 +6,10 @@
     <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
     <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
     <title>EIT 2D - Electrical Impedance Tomography</title>
+    <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             background-color: #000000;
@@ -69,12 +72,77 @@
         align-items: center;
         column-gap: 20px;
         }
+  
+        .equation{
+            font-size: 24px;
+            color: #88ccff;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .equation-left {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 24px;
+        }  
     </style>
 </head>
 
 <body>
-    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
-    <h1>Anisotropic domain with an Square object phantom -  Angle 0° - Auto scale</h1>
+    <h1>Results of the Anisotropic Inverse Problem EIT with Hua virtual electrode</h1>
+    <h1>Anisotropic domain with an Square object phantom -  Angle 0°</h1>
+    <p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the anisotropic inverse problem 
+    using the Hua virtual electrode model in Electrical Impedance Tomography (EIT).
+
+    The phantom domain presents anisotropic conductivity with:
+    σxx = 3 S/m and σyy = 1 S/m.
+
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The electric field behavior caused by anisotropy;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 and σyy = 3 S/m.<br>
+    Object conductivity: σxx = 3 and σyy = 1 S/m.<br>
+    Number of phantom elements mesh: 1992<br>
+    Number of elements in the base mesh: 910<br>
+    Maximum iterations: 25<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua
+    </div>
+    <p>
+    The anisotropic conductivity tensor is represented by:
+    </p>
+
+    <!-- <p style="font-size:24px;">
+    σ = [ σxx  σxy ; σxy  σyy ]
+    </p> 
+    <div class="equation">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div> -->
+    <div class="equation-left">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div>
 
     <hr>
 
@@ -86,6 +154,14 @@
     <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_Sxy.png" width="300">
     <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_Syy.png" width="300">
     </div>
+    <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution for σxx. Object with the same conductivity as the domain on the X-axis
+    <br>
+    Figure 2 — Phantom conductivity distribution for σxy.
+    <br>
+    Figure 2 — Phantom conductivity distribution for σyy. Object with conductivity different from the domain on the Y-axis
+    </p>
     <hr>
     <h4>Electric field of anisotropy - angle 0°</h4>
     <div style="display:flex; gap:20px;">
@@ -95,15 +171,20 @@
     <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE4.png" width="300">
     <img src="figureTemp/Phanton_1Objeto301_ang0_Dominio303_Scale_zc_1_ang0_CE5.png" width="300">
     </div>
-
     <br>
-
+    
+    <div class="explanation">
+    The anisotropic conductivity changes the electric field lines,
+    forcing the current to preferentially flow along the direction
+    of higher conductivity, producing asymmetric current flow..
     <br>
+    Above are some examples of simulated electric fields in the phantom.
+    <br>
+    </div>
 <hr>
 <hr>
     <br>
     <h1> Solution to the inverse problem. Base - 1 Square Object - Angle 0° -  Same scale</h1>
-    <br>
 
     <p><b>Results obtained for a maximum of 25 iterations. &nbsp;&nbsp;&nbsp;</b>
 
@@ -117,7 +198,7 @@
         <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
         <span>Summary</span>
         <span>Optimization</span>
-        <span>Angle</span>
+        <span>Angle [°]</span>
     </h1>
 
 
@@ -227,7 +308,6 @@
 <hr>
 <hr>
     <h1>  Solution to the inverse problem. Base - 1 Square Object - Angle 0° -  Auto scale</h1>
-    <br>
 
 
     <p><b>Results obtained for a maximum of 25 iterations. &nbsp;&nbsp;&nbsp;</b>
@@ -241,7 +321,7 @@
         <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
         <span>Summary</span>
         <span>Optimization</span>
-        <span>Angle</span>
+        <span>Angle [°]</span>
     </h1>
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/Teste_20lbda_1Objeto301_ang0_DominioIso303_NoScale_zc_1_ang0sigma_xx_1e-09.png" width="300">
@@ -347,7 +427,6 @@
 <hr>
 <hr>
     <h1>  Solution to the inverse problem. Base - 1 Square Object left - Angle 0° -  Same scale </h1>
-    <br>
 
 <hr>
     <p><b>Results obtained for a maximum of 25 iterations. &nbsp;&nbsp;&nbsp;</b>
@@ -361,7 +440,7 @@
         <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
         <span>Summary</span>
         <span>Optimization</span>
-        <span>Angle</span>
+        <span>Angle [°]</span>
     </h1>
     <br>
     <div style="display:flex; gap:20px;">
@@ -469,7 +548,6 @@
 <hr>
 <hr>
     <h1>  Solution to the inverse problem. Base - 1 Square Object left - Angle 0° -  Auto scale</h1>
-    <br>
 
 
     <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
@@ -483,7 +561,7 @@
         <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
         <span>Summary</span>
         <span>Optimization</span>
-        <span>Angle</span>
+        <span>Angle [°]</span>
     </h1>
         <br>
 
@@ -588,13 +666,6 @@
     <img src="figureTemp/Teste_10lbda_1Objeto301_esquerda_ang0_DominioIso303_Scale_zc_1_ang0_theta_10.0.png" width="300">
     </div>
     <br>
-
-    <br>
-
-
-
-
-
 <hr>
 <hr>
     <h1> Solution to the inverse problem. Base - 1 Square Object left [301] S/m Angle 0° -  Same scale - Colour RdBu_r</h1>
@@ -621,7 +692,7 @@
         <span>(&sigma;<sub>xx</sub> - &sigma;<sub>yy</sub>)</span>
         <span>Summary</span>
         <span>Optimization</span>
-        <span>Angle</span>
+        <span>Angle [°]</span>
     </h1>
     <br>
     <div style="display:flex; gap:20px;">
