@@ -6,7 +6,8 @@
     <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
     <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
     <title>EIT 2D - Electrical Impedance Tomography</title>
-
+    <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             background-color: #000000;
@@ -69,21 +70,84 @@
         align-items: center;
         column-gap: 20px;
         }
+
+        .equation{
+            font-size: 24px;
+            color: #88ccff;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .equation-left {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 24px;
+        }  
     </style>
 </head>
 
 <body>
-    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
+
+    <h1>Results of the Anisotropic Inverse Problem EIT with Hua virtual electrode</h1>
+    <h1>Anisotropic domain phantom </h1>
+    <p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the anisotropic inverse problem 
+    using the Hua virtual electrode model in Electrical Impedance Tomography (EIT). <br>
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The electric field behavior caused by anisotropy;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle -30°.<br>
+    Number of phantom elements mesh: 2038<br>
+    Number of elements in the base mesh: 910<br>
+    Maximum iterations: 5<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-9, 1, 20)<br>
+    [1.00000000e-09 3.35981829e-09 1.12883789e-08 3.79269019e-08 1.27427499e-07 4.28133240e-07 1.43844989e-06 4.83293024e-06 1.62377674e-05 5.45559478e-05<br> 
+    1.83298071e-04 6.15848211e-04 2.06913808e-03 6.95192796e-03 2.33572147e-02 7.84759970e-02 2.63665090e-01 8.85866790e-01 2.97635144e+00 1.00000000e+01]
+
+    </div>
+    <p>
+    The anisotropic conductivity tensor is represented by:
+    </p>
+
+    <div class="equation-left">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div>
+
     <hr>
 
     
-    <h2>Phanton</h2>
+    <h2>Phantom</h2>
     <h4>Domain - &sigma;<sub>xx</sub> = 3 [S/m] with &sigma;<sub>yy</sub> =  1 [S/m] and angle -30°. No objects.  &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
     <div style="display:flex; gap:20px;">
     <img src="figureTemp/phantonSxx.png" width="300">
     <img src="figureTemp/phantonSxy.png" width="300">
     <img src="figureTemp/phantonSyy.png" width="300">
     </div>
+    <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution for σxx = 3 [S/m] and angle -30°.
+    <br>
+    Figure 2 — Phantom conductivity distribution for σxy = 0 [S/m] and angle -30°.
+    <br>
+    Figure 2 — Phantom conductivity distribution for σyy = 1 [S/m] and angle -30°.
+    </p>
     <hr>
     <h4>Electric field of anisotropy - angle -30°</h4>
     <div style="display:flex; gap:20px;">
@@ -93,12 +157,26 @@
     <img src="figureTemp/malha_aniso_compoEletrico_4B.png" width="300">
     <img src="figureTemp/malha_aniso_compoEletrico_5B.png" width="300">
     </div>
-
+    <br>
+    <div class="explanation">
+    The anisotropic conductivity changes the electric field lines,
+    forcing the current to preferentially flow along the direction
+    of higher conductivity, producing asymmetric current flow..
+    <br>
+    Above are some examples of simulated electric fields in the phantom.
+    <br>
+    </div>
     <hr>
+    <h1> Solution to the inverse problem. Same scale</h1>
     <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
 
     <b>Same scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 20)'. </b>
-   
+    <div class="explanation">
+    <br>
+    This section shows the results of solving the inverse problem, with all graphs on the same scale.
+    <br>
+    </div>
+  
     <h1 class="titulo">
         <span>&sigma;<sub>xx</sub></span>
         <span>&sigma;<sub>xy</sub></span>
@@ -273,9 +351,16 @@
     <br>
     <br>
 <hr>
+   <hr>
+    <h1> Solution to the inverse problem. Same scale</h1>
     <p><b>Results obtained for a maximum of 5 iterations. &nbsp;&nbsp;&nbsp;</b>
 
     <b>Auto scale for all graphs. &nbsp;&nbsp;&nbsp;</b> <b>Lambda values ​​are obtained by: 'lambdas = np.logspace(-9, 1, 20)'. </b>
+    <div class="explanation">
+    <br>
+    This section shows the results of solving the inverse problem, with auto scale.
+    <br>
+    </div>
 <hr>
 
    
