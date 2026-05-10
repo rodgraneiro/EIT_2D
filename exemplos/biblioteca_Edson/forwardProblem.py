@@ -104,12 +104,14 @@ class forward_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
+            norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
             if SigmaXXXYYY == 'xy':
-                norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+                
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             if not SigmaXXXYYY == 'xy':
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             #triang = tri.Triangulation(x, y, elems_2D)
             #tpc = ax.tripcolor(triang, facecolors=sigma[:len(elems_2D)], edgecolors='k', cmap='Blues',min=0.0, vmax=5.0 )
             #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=0.0, vmax=5.0 )
