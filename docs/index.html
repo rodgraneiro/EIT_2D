@@ -65,23 +65,72 @@
 </head>
 
 <body>
-    <h2>Isotropic mesh with Hua virtual electrode</h2>
+    <h2>Isotropic mesh with Hua virtual electrode (EIT)</h2>
 
     <hr>
-
-
-    <p>Lambda values ​​are obtained by: 'lambdas = np.logspace(-4, 2, 10)'. &nbsp;&nbsp;&nbsp;    
-    <a href="https://numpy.org/doc/2.1/reference/generated/numpy.logspace.html">
-    link: Documentation of numpy.logspace
-    </a>  
     </p>
+<p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the inverse isotropic problem using Hua's virtual electrode<br> 
+    model in Electrical Impedance Tomography (EIT) for three different mesh configurations. Each<br> 
+    row shows the results for ten different lambdas.
+    <br> 
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    <li>Results obtained for a maximum of 100 iterations.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
 
-    <p><b>Results obtained for a maximum of 100 iterations. &nbsp;&nbsp;&nbsp;</b>
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
+    Object conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
+    Numbers of phantom elements mesh: 2038, 2660 and 2892 respectively.<br>
+    Number of elements in the base mesh: 910<br>
+    Maximum iterations: 100<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-4, 1, 10)<br>
+    [1.00000000e-04 3.59381366e-04 1.29154967e-03 4.64158883e-03 1.66810054e-02<br> 
+    5.99484250e-02 2.15443469e-01 7.74263683e-01 2.78255940e+00 1.00000000e+01]<br>
+    <a href="https://numpy.org/doc/2.1/reference/generated/numpy.logspace.html"> link: Documentation of numpy.logspace </a>  
+    </div>
+    <hr>
+    <h1> Solution to the inverse problem. Same scale.</h1>
+    
 
     <b>Same scale for all graphs.</b></p>
 
     <hr>
     <h4>Domain 3 [S/m] with an object 2 [S/m]. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2038 elements - base with 910 elements</h4>
+ <br> 
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+ <hr>   
+    <h2>Phanton 1</h2>
+    <h4>Domain - &sigma;<sub>[3]</sub> [S/m]. Object &sigma;<sub>[1]</sub> [S/m].</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_iso.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_CE1.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_CE2.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_CE3.png" width="300">
+    </div>
+        <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution - 1 object
+    <br>
+    Figure 2, 3 e 4 — Some examples of simulated electric fields in the phantom.
+    </p>
+
+
 
     <table>
         <tr>
@@ -162,6 +211,7 @@
         </a>&nbsp;&nbsp;&nbsp;
         <i>Video of the best result -> &lambda; = 4.64e-04.</i>
     </td>
+   <div class="infoBox"> Click on the image to zoom or video. </div> <br>
     <!--
     <td>
     <video width="300" controls>
@@ -170,6 +220,22 @@
     </video> -->
     <hr>
 </td>
+
+<hr>   
+    <h2>Phanton 2</h2>
+    <h4>Domain - &sigma;<sub>[3]</sub> [S/m]. Object &sigma;<sub>[1]</sub> [S/m].</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_iso.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_CE1.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_CE2.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso1_CE3.png" width="300">
+    </div>
+        <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution - 1 object
+    <br>
+    Figure 2, 3 e 4 — Some examples of simulated electric fields in the phantom.
+    </p>
     <h4>Domain with 3 objects version 1. Domain 3 [S/m]. Objects 2 [S/m]. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2660 elements - base with 910 elements</h4>
 
     <table>
@@ -252,10 +318,25 @@
         </a>&nbsp;&nbsp;&nbsp;
         <i>Video of the best result -> &lambda; = 4.64e-04.</i>
     </td>
-
+   <div class="infoBox"> Click on the image to zoom or video. </div> <br>
 
 
     <hr>
+<hr>   
+    <h2>Phanton 3</h2>
+    <h4>Domain - &sigma;<sub>[3]</sub> [S/m]. Object &sigma;<sub>[1]</sub> [S/m].</h4>
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso_v2_iso.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso_v2_CE1.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso_v2_CE2.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso_v2_CE3.png" width="300">
+    </div>
+        <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution - 1 object
+    <br>
+    Figure 2, 3 e 4 — Some examples of simulated electric fields in the phantom.
+    </p>
     <h4>Domain with 3 objects version 2. Domain 3 [S/m]. Objects 2 [S/m]. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2892 elements - base with 910 elements</h4>
 
     <table>
@@ -331,19 +412,35 @@
                 </a>
             </td>
     </table>
+     
     <td>     
         <a href="videos/domain_3Object_v2A.mp4" >
             <img src="figures/Hua_cuba16eletrodos_base_3_lambda_0.0022.png" style="width: 60px;">
         </a>&nbsp;&nbsp;&nbsp;
         <i>Video of the best result -> &lambda; = 4.64e-04.</i>
     </td>
-
+    <div class="infoBox"> Click on the image to zoom or video. </div> <br>
 
 
 
 
 
     <hr>
+<hr>   
+    <h2>Phanton 4</h2>
+
+    <div style="display:flex; gap:20px;">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso3_iso.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso3_CE_1.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso3_CE_2.png" width="300">
+    <img src="figureTemp/Hua_cuba16eletrodos_3objetos_denso3_CE_3.png" width="300">
+    </div>
+        <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution - 1 object
+    <br>
+    Figure 2, 3 e 4 — Some examples of simulated electric fields in the phantom.
+    </p>
     <h4>Mesh with 4 conductivities. Domain 4 [S/m]. Objects 1, 2, and 3 [S/m] respectively. &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Phaton with 2660 elements - base with 910 elements</h4>
 
     <table>
@@ -430,6 +527,7 @@
 
 
     <hr>
+    <h1> Link to anisotropy tests.</h1>
     <hr>
 
     <p>
