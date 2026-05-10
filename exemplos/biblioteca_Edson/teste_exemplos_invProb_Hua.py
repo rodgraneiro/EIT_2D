@@ -27,8 +27,8 @@ import matplotlib.pyplot as plt
 #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
 #nome = '../../malhasMSH/Hua_4e_coarse_test.msh'
 
-nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh'
-#nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
+#nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh'
+nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
 
 #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
 
@@ -45,9 +45,9 @@ print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
 
 
 meus_sigmas = {
-1000 : 4.0,    
-1001 : 3.0,
-1002 : 2.0,
+1000 : 3.0,    
+1001 : 0.0001,
+1002 : 1.0,
 1003 : 1.0,
 5001 : 1.0, 
 5002 : 1.0, 
@@ -80,5 +80,5 @@ fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
 fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
 V_measured_phaton = fwd.Vmedido_eletrodos
-np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
-print(f'V_mesured\n {V_measured_phaton}')
+#np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
+#print(f'V_mesured\n {V_measured_phaton}')

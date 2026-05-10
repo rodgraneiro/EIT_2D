@@ -805,7 +805,7 @@ class inverse_problem:
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             if not SigmaXXXYYY == 'xy':
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
         
 
@@ -1041,43 +1041,21 @@ class inverse_problem:
         V_measured = V_measured.reshape(-1, 1)
         #print('V_measured', V_measured.shape)
         
-        '''
-        #sigmaInicial = np.ones(self.mymesh.msh_topology.shape[0])*initialEstimate
-        #sigmaInicial = np.ones(self.mymesh.NumberOfElements)*initialEstimate
-        #sigmaInicial = sigmaInicial.reshape(-1,1)
-
-        #n_elem_initialEstimate = self.mymesh.NumberOfElements
-        n_elem_initialEstimate = self.mymesh.NumberOfNodes
-        initialEstimate = np.array(initialEstimate, dtype=float)
-
-        physical_elements_idx = [
-            #idx for idx in range(self.mymesh.NumberOfElements)
-            idx for idx in range(self.mymesh.NumberOfNodes)
-
-            if not self.mymesh.Elements[idx].FlagIsElectrode
-        ]
-
-        n_elem_initialEstimate = len(physical_elements_idx)
-
-        sigmaInicial = np.tile(initialEstimate, (n_elem_initialEstimate, 1))
-        
-        #n_elem_initialEstimate = self.mymesh.NumberOfElements
-        #initialEstimate = np.array(initialEstimate, dtype=float)
-        #sigmaInicial = np.tile(initialEstimate, (n_elem_initialEstimate, 1))
-        print('sigmaInicial',sigmaInicial.shape)
-        
-        #sigmaStar = sigmaInicial #np.ones(self.mymesh.NumberOfElements)*0
-        self.sigmaStar = (sigmaInicial)*2.5
-        sigmaOne = np.ones(self.mymesh.NumberOfElements)
-        '''
 
 
         initialEstimate = np.array(initialEstimate, dtype=float)
 
-        n_elem_phys = self.mymesh.NumberOfPhysicalElements
-        sigmaInicial = np.tile(initialEstimate, (n_elem_phys, 1))
 
-        self.sigmaStar = np.tile(initialEstimate, (n_elem_phys, 1))
+
+        #n_elem_phys = self.mymesh.NumberOfPhysicalElements
+        #sigmaInicial = np.tile(initialEstimate, (n_elem_phys, 1))
+        sigmaInicial = initialEstimate
+        #self.sigmaStar = np.tile(initialEstimate, (n_elem_phys, 1))
+
+
+
+
+
 
         #sigmaInicial_vec = sigmaInicial.reshape(-1, 1, order='C')
         #sigmaStar_vec    = self.sigmaStar.reshape(-1, 1, order='C')
