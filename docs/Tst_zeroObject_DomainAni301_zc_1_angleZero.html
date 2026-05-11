@@ -6,7 +6,8 @@
     <meta name="description" content="Simulation and reconstruction in 2D Electrical Impedance Tomography with Python">
     <!-- <title>REGULARIZATION PARAMETERS - EIT</title> -->
     <title>EIT 2D - Electrical Impedance Tomography</title>
-
+    <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             background-color: #000000;
@@ -73,9 +74,52 @@
 </head>
 
 <body>
-    <h1>Results of the Anisotropic Inverse Problem with Hua virtual electrode</h1>
+    <h1>Results of the Anisotropic Inverse Problem EIT with Hua virtual electrode</h1>
     <h1> Anisotropic domain - Zero Objects - Angle 0° - Same scale</h1>
+ <p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the anisotropic inverse problem 
+    using the Hua virtual electrode model in Electrical Impedance Tomography (EIT).
 
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The electric field behavior caused by anisotropy;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
+    Number of phantom elements mesh: 1992<br>
+    Number of elements in the base mesh: 910<br>
+    Maximum iterations: 25<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-9, 1, 20)<br>
+    [1.00000000e-09 3.35981829e-09 1.12883789e-08 3.79269019e-08 1.27427499e-07 4.28133240e-07 1.43844989e-06 4.83293024e-06 1.62377674e-05 5.45559478e-05<br>
+     1.83298071e-04 6.15848211e-04 2.06913808e-03 6.95192796e-03 2.33572147e-02 7.84759970e-02 2.63665090e-01 8.85866790e-01 2.97635144e+00 1.00000000e+01]<br>
+
+
+    </div>
+    <p>
+    The anisotropic conductivity tensor is represented by:
+    </p>
+
+    <div class="equation-left">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div>
+
+    <hr>
     <hr>
 
     
