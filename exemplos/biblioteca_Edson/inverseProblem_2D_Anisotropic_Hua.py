@@ -1183,12 +1183,12 @@ class inverse_problem:
             if normaDelta < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               convergencia = True
-              #break
+              break
                                                                         # interrompe o processo de iteração
             if normaResidue < Tol:    # Convergência atingida se a norma de # delta_sigam < que  1e-6
               print(f'Convergência atingida após {itr} iterações.')
               convergencia = True
-              #break
+              break
             
             #print('sigmaInicial_antes', sigmaInicial[:1])
             sigmaPlusOne = (sigmaInicial_vec + alphaDeltaSigma)
