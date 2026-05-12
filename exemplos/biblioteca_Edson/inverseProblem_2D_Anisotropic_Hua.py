@@ -487,13 +487,9 @@ class inverse_problem:
         #print("JTJ.shape =", self.JTJ.shape)
         J = self.TempJ
 
-        corr_xx_yy = np.corrcoef(
-            J[:, 0::3].ravel(),
-            J[:, 2::3].ravel()
-            )[0, 1]
-        
-
+        corr_xx_yy = np.corrcoef(J[:, 0::3].ravel(), J[:, 2::3].ravel())[0, 1]
         print("corr σxx-σyy =", corr_xx_yy)
+        
     '''
     def Calc_J(self, invVtemp):
         listTempJ=[]
@@ -842,38 +838,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
-    '''
-    def plot_sigma(self, sigmaResult, titulo="Problema Inverso Anisotrópico"):
-        # Carrega os dados
-        #data = np.loadtxt(filename)
-        data = sigmaResult
-    
-        # Separa as componentes
-        sigma_xx = data[:, 0]
-        sigma_xy = data[:, 1]
-        sigma_yy = data[:, 2]
-    
-        # Eixo x (índice dos elementos)
-        x = np.arange(len(sigma_xx))
-    
-        # Cria o gráfico
-        plt.figure(figsize=(10, 5))
-    
-        plt.plot(x, sigma_xx, label='σxx', linewidth=1.5)
-        plt.plot(x, sigma_xy, label='σxy', linewidth=1.5)
-        plt.plot(x, sigma_yy, label='σyy', linewidth=1.5)
-    
-        # Estilo semelhante ao seu exemplo
-        plt.title(titulo, fontsize=14)
-        plt.xlabel('Elemento', fontsize=12)
-        plt.ylabel('Condutividade', fontsize=12)
-    
-        plt.grid(True, linestyle='--', alpha=0.5)
-        plt.legend()
-    
-        plt.tight_layout()
-        plt.show()
-    ''' 
+
     def plot_sigma(self, sigmaResult, titulo="Results of the calculated conductivities σxx, σxy, σyy and σxx-σyy", salvar=False, nome_arquivo="plot_sigma.png"):
     
         data = sigmaResult
@@ -969,23 +934,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
-
-    '''
-    def salvar_html(self, lista_imagens, nome_html="resultado.html"):
-        with open(nome_html, "w", encoding="utf-8") as f:
-            f.write("<html>\n<head>\n<title>Resultados TIE</title>\n</head>\n<body>\n")
-    
-            f.write("<h1>Resultados do Problema Inverso</h1>\n")
-    
-            for img in lista_imagens:
-                f.write(f"""
-                <div style="margin-bottom:30px;">
-                    <img src="{img}" width="80">
-                </div>
-                """)
-    
-            f.write("</body>\n</html>")
-     '''       
+     
     def salvar_html(self, lista_imagens, nome_html="resultado.html"):
         with open(nome_html, "w", encoding="utf-8") as f:
             f.write("""
@@ -1047,10 +996,10 @@ class inverse_problem:
 
 
 
-        #n_elem_phys = self.mymesh.NumberOfPhysicalElements
-        #sigmaInicial = np.tile(initialEstimate, (n_elem_phys, 1))
-        sigmaInicial = initialEstimate
-        #self.sigmaStar = np.tile(initialEstimate, (n_elem_phys, 1))
+        n_elem_phys = self.mymesh.NumberOfPhysicalElements
+        sigmaInicial = np.tile(initialEstimate, (n_elem_phys, 1))
+        #sigmaInicial = initialEstimate
+        self.sigmaStar = np.tile(initialEstimate, (n_elem_phys, 1))
 
 
 
@@ -1080,13 +1029,11 @@ class inverse_problem:
             
             V_calc_noh = V_calc_noh.T
             V_calc_noh = V_calc_noh.reshape(-1, 1)
-            #print('V_calc_noh',V_calc_noh.shape)
-            #print('V_measured',V_measured.shape)
+
 
 
                         # ***** Determinação do resíduo *****
             residue = V_calc_noh - V_measured                                  # Calcula resíduo matriz Nele X Nele
-            #print('V_calc_noh',V_calc_noh)
             normaResidue = np.linalg.norm(residue)
             listaItrPlot.append(normaResidue)
             #print('residue',residue.shape)
@@ -1134,16 +1081,12 @@ class inverse_problem:
             #regTerm = (sigmaInicial)# - sigmaStar)* (Lambda**2)
             regTerm = (sigmaInicial_vec)# - sigmaInicial_vec)
             
-            #print('sigmaInicial',sigmaInicial)
-            #regTerm = regTerm.reshape(-1, 1)
-            #regTermC = np.repeat(regTerm, self.mymesh.NumberOfElectrodes, axis=1)
-            #print('regTerm',regTerm.shape)
+
             
 
             regularization = np.dot(termo_L, regTerm)
             
-            #regularization = (Lambda**2)*LTL @ regTerm     ????????
-            #regularization = (Lambda**2)*LTL @ regTerm     ????????
+
             
             # ***** Cálculo final do termo 2 *****
             secondTerm = -JTW_H - regularization
@@ -1216,19 +1159,19 @@ class inverse_problem:
 
             
                 
-            '''
-            if lastResidue[2] > lastResidue[1]:
+            
+            #if lastResidue[2] > lastResidue[1]:
                #contNorma =  contNorma + 1
-               print(f'Encontrou norma lastResidue maior  que a anterior.')
+               #print(f'Encontrou norma lastResidue maior  que a anterior.')
                
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
                #break
 
-            if contItr ==50:
-                np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-                contItr = 0
-            '''
+            #if contItr ==50:
+            #    np.savetxt('sigma_inicial_bk_{itr}.txt', sigmaInicial, fmt="%.8f")
+            #    contItr = 0
+            
             #if itr % 10 == 0:   # salva de 1000 em 1000 ...
             #    self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True)
             #    self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True)
@@ -1237,12 +1180,7 @@ class inverse_problem:
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         DifAnisotropia = sigmaInicial[:, 0] - sigmaInicial[:, 2]
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
-        #self.plotar_iteracoes(listXplot, listaItrPlot)
-        #self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med)
-        #self.plotMSH(sigmaInicial[:, 1],Lambda, itr, save = True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med)
-        #self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med)
-        #self.plotMSH(DifAnisotropia,Lambda, itr, save = True, SigmaXXXYYY='_DifAniso', DifAniso = DifAnisotropia_Med) #SigmaXXXYYY=' DifAniso')
-        #self.plot_sigma(sigmaInicial, titulo="Problema Inverso Anisotrópico")
+
         
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], DifAnisotropia)
         theta_deg = np.rad2deg(theta_rad)
