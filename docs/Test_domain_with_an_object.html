@@ -856,6 +856,170 @@
     <img src="figureTemp/Test_12lbda_1Obj301_Left_ag0_Dominio303_Scale_zc_1_ag0_RdBu_r__theta_10.0.png" width="300">
     </div>
     <br>
+<hr>
+
+    <div class="equation-left">
+    $$
+    \theta = \frac{1}{2}
+     \arctan (\frac{2\sigma_{xy}}{\sigma_{xx}-\sigma_{yy}})
+    $$
+    </div>
+<hr>
+    <div class="explanation">
+        <br>
+        Rotação do sistema de coordenadas
+        <br>
+        </div>
+$$  
+\sigma =  
+\begin{bmatrix}  
+\sigma_{xx} & \sigma_{xy} \\  
+\sigma_{xy} & \sigma_{yy}  
+\end{bmatrix}  
+$$
+
+$$  
+R =  
+\begin{bmatrix}  
+\cos\theta & -\sin\theta \\  
+\sin\theta & \cos\theta  
+\end{bmatrix}  
+$$
+
+
+
+$$  
+c=\cos\theta  
+$$
+$$  
+s=\sin\theta  
+$$
+
+
+
+$$  
+\sigma' = R \sigma R^T  
+$$
+
+
+
+ $$  
+R\sigma
+
+\begin{bmatrix}  
+c & -s \\  
+s & c  
+\end{bmatrix}  
+\begin{bmatrix}  
+\sigma_{xx} & \sigma_{xy} \\  
+\sigma_{xy} & \sigma_{yy}  
+\end{bmatrix}  
+=
+\begin{bmatrix}  
+c\sigma_{xx}-s\sigma_{xy}  
+&  
+c\sigma_{xy}-s\sigma_{yy}  
+\\  
+s\sigma_{xx}+c\sigma_{xy}  
+&  
+s\sigma_{xy}+c\sigma_{yy}  
+\end{bmatrix}  
+$$
+
+
+$$  
+\sigma' = (R\sigma)R^T  
+= 
+\sigma'_{xy}  
+$$
+
+# $$  
+\sigma'_{xy}
+
+(\sigma_{xx}-\sigma_{yy})sc  
++  
+\sigma_{xy}(c^2-s^2)  
+$$
+Nos eixos principais:
+
+$$  
+\sigma'_{xy}=0  
+$$
+
+Então:
+
+$$  
+(\sigma_{xx}-\sigma_{yy})sc  
++  
+\sigma_{xy}(c^2-s^2)  
+=0  
+$$
+
+Usando identidades trigonométricas
+
+Usamos:
+
+$$  
+\sin(2\theta)=2sc  
+$$
+
+e
+
+$$  
+\cos(2\theta)=c^2-s^2  
+$$
+
+Substituindo:
+$$  
+\frac{\sigma_{xx}-\sigma_{yy}}{2}\sin(2\theta)  
++  
+\sigma_{xy}\cos(2\theta)  
+=0  
+$$
+
+
+Dividindo por $$\cos(2\theta)$$:
+
+# $$  
+\frac{\sigma_{xx}-\sigma_{yy}}{2}\tan(2\theta)
+
+-\sigma_{xy}  
+$$
+
+Logo:
+
+# $$  
+\tan(2\theta)
+
+\frac{2\sigma_{xy}}{\sigma_{xx}-\sigma_{yy}}  
+$$
+
+
+
+
+Aplicando arco-tangente:
+
+$$  
+2\theta=  
+\arctan\left(  
+\frac{2\sigma_{xy}}  
+{\sigma_{xx}-\sigma_{yy}}  
+\right)  
+$$
+
+Portanto:
+
+$$  
+\boxed{  
+\theta=  
+\frac{1}{2}  
+\arctan\left(  
+\frac{2\sigma_{xy}}  
+{\sigma_{xx}-\sigma_{yy}}  
+\right)  
+}  
+$$
+
 
 </body>
 </html>
