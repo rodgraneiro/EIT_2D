@@ -80,9 +80,9 @@ def rodar_simulacao(lambda_val, sigma_saved):
             MinhaMalha_base.Elements[idx].CalcKgeo()
 
 
-    #start = [5.0, 0.0, 5.0]
+    start = [5.0, 0.0, 5.0]
     
-    start = np.loadtxt('sigmaInicial_result.txt')
+    #start = np.loadtxt('sigmaInicial_result.txt')
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
@@ -98,10 +98,10 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'Test_Reverter_1Obj301_Left_ag0_Dominio303_Scale_zc_1_ag0_'
+    htmlName = 'batata_'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.01,  Lambda = lambda_val, max_iter=1000,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=1,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -171,5 +171,5 @@ for lam in lambdas:
     
     resultados[lam] = rodar_simulacao(lam, None)
 '''
-rodar_simulacao(1.51991108e-03, None)
+rodar_simulacao(6.57933225e-03, None)
 
