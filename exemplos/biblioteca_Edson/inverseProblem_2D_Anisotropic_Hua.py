@@ -829,7 +829,8 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
+            #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -848,14 +849,27 @@ class inverse_problem:
         sigma_yy = data[:, 2]
         sigma_Dif = sigma_xx - sigma_yy
         
+        Smed = 0.5 * (sigma_xx + sigma_yy)
+        D = np.sqrt(((sigma_xx - sigma_yy)/2)**2 + sigma_xy**2)
+        
+        sigma_x = Smed + D
+        sigma_y = Smed - D
+        
+        theta_rad = 0.5 * np.arctan2(2*sigma_xy, sigma_xx - sigma_xy)
+        theta_deg = np.rad2deg(theta_rad)
+        
         x = np.arange(len(sigma_xx))
-    
+        '''
         plt.figure(figsize=(10, 5))
     
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.5)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.5)
         plt.plot(x, sigma_yy, label='σyy', linewidth=1.5)
-        plt.plot(x, sigma_Dif, label='σxx-σyy', linewidth=1.5)
+        plt.plot(x, sigma_Dif, label='σx-σyy', linewidth=1.5)
+        plt.plot(x, sigma_x, label='σx', linewidth=1.5)
+        plt.plot(x, sigma_y, label='σy', linewidth=1.5)
+        plt.plot(x, theta_deg, label='θ°', linewidth=1.5)
+        
     
         plt.title(titulo, fontsize=14)
         plt.xlabel('Element', fontsize=12)
@@ -865,10 +879,58 @@ class inverse_problem:
         plt.legend()
     
         plt.tight_layout()
+        '''
+        fig, ax1 = plt.subplots(figsize=(10, 6))
+
+        # =========================
+        # eixo Y esquerdo
+        # =========================
+        ax1.plot(x, sigma_xx, label='σxx', linewidth=1.5)
+        ax1.plot(x, sigma_xy, label='σxy', linewidth=1.5)
+        ax1.plot(x, sigma_yy, label='σyy', linewidth=1.5)
+        ax1.plot(x, sigma_Dif, label='σx-σyy', linewidth=1.5)
+        ax1.plot(x, sigma_x, label='σx', linewidth=1.5)
+        ax1.plot(x, sigma_y, label='σy', linewidth=1.5)
         
+        ax1.set_xlabel('Element', fontsize=12)
+        ax1.set_ylabel('Conductivity [S/m]', fontsize=12)
+        
+        ax1.grid(True, linestyle='--', alpha=0.5)
+        
+        # =========================
+        # eixo Y direito
+        # =========================
+        ax2 = ax1.twinx()
+        
+        ax2.plot(x, theta_deg,
+                 label='θ°',
+                 linewidth=2,
+                 linestyle='--')
+        
+        ax2.set_ylabel('Angle θ [°]', fontsize=12)
+        
+        # opcional
+        ax2.set_ylim(-90, 90)
+        
+        # =========================
+        # legenda combinada
+        # =========================
+        lines1, labels1 = ax1.get_legend_handles_labels()
+        lines2, labels2 = ax2.get_legend_handles_labels()
+        
+        ax1.legend(lines1 + lines2,
+                   labels1 + labels2,
+                   loc='best')
+        
+        plt.title("Results of the calculated conductivities", fontsize=14)
+        
+        plt.tight_layout()
+    
         
         if salvar:
-            plt.savefig(nome_arquivo, dpi=300)
+            #plt.savefig(nome_arquivo, dpi=100)
+            #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
+            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
             plt.show() 
             plt.close()   # importante
         else:
@@ -1180,43 +1242,50 @@ class inverse_problem:
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
         DifAnisotropia = sigmaInicial[:, 0] - sigmaInicial[:, 2]
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
+        
+        
 
         
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], DifAnisotropia)
         theta_deg = np.rad2deg(theta_rad)
-            
+
+        #theta_rad = 0.5 * np.arctan2(2*sigma_xy, sigma_xx - sigma_xy)
+        #theta_deg = np.rad2deg(theta_rad)
+        
+        
+        
         lista_imgs = []
 
         # σxx, σxy, σyy (MSH)
-        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda}.png' 
+        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda}.webp' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda}.png' 
+        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda}.webp' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda}.png'  
+        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda}.webp'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
         
         # Diferença anisotrópica
-        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.png' 
+        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.webp' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='xx-σyy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
         # Gráfico tipo linha (o que você mandou)
-        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda}.png'
+        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda}.webp'
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
         
-        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.png'
+        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.webp'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome6)
         lista_imgs.append(nome6)     
 
         # Gráfico tipo linha (o que você mandou)
-        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.png'
+        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.webp'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome7)
         lista_imgs.append(nome7)
 
