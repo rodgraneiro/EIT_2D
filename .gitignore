@@ -4,10 +4,12 @@
 *.geo_unrolled
 #*.png
 
+
 lastIteration.txt
 sigma_inicial_cont.txt
 itr_atual.txt
 sigmaInicialTest.txt
+sigmaInicial_result.txt
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
