@@ -98,10 +98,10 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'batata_'
+    htmlName = 'batata_2'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=1,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=25,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
