@@ -795,8 +795,11 @@ class inverse_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
-            norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
-            if SigmaXXXYYY == 'xy':
+            lim = np.max(np.abs(fc))
+            if lim == 0:
+                lim = 1e-12
+            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
                 
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             if not SigmaXXXYYY == 'xy':
@@ -808,7 +811,7 @@ class inverse_problem:
             fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"Conductivity (σ{SigmaXXXYYY}) - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
+                ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
             if save == False:
                 ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
         # ============================================================
@@ -840,47 +843,48 @@ class inverse_problem:
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
 
-    def plot_sigma(self, sigmaResult, titulo="Results of the calculated conductivities σxx, σxy, σyy and σxx-σyy", salvar=False, nome_arquivo="plot_sigma.png"):
+    def plot_sigma(self, sigmaResult, titulo="Results of  σxx, σxy, σyy, σx, σy and (σx-σy)", salvar=False, nome_arquivo="plot_sigma.png"):
     
         data = sigmaResult
     
         sigma_xx = data[:, 0]
         sigma_xy = data[:, 1]
         sigma_yy = data[:, 2]
-        sigma_Dif = sigma_xx - sigma_yy
+        #sigma_Dif = sigma_xx - sigma_yy
         
         Smed = 0.5 * (sigma_xx + sigma_yy)
         D = np.sqrt(((sigma_xx - sigma_yy)/2)**2 + sigma_xy**2)
         
         sigma_x = Smed + D
         sigma_y = Smed - D
-        
-        theta_rad = 0.5 * np.arctan2(2*sigma_xy, sigma_xx - sigma_xy)
-        theta_deg = np.rad2deg(theta_rad)
+        sigma_Dif = sigma_x - sigma_y
         
         x = np.arange(len(sigma_xx))
-        '''
-        plt.figure(figsize=(10, 5))
-    
-        plt.plot(x, sigma_xx, label='σxx', linewidth=1.5)
-        plt.plot(x, sigma_xy, label='σxy', linewidth=1.5)
-        plt.plot(x, sigma_yy, label='σyy', linewidth=1.5)
-        plt.plot(x, sigma_Dif, label='σx-σyy', linewidth=1.5)
-        plt.plot(x, sigma_x, label='σx', linewidth=1.5)
-        plt.plot(x, sigma_y, label='σy', linewidth=1.5)
-        plt.plot(x, theta_deg, label='θ°', linewidth=1.5)
         
     
-        plt.title(titulo, fontsize=14)
+        
+        plt.figure(figsize=(6, 5))
+    
+        plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
+        plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
+        plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
+        plt.plot(x, sigma_Dif, label='σx-σy', linewidth=1.0)
+        plt.plot(x, sigma_x, label='σx', linewidth=2.0,linestyle=':')
+        plt.plot(x, sigma_y, label='σy', linewidth=2.0,linestyle=':')
+
+        
+    
+        plt.title(titulo, fontsize=11)
         plt.xlabel('Element', fontsize=12)
         plt.ylabel('Conductivity [S/m]', fontsize=12)
     
         plt.grid(True, linestyle='--', alpha=0.5)
-        plt.legend()
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=6, fontsize=10)
+        #plt.legend()
     
         plt.tight_layout()
         '''
-        fig, ax1 = plt.subplots(figsize=(10, 6))
+        fig, ax1 = plt.subplots(figsize=(6, 5))
 
         # =========================
         # eixo Y esquerdo
@@ -902,10 +906,7 @@ class inverse_problem:
         # =========================
         ax2 = ax1.twinx()
         
-        ax2.plot(x, theta_deg,
-                 label='θ°',
-                 linewidth=2,
-                 linestyle='--')
+        ax2.plot(x, theta_deg, label='θ°',  linewidth=1.5)#,linestyle='-')
         
         ax2.set_ylabel('Angle θ [°]', fontsize=12)
         
@@ -925,7 +926,7 @@ class inverse_problem:
         plt.title("Results of the calculated conductivities", fontsize=14)
         
         plt.tight_layout()
-    
+        '''
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
@@ -943,7 +944,7 @@ class inverse_problem:
     
         x = np.arange(len(data_theta))
     
-        plt.figure(figsize=(10, 5))
+        plt.figure(figsize=(6, 5))
     
 
         plt.plot(x, data_theta, label='θ', linewidth=1.5)
@@ -1222,9 +1223,9 @@ class inverse_problem:
             
                 
             
-            #if lastResidue[2] > lastResidue[1]:
-               #contNorma =  contNorma + 1
-               #print(f'Encontrou norma lastResidue maior  que a anterior.')
+            if lastResidue[2] > lastResidue[1]:
+               contNorma =  contNorma + 1
+               print(f'Encontrou norma lastResidue maior  que a anterior.')
                
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
@@ -1240,11 +1241,16 @@ class inverse_problem:
             
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-        DifAnisotropia = sigmaInicial[:, 0] - sigmaInicial[:, 2]
-        DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
-        
-        
 
+        
+        Smed = 0.5 * (sigmaInicial[:, 0] + sigmaInicial[:, 2])
+        D = np.sqrt((sigmaInicial[:, 0] - sigmaInicial[:, 2]/2)**2 + sigmaInicial[:, 2])
+        
+        sigma_x = Smed + D
+        sigma_y = Smed - D
+
+        DifAnisotropia = sigma_x - sigma_y
+        DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
         
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], DifAnisotropia)
         theta_deg = np.rad2deg(theta_rad)
@@ -1268,17 +1274,26 @@ class inverse_problem:
         nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda}.webp'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
+             
+
+        nome8 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda}.webp'          
+        self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
+        lista_imgs.append(nome8)
+        
+        nome9 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda}.webp'  
+        self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
+        lista_imgs.append(nome9)
         
         # Diferença anisotrópica
         nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.webp' 
-        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='xx-σyy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
-        lista_imgs.append(nome4)
+        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
+        lista_imgs.append(nome4)    
         
         # Gráfico tipo linha (o que você mandou)
         nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda}.webp'
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
         lista_imgs.append(nome5)
-        
+        #print('plot_sigma_banana_solver', theta_deg)
         
         nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.webp'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome6)
@@ -1288,7 +1303,11 @@ class inverse_problem:
         nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.webp'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome7)
         lista_imgs.append(nome7)
+        
 
+
+        
+        
         # Criar HTML
         #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
         nome_html = f'../../docs/figureTemp/{html_name}_{Lambda}.html'

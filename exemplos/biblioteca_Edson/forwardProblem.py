@@ -104,7 +104,11 @@ class forward_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
-            norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+            lim = np.max(np.abs(fc))
+            if lim == 0:
+                lim = 1e-12
+            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            
             if SigmaXXXYYY == 'xy':
                 
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )

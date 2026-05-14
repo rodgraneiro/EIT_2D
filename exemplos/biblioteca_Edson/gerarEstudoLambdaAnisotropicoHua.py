@@ -98,7 +98,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'batata_2'
+    htmlName = 'anisotropiaHomogenea'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
     invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=25,Tol=1.0e-9, html_name = htmlName)
@@ -171,5 +171,5 @@ for lam in lambdas:
     
     resultados[lam] = rodar_simulacao(lam, None)
 '''
-rodar_simulacao(6.57933225e-03, None)
+rodar_simulacao(2.84803587e-02, None)
 
