@@ -18,6 +18,7 @@ import plotly.graph_objects as go
 from datetime import datetime
 from matplotlib import cm
 from matplotlib.colors import TwoSlopeNorm
+from matplotlib.colors import ListedColormap, BoundaryNorm
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
@@ -765,7 +766,7 @@ class inverse_problem:
         plt.grid(True)
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
-        plt.savefig(f"{nome_arquivo}", dpi=300, bbox_inches='tight')
+        plt.savefig(f"{nome_arquivo}", dpi=150, bbox_inches='tight')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -785,8 +786,9 @@ class inverse_problem:
         elems_1D = np.array([el for el in topo if len(el) == 2])
     
         #fig, ax = plt.subplots(figsize=(6, 5))
-        fig, ax = plt.subplots(figsize=(8,5))
-        ax.set_aspect('equal')
+        fig, ax = plt.subplots(figsize=(6,6))
+        #ax.set_aspect('equal')
+        ax.set_aspect('equal', adjustable='box')
         # ============================================================
         #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
         # ============================================================
@@ -795,10 +797,14 @@ class inverse_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
+
             lim = np.max(np.abs(fc))
             if lim == 0:
                 lim = 1e-12
-            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            #norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+            '''
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
                 
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
@@ -806,7 +812,7 @@ class inverse_problem:
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-        
+            '''
 
             fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             if save == True:
@@ -831,13 +837,91 @@ class inverse_problem:
         plt.ticklabel_format(style='plain')
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=300, bbox_inches='tight')
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
     ###############################################################################
+    
+    
+    ###############################################################################
+    #          Plotar máscara de anisotropia
+    
+    ###############################################################################
+
+
+
+    def plotMask(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
+
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+    
+        fig, ax = plt.subplots(figsize=(6, 6))
+        #fig, ax = plt.subplots(figsize=(5,5))
+        #plt.figure(figsize=(6, 5))
+        ax.set_aspect('equal')
+
+        # ============================================================
+        #   PLOTAR ELEMENTOS 2D (TRIANGULARES)
+        # ============================================================
+        if len(elems_2D) > 0:
+            triang = tri.Triangulation(x, y, elems_2D)
+            #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+            ntri = triang.triangles.shape[0]
+            fc = sigma.ravel()[:ntri]
+            level = np.max(np.abs(fc))
+            threshold = 0.7*level
+
+            # máscara binária
+            fc_bin = np.where(fc >= threshold, 1, 0)
+
+            
+            # mapa de cores fixo
+            cmap = ListedColormap(['white', 'black'])
+
+            # força apenas 2 níveis
+            normMask = BoundaryNorm([-0.5, 0.5, 1.5], cmap.N)
+            
+            tpc = ax.tripcolor(triang,facecolors=fc_bin, edgecolors='k',cmap=cmap, norm=normMask )
+            
+            #cbar = plt.colorbar(tpc, ticks=[0,1])
+            #cbar.set_label('Máscara binária')
+            #cbar.set_ticklabels(['< 1.0', '≥ 1.0'])
+            #fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
+            #plt.colorbar(tpc, label='Máscara binária')
+            ax.set_aspect('equal')
+            if save == True:
+                timestamp = datetime.now().strftime("%m%d_%H%M")
+                ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f} - th_{threshold:.3f}", fontsize=11)
+            if save == False:
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=150, bbox_inches='tight')
+            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
+            #plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
+    ###############################################################################
+
+
+
+
+
+# plot
+#fig, ax = plt.subplots(figsize=(6,6))
+
+
+
 
     ###############################################################################
     # Essa função plota o resultado do sigma calculado no problema inverso
@@ -851,19 +935,21 @@ class inverse_problem:
         sigma_xy = data[:, 1]
         sigma_yy = data[:, 2]
         #sigma_Dif = sigma_xx - sigma_yy
+
         
         Smed = 0.5 * (sigma_xx + sigma_yy)
         D = np.sqrt(((sigma_xx - sigma_yy)/2)**2 + sigma_xy**2)
-        
+
         sigma_x = Smed + D
         sigma_y = Smed - D
+
         sigma_Dif = sigma_x - sigma_y
-        
+
         x = np.arange(len(sigma_xx))
         
     
         
-        plt.figure(figsize=(6, 5))
+        plt.figure(figsize=(6, 6))
     
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
@@ -883,50 +969,7 @@ class inverse_problem:
         #plt.legend()
     
         plt.tight_layout()
-        '''
-        fig, ax1 = plt.subplots(figsize=(6, 5))
 
-        # =========================
-        # eixo Y esquerdo
-        # =========================
-        ax1.plot(x, sigma_xx, label='σxx', linewidth=1.5)
-        ax1.plot(x, sigma_xy, label='σxy', linewidth=1.5)
-        ax1.plot(x, sigma_yy, label='σyy', linewidth=1.5)
-        ax1.plot(x, sigma_Dif, label='σx-σyy', linewidth=1.5)
-        ax1.plot(x, sigma_x, label='σx', linewidth=1.5)
-        ax1.plot(x, sigma_y, label='σy', linewidth=1.5)
-        
-        ax1.set_xlabel('Element', fontsize=12)
-        ax1.set_ylabel('Conductivity [S/m]', fontsize=12)
-        
-        ax1.grid(True, linestyle='--', alpha=0.5)
-        
-        # =========================
-        # eixo Y direito
-        # =========================
-        ax2 = ax1.twinx()
-        
-        ax2.plot(x, theta_deg, label='θ°',  linewidth=1.5)#,linestyle='-')
-        
-        ax2.set_ylabel('Angle θ [°]', fontsize=12)
-        
-        # opcional
-        ax2.set_ylim(-90, 90)
-        
-        # =========================
-        # legenda combinada
-        # =========================
-        lines1, labels1 = ax1.get_legend_handles_labels()
-        lines2, labels2 = ax2.get_legend_handles_labels()
-        
-        ax1.legend(lines1 + lines2,
-                   labels1 + labels2,
-                   loc='best')
-        
-        plt.title("Results of the calculated conductivities", fontsize=14)
-        
-        plt.tight_layout()
-        '''
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
@@ -936,7 +979,59 @@ class inverse_problem:
             plt.close()   # importante
         else:
             plt.show()    
-    ###############################################################################        
+    ############################################################################### 
+
+
+
+
+
+
+    ###############################################################################
+    # Essa função plota o resultado do sigma calculado no problema inverso
+    ############################################################################### 
+
+    def plot_classificacao(self, sigma_Dif, titulo="Results (σx-σy)", salvar=False, nome_arquivo="plot_classificacao.webp"):
+        
+        #sigma_dif = sigma_x - sigma_y
+        
+        # ordenar do maior para o menor
+        sigma_dif_ord = np.sort(sigma_Dif)[::-1]
+        
+        # eixo x
+        x = np.arange(1, len(sigma_dif_ord) + 1)
+        
+        # plot
+        plt.figure(figsize=(6, 6))
+        plt.plot(x, sigma_dif_ord, linewidth=1.5)
+        
+        plt.title(r'$\sigma_x - \sigma_y$ ordenado')
+        plt.xlabel('Elemento ordenado')
+        plt.ylabel(r'$\sigma_x - \sigma_y$')
+        
+        plt.grid(True, linestyle='--', alpha=0.5)
+    
+    
+        plt.tight_layout()
+ 
+        
+        if salvar:
+            #plt.savefig(nome_arquivo, dpi=100)
+            #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
+            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.show() 
+            plt.close()   # importante
+        else:
+            plt.show()    
+    ###############################################################################    
+
+
+
+
+
+
+
+
+       
             
     def plot_theta_deg(self, theta_deg, titulo="Results of the calculated θ angle ", salvar=False, nome_arquivo="plot_theta.png"):
     
@@ -944,7 +1039,7 @@ class inverse_problem:
     
         x = np.arange(len(data_theta))
     
-        plt.figure(figsize=(6, 5))
+        plt.figure(figsize=(6, 6))
     
 
         plt.plot(x, data_theta, label='θ', linewidth=1.5)
@@ -961,7 +1056,8 @@ class inverse_problem:
         
         
         if salvar:
-            plt.savefig(nome_arquivo, dpi=300)
+            #plt.savefig(nome_arquivo, dpi=150)
+            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
             plt.show() 
             plt.close()   # importante
         else:
@@ -1010,10 +1106,13 @@ class inverse_problem:
     
             f.write("<h1>Results of the Anisotropic Inverse Problem</h1>\n")
     
-            f.write('<div style="display:flex; gap:20px;">\n')
+            f.write('<div style="display:flex; gap:10px;">\n')
     
             for img in lista_imagens:
-                f.write(f'<img src="{img}" width="300">\n')
+                #f.write(f'<img src="{img}" width="150">\n')
+                f.write(f'<img src="{img}" style="width:150px; height: auto;">\n')
+                
+                
     
             f.write('</div>\n')
     
@@ -1241,17 +1340,39 @@ class inverse_problem:
             
         #print('sigmaInicial \n', sigmaInicial) 
         #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
-
+        #print('sigma_xxS',sigmaInicial[:, 0])
+        #print('sigma_xyS',sigmaInicial[:, 1])
+        #print('sigma_yyS',sigmaInicial[:, 2])
+        '''
+        sigma_xx = sigmaInicial[:, 0]
+        sigma_xy = sigmaInicial[:, 1]
+        sigma_yy = sigmaInicial[:, 2]
+        #sigma_Dif = sigma_xx - sigma_yy
+        print('sigma_xx_Solve',sigma_xx[:3])
+        print('sigma_xy_Solve',sigma_xy[:3])
+        print('sigma_yy_Solve',sigma_yy[:3])
+        
+        
+        Smed = 0.5 * (sigma_xx + sigma_yy)
+        D = np.sqrt(((sigma_xx - sigma_yy)/2)**2 + sigma_xy**2)
+        sigma_x = Smed + D
+        sigma_y = Smed - D
+        sigma_Dif = sigma_x - sigma_y
+        '''
+        
+        
         
         Smed = 0.5 * (sigmaInicial[:, 0] + sigmaInicial[:, 2])
-        D = np.sqrt((sigmaInicial[:, 0] - sigmaInicial[:, 2]/2)**2 + sigmaInicial[:, 2])
-        
+        D = np.sqrt(((sigmaInicial[:, 0] - sigmaInicial[:, 2])/2)**2 + sigmaInicial[:, 1]**2)
+
         sigma_x = Smed + D
         sigma_y = Smed - D
 
+        
         DifAnisotropia = sigma_x - sigma_y
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
         
+
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], DifAnisotropia)
         theta_deg = np.rad2deg(theta_rad)
 
@@ -1261,7 +1382,7 @@ class inverse_problem:
         
         
         lista_imgs = []
-
+        
         # σxx, σxy, σyy (MSH)
         nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda}.webp' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
@@ -1277,11 +1398,11 @@ class inverse_problem:
              
 
         nome8 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda}.webp'          
-        self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
+        self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome8)
         lista_imgs.append(nome8)
         
-        nome9 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda}.webp'  
-        self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
+        nome9 = f'../../docs/figureTemp/{html_name}Sigma_Y_{Lambda}.webp'  
+        self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome9)
         lista_imgs.append(nome9)
         
         # Diferença anisotrópica
@@ -1306,7 +1427,13 @@ class inverse_problem:
         
 
 
-        
+        nome10 = f'../../docs/figureTemp/{html_name}_Mask{Lambda}.webp'  
+        self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome10)
+        lista_imgs.append(nome10)
+
+        nome11 = f'../../docs/figureTemp/{html_name}_ClassAniso_Y_{Lambda}.webp'
+        self.plot_classificacao(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome11)
+        lista_imgs.append(nome11)
         
         # Criar HTML
         #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
@@ -1315,7 +1442,7 @@ class inverse_problem:
         
        
         
-        
+   
         
 
         
