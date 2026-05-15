@@ -2,7 +2,9 @@
 #*.msh
 *.geo
 *.geo_unrolled
-#*.png
+*.png
+*.html
+*.webp
 
 
 lastIteration.txt
