@@ -15,6 +15,10 @@ import elements
 import gmsh
 import sys
 import plotly.graph_objects as go
+import os
+import glob
+from collections import defaultdict
+
 from datetime import datetime
 from matplotlib import cm
 from matplotlib.colors import TwoSlopeNorm
@@ -801,8 +805,8 @@ class inverse_problem:
             lim = np.max(np.abs(fc))
             if lim == 0:
                 lim = 1e-12
-            #norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
-            norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
             tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             '''
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
@@ -875,8 +879,9 @@ class inverse_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
-            level = np.max(np.abs(fc))
-            threshold = 0.7*level
+            #level = np.max(np.abs(fc))
+            #threshold = 0.7*level
+            threshold = np.percentile(np.abs(fc), 80)
 
             # máscara binária
             fc_bin = np.where(fc >= threshold, 1, 0)
@@ -1093,7 +1098,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
-     
+    @staticmethod
     def salvar_html(self, lista_imagens, nome_html="resultado.html"):
         with open(nome_html, "w", encoding="utf-8") as f:
             f.write("""
@@ -1107,7 +1112,7 @@ class inverse_problem:
             f.write("<h1>Results of the Anisotropic Inverse Problem</h1>\n")
     
             f.write('<div style="display:flex; gap:10px;">\n')
-    
+            f.write("<h1>nome_html</h1>\n")
             for img in lista_imagens:
                 #f.write(f'<img src="{img}" width="150">\n')
                 f.write(f'<img src="{img}" style="width:150px; height: auto;">\n')
@@ -1115,8 +1120,161 @@ class inverse_problem:
                 
     
             f.write('</div>\n')
-    
+            
+
             f.write("</body>\n</html>")
+    ###############################################################################
+    # Essa função salva arqui html do resultado doproblema inverso
+    ###############################################################################         
+        
+
+    def salvar_html_todos_lambdas(pasta, nome_html="resultado_completo.html"):
+    
+        arquivos = glob.glob(os.path.join(pasta, "*.webp"))
+    
+        grupos = defaultdict(dict)
+    
+        for arq in arquivos:
+            nome = os.path.basename(arq)
+    
+            # lambda = último pedaço antes de .webp
+            lambda_str = nome.replace(".webp", "").split("_")[-1]
+    
+            if "sigma_xx" in nome:
+                grupos[lambda_str]["sigma_xx"] = nome
+            elif "sigma_xy" in nome:
+                grupos[lambda_str]["sigma_xy"] = nome
+            elif "sigma_yy" in nome:
+                grupos[lambda_str]["sigma_yy"] = nome
+            elif "sigma_Dif" in nome:
+                grupos[lambda_str]["sigma_Dif"] = nome
+            elif "Sigma_X" in nome:
+                grupos[lambda_str]["Sigma_X"] = nome
+            elif "optimization" in nome or "iterations" in nome:
+                grupos[lambda_str]["optimization"] = nome
+            elif "theta" in nome:
+                grupos[lambda_str]["theta"] = nome
+            elif "ClassAniso_Y" in nome:
+                grupos[lambda_str]["summary"] = nome
+            elif "Mask" in nome:
+                grupos[lambda_str]["mask"] = nome
+    
+        colunas = [
+            ("sigma_xx", "σxx"),
+            ("sigma_xy", "σxy"),
+            ("sigma_yy", "σyy"),
+            ("sigma_Dif", "(σxx - σyy)"),
+            ("summary", "Summary"),
+            ("optimization", "Optimization"),
+            ("theta", "Angle [°]"),
+        ]
+    
+        html_path = os.path.join(pasta, nome_html)
+    
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write("""
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    
+    <style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+        color: white;
+    }
+    
+    .info {
+        color: lime;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    th {
+        font-size: 24px;
+        padding: 10px;
+        color: white;
+    }
+    
+    td {
+        padding: 6px;
+        text-align: center;
+        vertical-align: top;
+    }
+    
+    img {
+        width: 170px;
+        height: auto;
+        background-color: white;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    </style>
+    </head>
+    
+    <body>
+    """)
+    
+            f.write("<p>Above are some examples of simulated electrical fields in the phantom.</p>\n")
+            f.write("""
+    <p class="info">
+    Results obtained for a maximum of 25 iterations.
+    &nbsp;&nbsp;&nbsp;
+    Same scale for all graphs.
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
+    </p>
+    <hr>
+    """)
+    
+            f.write("<table>\n")
+    
+            f.write("<tr>\n")
+            for _, titulo in colunas:
+                f.write(f"<th>{titulo}</th>\n")
+            f.write("</tr>\n")
+    
+            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x), reverse=True):
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+                    img = grupos[lambda_str].get(chave)
+    
+                    if img is not None:
+                        f.write(f"""
+    <td>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    
+            f.write("""
+    </table>
+    </body>
+    </html>
+    """)
+    
+        print("HTML salvo em:", html_path)
+    
+    
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
@@ -1318,14 +1476,15 @@ class inverse_problem:
             if len(ultimos10) > 5:
                 ultimos10.pop(0)
             
-
             
+            if ultimaNorma[2] > ultimaNorma[1]:
+               print(f'Encontrou norma normaDelta maior  que a anterior.')
+               break
                 
             
             if lastResidue[2] > lastResidue[1]:
-               contNorma =  contNorma + 1
                print(f'Encontrou norma lastResidue maior  que a anterior.')
-               
+               break
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
                #break
@@ -1383,61 +1542,61 @@ class inverse_problem:
         
         lista_imgs = []
         
-        # σxx, σxy, σyy (MSH)
-        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda}.webp' 
+        # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
+        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda:.6f}.webp' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda}.webp' 
+        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda:.6f}.webp' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda}.webp'  
+        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda:.6f}.webp'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
              
 
-        nome8 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda}.webp'          
+        nome8 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda:.6f}.webp'          
         self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome8)
         lista_imgs.append(nome8)
         
-        nome9 = f'../../docs/figureTemp/{html_name}Sigma_Y_{Lambda}.webp'  
+        nome9 = f'../../docs/figureTemp/{html_name}Sigma_Y_{Lambda:.6f}.webp'  
         self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome9)
         lista_imgs.append(nome9)
         
         # Diferença anisotrópica
-        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda}.webp' 
+        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda:.6f}.webp' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)    
         
         # Gráfico tipo linha (o que você mandou)
-        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda}.webp'
+        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         #print('plot_sigma_banana_solver', theta_deg)
         
-        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda}.webp'
+        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome6)
         lista_imgs.append(nome6)     
 
         # Gráfico tipo linha (o que você mandou)
-        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda}.webp'
+        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome7)
         lista_imgs.append(nome7)
         
 
 
-        nome10 = f'../../docs/figureTemp/{html_name}_Mask{Lambda}.webp'  
+        nome10 = f'../../docs/figureTemp/{html_name}_Mask_{Lambda:.6f}.webp'  
         self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome10)
         lista_imgs.append(nome10)
 
-        nome11 = f'../../docs/figureTemp/{html_name}_ClassAniso_Y_{Lambda}.webp'
+        nome11 = f'../../docs/figureTemp/{html_name}_ClassAniso_Y_{Lambda:.6f}.webp'
         self.plot_classificacao(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome11)
         lista_imgs.append(nome11)
-        
+
         # Criar HTML
         #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
-        nome_html = f'../../docs/figureTemp/{html_name}_{Lambda}.html'
+        nome_html = f'../../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
         self.salvar_html(lista_imgs, nome_html)
         
        
