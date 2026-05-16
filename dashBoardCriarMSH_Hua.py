@@ -710,7 +710,7 @@ class ConfigDashboard(tk.Tk):
 
         # criando physicalGroup da superfície
         physycal_circulo = gmsh.model.addPhysicalGroup(2, [surface_circulo], 1000)
-        gmsh.model.setPhysicalName(2, physycal_circulo, "Domain")
+        gmsh.model.setPhysicalName(2, physycal_circulo, "domain")
 
 
         if int(self.NrAnomalias.get()) == 1:
@@ -781,9 +781,13 @@ class ConfigDashboard(tk.Tk):
         gmsh.write(self.nome_arquivo.get()  + ".geo_unrolled")
         os.rename(self.nome_arquivo.get()  + ".geo_unrolled", self.nome_arquivo.get()  + ".geo_unrolled")
         shutil.move(self.nome_arquivo.get()  + ".geo_unrolled",self.nome_arquivo.get()  + ".geo")
+        # adicionando linha no final do .geo
+        geo_path = self.nome_arquivo.get() + ".geo"
 
-        #if '-nopopup' not in sys.argv:
-        #    gmsh.fltk.run()
+        with open(geo_path, "a", encoding="utf-8") as f:
+            f.write("\nMesh.MshFileVersion = 2.2;\n")
+                #if '-nopopup' not in sys.argv:
+                #    gmsh.fltk.run()
 
         gmsh.finalize()
     
