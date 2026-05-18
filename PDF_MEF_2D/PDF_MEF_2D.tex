@@ -349,6 +349,24 @@ sumario=tradicional
     	\label{eq:matriz_D}
     \end{equation}
     
+    
+    onde:
+    
+    $
+    \sigma_{xx} = \sigma_n \cos^2 \theta + \sigma_t \sin^2 \theta 
+    $
+    
+    $
+    \sigma_{yy} = \sigma_n \sin^2 \theta + \sigma_t \cos^2 \theta 
+    $
+    
+    $
+    \sigma_{yx} = \sigma_{xy} = \sigma_n \sin \theta \cos \theta - \sigma_t \sin \theta \cos \theta $
+    
+
+    
+    
+    
     temos:
     
     \begin{equation}
@@ -2594,34 +2612,548 @@ Somando também as colunas $3$ e $4$, encontramos a matriz local do elemento ret
 %	\end{equation}
 	
 		\apendices
-	\chapter{da termo da matriz}
-
-	\chapter{Cálculo de cada termo da matriz}\label{ap:MEF_ap_B}
-	\begin{equation*}
-		N_l = \frac{1}{2A}[\alpha_l + x\beta_l + y\gamma_l]
-	\end{equation*}
-	\begin{equation*}
-		N_m = \frac{1}{2A}[\alpha_m + x\beta_m + y\gamma_m]
-	\end{equation*}
-	\begin{equation*}
-		N_n = \frac{1}{2A}[\alpha_n + x\beta_n + y\gamma_n]
-	\end{equation*}
+	\chapter{Rotação da matriz diagonal de condutividade}
+\section{Dedução dos termos $\sigma_{xx}$, $\sigma_{xy}$, $\sigma_{yx}$ e  $\sigma_{yy}$ do tensor [$\mathbf{\sigma}$].}{\label{ApendiceA1}}
 	
-	\begin{equation*}
-		\begin{array}{ccc}
-			\alpha_l = (x_m y_n - x_n y_m) &
-			\beta_l = (y_m - y_n) &
-			\gamma_l = (x_n - x_m) \\[6pt]
-			
-			\alpha_m  = (x_n y_l - x_l y_n) &
-			\beta_m = (y_n - y_l) &
-			\gamma_m = (x_l - x_n) \\[6pt]
-			
-			\alpha_n = (x_l y_m - x_m y_l) &
-			\beta_m = (y_l - y_m) &
-			\gamma_n = (x_m - x_l)
-		\end{array}
+As componentes principais de um material anisotrópico, quando alinhas com um sistema de coordenadas $XY$ de referência,   pode ser representada em 2D por:
+
+	\begin{equation} %\large
+	D_0 =  
+	\begin{bmatrix}  
+		\sigma_l & 0 \\  
+		0 & \sigma_t  
+	\end{bmatrix}  
+	\label{eq:componentes_principais}
+	\end{equation}
+
+onde $\sigma_l$ e $\sigma_t$ são as condutividades longitudinal e transversal nas direções principais do material -- paralelas ao eixo $X$ e $Y$ respectivamente --, e $D_0$ representa que o ângulo de rotação $\theta$ da matriz é zero.
+
+Entretanto, numa medição prática real não sabemos se as coordenadas $\sigma_l$ e $\sigma_t$ estão alinhadas com o sistema de coordenadas $XY$ de referência assumido. Portanto, é necessário  verificar se o material está rotacionado de um ângulo $\theta$ em relação a referência. Podemos determinar  $\theta$ por meio da matriz de rotação:
+
+\begin{equation} %\large
+	R =  
+	\begin{bmatrix}  
+		\cos\theta & -\sin\theta \\  
+		\sin\theta & \cos\theta  
+	\end{bmatrix} 
+	\label{eq:matrizRotacao}
+\end{equation}
+
+
+Dessa maneira,  podemos representar matriz $D_0$ no sistema global $x,y$ a partir de:
+
+\begin{equation} %\large
+D = R D_0 R^T 
+	\label{eq:matrizRotacaoGobal}
+\end{equation}
+
+Expandindo a equação \ref{eq:matrizRotacaoGobal} temos:
+
+
+\begin{equation*} %\large
+D =
+	\begin{bmatrix}  
+	\cos\theta & -\sin\theta \\  
+	\sin\theta & \cos\theta  
+	\end{bmatrix} 	
+	\begin{bmatrix}  
+	\sigma_l & 0 \\  
+	0 & \sigma_t  
+	\end{bmatrix}  
+	\begin{bmatrix}  
+		\cos\theta & \sin\theta \\  
+		-\sin\theta & \cos\theta  
+	\end{bmatrix} 
+\end{equation*}
+
+\begin{equation*} %\large
+	D =
+	\begin{bmatrix}  
+		\cos\theta & -\sin\theta \\  
+		\sin\theta & \cos\theta  
+	\end{bmatrix} 	
+	\begin{bmatrix}  
+		\sigma_l\cos\theta & \sigma_l\sin\theta \\  
+		-\sigma_t\sin\theta & \sigma_t\cos\theta  
+	\end{bmatrix}  
+\end{equation*}
+
+\begin{equation} %\large
+D =
+\begin{bmatrix}  
+	\sigma_l \cos^2\theta + \sigma_t \sin^2\theta  
+	&  
+	(\sigma_l-\sigma_t)\sin\theta\cos\theta  
+	\\  
+	(\sigma_l-\sigma_t)\sin\theta\cos\theta  
+	&  
+	\sigma_l \sin^2\theta + \sigma_t \cos^2\theta  
+\end{bmatrix} 
+	\label{eq:matrizRotacaoGobal_001}
+\end{equation}
+
+Renomeando os termos da matriz da equação \ref{eq:matrizRotacaoGobal_001} temos:
+\begin{equation} %\large
+	D =
+	\begin{bmatrix}  
+		\sigma_{xx} & \sigma_{xy} \\  
+		\sigma_{yx} &\sigma_{yy} 
+		\label{eq:tensorSigma_001}
+	\end{bmatrix} 	
+\end{equation}
+
+
+Portanto:
+\begin{equation}
+\sigma_{xx}
+=
+\sigma_l \cos^2\theta + \sigma_t \sin^2\theta  
+\label{eq:Sxx_001}
+\end{equation}
+
+\begin{equation}
+\sigma_{yy}
+=
+\sigma_l \sin^2\theta + \sigma_t \cos^2\theta  
+\label{eq:Syy_001}
+\end{equation}
+
+\begin{equation}
+	\sigma_{xy} = \sigma_{yx}
+	=
+    (\sigma_l-\sigma_t)\sin\theta\cos\theta 
+	\label{eq:Sxy_001}
+\end{equation}
+
+\section{Dedução do ângulo $\theta$ e dos termos $\sigma_l$ e $\sigma_t$.} {\label{Sl_St_theta}}
+\subsection{Dedução do ângulo $\theta$.}
+
+
+Na prática, quando efetuamos a medição (ou simulação) da anisotropia de um domínio, não conhecemos as componentes longitudinal ($\sigma_l$), transversal ($\sigma_t$) e nem o ângulo de rotação ($\theta$) em relação aos sistema de coordenadas $XY$, do material. No processo de solução do problema inverso de uma medição,  determinamos os termos $\sigma_{xx}$, $\sigma_{xy}$, $\sigma_{yx}$ e $\sigma_{yy}$  do tensor [$\mathbf{\sigma}$] e a partir desses dados encontramos os demais componentes.
+
+Dessa maneira, partindo do tensor da equação \ref{eq:tensorSigma_001} temos:
+
+\begin{equation} %\large
+   [\mathbf{\sigma}] = D =
+	\begin{bmatrix}  
+		\sigma_{xx} & \sigma_{xy} \\  
+		\sigma_{yx} &\sigma_{yy} 
+		\label{eq:tensorSigma_002}
+	\end{bmatrix}, 	
+\end{equation}
+
+temos como objetivo, determinar a anisotropia do material e o ângulo $\theta$ que torna o tensor $[\mathbf{\sigma}]$ uma matriz diagonal. Dessa forma, devemos rotacionar o $[\mathbf{\sigma}]$ para que  $\sigma_{xy} = \sigma_{yx} = 0$. Baseado na equação \ref{eq:matrizRotacaoGobal}, podemos rotacionar o tensor por meio de:
+\begin{equation*} %\large
+	\sigma' = R \sigma R^T 
+\end{equation*}
+Para simplificar a notação, definimos:
+\begin{equation*}
+c=\cos\theta  
+\end{equation*}
+\begin{equation*}
+s=\sin\theta  
+\end{equation*}
+Assim:
+\begin{equation*}
+R =  
+\begin{bmatrix}  
+	c & -s \\  
+	s & c  
+\end{bmatrix}  
+\end{equation*}
+e
+\begin{equation*}
+R^T =  
+\begin{bmatrix}  
+	c & s \\  
+	-s & c  
+\end{bmatrix}  
+\end{equation*}
+Então:
+\begin{equation*}
+	\sigma' = 
+	\begin{bmatrix}  
+		c & -s \\  
+		s & c  
+	\end{bmatrix} 
+	\begin{bmatrix}  
+		\sigma_{xx} & \sigma_{xy} \\  
+		\sigma_{yx} &\sigma_{yy} 
+	\end{bmatrix}	
+	\begin{bmatrix}  
+		c & s \\  
+		-s & c  
+	\end{bmatrix} 
+\end{equation*}
+Multiplicando $R\sigma$:
+\begin{equation*}
+R\sigma=
+\begin{bmatrix}  
+	c & -s \\  
+	s & c  
+\end{bmatrix}  
+\begin{bmatrix}  
+	\sigma_{xx} & \sigma_{xy} \\  
+	\sigma_{xy} & \sigma_{yy}  
+\end{bmatrix}  
+\end{equation*}
+\begin{equation*}
+	R\sigma=  
+	\begin{bmatrix}
+		(c\sigma_{xx}-s\sigma_{xy})  
+		&  
+		(c\sigma_{xy}-s\sigma_{yy}  )
+		\\  
+		(s\sigma_{xx}+c\sigma_{xy})  
+		&  
+		(s\sigma_{xy}+c\sigma_{yy})  
+	\end{bmatrix}  
+\end{equation*}
+Multiplicando $(R\sigma)R^T$:
+\begin{equation*}
+	\sigma'= (R\sigma)R^T = 
+\begin{bmatrix}
+	(c\sigma_{xx}-s\sigma_{xy})  
+	&  
+	(c\sigma_{xy}-s\sigma_{yy}  )
+	\\  
+	(s\sigma_{xx}+c\sigma_{xy})  
+	&  
+	(s\sigma_{xy}+c\sigma_{yy})  
+\end{bmatrix}
+	\begin{bmatrix}  
+	c & s \\  
+	-s & c  
+\end{bmatrix}   
+\end{equation*}
+
+
+
+
+
+\begin{equation} %\large
+	\sigma' =
+	\begin{bmatrix}  
+		(c^2\sigma_{xx}-2cs\sigma_{xy}+s^2\sigma_{yy})   
+		&  
+		(cs(\sigma_{xx}-\sigma_{yy})+(c^2-s^2)\sigma_{xy})  
+		\\  
+		(cs(\sigma_{xx}-\sigma_{yy}) + (c^2-s^2)\sigma_{xy} )
+		&  
+		(s^2\sigma_{xx} + 2cs\sigma_{xy} + c^2\sigma_{yy}  )
+	\end{bmatrix}
+	\label{eq:SigmaLinha_002} 
+\end{equation}
+
+Como mencionado anteriormente, para encontrar o ângulo $\theta$ devemos rotacionar o tensor para um valor onde  $\sigma'_{xy} = \sigma'_{yx} = 0$, assim:
+\begin{equation} %\large
+(\sigma_{xx}-\sigma_{yy})sc + \sigma_{xy}(c^2-s^2) = 0  
+	\label{eq:SigmaLinha_003} 
+\end{equation}
+
+Utilizando as identidades trigonométricas:
+\begin{equation} %\large
+\sin(2\theta)=2sc  
+	\label{eq:identTrigono_001} 
+\end{equation}
+e
+\begin{equation} %\large 
+\cos(2\theta)=c^2-s^2  
+	\label{eq:identTrigono_002} 
+\end{equation}
+
+Substituindo em \ref{eq:SigmaLinha_003}:
+
+\begin{equation} %\large 
+\frac{\sigma_{xx}-\sigma_{yy}}{2}\sin(2\theta)  
++  
+\sigma_{xy}\cos(2\theta)  
+=0  
+	\label{eq:SigmaLa_004} 
+\end{equation}
+ou,
+\begin{equation*} 
+\frac{\sigma_{xx}-\sigma_{yy}}{2}\sin(2\theta)
+=
+-\sigma_{xy}\cos(2\theta)  
+\end{equation*}
+Dividindo por $\cos(2\theta)$ e encontrando a tangente de ($2\theta$):
+\begin{equation*}  
+\frac{\sigma_{xx}-\sigma_{yy}}{2}\tan(2\theta)
+-\sigma_{xy}  
 	\end{equation*}
+Então:
+\begin{equation*}
+\tan(2\theta)
+=
+\frac{2\sigma_{xy}}{\sigma_{xx}-\sigma_{yy}}  
+\end{equation*}
+Aplicando arco-tangente:
+\begin{equation*} 
+2\theta=  
+\arctan\left(  
+\frac{2\sigma_{xy}}  
+{\sigma_{xx}-\sigma_{yy}}  
+\right)  
+\end{equation*}
+Portanto:
+\begin{equation}
+	\boxed{   
+	\theta=  
+	\frac{1}{2}  
+	\arctan\left(  
+	\frac{2\sigma_{xy}}  
+	{\sigma_{xx}-\sigma_{yy}}  
+	\right)  
+	\label{eq:AngleTheta_001}
+}
+\end{equation}
+
+\subsection{Dedução termos $\sigma_l$ e $\sigma_t$.}
+
+Como demonstrado na seção \ref{ApendiceA1}, e reproduzindo as equações \ref{eq:tensorSigma_001}, \ref{eq:Sxx_001}, \ref{eq:Syy_001} e \ref{eq:Sxy_001} nesta seção por conveniência, temos: 
+
+\begin{equation*} %\large
+	[\mathbf{\sigma}] = D =
+	\begin{bmatrix}  
+		\sigma_{xx} & \sigma_{xy} \\  
+		\sigma_{yx} &\sigma_{yy} 
+	\end{bmatrix} 	
+\end{equation*}
+\begin{equation*}
+	\sigma_{xx}
+	=
+	\sigma_l \cos^2\theta + \sigma_t \sin^2\theta  
+\end{equation*}
+\begin{equation*}
+	\sigma_{yy}
+	=
+	\sigma_l \sin^2\theta + \sigma_t \cos^2\theta  
+\end{equation*}
+\begin{equation*}
+	\sigma_{xy} = \sigma_{yx}
+	=
+	(\sigma_l-\sigma_t)\sin\theta\cos\theta 
+\end{equation*}
+onde:
+- $\sigma_l$ é a condutividade longitudinal do material;\\
+- $\sigma_t$ é a condutividade transversal;\\
+- $\theta$ é o ângulo em relação ao eixo $XY$ de referência;\\
+- $\sigma_{xx}$, $\sigma_{xy}$ e $\sigma_{yy}$ são as condutividades determinadas na solução do problema inverso.\\
+
+Para encontrar $\sigma_l$ e $\sigma_t$ precisamos determinar os auto-valores do tensor 	$	[\mathbf{\sigma}]$, ou seja:
+\begin{equation}
+\det(\boldsymbol{\sigma} - S I)=0  
+\label{eq:AutoValores_001}
+\end{equation}
+onde,
+\begin{equation*}
+SI = S \times I  
+\end{equation*}
+assim:
+\begin{equation*}
+SI
+= S  
+\begin{bmatrix}  
+	1 & 0 \\  
+	0 & 1  
+\end{bmatrix}
+=
+\begin{bmatrix}  
+	S & 0 \\  
+	0 & S  
+\end{bmatrix}  
+\end{equation*}
+então,
+\begin{equation*}
+\boldsymbol{\sigma}-SI
+= \begin{bmatrix}  
+	\sigma_{xx} & \sigma_{xy}\\  
+	\sigma_{xy} & \sigma_{yy}  
+\end{bmatrix}
+-
+\begin{bmatrix}  
+	S & 0\\  
+	0 & S  
+\end{bmatrix}  
+\end{equation*}
+ou
+\begin{equation*}
+\begin{bmatrix}  
+	\sigma_{xx}-S & \sigma_{xy}\\  
+	\sigma_{xy} & \sigma_{yy}-S  
+\end{bmatrix}  
+\end{equation*}
+Calculando o determinante, temos:
+\begin{equation} 
+\det  
+\begin{bmatrix}  
+	\sigma_{xx}-S & \sigma_{xy} \\  
+	\sigma_{xy} & \sigma_{yy}-S 
+	\label{eq:AutoValores_002} 
+\end{bmatrix}  
+=0  
+\end{equation}
+ou,
+\begin{equation*}
+(\sigma_{xx}-S)(\sigma_{yy}-S)-\sigma_{xy}^2=0  
+\end{equation*} 
+assim,
+
+\begin{equation*}
+\sigma_{xx}\sigma_{yy}  
+-\sigma_{xx}S  
+-\sigma_{yy}S  
++S^2  
+-\sigma_{xy}^2  
+=0  
+\end{equation*}
+então:
+\begin{equation*}  
+S^2  
+-(\sigma_{xx}+\sigma_{yy})S  
++  
+(\sigma_{xx}\sigma_{yy}-\sigma_{xy}^2)  
+=0  
+\end{equation*}
+Essa é uma equação quadrática. Aplicando Bhaskara:
+\begin{equation*} 
+S=  
+\frac{  
+	(\sigma_{xx}+\sigma_{yy})  
+	\pm  
+	\sqrt{  
+		(\sigma_{xx}+\sigma_{yy})^2	
+		4(\sigma_{xx}\sigma_{yy}-\sigma_{xy}^2)  
+	}  
+}{2}  
+\end{equation*}
+
+\begin{equation*}
+\Delta =(\sigma_{xx}+\sigma_{yy})^2
+4(\sigma_{xx}\sigma_{yy}-\sigma_{xy}^2)  
+\end{equation*}
+Expandindo:
+\begin{equation*} 
+\Delta =\sigma_{xx}^2  
++  
+2\sigma_{xx}\sigma_{yy}  
++  
+\sigma_{yy}^2
+4\sigma_{xx}\sigma_{yy}  
++  
+4\sigma_{xy}^2  
+\end{equation*}
+Agrupando:
+
+\begin{equation*}
+\sigma_{xx}^2
+2\sigma_{xx}\sigma_{yy}  
++  
+\sigma_{yy}^2  
++  
+4\sigma_{xy}^2  
+\end{equation*}
+Logo:
+
+\begin{equation*}
+(\sigma_{xx}-\sigma_{yy})^2 + 4\sigma_{xy}^2  
+\end{equation*}
+Portanto:
+\begin{equation*}
+S=  
+\frac{\sigma_{xx}+\sigma_{yy}}{2}  
+\pm  
+\frac{1}{2}  
+\sqrt{  
+	(\sigma_{xx}-\sigma_{yy})^2 + 4\sigma_{xy}^2  
+}  
+\end{equation*}
+note que:
+\begin{equation*}
+\frac{1}{2}  
+\sqrt{  
+	(\sigma_{xx}-\sigma_{yy})^2 + 4\sigma_{xy}^2  
+}
+=
+\sqrt{  
+	\left(  
+	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+	\right)^2  
+	+  
+	\sigma_{xy}^2  
+}  
+\end{equation*}
+Então obtemos:
+\begin{equation}
+\boxed{ 	
+S_x =  
+\frac{\sigma_{xx}+\sigma_{yy}}{2}  
++  
+\sqrt{  
+	\left(  
+	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+	\right)^2  
+	+  
+	\sigma_{xy}^2  
+} 
+\label{eq:SigmaLongitudinal_001}  
+}
+\end{equation}
+
+\begin{equation}
+	\boxed{ 
+S_y =  
+\frac{\sigma_{xx}+\sigma_{yy}}{2}
+-
+\sqrt{  
+	\left(  
+	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+	\right)^2  
+	+  
+	\sigma_{xy}^2  
+} 
+\label{eq:SigmaTransversal_001}
+}  
+\end{equation}
+
+Dessa maneira, demonstramos na seção \ref{Sl_St_theta} como determinar as condutividade principais $\sigma_l$ e $sigma_t$ do tensor, bem como, ângulo de rotação $\theta$ em relação ao sistema de coordenados dos eixos $XY$ adotados como referência.
+
+
+
+%
+%
+%
+%
+%
+%
+%	\chapter{Cálculo de cada termo da matriz}\label{ap:MEF_ap_B}
+%	\begin{equation*}
+%		N_l = \frac{1}{2A}[\alpha_l + x\beta_l + y\gamma_l]
+%\end{equation*}
+%	\begin{equation*}
+%		N_m = \frac{1}{2A}[\alpha_m + x\beta_m + y\gamma_m]
+%	\end{equation*}
+%	\begin{equation*}
+%		N_n = \frac{1}{2A}[\alpha_n + x\beta_n + y\gamma_n]
+%	\end{equation*}
+%	
+%	\begin{equation*}
+%		\begin{array}{ccc}
+%			\alpha_l = (x_m y_n - x_n y_m) &
+%			\beta_l = (y_m - y_n) &
+%			\gamma_l = (x_n - x_m) \\[6pt]
+%			
+%			\alpha_m  = (x_n y_l - x_l y_n) &
+%			\beta_m = (y_n - y_l) &
+%			\gamma_m = (x_l - x_n) \\[6pt]
+%			
+%			\alpha_n = (x_l y_m - x_m y_l) &
+%			\beta_m = (y_l - y_m) &
+%			\gamma_n = (x_m - x_l)
+%		\end{array}
+%	\end{equation*}
+%	
 	
 	
 	\section{Cálculo de $Y_{lm}^{(e)}$}

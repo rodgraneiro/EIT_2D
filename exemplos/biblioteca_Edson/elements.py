@@ -367,63 +367,7 @@ class LinearTriangleAnisotropic(MyElement):
                                 [C_13, C_23, C_33]       
                                 ])
         '''
-    '''
-    def CalcKgeo(self):
-        noh1 = int(self.Topology[0])
-        noh2 = int(self.Topology[1])
-        noh3 = int(self.Topology[2])
 
-        x = [self.Coordinates[noh1][0], self.Coordinates[noh2][0], self.Coordinates[noh3][0]]
-        y = [self.Coordinates[noh1][1], self.Coordinates[noh2][1], self.Coordinates[noh3][1]]
-
-        triangulo = np.array([
-            [1, x[0], y[0]],
-            [1, x[1], y[1]],
-            [1, x[2], y[2]]
-        ], dtype=np.float64)
-
-        area_triangulo = abs(np.linalg.det(triangulo) / 2.0)
-
-        B_l = (y[1] - y[2])
-        B_m = (y[2] - y[0])
-        B_n = (y[0] - y[1])
-
-        G_l = (x[2] - x[1])
-        G_m = (x[0] - x[2])
-        G_n = (x[1] - x[0])
-
-        fator = self.Altura2D / (4.0 * area_triangulo)
-
-        # Matrizes-base geométricas
-        self.Kxx = fator * np.array([
-            [B_l*B_l, B_l*B_m, B_l*B_n],
-            [B_m*B_l, B_m*B_m, B_m*B_n],
-            [B_n*B_l, B_n*B_m, B_n*B_n]
-        ], dtype=np.float64)
-
-        self.Kxy = fator * np.array([
-            [2.0*B_l*G_l, B_l*G_m + G_l*B_m, B_l*G_n + G_l*B_n],
-            [B_m*G_l + G_m*B_l, 2.0*B_m*G_m, B_m*G_n + G_m*B_n],
-            [B_n*G_l + G_n*B_l, B_n*G_m + G_n*B_m, 2.0*B_n*G_n]
-        ], dtype=np.float64)
-
-        self.Kyy = fator * np.array([
-            [G_l*G_l, G_l*G_m, G_l*G_n],
-            [G_m*G_l, G_m*G_m, G_m*G_n],
-            [G_n*G_l, G_n*G_m, G_n*G_n]
-        ], dtype=np.float64)
-
-        # Se houver sigma definido, monta também a matriz local completa
-        if self.PhysicalEntity >= 1000 and self.mymesh.sigma_vec is not None:
-            sigma = self.mymesh.sigma_vec[self.ElementIndex]
-
-            sigma_xx = sigma[0]
-            sigma_xy = sigma[1]
-            sigma_yy = sigma[2]
-
-            self.KGeo = sigma_xx * self.Kxx + sigma_xy * self.Kxy + sigma_yy * self.Kyy
-        
-    '''
     def CalcKgeo(self):
         noh1 = int(self.Topology[0])
         noh2 = int(self.Topology[1])
