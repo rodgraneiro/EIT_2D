@@ -33,7 +33,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
-    nome = '../../malhasMSH/test_Olavo_30graus.msh'
+    nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
     #nome = '../../malhasMSH/test_Olavo_60grausNeg.msh'
 
     
@@ -98,7 +98,7 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'anisotropiaHomogeneaRetangular30p'
+    htmlName = 'anisotropiaHomogeneaRetangular30Neg'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
     invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=25,Tol=1.0e-9, html_name = htmlName)
@@ -176,7 +176,7 @@ for lam in lambdas:
 
 inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(
     pasta="../../docs/figureTemp",
-    nome_html="resultado_anisotropiaHomogeneaRetangular30p.html"
+    nome_html="resultado_anisotropiaHomogeneaRetangular30Neg.html"
 )
 
 #rodar_simulacao(1.00000000e-09, None)
