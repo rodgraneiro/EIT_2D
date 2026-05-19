@@ -31,9 +31,9 @@ def rodar_simulacao(lambda_val, sigma_saved):
 
 
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
-    nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
+    #nome = '../../malhasMSH/Hua_cuba16eletrodos_base.msh'
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
-    #nome = '../../malhasMSH/test_Olavo_30graus.msh'
+    nome = '../../malhasMSH/test_Olavo_30graus.msh'
     #nome = '../../malhasMSH/test_Olavo_60grausNeg.msh'
 
     
@@ -98,10 +98,10 @@ def rodar_simulacao(lambda_val, sigma_saved):
     V_measured_phaton = np.load("V_measured_phaton.npy")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     
-    htmlName = 'anisotropiaHomogenea'
+    htmlName = 'anisotropiaHomogeneaRetangular30p'
     #htmlName = 'banana'
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=1,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter=25,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -158,8 +158,8 @@ def rodar_simulacao(lambda_val, sigma_saved):
 # 4.32876128e-06 3.51119173e-05 2.84803587e-04 2.31012970e-03
 # 1.87381742e-02 1.51991108e-01 1.23284674e+00 1.00000000e+01]
 
-#lambdas = np.logspace(-6, 1, 12)
-lambdas= [1.00000000e-06, 4.32876128e-06, 1.87381742e-05]# 8.11130831e-05]
+lambdas = np.logspace(-6, 1, 12)
+#lambdas= [1.00000000e-06]#, 4.32876128e-06, 1.87381742e-05]# 8.11130831e-05]
 # 3.51119173e-04 1.51991108e-03 6.57933225e-03 2.84803587e-02
 # 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
 
@@ -176,7 +176,7 @@ for lam in lambdas:
 
 inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(
     pasta="../../docs/figureTemp",
-    nome_html="resultado_completo.html"
+    nome_html="resultado_anisotropiaHomogeneaRetangular30p.html"
 )
 
 #rodar_simulacao(1.00000000e-09, None)

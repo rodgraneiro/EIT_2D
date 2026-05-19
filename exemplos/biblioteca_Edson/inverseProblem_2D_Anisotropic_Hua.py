@@ -756,7 +756,7 @@ class inverse_problem:
     ###############################################################################
 
     def plotar_iteracoes(self,lista_indice, lista_valor,  nome_arquivo="Optimization.png"):#, nome = None):
-        plt.figure(figsize=(6, 5))
+        plt.figure(figsize=(6, 6))
         plt.plot(lista_indice,
                 lista_valor,
                 marker='.',
@@ -818,7 +818,7 @@ class inverse_problem:
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             '''
 
-            fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
+            fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
                 ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
@@ -866,10 +866,11 @@ class inverse_problem:
         elems_2D = np.array([el for el in topo if len(el) == 3])
         elems_1D = np.array([el for el in topo if len(el) == 2])
     
-        fig, ax = plt.subplots(figsize=(6, 6))
+        fig, ax = plt.subplots(figsize=(6, 6.2))
         #fig, ax = plt.subplots(figsize=(5,5))
-        #plt.figure(figsize=(6, 5))
-        ax.set_aspect('equal')
+        #plt.figure(figsize=(6, 6))
+        #ax.set_aspect('equal')
+        #ax.set_aspect('equal', adjustable='box')
 
         # ============================================================
         #   PLOTAR ELEMENTOS 2D (TRIANGULARES)
@@ -900,7 +901,7 @@ class inverse_problem:
             #cbar.set_ticklabels(['< 1.0', '≥ 1.0'])
             #fig.colorbar(tpc, ax=ax, label='Conductivity σ [S/m]')
             #plt.colorbar(tpc, label='Máscara binária')
-            ax.set_aspect('equal')
+            #ax.set_aspect('equal')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
                 ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f} - th_{threshold:.3f}", fontsize=11)
@@ -954,7 +955,7 @@ class inverse_problem:
         
     
         
-        plt.figure(figsize=(6, 6))
+        plt.figure(figsize=(6, 5.9))
     
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
@@ -995,7 +996,7 @@ class inverse_problem:
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
 
-    def plot_classificacao(self, sigma_Dif, titulo="Results (σx-σy)", salvar=False, nome_arquivo="plot_classificacao.webp"):
+    def plot_Sorting(self, sigma_Dif, titulo="Results (σx-σy)", salvar=False, nome_arquivo="plot_Sorting.webp"):
         
         #sigma_dif = sigma_x - sigma_y
         
@@ -1009,8 +1010,8 @@ class inverse_problem:
         plt.figure(figsize=(6, 6))
         plt.plot(x, sigma_dif_ord, linewidth=1.5)
         
-        plt.title(r'$\sigma_x - \sigma_y$ ordenado')
-        plt.xlabel('Elemento ordenado')
+        plt.title(r'($\sigma_x - \sigma_y$) Sorting')
+        plt.xlabel('Sorting position')
         plt.ylabel(r'$\sigma_x - \sigma_y$')
         
         plt.grid(True, linestyle='--', alpha=0.5)
@@ -1146,27 +1147,35 @@ class inverse_problem:
                 grupos[lambda_str]["sigma_xy"] = nome
             elif "sigma_yy" in nome:
                 grupos[lambda_str]["sigma_yy"] = nome
+            elif "sigma_xl" in nome:
+                grupos[lambda_str]["sigma_l"] = nome
+            elif "sigma_xt" in nome:
+                grupos[lambda_str]["sigma_t"] = nome            
             elif "sigma_Dif" in nome:
-                grupos[lambda_str]["sigma_Dif"] = nome
-            elif "Sigma_X" in nome:
-                grupos[lambda_str]["Sigma_X"] = nome
-            elif "optimization" in nome or "iterations" in nome:
-                grupos[lambda_str]["optimization"] = nome
+                grupos[lambda_str]["sigma_Dif"] = nome          
+            elif "sigma_linhas" in nome:
+                grupos[lambda_str]["sigma_linhas"] = nome                           
+            elif "iterations" in nome:
+                grupos[lambda_str]["iterations"] = nome
             elif "theta" in nome:
                 grupos[lambda_str]["theta"] = nome
-            elif "ClassAniso_Y" in nome:
-                grupos[lambda_str]["summary"] = nome
-            elif "Mask" in nome:
-                grupos[lambda_str]["mask"] = nome
+            #elif "Sorting" in nome:
+            #    grupos[lambda_str]["Sorting"] = nome
+            #elif "Mask" in nome:
+                grupos[lambda_str]["Mask"] = nome
     
         colunas = [
             ("sigma_xx", "σxx"),
             ("sigma_xy", "σxy"),
             ("sigma_yy", "σyy"),
-            ("sigma_Dif", "(σxx - σyy)"),
-            ("summary", "Summary"),
-            ("optimization", "Optimization"),
+            ("sigma_l", "σ_l"),
+            ("sigma_t", "σ_t"),          
+            ("sigma_Dif", "(σ_l - σ_t)"),            
+            ("sigma_linhas", "Summary"),
+            ("iterations", "Optimization"),           
             ("theta", "Angle [°]"),
+            #("Sorting", "Sorting"),
+            #("Mask", "Mask"),
         ]
     
         html_path = os.path.join(pasta, nome_html)
@@ -1179,62 +1188,34 @@ class inverse_problem:
     <title>Resultados TIE</title>
     
     <style>
-    body {
-        background-color: black;
-        color: white;
-        font-family: Arial, sans-serif;
-    }
+    body {background-color: black; color: white; font-family: Arial, sans-serif;}
     
-    h1 {
-        color: white;
-    }
+    h1 {color: white;}
     
-    .info {
-        color: lime;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
+    .info {color: lime;font-weight: bold; margin-bottom: 6px;}
     
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+    table {border-collapse: collapse;width: 100%;}
     
-    th {
-        font-size: 24px;
-        padding: 10px;
-        color: white;
-    }
+    th {font-size: 24px; padding: 10px; color: white;}
     
-    td {
-        padding: 6px;
-        text-align: center;
-        vertical-align: top;
-    }
     
-    img {
-        width: 170px;
-        height: auto;
-        background-color: white;
-    }
+    td {padding: 0px; margin: 0px; text-align: center; vertical-align: top; }
     
-    .lambda {
-        color: yellow;
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
+    img {width: 200px;height: auto; background-color: white;}
+    
+    .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
     </style>
     </head>
     
     <body>
     """)
     
-            f.write("<p>Above are some examples of simulated electrical fields in the phantom.</p>\n")
+            #f.write("<p>Above are some examples of simulated electrical fields in the phantom.</p>\n")
             f.write("""
     <p class="info">
     Results obtained for a maximum of 25 iterations.
     &nbsp;&nbsp;&nbsp;
-    Same scale for all graphs.
+    Auto scale for all graphs.
     &nbsp;&nbsp;&nbsp;
     Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
     </p>
@@ -1248,7 +1229,7 @@ class inverse_problem:
                 f.write(f"<th>{titulo}</th>\n")
             f.write("</tr>\n")
     
-            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x), reverse=True):
+            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):#, reverse=True):
                 f.write("<tr>\n")
     
                 for chave, _ in colunas:
@@ -1531,8 +1512,8 @@ class inverse_problem:
         DifAnisotropia = sigma_x - sigma_y
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
         
-
-        theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], DifAnisotropia)
+        sigma_theta = sigmaInicial[:, 0] - sigmaInicial[:, 2]
+        theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], sigma_theta)
         theta_deg = np.rad2deg(theta_rad)
 
         #theta_rad = 0.5 * np.arctan2(2*sigma_xy, sigma_xx - sigma_xy)
@@ -1543,57 +1524,57 @@ class inverse_problem:
         lista_imgs = []
         
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
-        nome1 =  f'../../docs/figureTemp/{html_name}sigma_xx_{Lambda:.6f}.webp' 
+        nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'../../docs/figureTemp/{html_name}sigma_xy_{Lambda:.6f}.webp' 
+        nome2 =  f'../../docs/figureTemp/{html_name}_sigma_xy_{Lambda:.6f}.webp' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'../../docs/figureTemp/{html_name}sigma_yy_{Lambda:.6f}.webp'  
+        nome3 = f'../../docs/figureTemp/{html_name}_sigma_yy_{Lambda:.6f}.webp'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
              
 
-        nome8 = f'../../docs/figureTemp/{html_name}Sigma_X_{Lambda:.6f}.webp'          
-        self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome8)
-        lista_imgs.append(nome8)
+        nome4 = f'../../docs/figureTemp/{html_name}_sigma_xl_{Lambda:.6f}.webp'          
+        self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
+        lista_imgs.append(nome4)
         
-        nome9 = f'../../docs/figureTemp/{html_name}Sigma_Y_{Lambda:.6f}.webp'  
-        self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome9)
-        lista_imgs.append(nome9)
+        nome5 = f'../../docs/figureTemp/{html_name}_sigma_xt_{Lambda:.6f}.webp'  
+        self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
+        lista_imgs.append(nome5)
         
         # Diferença anisotrópica
-        nome4 =  f'../../docs/figureTemp/{html_name}sigma_Dif_{Lambda:.6f}.webp' 
-        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
-        lista_imgs.append(nome4)    
+        nome6 =  f'../../docs/figureTemp/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
+        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
+        lista_imgs.append(nome6)    
         
         # Gráfico tipo linha (o que você mandou)
-        nome5 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
-        self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome5)
-        lista_imgs.append(nome5)
+        nome7 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
+        self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome7)
+        lista_imgs.append(nome7)
         #print('plot_sigma_banana_solver', theta_deg)
         
-        nome6 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
-        self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome6)
-        lista_imgs.append(nome6)     
+        nome8 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
+        self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome8)
+        lista_imgs.append(nome8)     
 
         # Gráfico tipo linha (o que você mandou)
-        nome7 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
-        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome7)
-        lista_imgs.append(nome7)
+        nome9 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
+        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome9)
+        lista_imgs.append(nome9)
         
 
-
+        '''
         nome10 = f'../../docs/figureTemp/{html_name}_Mask_{Lambda:.6f}.webp'  
         self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome10)
         lista_imgs.append(nome10)
 
-        nome11 = f'../../docs/figureTemp/{html_name}_ClassAniso_Y_{Lambda:.6f}.webp'
-        self.plot_classificacao(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome11)
+        nome11 = f'../../docs/figureTemp/{html_name}_Sorting_{Lambda:.6f}.webp'
+        self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome11)
         lista_imgs.append(nome11)
-
+        '''
         # Criar HTML
         #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
         nome_html = f'../../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
