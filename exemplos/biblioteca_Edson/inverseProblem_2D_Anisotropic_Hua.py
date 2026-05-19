@@ -1303,13 +1303,32 @@ class inverse_problem:
         self.sigmaStar = np.tile(initialEstimate, (n_elem_phys, 1))
 
 
-
-
-
-
         #sigmaInicial_vec = sigmaInicial.reshape(-1, 1, order='C')
         #sigmaStar_vec    = self.sigmaStar.reshape(-1, 1, order='C')
 
+
+
+        #######################################################################
+        #  Regularização Filtro Gaussiano FP_Alta
+        # fonte: Erick equação C.37
+        #######################################################################
+        """
+            Atualização Gauss-Newton regularizada:
+
+            θ̂(k+1) = θ̂(k) + αk(JkᵀW1Jk + λ²L2ᵀL2)⁻¹ [ JkᵀW1(z-h(θ̂k)) - λ²L2ᵀL2(θ̂k-θ*) ]
+
+            Termos:
+
+            θ̂  -> condutividade reconstruída
+            J   -> Jacobiano
+            W1  -> pesos das medidas
+            L2  -> regularização espacial
+            λ   -> parâmetro de regularização
+            α   -> passo iterativo
+            z   -> tensão medida
+            h() -> problema direto
+            θ*  -> prior
+        """
         #######################################################################
         ###################        MAIN LOOP   ################################
         #######################################################################
@@ -1499,8 +1518,27 @@ class inverse_problem:
         sigma_y = Smed - D
         sigma_Dif = sigma_x - sigma_y
         '''
-        
-        
+        ##################################################################################
+        # Deteminação das condutividas longitudinal e transversal do material anisotrópico
+        # e do ângulo theta.
+        ##################################################################################
+        """
+        Condutividades principais:
+
+                σxx + σyy
+        Sx = ---------------- + √( ((σxx-σyy)/2)^2 + σxy² )
+                    2
+                σxx + σyy
+        Sy = ---------------- - √( ((σxx-σyy)/2)^2 + σxy² )
+                    2
+        Ângulo:
+        θ = 0.5 atan2(2σxy , σxx-σyy)
+        Tensor:
+                [σxx  σxy]
+        σ =     [        ]
+                [σxy  σyy]
+        """
+        ########################################################################################
         
         Smed = 0.5 * (sigmaInicial[:, 0] + sigmaInicial[:, 2])
         D = np.sqrt(((sigmaInicial[:, 0] - sigmaInicial[:, 2])/2)**2 + sigmaInicial[:, 1]**2)
