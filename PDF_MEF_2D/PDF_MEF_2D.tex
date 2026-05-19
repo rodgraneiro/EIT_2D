@@ -16,6 +16,7 @@ sumario=tradicional
 \usepackage{xcolor}
 \usepackage{pgfornament}
 \usepackage{tikz}
+\usepackage[most]{tcolorbox}
 
 
 \graphicspath{{imagens/}}
@@ -340,33 +341,25 @@ sumario=tradicional
     	\label{eq:c_calor_y}
     \end{equation}
     
-    Definindo a matriz 
-
-    \begin{equation}
+    Definindo a matriz do tensor $[D]$ -- onde a demostração dos termos  são apresentados no apêndice \ref{ApendiceA1_a} -- temos:   
+ \begin{equation}
     	[D] =
     	\begin{bmatrix} \sigma_{xx} & \sigma_{xy}\\ 
     		\sigma_{yx}& \sigma_{yy} \end{bmatrix}
     	\label{eq:matriz_D}
-    \end{equation}
-    
-    
-    onde:
-    
-    $
+ \end{equation}       
+    onde:  
+\begin{equation*}
     \sigma_{xx} = \sigma_n \cos^2 \theta + \sigma_t \sin^2 \theta 
-    $
-    
-    $
+\end{equation*} 
+\begin{equation*}
     \sigma_{yy} = \sigma_n \sin^2 \theta + \sigma_t \cos^2 \theta 
-    $
-    
-    $
-    \sigma_{yx} = \sigma_{xy} = \sigma_n \sin \theta \cos \theta - \sigma_t \sin \theta \cos \theta $
-    
+\end{equation*}   
+\begin{equation*}
+    \sigma_{yx} = \sigma_{xy} = \sigma_n \sin \theta \cos \theta - \sigma_t \sin \theta \cos \theta 
+\end{equation*}
 
-    
-    
-    
+
     temos:
     
     \begin{equation}
@@ -1970,11 +1963,11 @@ Somando também as colunas $3$ e $4$, encontramos a matriz local do elemento ret
 %\end{center}
 
 
-\begin{center}
-	\begin{tikzpicture}
-		\node at (0,0) {\pgfornament[width=6cm]{88}};
-	\end{tikzpicture}
-\end{center}
+%\begin{center}
+%	\begin{tikzpicture}
+%		\node at (0,0) {\pgfornament[width=6cm]{88}};
+%	\end{tikzpicture}
+%\end{center}
 %
 %\begin{center}
 %	\begin{tikzpicture}
@@ -2022,597 +2015,21 @@ Somando também as colunas $3$ e $4$, encontramos a matriz local do elemento ret
 %\huge
 %\Huge    
     
-    
-%\displaystyle	grande (padrão)
-%\textstyle	médio
-%\scriptstyle	pequeno
-%\scriptscriptstyle	bem pequeno
-%   assim,
-%   \begin{equation*}
-%   	N_l = \frac{1}{2A}[\alpha_l + x\beta_l + y\gamma_l]
-%   \end{equation*}
-%   \begin{equation*}
-%   	N_m = \frac{1}{2A}[\alpha_m + x\beta_m + y\gamma_m]
-%   \end{equation*}
-%   \begin{equation*}
-%   	N_n = \frac{1}{2A}[\alpha_n + x\beta_n + y\gamma_n]
-%   \end{equation*}
-%  Substituindo $N_i$  na equação \ref{eq:MEF_eq_0003b}obtém-se
-%   \begin{equation}
-%   	\phi_e(x,y) = \sum_{i=1}^{3} N_i(x,y) \, \phi_{i} \label{eq:MEF_eq_0003a}\end{equation}
-%   A função de forma tem as seguintes propriedades:
-%   \begin{equation*}
-%   	N_i =
-%   	\begin{cases}
-%   		1, & i = j \\
-%   		0, & i \neq j
-%   	\end{cases},
-%   	\qquad
-%   	\sum_{i=1}^{3} N_i(x,y) = 1
-%   \end{equation*}
-%   
-%
-%    Dessa maneira, a equação \ref{eq:MEF_eq_0003b} fica como:
-%   	\begin{equation}
-%    \phi_e(x,y) = \frac{1}{2A} \Big[ \,\phi_l N_l + \phi_m N_m + \phi_n N_n \,\Big]
-%    \label{eq:MEF_eq_0003ab}
-%    \end{equation}
-%    ou
-%    \begin{equation}
-%    	\phi_e(x,y) = \frac{1}{2A} [ \bm{N} ]\{\bm{\phi}\} \label{eq:MEF_eq_0003c}
-%    \end{equation}
-%    
-%    Observe que $\bm{[N]}$ sem as simplificações fica como:
-%
-%   	\begin{equation}
-%   	\begin{aligned}
-%   		\phi_e(x,y) = \frac{1}{2A} \Big[ \,
-%   		&[(x_m y_n - x_n y_m)+(y_m - y_n)+ (x_n - x_m)]\\
-%   		& x[(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]\\
-%   		& y[(x_l y_m - x_m y_)+ (y_l - y_m)+(x_m - x_l)] \, \Big]_{1\times 3}
-%   				\begin{Bmatrix}
-%   			\phi_{l} \\
-%   			\phi_{m} \\
-%   			\phi_{n}
-%   		\end{Bmatrix}_{3\times 1}
-%   	\end{aligned}
-%    \end{equation}
-%      A figura \ref{fig:fucoesFormaAlfa} apresenta graficamente o comportamentos das funções de forma $\alpha_l, \alpha_m$ e $\alpha_n$ para um elemento finito triangular.
-%   \begin{figure}[htbp]
-%   	\centering
-%   	\includegraphics[width=0.7\textwidth]{fucoesFormaAlfaN.png}
-%   	\caption{Funções de forma do elemento triangular.}
-%   	\label{fig:fucoesFormaAlfa}
-%   \end{figure} 
-%    
-%  
-%    \subsection*{Gradiente da função do potencial $\phi(x,y)$}
-%    Para efetuar o desenvolvimento do funcional que governa o processo de iteração numérica para resolver o problema direto pelo MEF, precisamos determinar o gradiente da função $\phi(x,y)$, assim, seja:
-%    
-%    \begin{equation*}
-%    	\nabla \phi = 
-%    	\begin{Bmatrix} 
-%    	\frac{\partial\phi}{\partial x} \\
-%    	\frac{\partial\phi}{\partial y}
-%        \end{Bmatrix} 
-%    	\end{equation*}
-%    
-%    Dessa maneira, vamos determinar o gradiente da função potencial descrita pela equação \ref{eq:MEF_eq_0003ab}, portanto:
-%    
-%    \begin{equation*}
-%    		\frac{\partial\phi(x,y)}{\partial x} = 
-%    	 \frac{1}{2A} \Big[ \,	\frac{\partial N_l}{\partial x} 
-%    	+ 	\frac{\partial N_m)}{\partial x} +	\frac{\partial N_n}{\partial x} \,\Big]
-%    \end{equation*}
-%    ou seja:
-%    
-%%     \begin{equation*}
-%%     	\begin{aligned}
-%%    	\frac{\partial\phi(x,y)}{\partial x} = \frac{1}{2A} \Big[ \, 
-%%    	& 	\frac{\partial [(x_m y_n - x_n y_m)+(y_m - y_n)+ (x_n - x_m)]}{\partial x}\phi_l \\
-%%   	&+ 	\frac{\partial [(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]x}{\partial x}\phi_m \\
-%%    	&+	\frac{\partial[(x_l y_m - x_m y_)+ (y_l - y_m)+(x_m - x_l)]y}{\partial x}\phi_n \,\Big]
-%%       \end{aligned}
-%%    \end{equation*}
-%%    
-%%    \begin{equation*}    	
-%%    		\frac{\partial\phi(x,y)}{\partial x} = \frac{1}{2A} \Big[ \,    		 	
-%%    	 	\frac{\partial [(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]x}{\partial x}\phi_m
-%%    		\,\Big]   	
-%%    \end{equation*}
-%%    
-%%%    \begin{equation}
-%%%    	\begin{aligned}
-%%%    		\phi_e(x,y) = \frac{1}{2A} \Big[ \,
-%%%    		&[(x_m y_n - x_n y_m)+(y_m - y_n)+ (x_n - x_m)]\\
-%%%    		& x[(x_n y_l - x_l y_n)+ (y_n - y_l)+(x_l - x_n)]\\
-%%%    		& y[(x_l y_m - x_m y_)+ (y_l - y_m)+(x_m - x_l)] \, \Big]_{1\times 3}
-%%%    		\begin{Bmatrix}
-%%%    			\phi_{l} \\
-%%%    			\phi_{m} \\
-%%%    			\phi_{n}
-%%%    		\end{Bmatrix}_{3\times 1}
-%%%    	\end{aligned}
-%%%    \end{equation}
-%    
-%    \textcolor{red}{*********** CONTINUAR ***********}
-%    
-%    \subsection*{Formulação da equação de Laplace}
-%    
-%    As Equações de Maxwell descrevem o campo eletromagnético dentro de um objeto:
-%    
-%    - Lei de Gauss
-%    \begin{equation}\nabla \cdot D = \rho_c \label{eq:MEF_eq_0004} \end{equation}
-%    -  Lei de Gauss para o magnetismo 
-%    \begin{equation}\nabla \cdot B = 0 \end{equation}
-%    - Lei da Indução de Faraday
-%    \begin{equation}\nabla \times E = - \dfrac{\partial B}{\partial t}\end{equation}
-%    - Lei de Ampere
-%    \begin{equation}\nabla \times H = \mathbf{J} + \dfrac{\partial D}{\partial t}\end{equation}
-%    - Equação da continuidade
-%    \begin{equation}\nabla \cdot J = 0 \label{eq:MEF_eq_0004b}\end{equation}            
-%    onde: \\
-%    - $D$ é o campo de deslocamento elétrico \\
-%    - $\rho_c$ é a densidade de carga livre \\
-%    - $B$ é a densidade de fluxo magnético \\
-%    - $E$ é o campo elétrico \\
-%    - $H$ é o campo magnético \\
-%    - $\mathbf{J}$ é a densidade de corrente \\
-%    - $\nabla$ é o gradiente. $\nabla \phi(x,y,z) = \left[\frac{\partial \phi}{\partial x};  \frac{\partial \phi} {\partial y}; \frac{\partial \phi}{ \partial z} \right]$ \\
-%    - $\nabla \cdot$ é o divergente. $\nabla \cdot \phi(x,y) = \left[\frac{\partial \phi_x(x,y)}{\partial x} + \frac{\partial \phi_y(x,y)}{\partial y} \right ]$ (fonte/sorvedouro) \\
-%    - $\nabla \times$ é o rotacional. $\nabla \times \phi(x,y,z) = \left[(\frac{\partial \phi_z}{\partial y} - \frac{\partial \phi_y}{\partial z}); (\frac{\partial \phi_x}{\partial z} - \frac{\partial \phi_z}{\partial x}); (\frac{\partial \phi_y}{\partial x} - \frac{\partial \phi_x}{\partial y}) \right ]$ (vorticidade)
-%    
-%    Para problemas envolvendo corrente alternada de frequência baixa, pode-se desconsiderar a dependência do tempo  e utilizar uma aproximação quasi-estática para a equações:
-%    
-%    \begin{equation}\nabla \times E = 0 \end{equation}
-%    \begin{equation}\nabla \times H = \mathbf{J} \label{eq:MEF_eq_0005} \end{equation}
-%    Em meios lineares isotrópicos, temos também: 
-%    
-%    \begin{equation}D = \varepsilon E \end{equation}
-%    \begin{equation}B = \mu H \end{equation}
-%    \begin{equation}\mathbf{J} = \sigma E \label{eq:MEF_eq_0006}\end{equation} 
-%    
-%    onde:\\
-%    - $\varepsilon$ é a permissividade do meio\\
-%    - $\sigma$ é a condutividade do meio\\
-%    - $\mu$ é a permeabilidade magnética do meio\\
-%    
-%    Na eletrostática a Lei da Indução de Faraday não tem variação no tempo, portanto $\nabla \times E = 0$. Do cálculo, sabe-se que o rotacional de um gradiente é nulo, dessa maneira pode-se assumir que:
-%    \begin{equation}\nabla \times \nabla \phi = 0\end{equation} 
-%    assim conclui-se que
-%    \begin{equation}E = -\nabla \phi\end{equation} 
-%    Substituindo a equação \ref{eq:MEF_eq_0006} na \ref{eq:MEF_eq_0005}, temos:
-%    \begin{equation}D = \varepsilon (-\nabla\phi)\end{equation} 
-%    Substituindo $D$ na equação \ref{eq:MEF_eq_0004}, obtemos e equação de Poisson:
-%    
-%   \begin{equation}\nabla \cdot (\varepsilon (-\nabla\phi)) = \rho_c \end{equation}
-%    \begin{equation}\nabla^2 \phi = -\frac{\rho_c}{\varepsilon} \label{eq:MEF_eq_0007} \end{equation}
-%    Quando não há cargas livres no domínio $\rho_c = 0$, a equação \ref{eq:MEF_eq_0006} passa a ser denominada equação de Laplace:
-%    \begin{equation}\nabla^2 \phi = 0\end{equation}
-%    ou,
-%    \begin{equation}\nabla^2 \phi = \frac{\partial^2\phi_{(x,y,z)}}{\partial x^2} + \frac{\partial^2\phi_{(x,y,z)}}{\partial y^2} + \frac{\partial^2\phi_{(x,y,z)}}{\partial z^2} = 0 \label{eq:MEF_eq_0008} \end{equation}
-%    
-%    A equação \ref{eq:MEF_eq_0008} é a equação diferencial que rege o problema eletrostático.
-%    Da equação \ref{eq:MEF_eq_0006} sabe-se que $\mathbf{J} = \sigma E$, portanto:
-%    \begin{equation}\mathbf{J} = \sigma (-\nabla\phi)\end{equation}
-%    Substituindo $J$ na equação \ref{eq:MEF_eq_0004b}, temos:
-%    \begin{equation} \nabla \cdot (\sigma \nabla\phi) = 0 \label{eq:MEF_eq_0009}\end{equation}
-%    
-%    A equação \ref{eq:MEF_eq_0009} é conhecida como equação generalizada de Laplace.
-%    
-%    Para um meio de condutividade isotrópica do meio, onde $\sigma_x = \sigma_y = \sigma_z$, pode-se representar a equação\ref{eq:MEF_eq_0009}, num modo geral em 3D, como:
-%     \begin{equation}\nabla  \cdot \sigma \nabla \phi =  \nabla  \cdot \sigma \begin{Bmatrix}
-%    	\frac{\partial \phi}{\partial x} \\ \frac{\partial \phi}{\partial y} \\ \frac{\partial \phi}{\partial z} \end{Bmatrix} = \frac{\partial}{\partial x} \left( \sigma \frac{\partial \phi}{\partial x} \right) + \frac{\partial}{\partial y} \left( \sigma \frac{\partial  \phi}{\partial y} \right) + \frac{\partial}{\partial z} \left( \sigma \frac{\partial \phi}{\partial z} \right) = 0 \end{equation}
-%    
-%    Para um meio de condutividade anisotrópica onde a anisotropia, bem como, a geometria estão em conformidade com os eixos $x$, $y$ e $z$ do sistema de referência de coordenas, temos: 
-%    \begin{equation}\nabla  \cdot \sigma \nabla \phi = \nabla  \cdot \begin{bmatrix}
-%    	\sigma_{xx} & 0 & 0\\
-%    	0 & \sigma_{yy} & 0\\
-%    	0 & 0 & \sigma_{zz}
-%    \end{bmatrix} \begin{Bmatrix}
-%    	\frac{\partial \phi}{\partial x} \\ \frac{\partial \phi}{\partial y} \\ \frac{\partial \phi}{\partial z} \end{Bmatrix} = 0\end{equation}
-%    \begin{equation}\nabla  \cdot \sigma \nabla \phi = \frac{\partial}{\partial x} \left( \sigma_{xx} \frac{\partial \phi}{\partial x} \right) + \frac{\partial}{\partial y} \left( \sigma_{yy} \frac{\partial \phi}{\partial y} \right) + \frac{\partial}{\partial z} \left( \sigma_{zz} \frac{\partial \phi}{\partial z} \right) = 0 \end{equation}
-%    
-%    Para um meio de condutividade anisotrópica geral , temos: 
-%    \begin{equation}\nabla  \cdot \sigma \nabla \phi =\nabla  \cdot \begin{bmatrix}
-%    	\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%    	\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%    	\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%    \end{bmatrix} \begin{Bmatrix}
-%    	\frac{\partial \phi}{\partial x} \\ \frac{\partial \phi}{\partial y} \\ \frac{\partial \phi}{\partial z} \end{Bmatrix} = 0 \end{equation}
-%    portanto,
-%    \begin{equation}
-%    \nabla \cdot 
-%    \left(
-%    \boldsymbol{\sigma}\nabla\phi
-%    \right)
-%    =
-%    \frac{\partial}{\partial x}
-%    \left(
-%    \sigma_{xx}\frac{\partial \phi}{\partial x}
-%    +\sigma_{xy}\frac{\partial \phi}{\partial y}
-%    +\sigma_{xz}\frac{\partial \phi}{\partial z}
-%    \right) \end{equation}
-%    \begin{equation}\quad
-%    +
-%    \frac{\partial}{\partial y}
-%    \left(
-%    \sigma_{yx}\frac{\partial \phi}{\partial x}
-%    +\sigma_{yy}\frac{\partial \phi}{\partial y}
-%    +\sigma_{yz}\frac{\partial \phi}{\partial z}
-%    \right)\end{equation}
-%    \begin{equation}\quad\quad
-%    +
-%    \frac{\partial}{\partial z}
-%    \left(
-%    \sigma_{zx}\frac{\partial \phi}{\partial x}
-%    +\sigma_{zy}\frac{\partial \phi}{\partial y}
-%    +\sigma_{zz}\frac{\partial \phi}{\partial z}
-%    \right) = 0 \end{equation}
-%    
-%    obs:
-%    \begin{equation}
-%    \sigma_{xx} = \sigma_n \cos^2 \theta + \sigma_t \sin^2 \theta 
-%    \end{equation}
-%    \begin{equation}
-%    \sigma_{yy} = \sigma_n \sin^2 \theta + \sigma_t \cos^2 \theta \end{equation}
-%    \begin{equation}
-%    \sigma_{yx} = \sigma_{xy} = \sigma_n \sin \theta \cos \theta - \sigma_t \sin \theta \cos \theta \end{equation}
-%    VERIFICAR EIXO Z
-%    
-%
-%	\subsection*{Formulação do Funcional}
-%	
-%	Para determinar o sistema de equações necessárias para utilização do MEF é preciso efetuar  minimização de um funcional que represente a equação diferencial que governa o problema. Os métodos frequentemente mencionados na literatura para encontrar essas equações são: o método variacional e método  dos resíduos ponderados de Galerkin, respectivamente. 
-%	
-%	
-%	
-%	Por meio do método variacional, para resolver a equação diferencial de Laplace, utiliza-se a minimização de um funcional baseado na energia do sistema,  que corresponde a solução da equação original, dado por.
-%	\begin{equation}\pi = \frac{1}{2}\int_S \varepsilon |E|^2 dS= \frac{1}{2}\int_S \varepsilon |\nabla \phi|^2 dS \label{eq:MEF_eq_0010}\end{equation}
-%	
-%	Considerando um meio puramente resistivo e desconsiderando os efeitos de capacitância, pode-se reescrever a equação \ref{eq:MEF_eq_0010} em função da condutividade, que assim:
-%	\begin{equation}\pi = \frac{1}{2}\int_S \sigma |E|^2 dS= \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS \end{equation}
-%	Para um único elemento da malha de elementos finitos o funcional fica como:
-%	\begin{equation} \pi_e = \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS \label{eq:MEF_eq_0011}\end{equation}
-%	Da equação \ref{eq:MEF_eq_0003a} obtemos que:
-%	\begin{equation}
-%	\nabla \phi = \sum_{i=1}^{3} \phi_{i} \nabla N_i \label{eq:MEF_eq_0012}\end{equation}
-%	
-%	Substituindo a equação \ref{eq:MEF_eq_0012} na \ref{eq:MEF_eq_0011} temos:
-%	Expandindo o termo quadrático, temos:
-%	\begin{equation*}
-%	\textstyle
-%	\lvert \nabla \phi\rvert^2
-%	= \nabla \phi\cdot \nabla \phi
-%	= \left(\sum_{i=1}^3 \phi_{i}\,\nabla N_i\right)\cdot
-%	\left(\sum_{j=1}^3 \phi_{j}\,\nabla N_j\right)
-%	= \sum_{i=1}^3\sum_{j=1}^3
-%	\phi_{i}\phi_{j}\,(\nabla N_i\cdot \nabla N_j)\end{equation*}
-%	
-%	Substituindo e na equação \ref{eq:MEF_eq_0011}:
-%	\begin{equation}
-%	\pi_e=\tfrac12\int_S \bm{\sigma}
-%	\left[\sum_{i=1}^3\sum_{j=1}^3
-%	\phi_{i}\phi_{j}\,(\nabla N_i\cdot \nabla N_j)\right] dS\end{equation}
-%	ou,
-%	\begin{equation}
-%	\pi_e = \tfrac{1}{2} \sum_{i=1}^{3} \sum_{j=1}^{3}
-%	 \begin{bmatrix}
-%		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%	\end{bmatrix}	
-%	  \phi_{i} 
-%	\left[ \int_S \nabla N_i \nabla N_j \, dS \right] \phi_{j} \label{eq:MEF_eq_0013}\end{equation}
-%	Nomeando os termos entre colchetes por $Y_{ij}^{(e)}$,temos:
-%	\begin{equation}
-%	Y_{ij}^{(e)} = \int_S \nabla N_i \nabla N_j \, dS \label{eq:MEF_eq_0013a} \end{equation}
-%	podemos reescrever a equação \ref{eq:MEF_eq_0013} na forma matricial,
-%	\begin{equation}
-%	\pi_e = \tfrac{1}{2} [\bm{\sigma}] \{\phi_e\}^T [Y^{(e)}] \{\phi_e\} \label{eq:MEF_eq_0015} \end{equation}
-%	onde $T$ indica a transposta do vetor ${\phi_e}$ com os potenciais  do elemento triangular e [$\bm{\sigma}$] é o tensor de condutividade anisotrópica.
-%	
-%	A matriz $[Y^{(e)}]$ apresentada na equação \ref{eq:MEF_eq_0014} é como \textbf{matriz local dos coeficientes dos elementos} triangulares que pode ser representada como:
-%	\begin{equation}
-%	[Y^{(e)}] =
-%	\begin{bmatrix}
-%		Y^{(e)}_{ll} & Y^{(e)}_{lm} & Y^{(e)}_{ln} \\
-%		Y^{(e)}_{ml} & Y^{(e)}_{mm} & Y^{(e)}_{mn} \\
-%		Y^{(e)}_{nl} & Y^{(e)}_{nm} & Y^{(e)}_{nn}
-%	\end{bmatrix} \label{eq:MEF_eq_0014}
-%    \end{equation}
-%	As equações de cada termo da matriz $[Y^{(e)}]$ são apresentadas a seguir:
-%	
-%	\begin{equation*}
-%	\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big]; }
-%	\end{equation*}
-%	\begin{equation*}
-%	\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]; }
-%	\end{equation*}
-%	\begin{equation*}
-%	\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big]; }
-%	\end{equation*}
-%	\begin{equation*}
-%	\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]; }
-%	\end{equation*}
-%	\begin{equation*}
-%	\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big]; }
-%	\end{equation*}
-%	\begin{equation*}
-%	\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big]. }
-%	\end{equation*}
-%	Onde $A$ é a área do elemento dada pela equação \textcolor{red}{XXXXX}.
-%	Como a matriz $[Y^{(e)}]$ é simétrica temos:  $Y_{ml}^{(e)} = Y_{lm}^{(e)}$ ; $Y_{nl}^{(e)} = Y_{ln}^{(e)}$ ; $Y_{nm}^{(e)} = Y_{mn}^{(e)}$.
-%	O desenvolvimento dos cálculos para cada termo da matriz $[Y^{(e)}]$ estão detalhados no Apêndice \ref{ap:MEF_ap_B}.
-%	
-%	Retomando a equação \ref{eq:MEF_eq_0015}, temos
-%	
-%		\begin{equation*}
-%		\pi_e = \tfrac{1}{2}
-%		\begin{bmatrix}
-%			\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%			\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%			\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%		\end{bmatrix}
-%		 \begin{Bmatrix}
-%		 	\phi_{l} \\
-%		 	\phi_{m} \\
-%		 	\phi_{n}
-%		 \end{Bmatrix}^T 	
-%		 \begin{bmatrix}
-%		 Y^{(e)}_{ll} & Y^{(e)}_{lm} & Y^{(e)}_{ln} \\
-%		 Y^{(e)}_{ml} & Y^{(e)}_{mm} & Y^{(e)}_{mn} \\
-%		 Y^{(e)}_{nl} & Y^{(e)}_{nm} & Y^{(e)}_{nn}
-%		 \end{bmatrix}
-%		 \begin{Bmatrix}
-%		 \phi_{l} \\
-%		 \phi_{m} \\
-%		 \phi_{n}
-%		 \end{Bmatrix}  \end{equation*}
-%	
-%\begin{equation*}
-%	\pi_e = \tfrac{1}{2}
-%	\begin{bmatrix}
-%		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%	\end{bmatrix}
-%	\begin{Bmatrix}
-%		\phi_{l} &
-%		\phi_{m} &
-%		\phi_{n}
-%	\end{Bmatrix} 	
-%	\begin{bmatrix}
-%		Y^{(e)}_{ll}\phi_{l} + Y^{(e)}_{lm}\phi_{m} + Y^{(e)}_{ln}\phi_{n} \\
-%		Y^{(e)}_{ml}\phi_{l} + Y^{(e)}_{mm}\phi_{m} + Y^{(e)}_{mn}\phi_{m} \\
-%		Y^{(e)}_{nl}\phi_{l} + Y^{(e)}_{nm}\phi_{m} + Y^{(e)}_{nn}\phi_{n}
-%	\end{bmatrix}  \end{equation*}	
-%\begin{equation*}
-%	\pi_e = \tfrac{1}{2}
-%	\begin{bmatrix}
-%		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%	\end{bmatrix}
-%	\begin{bmatrix}
-%		\phi_{l}(Y^{(e)}_{ll}\phi_{l} + Y^{(e)}_{lm}\phi_{m} + Y^{(e)}_{ln}\phi_{n}) \\
-%		\phi_{m}(Y^{(e)}_{ml}\phi_{l} + Y^{(e)}_{mm}\phi_{m} + Y^{(e)}_{mn}\phi_{m}) \\
-%		\phi_{n}(Y^{(e)}_{nl}\phi_{l} + Y^{(e)}_{nm}\phi_{m} + Y^{(e)}_{nn}\phi_{n})
-%\end{bmatrix}  \end{equation*}
-%
-%
-%\begin{equation*}
-%	\pi_e = \tfrac{1}{2}
-%	\begin{bmatrix}
-%		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%	\end{bmatrix}
-%	\begin{bmatrix}
-%		(Y^{(e)}_{ll}\phi_{l}^2 + Y^{(e)}_{lm}\phi_{l}\phi_{m} + Y^{(e)}_{ln}\phi_{l}\phi_{n}) \\
-%		(Y^{(e)}_{ml}\phi_{l}\phi_{m} + Y^{(e)}_{mm}\phi_{m}^2 + Y^{(e)}_{mn\phi_{m}}\phi_{m}\phi_{m}) \\
-%		(Y^{(e)}_{nl}\phi_{l}\phi_{n} + Y^{(e)}_{nm}\phi_{m} + Y^{(e)}_{nn}\phi_{n})^2
-%\end{bmatrix}  \end{equation*}
-%
-%Como todos so termos da matriz $[Y^{(e)}]]$ são multiplicados por $(\frac{1}{4A})$ podemos tirá-lo da matriz e substituindo os termos da  matriz $[\{\phi_e\}^T [Y^{(e)}] \{\phi_e\}]$por $\xi_i$, temos:
-%\begin{equation*}
-%	\pi_e = \tfrac{1}{2}\tfrac{1}{4}
-%	\begin{bmatrix}
-%		\sigma_{xx} & \sigma_{xy} & \sigma_{xz}\\
-%		\sigma_{yx} & \sigma_{yy} & \sigma_{yz}\\
-%		\sigma_{zx} & \sigma_{zy} & \sigma_{zz}
-%	\end{bmatrix}
-%	\begin{bmatrix}
-%		\xi_l \\
-%		\xi_m \\
-%		\xi_n
-%\end{bmatrix}  \end{equation*}
-%
-%\begin{equation*}
-%	\pi_e = \tfrac{1}{8}
-%	\begin{Bmatrix}
-%		\sigma_{xx}\xi_l + \sigma_{xy}\xi_m + \sigma_{xz}\xi_n\\
-%		\sigma_{yx}\xi_l + \sigma_{yy}\xi_l + \sigma_{yz}\xi_l\\
-%		\sigma_{zx}\xi_l + \sigma_{zy}\xi_l + \sigma_{zz}\xi_l
-%	\end{Bmatrix} = \tfrac{1}{8} \{\Pi\}
-%  \end{equation*}
-%  
-%dessa maneira, expandindo o primeiro termo do vetor $\{\Pi\}$, temos
-%
-%
-%\begin{equation*}
-%\begin{aligned}
-%&\{\Pi\}_l = \sigma_{xx}[Y^*_{ll}\phi_{l}^2 + Y^*_{lm}\phi_{l}\phi_{m} + Y^*_{ln}\phi_{l}\phi_{n}]  \\
-%& +\sigma_{xy}[Y^*_{ml}\phi_{l}\phi_{m} + Y^*_{mm}\phi_{m}^2 + Y^*_{mn\phi_{m}}\phi_{m}\phi_{m}]  \\
-%& + \sigma_{yy}[Y^*_{nl}\phi_{l}\phi_{n} + Y^*_{nm}\phi_{m} + Y^*_{nn}\phi_{n}^2 ] \\
-%\end{aligned}
-%\end{equation*}
-%
-%\begin{equation*}
-%	\begin{aligned}
-%		&\{\Pi\}_l = \sigma_{xx}\{ [\beta_l^2 + \gamma_l^2]\phi_{l}^2 + Y^*_{lm}\phi_{l}\phi_{m} + Y^*_{ln}\phi_{l}\phi_{n} \} \\
-%		& +\sigma_{xy}[Y^*_{ml}\phi_{l}\phi_{m} + Y^*_{mm}\phi_{m}^2 + Y^*_{mn\phi_{m}}\phi_{m}\phi_{m}]  \\
-%		& + \sigma_{yy}[Y^*_{nl}\phi_{l}\phi_{n} + Y^*_{nm}\phi_{m} + Y^*_{nn}\phi_{n}^2 ] \\
-%	\end{aligned}
-%\end{equation*}
-
-
-
-
-%\begin{equation*}
-%	\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big]; }
-%\end{equation*}
-%\begin{equation*}
-%	\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]; }
-%\end{equation*}
-%\begin{equation*}
-%	\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big]; }
-%\end{equation*}
-%\begin{equation*}
-%	\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]; }
-%\end{equation*}
-%\begin{equation*}
-%	\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big]; }
-%\end{equation*}
-%\begin{equation*}
-%	\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big]. }
-%\end{equation*}
-
-
-
-%	\begin{equation*}
-%	\begin{array}{ccc}
-%		\alpha_l = (x_m y_n - x_n y_m) &
-%		\beta_l = (y_m - y_n) &
-%		\gamma_l = (x_n - x_m) \\[6pt]
-%		
-%		\alpha_m  = (x_n y_l - x_l y_n) &
-%		\beta_m = (y_n - y_l) &
-%		\gamma_m = (x_l - x_n) \\[6pt]
-%		
-%		\alpha_n = (x_l y_m - x_m y_l) &
-%		\beta_m = (y_l - y_m) &
-%		\gamma_n = (x_m - x_l)
-%	\end{array}
-%\end{equation*}
-
-	
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.2\textwidth]{Burro.png}
-\caption{Burro.}
-\label{fig:burro}
-\end{figure}
 
 
 	
-%\displaystyle	grande (padrão)
-%\textstyle	médio
-%\scriptstyle	pequeno
-%\scriptscriptstyle	bem pequeno
+%\begin{figure}[htbp]
+%\centering
+%\includegraphics[width=0.2\textwidth]{Burro.png}
+%\caption{Burro.}
+%\label{fig:burro}
+%\end{figure}
 
-	
-	
-	
-%	Para calcular a matriz adjunta $Adj[\textbf{M}]$, precisamos transpor a matriz $[\textbf{M}]$, e em seguida, determinar os cofatores da nova matriz $[\textbf{M}]^T$.
-%	\begin{equation*} %\large
-%		[\bm{M}]^{T}  = 
-%		\begin{bmatrix}1&1&1\\ x_l&x_m&x_n\\ y_l&y_m&y_n\end{bmatrix}
-%	\end{equation*}
-%	
-%	Os cofatores de uma matriz \(3\times3\) são calculados por meio da seguinte equação $C_{ij} = (-1)^{i+j} M_{ij}$, onde $M_{ij}$ é um \textit{menor} da matriz $[M]^T$, de um dado elemento  de índices \textit{i} e \textit{j}.
-%	%\vspace{2cm}
-%	
-%	
-%	Cálculo dos \textit{cofatores} ($C_{ij}$) de cada elemento da matriz $[M]^T$.
-%	{\small
-%		\begin{align*}
-%			C_{11} &= (-1)^{1+1} M_{11} = \phantom{-}M_{11}, &
-%			C_{12} &= (-1)^{1+2} M_{12} = -M_{12}, &
-%			C_{13} &= (-1)^{1+3} M_{13} = \phantom{-}M_{13},\\
-%			C_{21} &= (-1)^{2+1} M_{21} = -M_{21}, &
-%			C_{22} &= (-1)^{2+2} M_{22} = \phantom{-}M_{22}, &
-%			C_{23} &= (-1)^{2+3} M_{23} = -M_{23},\\
-%			C_{31} &= (-1)^{3+1} M_{31} = \phantom{-}M_{31}, &
-%			C_{32} &= (-1)^{3+2} M_{32} = -M_{32}, &
-%			C_{33} &= (-1)^{3+3} M_{33} = \phantom{-}M_{33}.
-%		\end{align*}
-%	}
-%	
-%	{\small
-%		\begin{align*}
-%			|M_{11}| &= \det\!\begin{bmatrix} x_m & x_n\\ y_m & y_n \end{bmatrix} = x_m y_n - x_n y_m,
-%			&
-%			|M_{12}| &= \det\!\begin{bmatrix} x_l & x_n\\ y_l & y_n \end{bmatrix} = x_l y_n - x_n y_l,\\[4pt]
-%			|M_{13}| &= \det\!\begin{bmatrix} x_l & x_m\\ y_l & y_m \end{bmatrix} = x_l y_m - x_m y_l,
-%			&
-%			|M_{21}| &= \det\!\begin{bmatrix} 1 & 1\\ y_m & y_n \end{bmatrix} = y_n - y_m,\\[4pt]
-%			|M_{22}| &= \det\!\begin{bmatrix} 1 & 1\\ y_l & y_n \end{bmatrix} = y_n - y_l,
-%			&
-%			|M_{23}| &= \det\!\begin{bmatrix} 1 & 1\\ y_l & y_m \end{bmatrix} = y_m - y_l,\\[4pt]
-%			|M_{31}| &= \det\!\begin{bmatrix} 1 & 1\\ x_m & x_n \end{bmatrix} = x_n - x_m,
-%			&
-%			|M_{32}| &= \det\!\begin{bmatrix} 1 & 1\\ x_l & x_n \end{bmatrix} = x_n - x_l,\\[4pt]
-%			|M_{33}| &= \det\!\begin{bmatrix} 1 & 1\\ x_l & x_m \end{bmatrix} = x_m - x_l.
-%		\end{align*}
-%	}
-%	
-%	
-%	A matriz adjunta de $[M]$ será:
-%	\begin{equation*} %\large
-%		Adj[\bm{M}]  = 
-%		\begin{bmatrix}C_{11}&C_{12}&C_{13}\\ 
-%			C_{21}&C_{22}&C_{23}\\ 
-%			C_{31}&C_{32}&C_{33}\end{bmatrix} =
-%		\begin{bmatrix}M_{11}&-M_{12}&M_{13}\\ 
-%			-M_{21}&M_{22}&-M_{23}\\ 
-%			M_{31}&-M_{32}&M_{33}\end{bmatrix}
-%	\end{equation*}
-%	\begin{equation} %\large
-%		Adj[\bm{M}]  = \begin{bmatrix}(x_my_n -x_ny_m)&(x_ny_l-x_ly_n)&(x_ly_m-x_my_l)\\ 
-%			(y_m-y_n)&(y_n-y_l)&(y_l-y_m)\\ 
-%			(x_n-x_m)&(x_l-x_n)&(x_m-x_l)\end{bmatrix}
-%		\label{eq:adjunta}
-%	\end{equation}
-%	
-%	Em seguida, calculamos o determinante da matriz $[M]$ que, neste caso, é igual a duas vezes a área do elemento finito  triangular.
-%	{\small
-%		\begin{align*}
-%			\bm{M} &=
-%			\begin{bmatrix}
-%				1 & x_l & y_l\\
-%				1 & x_m & y_m\\
-%				1 & x_n & y_n
-%			\end{bmatrix},
-%			\\[6pt]
-%			\det(\bm{M}) &=
-%			\begin{vmatrix}
-%				1 & x_l & y_l\\
-%				1 & x_m & y_m\\
-%				1 & x_n & y_n
-%			\end{vmatrix}
-%			= x_l(y_m-y_n) + x_m(y_n-y_l) + x_n(y_l-y_m)
-%			\\[4pt]
-%			&= x_l y_m - x_l y_n + x_m y_n - x_m y_l + x_n y_l - x_n y_m
-%			= 2A.
-%		\end{align*}
-%	}
-%	
-%	Portanto,
-%	\begin{equation}
-%		det[\bm{M}]  = \begin{bmatrix}
-%			(x_m-x_l)(y_n-y_l)-(x_n-x_l)(y_m-y_l)\end{bmatrix} = 2A
-%		\label{eq:det_Matriz}   
-%	\end{equation}
-%	e consequentemente,
-%	\begin{equation} %\large
-%		A  = \frac{1}{2}
-%		\begin{bmatrix} (x_m-x_l)(y_n-y_l)-(x_n-x_l)(y_m-y_l)\end{bmatrix}
-%		\label{eq:area_triangulo}
-%	\end{equation}
+
+
 	
 		\apendices
-	\chapter{Rotação da matriz diagonal de condutividade}
+	\chapter{Rotação da matriz diagonal de condutividade}{\label{ApendiceA1_a}}
 \section{Dedução dos termos $\sigma_{xx}$, $\sigma_{xy}$, $\sigma_{yx}$ e  $\sigma_{yy}$ do tensor [$\mathbf{\sigma}$].}{\label{ApendiceA1}}
 	
 As componentes principais de um material anisotrópico, quando alinhas com um sistema de coordenadas $XY$ de referência,   pode ser representada em 2D por:
@@ -2897,17 +2314,34 @@ Aplicando arco-tangente:
 \right)  
 \end{equation*}
 Portanto:
+%\begin{equation}
+%	\boxed{   
+%	\theta=  
+%	\frac{1}{2}  
+%	\arctan\left(  
+%	\frac{2\sigma_{xy}}  
+%	{\sigma_{xx}-\sigma_{yy}}  
+%	\right)  
+%	\label{eq:AngleTheta_001}
+%}
+%\end{equation}
+
+\begin{tcolorbox}[colback=red!5, colframe=red!40!black, title=\textbf{Ângulo de rotação do material anisotrópico em relação ao eixo de coordenadas global.}]
 \begin{equation}
-	\boxed{   
-	\theta=  
-	\frac{1}{2}  
-	\arctan\left(  
-	\frac{2\sigma_{xy}}  
-	{\sigma_{xx}-\sigma_{yy}}  
-	\right)  
-	\label{eq:AngleTheta_001}
-}
+%	\boxed{   
+		\theta=  
+		\frac{1}{2}  
+		\arctan\left(  
+		\frac{2\sigma_{xy}}  
+		{\sigma_{xx}-\sigma_{yy}}  
+		\right)  
+		\label{eq:AngleTheta_001}
+%	}
 \end{equation}
+\end{tcolorbox}
+
+
+
 
 \subsection{Dedução termos $\sigma_l$ e $\sigma_t$.}
 
@@ -3085,37 +2519,71 @@ note que:
 }  
 \end{equation*}
 Então obtemos:
+%\begin{equation}
+%\boxed{ 	
+%S_x =  
+%\frac{\sigma_{xx}+\sigma_{yy}}{2}  
+%+  
+%\sqrt{  
+%	\left(  
+%	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+%	\right)^2  
+%	+  
+%	\sigma_{xy}^2  
+%} 
+%\label{eq:SigmaLongitudinal_001}  
+%}
+%\end{equation}
+%
+%\begin{equation}
+%	\boxed{ 
+%S_y =  
+%\frac{\sigma_{xx}+\sigma_{yy}}{2}
+%-
+%\sqrt{  
+%	\left(  
+%	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+%	\right)^2  
+%	+  
+%	\sigma_{xy}^2  
+%} 
+%\label{eq:SigmaTransversal_001}
+%}  
+%\end{equation}
+
+\begin{tcolorbox}[colback=red!5, colframe=red!40!black, title=\textbf{Componentes longitudinal e transversal do material anisotrópico.}]
 \begin{equation}
-\boxed{ 	
-S_x =  
-\frac{\sigma_{xx}+\sigma_{yy}}{2}  
-+  
-\sqrt{  
-	\left(  
-	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
-	\right)^2  
-	+  
-	\sigma_{xy}^2  
-} 
-\label{eq:SigmaLongitudinal_001}  
-}
+	\boxed{ 	
+		S_x =  
+		\frac{\sigma_{xx}+\sigma_{yy}}{2}  
+		+  
+		\sqrt{  
+			\left(  
+			\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+			\right)^2  
+			+  
+			\sigma_{xy}^2  
+		} 
+		\label{eq:SigmaLongitudinal_001}  
+	}
 \end{equation}
 
 \begin{equation}
 	\boxed{ 
-S_y =  
-\frac{\sigma_{xx}+\sigma_{yy}}{2}
--
-\sqrt{  
-	\left(  
-	\frac{\sigma_{xx}-\sigma_{yy}}{2}  
-	\right)^2  
-	+  
-	\sigma_{xy}^2  
-} 
-\label{eq:SigmaTransversal_001}
-}  
+		S_y =  
+		\frac{\sigma_{xx}+\sigma_{yy}}{2}
+		-
+		\sqrt{  
+			\left(  
+			\frac{\sigma_{xx}-\sigma_{yy}}{2}  
+			\right)^2  
+			+  
+			\sigma_{xy}^2  
+		} 
+		\label{eq:SigmaTransversal_001}
+	}  
 \end{equation}
+\end{tcolorbox}
 
 Dessa maneira, demonstramos na seção \ref{Sl_St_theta} como determinar as condutividade principais $\sigma_l$ e $sigma_t$ do tensor, bem como, ângulo de rotação $\theta$ em relação ao sistema de coordenados dos eixos $XY$ adotados como referência.
 
@@ -3154,9 +2622,752 @@ Dessa maneira, demonstramos na seção \ref{Sl_St_theta} como determinar as cond
 %		\end{array}
 %	\end{equation*}
 %	
-	
-	
-	\section{Cálculo de $Y_{lm}^{(e)}$}
+\chapter{Matriz inversa} \label{App:matrizInversa}
+\section*{Cálculo da inversa de uma matriz $3 \times 3$}
+Pode-se calcular a inversa da matriz $[M]$ por meio de:
+
+\begin{equation} %\large
+	[\mathbf{M}]^{-1} = \frac{1}{\det(\mathbf{M})} \, \text{Adj}(\mathbf{M})
+	\label{eq:A_003}
+\end{equation}
+
+Para calcular a matriz adjunta $\text{Adj}[\mathbf{M}]$, precisamos transpor a matriz $[\mathbf{M}]$, e em seguida, determinar os cofatores da nova matriz $[\mathbf{M}]^T$.
+$$
+[\mathbf{M}]^T =
+\begin{bmatrix}
+	1 & 1 & 1 \\
+	x_l & x_m & x_n \\
+	y_l & y_m & y_n
+\end{bmatrix}
+$$
+Os cofatores de uma matriz $3 \times 3$ são calculados por meio da seguinte equação: 
+$$
+C_{ij} = (-1)^{i+j} M_{ij},
+$$
+onde $M_{ij}$ é um \textbf{menor} da matriz $[\mathbf{M}]^T$ de um dado elemento de índices $i$ e $j$.
+
+Cálculo dos menores $(M_{ij})$ de cada elemento da matriz $[\mathbf{M}]^T$:
+$$
+|M_{11}| = \det \begin{bmatrix}
+	x_m & x_n \\
+	y_m & y_n
+\end{bmatrix}
+= x_m y_n - x_n y_m,
+\qquad
+|M_{12}| = \det \begin{bmatrix}
+	x_l & x_n \\
+	y_l & y_n
+\end{bmatrix}
+= x_l y_n - x_n y_l,
+$$
+$$
+|M_{13}| = \det \begin{bmatrix}
+	x_l & x_m \\
+	y_l & y_m
+\end{bmatrix}
+= x_l y_m - x_m y_l,
+\qquad
+|M_{21}| = \det \begin{bmatrix}
+	1 & 1 \\
+	y_m & y_n
+\end{bmatrix}
+= y_n - y_m,
+$$
+$$
+|M_{22}| = \det \begin{bmatrix}
+	1 & 1 \\
+	y_l & y_n
+\end{bmatrix}
+= y_n - y_l,
+\qquad
+|M_{23}| = \det \begin{bmatrix}
+	1 & 1 \\
+	y_l & y_m
+\end{bmatrix}
+= y_m - y_l,
+$$
+$$
+|M_{31}| = \det \begin{bmatrix}
+	1 & 1 \\
+	x_m & x_n
+\end{bmatrix}
+= x_n - x_m,
+\qquad
+|M_{32}| = \det \begin{bmatrix}
+	1 & 1 \\
+	x_l & x_n
+\end{bmatrix}
+= x_n - x_l,
+$$
+$$
+|M_{33}| = \det \begin{bmatrix}
+	1 & 1 \\
+	x_l & x_m
+\end{bmatrix}
+= x_m - x_l
+$$
+
+Cálculo dos \textbf{cofatores} $(C_{ij})$ de cada elemento da matriz $[\mathbf{M}]^T$.
+
+.
+$$
+C_{11} = (-1)^{1+1} M_{11} = M_{11}, \qquad
+C_{12} = (-1)^{1+2} M_{12} = -M_{12},
+$$
+$$
+C_{13} = (-1)^{1+3} M_{13} = M_{13}, \qquad
+C_{21} = (-1)^{2+1} M_{21} = -M_{21},
+$$
+$$
+C_{22} = (-1)^{2+2} M_{22} = M_{22}, \qquad
+C_{23} = (-1)^{2+3} M_{23} = -M_{23},
+$$
+$$
+C_{31} = (-1)^{3+1} M_{31} = M_{31}, \qquad
+C_{32} = (-1)^{3+2} M_{32} = -M_{32},
+$$
+$$
+C_{33} = (-1)^{3+3} M_{33} = M_{33}.
+$$
+A matriz adjunta de $[\mathbf{M}]$ será:
+
+
+$$
+\text{Adj}[\mathbf{M}] =
+\begin{bmatrix}
+	C_{11} & C_{12} & C_{13} \\
+	C_{21} & C_{22} & C_{23} \\
+	C_{31} & C_{32} & C_{33}
+\end{bmatrix}
+=
+\begin{bmatrix}
+	M_{11} & -M_{12} & M_{13} \\
+	-M_{21} & M_{22} & -M_{23} \\
+	M_{31} & -M_{32} & M_{33}
+\end{bmatrix}
+$$
+
+\begin{equation} %\large
+	\text{Adj}[\mathbf{M}] =
+	\begin{bmatrix}
+		(x_m y_n - x_n y_m) & (x_n y_l - x_l y_n) & (x_l y_m - x_m y_l) \\
+		(y_m - y_n) & (y_n - y_l) & (y_l - y_m) \\
+		(x_n - x_m) & (x_l - x_n) & (x_m - x_l)
+	\end{bmatrix}
+	\label{eq:A_002}
+\end{equation}
+
+Em seguida, calculamos o determinante da matriz $[M]$ que, neste caso, é igual a duas vezes a área do elemento finito triangular.
+$$
+[M] =
+\begin{bmatrix}
+	1 & x_l & y_l \\
+	1 & x_m & y_m \\
+	1 & x_n & y_n
+\end{bmatrix},
+\qquad
+\det[M] =
+\begin{vmatrix}
+	1 & x_l & y_l \\
+	1 & x_m & y_m \\
+	1 & x_n & y_n
+\end{vmatrix}
+= 2A
+$$
+$$
+\det[M] =
+\begin{vmatrix}
+	1 & x_l & y_l & 1 & x_l \\
+	1 & x_m & y_m & 1 & x_m \\
+	1 & x_n & y_n & 1 & x_n
+\end{vmatrix}
+= x_m y_n + x_l y_m + y_l x_n - x_m y_l - x_n y_m - y_n x_l
+$$
+$$
+\det[M] = (x_l y_m - x_m y_l) + (x_n y_l - x_l y_n) + (x_m y_n - x_m y_m) = 2A
+$$
+Portanto,
+
+\begin{equation} %\large
+	\det[M] = \left[ (x_m - x_l)(y_n - y_l) - (x_n - x_l)(y_m - y_l) \right] = 2A 
+	\label{eq:A_003}
+\end{equation}
+e consequentemente,
+
+
+\begin{equation} %\large
+	A = \tfrac{1}{2} \left[ (x_m - x_l)(y_n - y_l) - (x_n - x_l)(y_m - y_l) \right] 
+	\label{eq:A_004}
+\end{equation}
+Portanto, a inversa na matriz $[M]$ fica como:
+
+
+\begin{equation} %\large
+	[M]^{-1}=\frac{1}{2A}
+	\begin{bmatrix}
+		(x_m y_n - x_n y_m) & (x_m y_l - x_l y_n) & (x_l y_m - x_m y_l) \\
+		(y_m - y_n) & (y_n - y_l) & (y_l - y_m) \\
+		(x_n - x_m) & (x_l - x_n) & (x_m - x_l)
+	\end{bmatrix}
+	\label{eq:A_005}
+\end{equation}	
+
+\chapter{Funcional de energia potencial} \label{App:Funcionalendix_B}
+\section*{Determinação do funcional de energia potencial}
+Sabe-se que a quantidade de trabalho necessária para mover uma carga da posição 1 para a posição 2 em um campo elétrico é
+
+\begin{equation}
+	\Delta W = q(\phi_2 - \phi_1), 
+	\label{eq:B_001}
+\end{equation}
+ou
+
+\begin{equation}
+	\Delta W = q \phi(\mathbf{x}).
+	\label{eq:B_002}
+\end{equation}
+
+A lei de Coulomb afirma que  o campo elétrico e o potencial criados entre duas  cargas puntiformes podem ser relacionados 
+
+
+\begin{equation}
+	\phi(r) = \frac{Q}{4 \pi \varepsilon_0 r},  
+	\label{eq:B_003}
+\end{equation}
+onde $r$ é a distância a partir da carga. 
+Partindo da lei de Coulomb, verifica-se que o trabalho necessário para mover uma carga  $Q_1$ até uma distância $R$ de carga $Q_2$ e vice-versa, podem ser relacionados  por:
+
+\begin{equation}
+	\Delta W = Q_1 \frac{Q_2}{4 \pi \varepsilon_0 R} = Q_1 \phi_1,
+	\label{eq:B_004}
+\end{equation}
+e
+
+\begin{equation}
+	\Delta W = Q_2 \frac{Q_1}{4 \pi \varepsilon_0 R} = Q_2 \phi_2
+	\label{eq:B_005}
+\end{equation}
+onde $\phi_1$  e $\phi_2$ são os potenciais nas posições de $Q_1$  e $Q_2$ respectivamente. Dessa maneira, o trabalho total entre as cargas pode ser encontrado pela média das contribuições de cada carga, assim: 
+
+\begin{equation}
+	\Delta W = \frac{Q_1 \phi_1 + Q_2 \phi_2}{2}.  
+	\label{eq:B_006}
+\end{equation}
+Para uma quantidade $N$ de cargas o trabalho pode ser representado pelo somatório de cada contribuição, ou seja:
+
+\begin{equation}
+	W = \frac{1}{2} \sum_{i=1}^{N} Q_i \phi(\mathbf{x}_i).  
+	\label{eq:B_007}
+\end{equation}
+
+A Equação \ref{eq:B_007} representa a energia potencial da distribuição de carga ou energia de campo \cite{humphries2010finite}, assim, substituindo a variável de trabalho $W$ pela variável de energia $\pi$, temos:
+
+\begin{equation}
+	\pi= \frac{1}{2} \int_V  \rho(\mathbf{x}) \phi(\mathbf{x}) dV .  
+	\label{eq:B_008}
+\end{equation}
+
+A densidade de carga está relacionada ao campo pela Equação por:
+
+\begin{equation}
+	\rho = \varepsilon_0 \nabla \cdot \mathbf{E}.  
+	\label{eq:B_009}
+\end{equation}
+
+Substituindo a equação \ref{eq:B_009} na \ref{eq:B_008},  a energia de campo como fica como:
+
+\begin{equation}
+	\pi = \frac{1}{2} \int_V   (\varepsilon_0 \nabla \cdot \mathbf{E})  \phi dV.  
+	\label{eq:B_010}
+\end{equation}
+
+Aplicando a identidade vetorial
+
+\begin{equation*}
+	\frac{d}{dx}(uv) = u\frac{dv}{dx} + v\frac{du}{dx}.  
+\end{equation*}
+ou,
+
+\begin{equation*}
+	\nabla \cdot (u v) = u \nabla \cdot v + v \cdot \nabla u 
+\end{equation*}
+assim:
+
+\begin{equation}
+	\nabla \cdot (\phi \mathbf{E}) = \phi \nabla \cdot \mathbf{E} + \mathbf{E} \cdot \nabla \phi,
+	\label{eq:B_011}
+\end{equation}
+Isolando o termo $\phi  \nabla \cdot \mathbf{E}$,
+
+\begin{equation}
+	\phi  \nabla \cdot \mathbf{E}  
+	= \nabla \cdot (\phi \mathbf{E}) - \mathbf{E} \cdot \nabla \phi.  
+	\label{eq:B_012}
+\end{equation}
+Substituindo na equação \ref{eq:B_010}, temos:
+
+
+\begin{equation}
+	\pi = \frac{1}{2} \int_V  \varepsilon_0 \nabla \cdot (\phi \mathbf{E}) dV
+	- \frac{1}{2} \int_V  (\varepsilon_0 \mathbf{E} \cdot \nabla \phi)dV.  
+	\label{eq:B_013}
+\end{equation}
+
+A aplicação do \textbf{teorema da divergência}  \cite{vilches2011calculo}  (ou teorema de Gauss) para converter o primeiro termo no lado direito da equação \ref{eq:B_013}, 
+
+
+\begin{tcolorbox}[colback=red!5, colframe=red!40!black, title=\textbf{Teorema da divergência ou teorema de de Gauss}]
+	$$
+	\int_V \nabla \cdot (f \nabla g)dV = \int_S (f \nabla g) \cdot \vec{n}\, dS.
+	$$
+\end{tcolorbox}
+\noindent fornece a seguinte relação:
+
+\begin{equation}
+	\pi = \frac{1}{2} \int_S  \varepsilon \phi \mathbf{E} \cdot \mathbf{n} dS
+	- \frac{1}{2} \int_V  \varepsilon_0 \mathbf{E} \cdot \mathbf{E} dV.  
+	\label{eq:B_014}
+\end{equation}
+
+Considerando a superfície da primeira integral como a superfície de uma esfera de raio infinito, portanto o potencial tenderá a zero, o resultado da integral será zero e desaparece da equação, dessa maneira:
+
+\begin{equation}
+	\pi = \int_S \frac{\varepsilon \mathbf{E} \cdot \mathbf{E}}{2} dV.  
+	\label{eq:B_015}
+\end{equation}
+
+A partir das relações constitutivas de Maxwell $E = -\nabla \phi$ , portanto:
+
+
+\begin{equation*}
+	\pi = \iiint  \frac{\varepsilon (\mathbf{-\nabla\phi}) \cdot \mathbf{(\mathbf{-\nabla\phi})}}{2} dV.
+\end{equation*}
+ou,
+
+\begin{equation}
+	\pi = \frac{1}{2} \int_V  \varepsilon \mathbf{|\nabla\phi}|^2 dV.  
+	\label{eq:B_016}
+\end{equation}
+
+A equação \ref{eq:B_016} é um funcional da energia potencial em 3D. Para problemas de elementos finitos em 2D a equação \ref{eq:B_016}, fica como:
+
+\begin{equation}
+	\pi = \frac{1}{2} \int_S  \varepsilon \mathbf{|\nabla\phi}|^2 dS.  
+	\label{eq:B_017}
+\end{equation}
+
+
+A equações \ref{eq:B_016} e \ref{eq:B_017} são os funcionais utilizados no método variacional para encontrar uma função que minimiza a energia potencial para problemas 3D e 2D, respectivamente.
+
+\chapter{Termos da matriz local} \label{App:MatrizLocal}
+\section*{Cálculo de cada termo da matriz $[Y^{(e)}]$}
+
+\subsection*{ Cálculo de $Y_{lm}^{(e)}$}
+Os coeficientes da matriz $[Y^{(e)}]$ podem ser obtidos pela equação \ref{eq:eq_036}, por exemplo:
+$$ 
+\boxed{Y_{lm}^{(e)} = \int \nabla \alpha_l \nabla \alpha_m dS}
+$$
+Para calcular o gradiente de $\alpha_i$, precisamos determinar as derivadas parciais da função em relação a ’x’ e ’y’, então:
+$$
+\alpha_l(x,y) = \frac{1}{2A}\Big[ (x_m y_n - x_n y_m) + (y_m - y_n)x + (x_n - x_m)y \Big]
+$$
+$$
+\frac{\partial \alpha_l}{\partial x} = \frac{1}{2A}\frac{\partial}{\partial x}\Big[ (x_m y_n - x_n y_m) + (y_m - y_n)x + (x_n - x_m)y \Big]
+$$
+$$
+\boxed{\frac{\partial \alpha_l}{\partial x} = \frac{1}{2A}(y_m - y_n)}
+$$
+analogamente,
+$$
+\frac{\partial \alpha_l}{\partial y} = \frac{1}{2A}\frac{\partial}{\partial y}\Big[ (x_m y_n - x_n y_m) + (y_m - y_n)x + (x_n - x_m)y \Big]
+$$
+$$
+\boxed{\frac{\partial \alpha_l}{\partial y} = \frac{1}{2A}(x_n - x_m)}
+$$
+Portanto,
+$$
+\boxed{\nabla \alpha_l = \left( \frac{\partial \alpha_l}{\partial x}, \frac{\partial \alpha_l}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_m - y_n), \frac{1}{2A}(x_n - x_m) \right)}
+$$
+
+
+Por meio do mesmo procedimento demonstrado anteriormente podemos determinar o $\nabla \alpha_m$.
+$$
+\alpha_m(x,y) = \frac{1}{2A} \left[ (x_m y_l - x_l y_n) + (y_n - y_l)x + (x_l - x_n)y \right] 
+$$
+$$
+\frac{\partial \alpha_m}{\partial x} = \frac{1}{2A}\frac{\partial}{\partial x}\left[ (x_m y_l - x_l y_n) + (y_n - y_l)x + (x_l - x_n)y \right] 
+$$
+$$
+\boxed{\frac{\partial \alpha_m}{\partial x} = \frac{1}{2A}(y_n - y_l)}
+$$
+$$
+\frac{\partial \alpha_m}{\partial y} = \frac{1}{2A}\frac{\partial}{\partial y}\left[ (x_m y_l - x_l y_n) + (y_n - y_l)x + (x_l - x_n)y \right] 
+$$
+$$
+\boxed{\frac{\partial \alpha_m}{\partial x} = \frac{1}{2A}(x_l - x_n)}
+$$
+portanto,
+
+$$
+\boxed{\nabla \alpha_m = \left( \frac{\partial \alpha_m}{\partial x}, \frac{\partial \alpha_m}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_n - y_l), \frac{1}{2A}(x_l - x_n) \right)}
+$$
+Multiplicando os dois gradientes, temos:
+
+$$
+\nabla \alpha_l \nabla \alpha_m =
+\left(\frac{1}{2A}(y_m - y_n)\right)\left(\frac{1}{2A}(y_n - y_l)\right) +
+\left(\frac{1}{2A}(x_n - x_m)\right)\left(\frac{1}{2A}(x_l - x_n)\right)
+$$
+
+Com esses dados podemos calcular o coeficiente $Y_{lm}^{(e)}$ do exemplo.
+
+$$
+Y_{lm}^{(e)} = \int \nabla \alpha_l \nabla \alpha_m \, dS
+= \frac{1}{4A^2} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big] \int dS
+$$
+Obs.:  Sabendo que  $\int dS = A$
+
+\begin{equation}
+	\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]}
+	\label{eq:C_001}
+\end{equation}
+
+Por meio dos procedimentos aplicados no exemplo anterior, podemos calcular os demais
+
+\subsection*{Cálculo de $Y_{ln}^{(e)}$}
+
+
+$$ 
+\boxed{Y_{ln}^{(e)} = \int \nabla \alpha_l \nabla \alpha_n dS}
+$$
+Como calculado anteriormente;
+$$
+\boxed{\nabla \alpha_l = \left( \frac{\partial \alpha_l}{\partial x}, \frac{\partial \alpha_l}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_m - y_n), \frac{1}{2A}(x_n - x_m) \right)}
+$$
+e,
+$$
+\alpha_n = \frac{1}{2A} \left[ (x_l y_m - x_m y_l) + (y_l - y_m)x + (x_m - x_l)y \right] 
+$$
+$$
+\frac{\partial \alpha_n}{\partial x} = \frac{1}{2A}\frac{\partial}{\partial x}\left[ (x_l y_m - x_m y_l) + (y_l - y_m)x + (x_m - x_l)y \right] 
+$$
+$$
+\boxed{\frac{\partial \alpha_n}{\partial x} = \frac{1}{2A} (y_l - y_m)}
+$$
+e,
+$$
+\frac{\partial \alpha_n}{\partial y} = \frac{1}{2A}\frac{\partial}{\partial y}\left[ (x_l y_m - x_m y_l) + (y_l - y_m)x + (x_m - x_l)y \right] 
+$$
+$$
+\boxed{\frac{\partial \alpha_n}{\partial y} = (x_m - x_l) }
+$$
+então:
+$$
+\boxed{\nabla \alpha_n = \left( \frac{\partial \alpha_n}{\partial x}, \frac{\partial \alpha_n}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_l - y_m), \frac{1}{2A}(x_m - x_l) \right)}
+$$
+Multiplicando os dois gradientes, temos:
+
+$$
+\nabla \alpha_l \nabla \alpha_n =
+\left(\frac{1}{2A}(y_m - y_n)\right)\left(\frac{1}{2A}(y_l - y_m)\right) +
+\left(\frac{1}{2A}(x_n - x_m)\right)\left(\frac{1}{2A}(x_m - x_l)\right)
+$$
+$$
+Y_{ln}^{(e)} = \int \nabla \alpha_l \nabla \alpha_n \, dS
+= \frac{1}{4A^2} \Big[ (y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l) \Big] \int dS
+$$
+portanto:
+
+\begin{equation}
+	\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big] }
+	\label{eq:C_002}
+\end{equation}
+
+\subsection*{Cálculo de $Y_{ll}^{(e)}$}
+
+$$ 
+\boxed{Y_{ll}^{(e)} = \iint_S \nabla \alpha_l \nabla \alpha_l dS}
+$$
+Como calculado anteriormente:
+$$
+\boxed{\nabla \alpha_l = \left( \frac{\partial \alpha_l}{\partial x}, \frac{\partial \alpha_l}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_m - y_n), \frac{1}{2A}(x_n - x_m) \right)}
+$$
+então:
+$$
+\nabla \alpha_l \nabla \alpha_l =
+\left(\frac{1}{2A}(y_m - y_n)\right)\left(\frac{1}{2A}(y_m - y_n)\right) +
+\left(\frac{1}{2A}(x_n - x_m)\right)\left(\frac{1}{2A}(x_n - x_m)\right)
+$$
+$$
+Y_{ll}^{(e)} = \int \nabla \alpha_l \nabla \alpha_l \, dS
+= \frac{1}{4A^2} \Big[ (y_m - y_n)(y_m - y_n) + (x_n - x_m)(x_n - x_m) \Big] \int dS
+$$
+portanto:
+
+\begin{equation}
+	\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big] }
+	\label{eq:C_003}
+\end{equation}
+
+
+\subsection*{Cálculo de $Y_{mm}^{(e)}$}
+
+
+$$ 
+\boxed{Y_{mm}^{(e)} = \int \nabla \alpha_m \nabla \alpha_m dS}
+$$
+Como calculado anteriormente:
+$$
+\boxed{\nabla \alpha_m = \left( \frac{\partial \alpha_m}{\partial x}, \frac{\partial \alpha_m}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_n - y_l), \frac{1}{2A}(x_l - x_n) \right)}
+$$
+então:
+$$
+\nabla \alpha_m \nabla \alpha_m =
+\left(\frac{1}{2A}(y_n - y_l)\right)\left(\frac{1}{2A}(y_n - y_l)\right) +
+\left(\frac{1}{2A}(x_l - x_n)\right)\left(\frac{1}{2A}(x_l - x_n)\right)
+$$
+$$
+Y_{mm}^{(e)} = \int \nabla \alpha_m \nabla \alpha_m \, dS
+= \frac{1}{4A^2} \Big[ (y_n - y_l)(y_n - y_l) + (x_l - x_n)(x_l - x_n) \Big] \int dS
+$$
+portanto:
+
+\begin{equation}
+	\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]} 
+	\label{eq:C_004}
+\end{equation}
+
+\subsection*{Cálculo de $Y_{mn}^{(e)}$}
+
+$$ 
+\boxed{Y_{mn}^{(e)} = \iint_S \nabla \alpha_m \nabla \alpha_n dS}
+$$
+Como calculado anteriormente:
+$$
+\boxed{\nabla \alpha_m = \left( \frac{\partial \alpha_m}{\partial x}, \frac{\partial \alpha_m}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_n - y_l), \frac{1}{2A}(x_l - x_n) \right)}
+$$
+$$
+\boxed{\nabla \alpha_n = \left( \frac{\partial \alpha_n}{\partial x}, \frac{\partial \alpha_n}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_l - y_m), \frac{1}{2A}(x_m - x_l) \right)}
+$$
+então:
+$$
+\nabla \alpha_m \nabla \alpha_n =
+\left(\frac{1}{2A}(y_n - y_l)\right)\left(\frac{1}{2A}(y_l - y_m)\right) +
+\left(\frac{1}{2A}(x_l - x_n)\right)\left(\frac{1}{2A}(x_m - x_l)\right)
+$$
+$$
+Y_{mn}^{(e)} = \int \nabla \alpha_m \nabla \alpha_n \, dS
+= \frac{1}{4A^2} \Big[ (y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l) \Big] \int dS
+$$
+portanto:
+
+\begin{equation}
+	\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big] }
+	\label{eq:C_005}
+\end{equation}
+
+\subsection*{Cálculo de $Y_{nn}^{(e)}$}
+
+$$ 
+\boxed{Y_{nn}^{(e)} = \int \nabla \alpha_n \nabla \alpha_n dS}
+$$
+Como calculado anteriormente:
+$$
+\boxed{\nabla \alpha_n = \left( \frac{\partial \alpha_n}{\partial x}, \frac{\partial \alpha_n}{\partial y} \right)
+	= \left( \frac{1}{2A}(y_l - y_m), \frac{1}{2A}(x_m - x_l) \right)}
+$$
+então:
+$$
+\nabla \alpha_n \nabla \alpha_n =
+\left(\frac{1}{2A}(y_l - y_m)\right)\left(\frac{1}{2A}(y_l - y_m)\right) +
+\left(\frac{1}{2A}(x_m - x_l)\right)\left(\frac{1}{2A}(x_m - x_l)\right)
+$$
+$$
+Y_{nn}^{(e)} = \int \nabla \alpha_n \nabla \alpha_n \, dS
+= \frac{1}{4A^2} \Big[ (y_l - y_m)(y_l - y_m) + (x_m - x_l)(x_m - x_l) \Big] \int dS
+$$
+portanto:
+
+\begin{equation}
+	\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big] }
+	\label{eq:C_006}
+\end{equation}
+
+Como a matriz $[Y^{(e)}]$ é simétrica temos:  $Y_{ml}^{(e)} = Y_{lm}^{(e)}$ ; $Y_{nl}^{(e)} = Y_{ln}^{(e)}$ ; $Y_{nm}^{(e)} = Y_{mn}^{(e)}$.
+
+\subsection*{Resumo}
+
+
+Coeficientes das equações:
+$$
+\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big]; }
+$$
+$$
+\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]; }
+$$
+$$
+\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big]; }
+$$
+$$
+\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]; }
+$$
+$$
+\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big]; }
+$$
+$$
+\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big]. }
+$$
+
+Como a matriz $[Y^{(e)}]$ é simétrica temos:  $Y_{ml}^{(e)} = Y_{lm}^{(e)}$ ; $Y_{nl}^{(e)} = Y_{ln}^{(e)}$ ; $Y_{nm}^{(e)} = Y_{mn}^{(e)}$.
+
+
+
+
+
+
+\chapter{Suporte para desenvolver o texto} \label{App:Suporte}
+\subsection*{Desenvolvimento das funções de forma.}
+
+Para determinar o sistema de equações necessárias para utilização do MEF é preciso efetuar  minimização de um funcional que represente a equação diferencial que governa o problema. Os métodos frequentemente mencionados na literatura para encontrar essas equações são: o método variacional e método  dos resíduos ponderados de Galerkin, respectivamente \cite{roberto2019electromagnetics}. 
+
+
+
+Por meio do método variacional, para resolver a equação diferencial de Laplace \ref{eq:eq_030}, utiliza-se a minimização de um funcional baseado na energia do sistema,  que corresponde a solução da equação original, dado por.
+
+
+\begin{equation}
+	\pi = \frac{1}{2}\int_S \varepsilon |E|^2 dS= \frac{1}{2}\int_S \varepsilon |\nabla \phi|^2 dS
+	\label{eq:eq_031}
+\end{equation}
+
+
+Considerando um meio puramente resistivo e desconsiderando os efeitos de capacitância, pode-se reescrever a equação \ref{eq:eq_031} em função da condutividade, assim:
+
+
+\begin{equation}
+	\pi = \frac{1}{2}\int_S \sigma |E|^2 dS= \frac{1}{2}\int_S \sigma |\nabla \phi|^2 dS
+	\label{eq:eq_032}
+\end{equation}
+
+O procedimento para encontrar o funcional que resolve a equação de Laplace é apresentado n Apêndice \ref{Appendix_B};
+
+Para um único elemento da malha de elementos finitos o funcional fica como:
+
+
+\begin{equation}
+	\pi_e = \frac{1}{2}\int_S \sigma |\nabla \phi_e|^2 dS
+	\label{eq:eq_033}
+\end{equation}
+
+Da equação \ref{eq:eq_008} obtemos que:
+
+\begin{equation}
+	\nabla \phi_e = \sum_{i=1}^{3} \phi_{i} \nabla \alpha_i
+	\label{eq:eq_034}
+\end{equation}
+
+Substituindo a equação \ref{eq:eq_034} na \ref{eq:eq_033} temos:
+Primeiramente, expandindo o termo $|\nabla \phi_e|^2$
+
+\begin{equation*}
+	|\nabla \phi_e|^2
+	= \nabla \phi_e\cdot \nabla \phi_e
+\end{equation*}
+\begin{equation*}
+	|\nabla \phi_e|^2
+	= \left(\sum_{i=1}^3 \phi_{ei}\,\nabla \alpha_i\right)\cdot
+	\left(\sum_{j=1}^3 \phi_{ej}\,\nabla \alpha_j\right)
+	= \sum_{i=1}^3\sum_{j=1}^3
+	\phi_{ei}\phi_{ej}\,(\nabla \alpha_i\cdot \nabla \alpha_j).
+\end{equation*}
+
+Substituindo e em $\pi_e$:
+
+\begin{equation*}
+	\pi_e=\tfrac12\int_S \sigma
+	\left[\sum_{i=1}^3\sum_{j=1}^3
+	\phi_{ei}\phi_{ej}\,(\nabla \alpha_i\cdot \nabla \alpha_j)\right] dS.
+\end{equation*}
+ou,
+
+\begin{equation}
+	\pi_e = \tfrac{1}{2} \sum_{i=1}^{3} \sum_{j=1}^{3} \sigma \phi_{ei} 
+	\left[ \int_S \nabla \alpha_i \nabla \alpha_j \, dS \right] \phi_{ej} 
+	\label{eq:eq_035}
+\end{equation}
+Nomeando os termos entre colchetes por $Y_{ij}^{(e)}$,temos:
+
+
+\begin{equation}
+	Y_{ij}^{(e)} = \int_S \nabla \alpha_i \nabla \alpha_j  dS
+	\label{eq:eq_036}
+\end{equation}
+podemos reescrever a equação \ref{eq:eq_036} na forma matricial,
+
+\begin{equation}
+	\pi_e = \frac{1}{2} \sigma \{\phi_e\}^T [Y^{(e)}] \{\phi_e\}
+	\label{eq:eq_037}
+\end{equation}
+onde $T$ indica a transposta do vetor ${\phi_e}$ com os potenciais  do elemento triangular.
+
+\begin{equation*}
+	\{\phi_e\} =
+	\begin{Bmatrix}
+		\phi_{e l} \\
+		\phi_{e m} \\
+		\phi_{e n}
+	\end{Bmatrix} 
+\end{equation*}
+
+
+Resolvendo cada termos da matriz $[Y^{(e)}]$ por meio da equação \ref{eq:eq_036} encontra-se os  coeficientes da matriz para os elementos triangulares, que pode ser representada como:
+
+\begin{equation}
+	[Y^{(e)}] =
+	\begin{bmatrix}
+		Y^{(e)}_{ll} & Y^{(e)}_{lm} & Y^{(e)}_{ln} \\
+		Y^{(e)}_{ml} & Y^{(e)}_{mm} & Y^{(e)}_{mn} \\
+		Y^{(e)}_{nl} & Y^{(e)}_{nm} & Y^{(e)}_{nn}
+	\end{bmatrix}
+	\label{eq:eq_039}
+\end{equation}
+
+
+A matriz $[Y^{(e)}]$ apresentada na equação \ref{eq:eq_039} é conhecida como \textbf{matriz local dos coeficientes} dos elementos triangulares.
+
+
+As equações de cada termo da matriz $[Y^{(e)}]$ são apresentadas a seguir:
+$$
+\boxed{Y_{ll}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)^2 + (x_n - x_m)^2\Big]; }
+$$
+$$
+\boxed{Y_{mm}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)^2 + (x_l - x_n)^2\Big]; }
+$$
+$$
+\boxed{Y_{nn}^{(e)} = \frac{1}{4A}\Big[(y_l - y_m)^2 + (x_m - x_l)^2\Big]; }
+$$
+$$
+\boxed{Y_{lm}^{(e)} = \frac{1}{4A} \Big[ (y_m - y_n)(y_n - y_l) + (x_n - x_m)(x_l - x_n) \Big]; }
+$$
+$$
+\boxed{Y_{ln}^{(e)} = \frac{1}{4A}\Big[(y_m - y_n)(y_l - y_m) + (x_n - x_m)(x_m - x_l)\Big]; }
+$$
+$$
+\boxed{Y_{mn}^{(e)} = \frac{1}{4A}\Big[(y_n - y_l)(y_l - y_m) + (x_l - x_n)(x_m - x_l)\Big]. }
+$$
+Onde $A$ é a área do elemento dada pela equação A1.4.
+Como a matriz $[Y^{(e)}]$ é simétrica temos:  $Y_{ml}^{(e)} = Y_{lm}^{(e)}$ ; $Y_{nl}^{(e)} = Y_{ln}^{(e)}$ ; $Y_{nm}^{(e)} = Y_{mn}^{(e)}$.
+
+O desenvolvimento dos cálculos para cada termo da matriz $[Y^{(e)}]$ estão detalhados no Apêndice \ref{Appendix_C}.
+%	\section{Cálculo de $Y_{lm}^{(e)}$}
 %	Os coeficientes da matriz $[Y^{(e)}]$ podem ser obtidos pela equação \ref{eq:MEF_eq_0013a}, por exemplo:
 %	\begin{equation} 
 %	\boxed{Y_{lm}^{(e)} = \int \nabla N_l \nabla N_m dS}

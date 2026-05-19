@@ -12,6 +12,11 @@
 \emph{IEEE Transactions on Biomedical Engineering}, IEEE, v.~40, n.~4, p.
   335--343, 1993.}
 
+\bibitem[Humphries 2010]{humphries2010finite}
+\abntrefinfo{Humphries}{HUMPHRIES}{2010}
+{HUMPHRIES, S. Finite-element methods for electromagnetics.
+\emph{New Mexico, January}, 2010.}
+
 \bibitem[Moura 2013]{moura2013estimaccao}
 \abntrefinfo{Moura}{MOURA}{2013}
 {MOURA, F. S.~d.
@@ -19,10 +24,20 @@
   tomografia por impedância elétrica.}
 Tese (Doutorado) --- Universidade de São Paulo, 2013.}
 
+\bibitem[ROBERTO 2019]{roberto2019electromagnetics}
+\abntrefinfo{ROBERTO}{ROBERTO}{2019}
+{ROBERTO, J. \emph{Electromagnetics through the Finite Element Method: A
+  Simplified Approach Using Maxwell's Equations}. [S.l.]: CRC PRESS, 2019.}
+
 \bibitem[Rosell et al. 2002]{rosell2002skin}
 \abntrefinfo{Rosell et al.}{ROSELL et al.}{2002}
 {ROSELL, J. et al. Skin impedance from 1 hz to 1 mhz.
 \emph{IEEE Transactions on Biomedical Engineering}, IEEE, v.~35, n.~8, p.
   649--651, 2002.}
+
+\bibitem[VILCHES e CORR{\^E}A 2011]{vilches2011calculo}
+\abntrefinfo{VILCHES e CORR{\^E}A}{VILCHES; CORR{\^E}A}{2011}
+{VILCHES, M.~A.; CORR{\^E}A, M.~L. C{\'a}lculo.
+\emph{Departamento de An{\'a}lise, IME, UERJ}, 2011.}
 
 \end{thebibliography}
