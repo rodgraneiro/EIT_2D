@@ -682,8 +682,10 @@ class inverse_problem:
                     dmins.append(dmin)
 
             dmed = np.mean(dmins)
-            std = 1.5 * dmed
-            print('std', std)
+            std = 4.5 * dmed
+            print('WARNING: Std', std)
+        else: 
+            print('Std', std)
 
         # ------------------------------------------------------------
         # monta gaussiana normalizada
@@ -1275,7 +1277,7 @@ class inverse_problem:
 
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
 
-        L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D)
+        L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D, std=0.01)
 
         #print(f"Filtro gaussiano: std = {std_auto:.6e}")
         #print(f"Número de elementos no domínio físico = {len(idx_dom)}")
