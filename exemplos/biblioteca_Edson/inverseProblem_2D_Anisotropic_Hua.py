@@ -935,7 +935,7 @@ class inverse_problem:
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
 
-    def plot_sigma(self, sigmaResult, titulo="Results of  σxx, σxy, σyy, σx, σy and (σx-σy)", salvar=False, nome_arquivo="plot_sigma.png"):
+    def plot_sigma(self, sigmaResult, ref_sL = 3.0, ref_sT = 1.0, titulo="Results of  σxx, σxy, σyy, σL, σT and (σxx-σyy)", salvar=False, nome_arquivo="plot_sigma.png"):
     
         data = sigmaResult
     
@@ -948,32 +948,34 @@ class inverse_problem:
         Smed = 0.5 * (sigma_xx + sigma_yy)
         D = np.sqrt(((sigma_xx - sigma_yy)/2)**2 + sigma_xy**2)
 
-        sigma_x = Smed + D
-        sigma_y = Smed - D
+        sigma_L = Smed + D
+        sigma_T = Smed - D
 
-        sigma_Dif = sigma_x - sigma_y
+        sigma_Dif = sigma_L - sigma_T
 
         x = np.arange(len(sigma_xx))
+        plot_ref_sL = np.ones(len(sigma_xx))*ref_sL
+        plot_ref_sT = np.ones(len(sigma_xx))*ref_sT
         
-    
         
         plt.figure(figsize=(6, 5.9))
     
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
         plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
-        plt.plot(x, sigma_Dif, label='σx-σy', linewidth=1.0)
-        plt.plot(x, sigma_x, label='σx', linewidth=2.0,linestyle=':')
-        plt.plot(x, sigma_y, label='σy', linewidth=2.0,linestyle=':')
-
+        plt.plot(x, sigma_Dif, label='σxx-σyy', linewidth=1.0, linestyle='-.')
+        plt.plot(x, sigma_L, label='σL', linewidth=2.0,linestyle=':')
+        plt.plot(x, sigma_T, label='σT', linewidth=2.0,linestyle=':')
+        plt.plot(x, plot_ref_sL, label='Ref_σL', linewidth=3.0,linestyle='--')
+        plt.plot(x, plot_ref_sT, label='Ref_σT', linewidth=3.0,linestyle='--')
         
     
-        plt.title(titulo, fontsize=11)
-        plt.xlabel('Element', fontsize=12)
-        plt.ylabel('Conductivity [S/m]', fontsize=12)
+        plt.title(titulo, fontsize=14)
+        plt.xlabel('Element', fontsize=10)
+        plt.ylabel('Conductivity [S/m]', fontsize=10)
     
         plt.grid(True, linestyle='--', alpha=0.5)
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=6, fontsize=10)
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=4, fontsize=10)
         #plt.legend()
     
         plt.tight_layout()
@@ -1102,7 +1104,7 @@ class inverse_problem:
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
     @staticmethod
-    def salvar_html(self, lista_imagens, nome_html="resultado.html"):
+    def salvar_html(self, lista_imagens, nome_html="resultado"):
         with open(nome_html, "w", encoding="utf-8") as f:
             f.write("""
             <html>
@@ -1131,9 +1133,15 @@ class inverse_problem:
     ###############################################################################         
         
 
-    def salvar_html_todos_lambdas(pasta, nome_html="resultado_completo.html"):
+    def salvar_html_todos_lambdas(pasta, nome_html="resultado_completo"):
     
-        arquivos = glob.glob(os.path.join(pasta, "*.webp"))
+        arquivos = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
+        #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
+        #print(padrao)
+
+        #arquivos = glob.glob(padrao)
+
+        #print(arquivos)
     
         grupos = defaultdict(dict)
     
@@ -1180,7 +1188,7 @@ class inverse_problem:
             #("Mask", "Mask"),
         ]
     
-        html_path = os.path.join(pasta, nome_html)
+        html_path = os.path.join(pasta, f"{nome_html}.html") 
     
         with open(html_path, "w", encoding="utf-8") as f:
             f.write("""
@@ -1598,15 +1606,16 @@ class inverse_problem:
         
         nome8 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome8)
-        lista_imgs.append(nome8)     
-
+        lista_imgs.append(nome8)  
+        
+        '''
         # Gráfico tipo linha (o que você mandou)
         nome9 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome9)
         lista_imgs.append(nome9)
         
 
-        '''
+        
         nome10 = f'../../docs/figureTemp/{html_name}_Mask_{Lambda:.6f}.webp'  
         self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome10)
         lista_imgs.append(nome10)
@@ -1615,10 +1624,15 @@ class inverse_problem:
         self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome11)
         lista_imgs.append(nome11)
         '''
+        # Theta amgle
+        nome12 =  f'../../docs/figureTemp/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
+        self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY=' θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome12)
+        lista_imgs.append(nome12)  
+        
         # Criar HTML
         #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
-        nome_html = f'../../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
-        self.salvar_html(lista_imgs, nome_html)
+        #nome_html = f'../../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
+        #self.salvar_html(lista_imgs, nome_html)
         
        
         

@@ -85,7 +85,7 @@ def runFWD_InverseProblemAnisotropicHua():
     V_measured_phaton = fwd.Vmedido_eletrodos
     np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
     print(f'V_mesured\n {V_measured_phaton}')
-
+    print(f'meus_sigmas\n {meus_sigmas}')
 
 #############################################################################################
 #############################################################################################
