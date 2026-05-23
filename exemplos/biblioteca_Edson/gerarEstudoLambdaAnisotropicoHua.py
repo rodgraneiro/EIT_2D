@@ -19,10 +19,16 @@ import forwardProblem
 #import inverseProblem_2D_Hua
 import inverseProblem_2D_Anisotropic_Hua
 import matplotlib.pyplot as plt
+import os
+'''
+def rodar_simulacao(lam, alguma_coisa, nome_html, pasta_figuras):
 
+    nome_arquivo = os.path.join(pasta_figuras,f"{nome_html}_sigma_xx_{lam:.6f}.webp" )
 
+    plt.savefig(nome_arquivo, dpi=200)
+'''
 
-
+#def rodar_simulacao(lambda_val, sigma_saved, nome_html="resultado", pasta_figuras):
 def rodar_simulacao(lambda_val, sigma_saved, nome_html="resultado"):
     
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
@@ -165,18 +171,37 @@ lambdas= [2.84803587e-02]
 
 resultados = {}
 
-nome_html="XXXrectangularHomogeneousAnisotropy30Neg"
-pasta="../../docs/figureTemp"
-
+#nome_html="XXXrectangularHomogeneousAnisotropy30Neg"
+#pasta="../../docs/figureTemp"
+#pasta2="../../docs"
+'''
 for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
     resultados[lam] = rodar_simulacao(lam, None, nome_html)
 
+inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta2, nome_html)
+'''
+#rodar_simulacao(6.57933225e-03, None)
+
+
 # depois que TODAS imagens foram salvas:
 #inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta="../../docs/figureTemp",nome_html="resultado_completo.html")
+import os
 
-inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta, nome_html)
+nome_html = "XXXrectangularHomogeneousAnisotropy30Neg"
 
-#rodar_simulacao(6.57933225e-03, None)
+pasta_base = "../../docs/figureTemp"
+pasta_teste = os.path.join(pasta_base, nome_html)
+
+os.makedirs(pasta_teste, exist_ok=True)
+
+pasta2 = "../../docs"
+
+for lam in lambdas:
+    print(f"\nRodando lambda = {lam:.5f}")
+    
+    resultados[lam] = rodar_simulacao(lam, None, nome_html = pasta_teste)
+
+inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta_teste)
 

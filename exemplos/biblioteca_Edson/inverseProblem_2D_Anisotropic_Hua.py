@@ -1135,7 +1135,7 @@ class inverse_problem:
 
     def salvar_html_todos_lambdas(pasta, nome_html="resultado_completo"):
     
-        arquivos = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
+        arquivos = glob.glob(os.path.join(pasta, f"figureTemp/{nome_html}*.webp"))
         #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
         #print(padrao)
 
@@ -1162,13 +1162,13 @@ class inverse_problem:
             elif "sigma_xt" in nome:
                 grupos[lambda_str]["sigma_t"] = nome            
             elif "sigma_Dif" in nome:
-                grupos[lambda_str]["sigma_Dif"] = nome          
+                grupos[lambda_str]["sigma_Dif"] = nome
+            elif "theta" in nome:
+                grupos[lambda_str]["theta"] = nome
             elif "sigma_linhas" in nome:
                 grupos[lambda_str]["sigma_linhas"] = nome                           
             elif "iterations" in nome:
                 grupos[lambda_str]["iterations"] = nome
-            elif "theta" in nome:
-                grupos[lambda_str]["theta"] = nome
             #elif "Sorting" in nome:
             #    grupos[lambda_str]["Sorting"] = nome
             #elif "Mask" in nome:
@@ -1180,10 +1180,11 @@ class inverse_problem:
             ("sigma_yy", "σyy"),
             ("sigma_l", "σ_l"),
             ("sigma_t", "σ_t"),          
-            ("sigma_Dif", "(σ_l - σ_t)"),            
+            ("sigma_Dif", "(σ_l - σ_t)"),
+            ("theta", "Angle [°]"),            
             ("sigma_linhas", "Summary"),
             ("iterations", "Optimization"),           
-            ("theta", "Angle [°]"),
+            
             #("Sorting", "Sorting"),
             #("Mask", "Mask"),
         ]
@@ -1249,7 +1250,7 @@ class inverse_problem:
                         f.write(f"""
     <td>
         <div class="lambda">λ = {lambda_str}</div>
-        <img src="{img}">
+        <img src= "figureTemp/{img}">
     </td>
     """)
                     else:
@@ -1596,42 +1597,45 @@ class inverse_problem:
         # Diferença anisotrópica
         nome6 =  f'../../docs/figureTemp/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
-        lista_imgs.append(nome6)    
+        lista_imgs.append(nome6)
+        
+        # Theta amgle
+        nome7 =  f'../../docs/figureTemp/{html_name}_theta_deg_{Lambda:.6f}.webp' 
+        self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY=' θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
+        lista_imgs.append(nome7)  
         
         # Gráfico tipo linha (o que você mandou)
-        nome7 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
-        self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome7)
-        lista_imgs.append(nome7)
+        nome8 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
+        self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome8)
+        lista_imgs.append(nome8)
         #print('plot_sigma_banana_solver', theta_deg)
         
-        nome8 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
-        self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome8)
-        lista_imgs.append(nome8)  
+        nome9 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
+        self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
+        lista_imgs.append(nome9)  
         
         '''
         # Gráfico tipo linha (o que você mandou)
-        nome9 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
-        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome9)
-        lista_imgs.append(nome9)
-        
-
-        
-        nome10 = f'../../docs/figureTemp/{html_name}_Mask_{Lambda:.6f}.webp'  
-        self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome10)
+        nome10 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
+        self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
         lista_imgs.append(nome10)
+        
 
-        nome11 = f'../../docs/figureTemp/{html_name}_Sorting_{Lambda:.6f}.webp'
-        self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome11)
+        
+        nome11 = f'../../docs/figureTemp/{html_name}_Mask_{Lambda:.6f}.webp'  
+        self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome11)
         lista_imgs.append(nome11)
+
+        nome12 = f'../../docs/figureTemp/{html_name}_Sorting_{Lambda:.6f}.webp'
+        self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome12)
+        lista_imgs.append(nome12)
         '''
         # Theta amgle
-        nome12 =  f'../../docs/figureTemp/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
-        self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY=' θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome12)
-        lista_imgs.append(nome12)  
+
         
         # Criar HTML
-        #nome_html = '../../docs/figureTemp/{html_name}_{Lambda}.html'
-        #nome_html = f'../../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
+        #nome_html = '../docs/figureTemp/{html_name}_{Lambda}.html'
+        #nome_html = f'../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
         #self.salvar_html(lista_imgs, nome_html)
         
        
