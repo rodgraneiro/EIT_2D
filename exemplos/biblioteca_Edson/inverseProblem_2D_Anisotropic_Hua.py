@@ -1133,9 +1133,9 @@ class inverse_problem:
     ###############################################################################         
         
 
-    def salvar_html_todos_lambdas(pasta, nome_html="resultado_completo"):
-    
-        arquivos = glob.glob(os.path.join(pasta, f"figureTemp/{nome_html}*.webp"))
+    def salvar_html_todos_lambdas(self,pasta, html_name="resultado_completo"):
+        print('pasta_salvar_html_todos_lambdas', pasta)
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
         #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
         #print(padrao)
 
@@ -1189,7 +1189,7 @@ class inverse_problem:
             #("Mask", "Mask"),
         ]
     
-        html_path = os.path.join(pasta, f"{nome_html}.html") 
+        html_path = os.path.join(pasta, f"{html_name}.html") 
     
         with open(html_path, "w", encoding="utf-8") as f:
             f.write("""
@@ -1250,7 +1250,7 @@ class inverse_problem:
                         f.write(f"""
     <td>
         <div class="lambda">λ = {lambda_str}</div>
-        <img src= "figureTemp/{img}">
+        <img src= "{img}">
     </td>
     """)
                     else:
@@ -1271,7 +1271,7 @@ class inverse_problem:
     # Essa função calcula o problema inverso
     ###############################################################################
     def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0, html_name = None):
-        #print(f'lastIteration {iteration}')
+        print('html_name_solve',html_name)
         itr_start = int(iteration)
         ultimos10 = []
         ultimaNorma =[99,99,99]
@@ -1571,62 +1571,66 @@ class inverse_problem:
         
         
         lista_imgs = []
-        
+        pasta_base = "../../docs/"
+        pasta_teste = os.path.join(pasta_base, html_name)
+        print('pasta_teste', pasta_teste)
+        os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
-        nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp' 
+        #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp'
+        nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}.webp' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'../../docs/figureTemp/{html_name}_sigma_xy_{Lambda:.6f}.webp' 
+        nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.6f}.webp' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'../../docs/figureTemp/{html_name}_sigma_yy_{Lambda:.6f}.webp'  
+        nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}.webp'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
              
 
-        nome4 = f'../../docs/figureTemp/{html_name}_sigma_xl_{Lambda:.6f}.webp'          
+        nome4 = f'{pasta_teste}/{html_name}_sigma_xl_{Lambda:.6f}.webp'          
         self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
-        nome5 = f'../../docs/figureTemp/{html_name}_sigma_xt_{Lambda:.6f}.webp'  
+        nome5 = f'{pasta_teste}/{html_name}_sigma_xt_{Lambda:.6f}.webp'  
         self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
         # Diferença anisotrópica
-        nome6 =  f'../../docs/figureTemp/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
+        nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
         lista_imgs.append(nome6)
         
         # Theta amgle
-        nome7 =  f'../../docs/figureTemp/{html_name}_theta_deg_{Lambda:.6f}.webp' 
+        nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}.webp' 
         self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY=' θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         lista_imgs.append(nome7)  
         
         # Gráfico tipo linha (o que você mandou)
-        nome8 = f'../../docs/figureTemp/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
+        nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome8)
         lista_imgs.append(nome8)
         #print('plot_sigma_banana_solver', theta_deg)
         
-        nome9 = f'../../docs/figureTemp/{html_name}_iterations_{Lambda:.6f}.webp'
+        nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.6f}.webp'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
         
         '''
         # Gráfico tipo linha (o que você mandou)
-        nome10 = f'../../docs/figureTemp/{html_name}_theta_{Lambda:.6f}.webp'
+        nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}.webp'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
         lista_imgs.append(nome10)
         
 
         
-        nome11 = f'../../docs/figureTemp/{html_name}_Mask_{Lambda:.6f}.webp'  
+        nome11 = f'{pasta_teste}/{html_name}_Mask_{Lambda:.6f}.webp'  
         self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome11)
         lista_imgs.append(nome11)
 
-        nome12 = f'../../docs/figureTemp/{html_name}_Sorting_{Lambda:.6f}.webp'
+        nome12 = f'{pasta_teste}/{html_name}_Sorting_{Lambda:.6f}.webp'
         self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome12)
         lista_imgs.append(nome12)
         '''
@@ -1637,7 +1641,7 @@ class inverse_problem:
         #nome_html = '../docs/figureTemp/{html_name}_{Lambda}.html'
         #nome_html = f'../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
         #self.salvar_html(lista_imgs, nome_html)
-        
+        self.salvar_html_todos_lambdas(pasta_teste, html_name)
        
         
    

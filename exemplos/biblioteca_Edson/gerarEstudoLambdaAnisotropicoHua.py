@@ -1,10 +1,6 @@
 # %%time
 ###############################################################################
-###############################################################################
-# Arquivo de teste para desenvolvimento do problema inverso 
-# para malha isotrópica 
-###############################################################################
-###############################################################################
+
 
 
 ###############################################################################
@@ -20,17 +16,84 @@ import forwardProblem
 import inverseProblem_2D_Anisotropic_Hua
 import matplotlib.pyplot as plt
 import os
-'''
-def rodar_simulacao(lam, alguma_coisa, nome_html, pasta_figuras):
 
-    nome_arquivo = os.path.join(pasta_figuras,f"{nome_html}_sigma_xx_{lam:.6f}.webp" )
 
-    plt.savefig(nome_arquivo, dpi=200)
-'''
+def runFWD_InverseProblemAnisotropicHua():
 
-#def rodar_simulacao(lambda_val, sigma_saved, nome_html="resultado", pasta_figuras):
-def rodar_simulacao(lambda_val, sigma_saved, nome_html="resultado"):
+    #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
+    #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
+
+
+    #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
+    #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
+    nome = '../../malhasMSH/test_Olavo_Hua.msh'
+    #nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
     
+
+    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
+
+    MinhaMalha.ReadMesh() 
+
+    print('MinhaMalha.Elements[2]',MinhaMalha.Elements[2])
+    print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
+    #print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
+
+
+    meus_sigmas = {
+        1000: [3.0, 0.0, 1.0],
+        1001: [3.0, 0.0, 1.0],
+        1002: [1.0, 0.0, 1.0],
+        1003: [1.0, 0.0, 1.0],
+        5001: [1.0, 0.0, 1.0],
+        5002: [1.0, 0.0, 1.0],
+        5003: [1.0, 0.0, 1.0],
+        5004: [1.0, 0.0, 1.0],
+        5005: [1.0, 0.0, 1.0],
+        5006: [1.0, 0.0, 1.0],
+        5007: [1.0, 0.0, 1.0],
+        5008: [1.0, 0.0, 1.0],
+        5009: [1.0, 0.0, 1.0],
+        5010: [1.0, 0.0, 1.0],
+        5011: [1.0, 0.0, 1.0],
+        5012: [1.0, 0.0, 1.0],
+        5013: [1.0, 0.0, 1.0],
+        5014: [1.0, 0.0, 1.0],
+        5015: [1.0, 0.0, 1.0],
+        5016: [1.0, 0.0, 1.0]
+    }
+
+    MinhaMalha.SetSigmaAnisotropicElementsHua(meus_sigmas)
+
+
+    
+    for idx in range(MinhaMalha.NumberOfElements):
+        if not MinhaMalha.Elements[idx].FlagIsElectrode:
+            MinhaMalha.Elements[idx].CalcKgeo()
+
+
+    MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
+
+    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3, name = None, imageSave = True)   # __init__ roda aqui
+
+    mtz_Vmedido = fwd.Solve()
+    print(f'Vmedido \n {fwd.Vmedido[:10]}')
+
+    nome_arquivo = 'ParaVernoGmshPto'
+    fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+    fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+
+    V_measured_phaton = fwd.Vmedido_eletrodos
+    np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
+    print(f'V_mesured\n {V_measured_phaton}')
+    print(f'meus_sigmas\n {meus_sigmas}')
+
+#############################################################################################
+#############################################################################################
+#############################################################################################
+
+
+def rodar_simulacao(lambda_val, html_name="resultado"):
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
     #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
@@ -169,22 +232,26 @@ def rodar_simulacao(lambda_val, sigma_saved, nome_html="resultado"):
 # 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
 lambdas= [2.84803587e-02]
 
+
+
+
+
 resultados = {}
 
-#nome_html="XXXrectangularHomogeneousAnisotropy30Neg"
+nome_html="XXXrectangularHomogeneousAnisotropy30Neg"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
-'''
+
 for lam in lambdas:
     print(f"\nRodando lambda = {lam:.5f}")
     
-    resultados[lam] = rodar_simulacao(lam, None, nome_html)
+    resultados[lam] = rodar_simulacao(lam, html_name=nome_html)
 
-inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta2, nome_html)
-'''
+#inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta2, nome_html)
+
 #rodar_simulacao(6.57933225e-03, None)
 
-
+'''
 # depois que TODAS imagens foram salvas:
 #inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta="../../docs/figureTemp",nome_html="resultado_completo.html")
 import os
@@ -204,4 +271,4 @@ for lam in lambdas:
     resultados[lam] = rodar_simulacao(lam, None, nome_html = pasta_teste)
 
 inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta_teste)
-
+'''

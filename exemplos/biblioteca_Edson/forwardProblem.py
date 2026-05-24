@@ -83,7 +83,7 @@ class forward_problem:
               self.KGlobal[k][noh_cond_contorno] = 0
         self.KGlobal[noh_cond_contorno][noh_cond_contorno] = 1
     ###############################################################################
-    def plotMSH(self, sigma, iteration = None, save = False, SigmaXXXYYY = None):
+    def plotMSH(self, sigma, iteration = None, save = False, SigmaXXXYYY = None, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -139,9 +139,12 @@ class forward_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        #nome_arquivo = f"figures/{self.name}.png"
+        #nome_arquivo = f"../../docs/{self.name}.webp"
+        #plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
+        plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight') 
         plt.show() 
-        #plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')   
+         
+        
         plt.show(block=False)
 
         plt.pause(0.1)  
@@ -149,9 +152,26 @@ class forward_problem:
     def Solve(self, forceKGolbalCalc=False):
         if self.imageSave == True:
             #self.plotMSH(self.mymesh.sigma_vec)
-            self.plotMSH(self.mymesh.sigma_vec[:, 0],  save = True, SigmaXXXYYY='xx')
-            self.plotMSH(self.mymesh.sigma_vec[:, 1],  save = True, SigmaXXXYYY='xy')
-            self.plotMSH(self.mymesh.sigma_vec[:, 2],  save = True, SigmaXXXYYY='yy')
+            #self.plotMSH(self.mymesh.sigma_vec[:, 0],  save = True, SigmaXXXYYY='xx')
+            #self.plotMSH(self.mymesh.sigma_vec[:, 1],  save = True, SigmaXXXYYY='xy')
+            #self.plotMSH(self.mymesh.sigma_vec[:, 2],  save = True, SigmaXXXYYY='yy')
+            #### plotMSH(self, sigma, iteration = None, save = False, SigmaXXXYYY = None):
+            #nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}.webp'
+            nome1 = f"../../docs/{self.name}_sigma_xx.webp" 
+            self.plotMSH(self.mymesh.sigma_vec[:, 0],  save = True, SigmaXXXYYY='xx', nome_arquivo=nome1)
+            #lista_imgs.append(nome1)
+            
+            #nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.6f}.webp'
+            nome2 =  f"../../docs/{self.name}_sigma_xy.webp"
+            self.plotMSH(self.mymesh.sigma_vec[:, 1],  save = True, SigmaXXXYYY='xy', nome_arquivo=nome2)
+            #lista_imgs.append(nome2)
+            
+            #nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}.webp'
+            nome3 =f"../../docs/{self.name}_sigma_yy.webp"
+            self.plotMSH(self.mymesh.sigma_vec[:, 2],  save = True, SigmaXXXYYY='yy', nome_arquivo=nome3)
+            #lista_imgs.append(nome3)
+            
+            
         #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
             self.mymesh.CalcKGlobal()
