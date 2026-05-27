@@ -104,7 +104,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
     #nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
     #nome = '../../malhasMSH/test_Olavo_60graus.msh'
-    nome = '../../malhasMSH/Hua_domain16e_base_v2B.msh'
+    nome = '../../malhasMSH/Hua_domain16e_base_v2D.msh'
     
 
     
@@ -240,7 +240,7 @@ lambdas= [3.51119173e-04, 1.51991108e-03, 6.57933225e-03, 2.84803587e-02]
 
 resultados = {}
 
-nome_html="batatadaBananada"
+nome_html="TomamteAbobrinhaBatata"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

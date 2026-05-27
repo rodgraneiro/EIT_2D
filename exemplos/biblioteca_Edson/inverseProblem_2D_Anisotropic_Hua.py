@@ -935,7 +935,7 @@ class inverse_problem:
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
 
-    def plot_sigma(self, sigmaResult, ref_sL = 3.0, ref_sT = 1.0, titulo="Results of  σxx, σxy, σyy, σL, σT and (σxx-σyy)", salvar=False, nome_arquivo="plot_sigma.png"):
+    def plot_sigma(self, sigmaResult, ref_sL = 3.0, ref_sT = 1.0, titulo="Results of  σxx, σxy, σyy, σL, σT and (σL-σT)", salvar=False, nome_arquivo="plot_sigma.png"):
     
         data = sigmaResult
     
@@ -963,7 +963,7 @@ class inverse_problem:
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
         plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
-        plt.plot(x, sigma_Dif, label='σxx-σyy', linewidth=1.0, linestyle='-.')
+        plt.plot(x, sigma_Dif, label='σL-σT', linewidth=1.0, linestyle='-.')
         plt.plot(x, sigma_L, label='σL', linewidth=2.0,linestyle=':')
         plt.plot(x, sigma_T, label='σT', linewidth=2.0,linestyle=':')
         plt.plot(x, plot_ref_sL, label='Ref_σL', linewidth=3.0,linestyle='--')
