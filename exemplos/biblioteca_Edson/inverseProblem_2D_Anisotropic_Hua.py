@@ -809,16 +809,17 @@ class inverse_problem:
                 lim = 1e-12
             norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
             #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
-            tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-            '''
+            #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+            
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
                 
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             if not SigmaXXXYYY == 'xy':
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-            '''
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow' )
+            
 
             fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
             if save == True:
@@ -1057,7 +1058,7 @@ class inverse_problem:
         plt.title(titulo, fontsize=14)
         plt.xlabel('Element', fontsize=12)
         plt.ylabel('Angle θ [°]', fontsize=12)
-        plt.ylim(-65, 65)   # exemplo: de -65° a 66°
+        plt.ylim(-180, 180)   # exemplo: de -65° a 66°
     
         plt.grid(True, linestyle='--', alpha=0.5)
         plt.legend()
@@ -1169,10 +1170,10 @@ class inverse_problem:
                 grupos[lambda_str]["sigma_linhas"] = nome                           
             elif "iterations" in nome:
                 grupos[lambda_str]["iterations"] = nome
-            #elif "Sorting" in nome:
-            #    grupos[lambda_str]["Sorting"] = nome
+            elif "plot_theta_deg" in nome:
+                grupos[lambda_str]["Sorting"] = nome
             #elif "Mask" in nome:
-                grupos[lambda_str]["Mask"] = nome
+            #    grupos[lambda_str]["Mask"] = nome
     
         colunas = [
             ("sigma_xx", "σxx"),
@@ -1184,7 +1185,7 @@ class inverse_problem:
             ("theta", "Angle [°]"),            
             ("sigma_linhas", "Summary"),
             ("iterations", "Optimization"),           
-            
+            ("plot_theta_deg", "Angle [°]"),  
             #("Sorting", "Sorting"),
             #("Mask", "Mask"),
         ]
@@ -1618,14 +1619,14 @@ class inverse_problem:
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
         
-        '''
+        
         # Gráfico tipo linha (o que você mandou)
         nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}.webp'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
         lista_imgs.append(nome10)
         
 
-        
+        '''
         nome11 = f'{pasta_teste}/{html_name}_Mask_{Lambda:.6f}.webp'  
         self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome11)
         lista_imgs.append(nome11)
