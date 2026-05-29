@@ -813,7 +813,8 @@ class inverse_problem:
             
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
                 
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
             if not SigmaXXXYYY == 'xy':
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )

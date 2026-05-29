@@ -25,7 +25,7 @@ def runFWD_InverseProblemAnisotropicHua():
     
     
 
-    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = -30.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha.ReadMesh() 
@@ -36,7 +36,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
 
     meus_sigmas = {
-        1000: [3.0, 0.0, 3.0],
+        1000: [3.0, 0.0, 1.0],
         1001: [3.0, 0.0, 1.0],
         1002: [1.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],

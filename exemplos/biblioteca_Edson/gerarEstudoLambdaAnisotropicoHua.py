@@ -228,19 +228,19 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 # 4.32876128e-06 3.51119173e-05 2.84803587e-04 2.31012970e-03
 # 1.87381742e-02 1.51991108e-01 1.23284674e+00 1.00000000e+01]
 
-#lambdas = np.logspace(-6, 1, 12)
+lambdas = np.logspace(-6, 1, 12)
 #lambdas= [1.00000000e-06]#, 4.32876128e-06, 1.87381742e-05]# 8.11130831e-05]
 # 3.51119173e-04 1.51991108e-03 6.57933225e-03 2.84803587e-02
 # 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
 #lambdas= [2.84803587e-02]
-lambdas= [3.51119173e-04, 1.51991108e-03, 6.57933225e-03, 2.84803587e-02]
+#lambdas= [3.51119173e-04, 1.51991108e-03, 6.57933225e-03, 2.84803587e-02]
 
 
 
 
 resultados = {}
 
-nome_html="TomamteAbobrinhaBatataRainbow"
+nome_html="GraficosRainbowHomogenio"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
