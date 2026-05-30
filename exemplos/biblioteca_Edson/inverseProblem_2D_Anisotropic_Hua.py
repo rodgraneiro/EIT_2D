@@ -813,15 +813,15 @@ class inverse_problem:
             
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
                 
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
             if not SigmaXXXYYY == 'xy':
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow' )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow', vmin=0.0, vmax=4.0 )
             
-
+            
             fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
@@ -937,7 +937,7 @@ class inverse_problem:
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
 
-    def plot_sigma(self, sigmaResult, ref_sL = 3.0, ref_sT = 1.0, titulo="Results of  σxx, σxy, σyy, σL, σT and (σL-σT)", salvar=False, nome_arquivo="plot_sigma.png"):
+    def plot_sigma(self, sigmaResult, ref_sL = 3.0, ref_sT = 1.0, titulo="Results of  σxx, σxy, σyy, σL and σT", salvar=False, nome_arquivo="plot_sigma.png"):
     
         data = sigmaResult
     
@@ -965,7 +965,7 @@ class inverse_problem:
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
         plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
-        plt.plot(x, sigma_Dif, label='σL-σT', linewidth=1.0, linestyle='-.')
+        #plt.plot(x, sigma_Dif, label='σL-σT', linewidth=1.0, linestyle='-.')
         plt.plot(x, sigma_L, label='σL', linewidth=2.0,linestyle=':')
         plt.plot(x, sigma_T, label='σT', linewidth=2.0,linestyle=':')
         plt.plot(x, plot_ref_sL, label='Ref_σL', linewidth=3.0,linestyle='--')
