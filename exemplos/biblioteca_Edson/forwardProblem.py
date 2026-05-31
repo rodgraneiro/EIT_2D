@@ -139,8 +139,8 @@ class forward_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        #nome_arquivo = f"../../docs/{self.name}.webp"
-        #plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
+        nome_arquivo = f"../../docs/{self.name}.webp"
+        plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
         plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight') 
         plt.show() 
          

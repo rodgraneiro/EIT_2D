@@ -20,8 +20,9 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
     #nome = '../../malhasMSH/test_Olavo_Hua.msh'
-    nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
+    #nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
     #nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
+    nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
     
     
 
@@ -38,7 +39,7 @@ def runFWD_InverseProblemAnisotropicHua():
     meus_sigmas = {
         1000: [3.0, 0.0, 3.0],
         1001: [3.0, 0.0, 1.0],
-        1002: [1.0, 0.0, 1.0],
+        1002: [3.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
         5002: [1.0, 0.0, 1.0],
