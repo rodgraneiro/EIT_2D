@@ -811,18 +811,21 @@ class inverse_problem:
             #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
             #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
             
-            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'x' or SigmaXXXYYY == 'y':
+            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
                 
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
-            if not SigmaXXXYYY == 'xy':
+            #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
+            if SigmaXXXYYY not in ('xy', 'θ°'):
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
                 tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow', vmin=0.0, vmax=4.0 )
             
-            
-            fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
+            if SigmaXXXYYY != 'θ°':
+                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
+            else:
+                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Angle θ° ')
             if save == True:
                 timestamp = datetime.now().strftime("%m%d_%H%M")
                 ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
@@ -960,7 +963,7 @@ class inverse_problem:
         plot_ref_sT = np.ones(len(sigma_xx))*ref_sT
         
         
-        plt.figure(figsize=(6, 5.9))
+        plt.figure(figsize=(6, 6.05))
     
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
@@ -1059,8 +1062,8 @@ class inverse_problem:
         plt.title(titulo, fontsize=14)
         plt.xlabel('Element', fontsize=12)
         plt.ylabel('Angle θ [°]', fontsize=12)
-        plt.ylim(-180, 180)   # exemplo: de -65° a 66°
-    
+        plt.ylim(-90, 90)   # exemplo: de -65° a 66°
+        
         plt.grid(True, linestyle='--', alpha=0.5)
         plt.legend()
     
@@ -1186,7 +1189,7 @@ class inverse_problem:
             ("theta", "Angle [°]"),            
             ("sigma_linhas", "Summary"),
             ("iterations", "Optimization"),           
-            ("plot_theta_deg", "Angle [°]"),  
+            #("plot_theta_deg", "Angle [°]"),  
             #("Sorting", "Sorting"),
             #("Mask", "Mask"),
         ]
@@ -1217,8 +1220,20 @@ class inverse_problem:
     img {width: 200px;height: auto; background-color: white;}
     
     .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
-    </style>
-    </head>
+    .titulo {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+        </style>
+        </head>
     
     <body>
     """)
@@ -1238,9 +1253,9 @@ class inverse_problem:
             f.write("<table>\n")
     
             f.write("<tr>\n")
-            for _, titulo in colunas:
-                f.write(f"<th>{titulo}</th>\n")
-            f.write("</tr>\n")
+            #for _, titulo in colunas:
+            #    f.write(f"<th>{titulo}</th>\n")
+            #f.write("</tr>\n")
     
             for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):#, reverse=True):
                 f.write("<tr>\n")
@@ -1249,12 +1264,21 @@ class inverse_problem:
                     img = grupos[lambda_str].get(chave)
     
                     if img is not None:
+                        titulo = dict(colunas)[chave]
+
                         f.write(f"""
-    <td>
-        <div class="lambda">λ = {lambda_str}</div>
-        <img src= "{img}">
-    </td>
+        <td>
+            <div class="titulo">{titulo}</div>
+            <div class="lambda">λ = {lambda_str}</div>
+            <img src="{img}">
+        </td>
     """)
+#                        f.write(f"""
+#    <td>
+#        <div class="lambda">λ = {lambda_str}</div>
+#        <img src= "{img}">
+#    </td>
+#    """)
                     else:
                         f.write("<td></td>\n")
     
@@ -1558,15 +1582,23 @@ class inverse_problem:
 
         sigma_x = Smed + D
         sigma_y = Smed - D
-
+        
         
         DifAnisotropia = sigma_x - sigma_y
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
         
+        # para evitar saturação para  +/- 90 devido a arctan
+
+        anisotropia = np.abs(sigma_x - sigma_y)       # verifica se a diferença Sxx - Syy é muito pequena
+
         sigma_theta = sigmaInicial[:, 0] - sigmaInicial[:, 2]
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], sigma_theta)
         theta_deg = np.rad2deg(theta_rad)
+        tolerance = 0.01 * np.max(anisotropia)
 
+        theta_deg[anisotropia < tolerance] = 0.0
+        
+        
         #theta_rad = 0.5 * np.arctan2(2*sigma_xy, sigma_xx - sigma_xy)
         #theta_deg = np.rad2deg(theta_rad)
         
@@ -1607,7 +1639,7 @@ class inverse_problem:
         
         # Theta amgle
         nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}.webp' 
-        self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY=' θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
+        self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         lista_imgs.append(nome7)  
         
         # Gráfico tipo linha (o que você mandou)
