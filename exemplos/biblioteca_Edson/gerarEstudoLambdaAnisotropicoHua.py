@@ -240,7 +240,7 @@ lambdas = np.logspace(-6, 1, 12)
 
 resultados = {}
 
-nome_html="circ16_2object_SqrCirc_Hua_v1_0Grau_SameScale"
+nome_html="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
