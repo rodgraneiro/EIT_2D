@@ -3,7 +3,7 @@
     <head>
     <meta charset="utf-8">
     <title>Resultados TIE</title>
-    <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+  <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
     body {background-color: black; color: white; font-family: Arial, sans-serif;}
@@ -69,8 +69,8 @@
     Current pattern: Skip - 3<br>
     Electrodes: 16<br>
     Domain conductivity: σxx = 3 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
-    Object conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
-    Number of phantom elements mesh: 2590<br>
+    Objects conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
+    Number of phantom elements mesh: 2322<br>
     Number of elements in the base mesh: 1164<br>
     Maximum iterations: 5<br>
     Regularization: Gaussian HPF<br>
@@ -110,7 +110,7 @@
     <p class="info">
     Results obtained for a maximum of 5 iterations.
     &nbsp;&nbsp;&nbsp;
-    Same scale for all graphs.
+    Auto scale for all graphs.
     &nbsp;&nbsp;&nbsp;
     Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
     </p>
@@ -118,9 +118,9 @@
     <h2>Phanton</h2>
     <h4>Domain - &sigma; [3-0-3] [S/m]. Object &sigma; [3-0-1]  [S/m] and angle 0° for all. </h4>
     <div style="display:flex; gap:20px;">
-    <img src="circSqrLeft_Sxx.webp" width="300">
-    <img src="circSqrLeft_Sxy.webp" width="300">
-    <img src="circSqrLeft_Syy.webp" width="300">
+    <img src="circ2Objects_Sxx.webp" width="300">
+    <img src="circ2Objects_Sxy.webp" width="300">
+    <img src="circ2Objects_Syy.webp" width="300">
     </div>
     <p style="color:#aaaaaa; font-size:14px;">
     <br>
@@ -137,55 +137,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.000001.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.000001</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.000001.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.000001.webp">
         </td>
     </tr>
 <tr>
@@ -193,55 +193,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.000004.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.000004</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.000004.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.000004.webp">
         </td>
     </tr>
 <tr>
@@ -249,55 +249,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.000019.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.000019</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.000019.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.000019.webp">
         </td>
     </tr>
 <tr>
@@ -305,55 +305,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.000081.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.000081</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.000081.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.000081.webp">
         </td>
     </tr>
 <tr>
@@ -361,55 +361,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.000351.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.000351</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.000351.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.000351.webp">
         </td>
     </tr>
 <tr>
@@ -417,55 +417,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.001520.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.001520</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.001520.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.001520.webp">
         </td>
     </tr>
 <tr>
@@ -473,55 +473,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.006579.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.006579</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.006579.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.006579.webp">
         </td>
     </tr>
 <tr>
@@ -529,55 +529,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.028480.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.028480</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.028480.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.028480.webp">
         </td>
     </tr>
 <tr>
@@ -585,55 +585,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.123285.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.123285</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.123285.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.123285.webp">
         </td>
     </tr>
 <tr>
@@ -641,55 +641,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_0.533670.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 0.533670</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_0.533670.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_0.533670.webp">
         </td>
     </tr>
 <tr>
@@ -697,55 +697,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_2.310130.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 2.310130</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_2.310130.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_2.310130.webp">
         </td>
     </tr>
 <tr>
@@ -753,55 +753,55 @@
         <td>
             <div class="titulo">σxx</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xx_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xx_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">σxy</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xy_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xy_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">σyy</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_yy_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_yy_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">σ_l</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xl_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xl_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">σ_t</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_xt_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_xt_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">(σ_l - σ_t)</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_Dif_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_Dif_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">Angle [°]</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_theta_deg_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_theta_deg_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">Summary</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_sigma_linhas_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_sigma_linhas_10.000000.webp">
         </td>
     
         <td>
             <div class="titulo">Optimization</div>
             <div class="lambda">λ = 10.000000</div>
-            <img src="circ16_1ob_Square_denso_0Grau_SameScale_iterations_10.000000.webp">
+            <img src="circ16_2object_SqrCirc_Hua_v1_0Grau_AutoScale_iterations_10.000000.webp">
         </td>
     </tr>
 

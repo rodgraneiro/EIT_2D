@@ -3,7 +3,8 @@
     <head>
     <meta charset="utf-8">
     <title>Resultados TIE</title>
-    
+  <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
     body {background-color: black; color: white; font-family: Arial, sans-serif;}
     
@@ -21,19 +22,114 @@
     img {width: 200px;height: auto; background-color: white;}
     
     .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
-    </style>
-    </head>
+    .titulo {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+            .equation{
+            font-size: 24px;
+            color: #88ccff;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .equation-left {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 24px;
+        }  
+        </style>
+        </head>
     
     <body>
+       <h1>Results of the Anisotropic Inverse Problem EIT with Hua virtual electrode</h1>
+    <h1>Anisotropic domain with an Square object phantom -  Angle 0°</h1>
+    <p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the anisotropic inverse problem 
+    using the Hua virtual electrode model in Electrical Impedance Tomography (EIT).
+
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The electric field behavior caused by anisotropy;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
+    Object conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
+    Number of phantom elements mesh: 2590<br>
+    Number of elements in the base mesh: 1164<br>
+    Maximum iterations: 5<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-6, 1, 12)<br>
+    [1.00000000e-06 4.32876128e-06 1.87381742e-05 8.11130831e-05 3.51119173e-04 1.51991108e-03<br>  
+    6.57933225e-03 2.84803587e-02 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]<br> 
+
+
+    </div>
+    <p>
+    The anisotropic conductivity tensor is represented by:
+    </p>
+
+    <!-- <p style="font-size:24px;">
+    σ = [ σxx  σxy ; σxy  σyy ]
+    </p> 
+    <div class="equation">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div> -->
+    <div class="equation-left">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div>
     
     <p class="info">
-    Results obtained for a maximum of 25 iterations.
+    Results obtained for a maximum of 5 iterations.
     &nbsp;&nbsp;&nbsp;
     Auto scale for all graphs.
     &nbsp;&nbsp;&nbsp;
     Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
     </p>
     <hr>
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma; [3-0-3] [S/m]. Object &sigma; [3-0-1]  [S/m] and angle 0° for all. </h4>
+    <div style="display:flex; gap:20px;">
+    <img src="circSqrLeft_Sxx.webp" width="300">
+    <img src="circSqrLeft_Sxy.webp" width="300">
+    <img src="circSqrLeft_Syy.webp" width="300">
+    </div>
+    <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution for σxx. Object with the same conductivity as the domain on the X-axis
+    <br>
+    Figure 2 — Phantom conductivity distribution for σxy.
+    <br>
+    Figure 2 — Phantom conductivity distribution for σyy. Object with conductivity different from the domain on the Y-axis
+    </p>
     <table>
 <tr>
 <th>σxx</th>
