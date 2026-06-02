@@ -3,8 +3,8 @@
 *.geo
 *.geo_unrolled
 *.png
-.html
-.webp
+#*.html
+#*.webp
 
 
 lastIteration.txt
