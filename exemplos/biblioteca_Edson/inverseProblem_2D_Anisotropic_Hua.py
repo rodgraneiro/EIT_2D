@@ -786,6 +786,7 @@ class inverse_problem:
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
+        ajuste  = self.mymesh.NumberOfElectrodes*4 +1
     
         # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
         elems_2D = np.array([el for el in topo if len(el) == 3])
@@ -803,7 +804,17 @@ class inverse_problem:
             #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
             ntri = triang.triangles.shape[0]
             fc = sigma.ravel()[:ntri]
-
+            
+            #finder = triang.get_trifinder()
+            #ex, ey = 0.02, 0.07
+            #idx_elem = finder(ex, ey) 
+            #idx_elem_global = finder(ex, ey) + ajuste
+            #print("Elemento:", idx_elem_global)
+            #print("Nós:", elems_2D[idx_elem])
+            #if idx_elem != -1:
+            #    print("Nós:", elems_2D[idx_elem])
+            #else:
+            #    print("Ponto fora da malha")
             lim = np.max(np.abs(fc))
             if lim == 0:
                 lim = 1e-12
@@ -857,6 +868,105 @@ class inverse_problem:
         plt.close('all')        # fecha automaticamente
     ###############################################################################
     
+    
+    def plotElipse(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
+
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+        ajuste  = self.mymesh.NumberOfElectrodes*4 +1
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+        '''
+        #fig, ax = plt.subplots(figsize=(6, 5))
+        fig, ax = plt.subplots(figsize=(6,6))
+        #ax.set_aspect('equal')
+        ax.set_aspect('equal', adjustable='box')
+        '''
+        #if len(elems_2D) > 0:
+        triang = tri.Triangulation(x, y, elems_2D)
+        #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+        ntri = triang.triangles.shape[0]
+        fc = sigma.ravel()[:ntri]
+        
+        finder = triang.get_trifinder()
+        pontos = np.array([
+                [0.075, 0.0],
+                [0.075, 0.075],
+                [0.075, -0.075],
+                [-0.075, 0.0],
+                [-0.075, 0.075],
+                [-0.075, -0.075],
+                [0.0, 0.09]
+            ])
+            
+        ex = pontos[:,0]
+        ey = pontos[:,1]
+        #ex, ey = 0.02, 0.07
+    
+        idx_elem = finder(ex, ey) 
+        idx_elem_global = finder(ex, ey) + ajuste
+        print("Elemento:", idx_elem_global)
+        #print("Nós:", elems_2D[idx_elem])
+        #if idx_elem != -1:
+        #    print("Nós:", elems_2D[idx_elem])
+        #else:
+        #    print("Ponto fora da malha")
+                
+        '''
+            lim = np.max(np.abs(fc))
+            if lim == 0:
+                lim = 1e-12
+            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+            #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+            
+            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
+                
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')#, norm=norm )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
+            #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
+            if SigmaXXXYYY not in ('xy', 'θ°'):
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow')#, vmin=0.0, vmax=4.0 )
+            
+            if SigmaXXXYYY != 'θ°':
+                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
+            else:
+                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Angle θ° ')
+                
+            if save == True:
+                timestamp = datetime.now().strftime("%m%d_%H%M")
+                ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
+            if save == False:
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+        
+        plt.tight_layout()
+        plt.ticklabel_format(style='plain')
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
+            #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
+        '''
+    ###############################################################################
+
+
+
+
+
+
+
+
+
+
+
     
     ###############################################################################
     #          Plotar máscara de anisotropia
@@ -1679,7 +1789,7 @@ class inverse_problem:
         self.salvar_html_todos_lambdas(pasta_teste, html_name)
        
         
-   
+        self.plotElipse(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         
 
         
@@ -1703,5 +1813,4 @@ class inverse_problem:
         tol = 1e-6 * s[0]          # ou outro fator
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
-        
         
