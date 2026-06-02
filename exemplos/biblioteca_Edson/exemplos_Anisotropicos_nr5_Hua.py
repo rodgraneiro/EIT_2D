@@ -21,8 +21,8 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
     #nome = '../../malhasMSH/test_Olavo_Hua.msh'
     #nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
-    #nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
-    nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
+    nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
+    #nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
     
     
     nomePhanton = 'circ16_2object_SqrCirc_Hua_v1'

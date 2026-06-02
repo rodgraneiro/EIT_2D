@@ -824,14 +824,14 @@ class inverse_problem:
             
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
                 
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')#, norm=norm )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
             #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
             if SigmaXXXYYY not in ('xy', 'θ°'):
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow')#, vmin=0.0, vmax=4.0 )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow', vmin=0.0, vmax=4.0 )
             
             if SigmaXXXYYY != 'θ°':
                 fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
