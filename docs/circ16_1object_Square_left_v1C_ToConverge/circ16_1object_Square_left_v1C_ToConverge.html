@@ -1,0 +1,604 @@
+
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    
+    <style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+        color: white;
+    }
+    
+    .info {
+        color: lime;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+    
+    th {
+        font-size: 24px;
+        padding: 10px;
+        color: white;
+    }
+    
+    td {
+        padding: 2px;
+        margin: 0px;
+        text-align: center;
+        vertical-align: top;
+    }
+    
+    img {
+        width: 200px;
+        height: auto;
+        background-color: white;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .titulo {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    
+    .escala {
+        color: cyan;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .lambda_bloco {
+        color: orange;
+        font-size: 22px;
+        font-weight: bold;
+        padding-top: 18px;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+    </style>
+    </head>
+    
+    <body>
+    
+    <p class="info">
+    Results obtained for a maximum of 25 iterations.
+    &nbsp;&nbsp;&nbsp;
+    First row: AutoScale.
+    &nbsp;&nbsp;&nbsp;
+    Second row: SameScale.
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
+    </p>
+    <hr>
+    <table>
+<tr>
+<th>σxx</th>
+<th>σxy</th>
+<th>σyy</th>
+<th>σ_l</th>
+<th>σ_t</th>
+<th>(σ_l - σ_t)</th>
+<th>Angle [°]</th>
+<th>Summary</th>
+<th>Optimization</th>
+</tr>
+
+    <tr>
+        <td colspan="9" class="lambda_bloco">
+            λ = 0.006579
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.006579_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_linhas_0.006579.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_iterations_0.006579.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.006579_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.006579_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.006579_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.006579_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.006579_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.006579_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006579</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.006579_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="9" class="lambda_bloco">
+            λ = 0.014240
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.014240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_linhas_0.014240.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_iterations_0.014240.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.014240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.014240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.014240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.014240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.014240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.014240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.014240</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.014240_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="9" class="lambda_bloco">
+            λ = 0.028480
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.028480_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_linhas_0.028480.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_iterations_0.028480.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.028480_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.028480_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.028480_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.028480_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.028480_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.028480_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.028480</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.028480_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="9" class="lambda_bloco">
+            λ = 0.056960
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.056960_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_linhas_0.056960.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_iterations_0.056960.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xx_0.056960_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xy_0.056960_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_yy_0.056960_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_l</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xl_0.056960_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_t</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_xt_0.056960_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_l - σ_t)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_sigma_Dif_0.056960_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.056960</div>
+        <img src="circ16_1object_Square_left_v1C_ToConverge_theta_deg_0.056960_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+</tr>
+
+    </table>
+    </body>
+    </html>
+    
