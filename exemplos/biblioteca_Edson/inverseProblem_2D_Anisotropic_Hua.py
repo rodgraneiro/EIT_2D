@@ -18,6 +18,7 @@ import plotly.graph_objects as go
 import os
 import glob
 from collections import defaultdict
+    
 
 from datetime import datetime
 from matplotlib import cm
@@ -756,9 +757,10 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
-
+    '''
     def plotar_iteracoes(self,lista_indice, lista_valor,  nome_arquivo="Optimization.png"):#, nome = None):
         plt.figure(figsize=(6, 6))
+        ax.set_aspect('equal', adjustable='box')
         plt.plot(lista_indice,
                 lista_valor,
                 marker='.',
@@ -772,16 +774,58 @@ class inverse_problem:
         plt.grid(True)
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
-        plt.savefig(f"{nome_arquivo}", dpi=150, bbox_inches='tight')
+        plt.savefig(f"{nome_arquivo}.webp", dpi=150, bbox_inches='tight')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
+    '''
+    def plotar_iteracoes(self,
+                     lista_indice,
+                     lista_valor,
+                     nome_arquivo="Optimization"):
+
+        fig, ax = plt.subplots(figsize=(6, 5))
+    
+        # NÃO usar aspect='equal' para gráfico de linhas
+        # ax.set_aspect('equal', adjustable='box')
+    
+        ax.plot(
+            lista_indice,
+            lista_valor,
+            marker='.',
+            linestyle='-',
+            color='b',
+            label=r'Norm $\Delta\sigma$'
+        )
+    
+        ax.set_xlabel("Iteration", fontsize=12)
+        ax.set_ylabel(r"Norm [$\Delta\sigma$]", fontsize=12)
+        ax.set_title("Optimization", fontsize=15)
+    
+        ax.legend()
+        ax.grid(True)
+    
+        fig.tight_layout()
+    
+        ax.ticklabel_format(style='plain')
+    
+        fig.savefig(
+            f"{nome_arquivo}.webp",
+            dpi=150,
+            bbox_inches='tight',
+            pil_kwargs={"quality": 70}
+        )
+    
+        plt.show(block=False)
+        plt.pause(3)
+    
+        plt.close(fig)
     ###############################################################################
     ###############################################################################
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
 
-    
+    '''
     def plotMSH(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
@@ -824,14 +868,14 @@ class inverse_problem:
             
             if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
                 
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')#, norm=norm )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
             #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
             if SigmaXXXYYY not in ('xy', 'θ°'):
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
                 #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow', vmin=0.0, vmax=4.0 )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow')#, vmin=0.0, vmax=4.0 )
             
             if SigmaXXXYYY != 'θ°':
                 fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
@@ -862,13 +906,167 @@ class inverse_problem:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}_AutoScale.webp',  dpi=200, pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
-    ###############################################################################
+    '''
+    def plotMSH(self, sigma, Lambda=None, iteration=None, save=False,   SigmaXXXYYY=None, DifAniso=None, nome_arquivo=None):
+
+
+        x = self.mymesh.Coordinates[:, 0]
+        y = self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
     
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
     
+        if len(elems_2D) == 0:
+            print("Nenhum elemento triangular encontrado.")
+            return
+    
+        triang = tri.Triangulation(x, y, elems_2D)
+        ntri = triang.triangles.shape[0]
+        fc = sigma.ravel()[:ntri]
+    
+        # ============================================================
+        # Função interna para desenhar e salvar cada figura
+        # ============================================================
+        def desenhar_figura(tipo_escala):
+    
+            fig, ax = plt.subplots(figsize=(6, 6))
+            ax.set_aspect('equal', adjustable='box')
+    
+            # -------------------------------
+            # ESCALA AUTOMÁTICA
+            # -------------------------------
+            if tipo_escala == "AutoScale":
+    
+                if SigmaXXXYYY in ('xy', 'θ°'):
+                    tpc = ax.tripcolor(
+                        triang,
+                        facecolors=fc,
+                        edgecolors='k',
+                        cmap='RdBu_r'
+                    )
+                else:
+                    tpc = ax.tripcolor(
+                        triang,
+                        facecolors=fc,
+                        edgecolors='k',
+                        cmap='rainbow'
+                    )
+    
+            # -------------------------------
+            # ESCALA FIXA / SAME SCALE
+            # -------------------------------
+            elif tipo_escala == "SameScale":
+    
+                if SigmaXXXYYY in ('xy', 'θ°'):
+    
+                    lim = np.max(np.abs(fc))
+    
+                    if lim == 0:
+                        lim = 1e-12
+    
+                    norm = TwoSlopeNorm(
+                        vmin=-lim,
+                        vcenter=0,
+                        vmax=lim
+                    )
+    
+                    tpc = ax.tripcolor(
+                        triang,
+                        facecolors=fc,
+                        edgecolors='k',
+                        cmap='RdBu_r',
+                        norm=norm
+                    )
+    
+                else:
+                    tpc = ax.tripcolor(
+                        triang,
+                        facecolors=fc,
+                        edgecolors='k',
+                        cmap='rainbow',
+                        vmin=0.0,
+                        vmax=4.0
+                    )
+    
+            # -------------------------------
+            # Plotar elementos 1D / eletrodos
+            # -------------------------------
+            if len(elems_1D) > 0:
+                for n1, n2 in elems_1D:
+                    x_coords = [x[n1], x[n2]]
+                    y_coords = [y[n1], y[n2]]
+                    ax.plot(x_coords, y_coords, color='red', linewidth=2)
+    
+            # -------------------------------
+            # Colorbar
+            # -------------------------------
+            if SigmaXXXYYY != 'θ°':
+                fig.colorbar(
+                    tpc,
+                    ax=ax,
+                    shrink=0.70,
+                    label='Conductivity σ [S/m]'
+                )
+            else:
+                fig.colorbar(
+                    tpc,
+                    ax=ax,
+                    shrink=0.70,
+                    label='Angle θ°'
+                )
+    
+            # -------------------------------
+            # Título
+            # -------------------------------
+            if save:
+                ax.set_title(
+                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+                    fontsize=11
+                )
+            else:
+                ax.set_title("Conductivity Real (σ)", fontsize=15)
+    
+            ax.set_xlabel("[m]", fontsize=12)
+            ax.set_ylabel("[m]", fontsize=12)
+    
+            plt.tight_layout()
+            plt.ticklabel_format(style='plain')
+    
+            # -------------------------------
+            # Salvar
+            # -------------------------------
+            if save:
+    
+                if nome_arquivo is None:
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+                    nome_saida = f"Conductivity_{tipo_escala}_{timestamp}.webp"
+                else:
+                    nome_saida = f"{nome_arquivo}_{tipo_escala}.webp"
+    
+                plt.savefig(
+                    nome_saida,
+                    dpi=200,
+                    bbox_inches='tight',
+                    pil_kwargs={"quality": 70}
+                )
+    
+            plt.show(block=False)
+            plt.pause(3)
+            plt.close(fig)
+    
+        # ============================================================
+        # Gera as duas imagens
+        # ============================================================
+        desenhar_figura("AutoScale")
+        desenhar_figura("SameScale")
+        ###############################################################################
+
+    ###############################################################################   
     def plotElipse(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
@@ -1029,11 +1227,11 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=150, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
-        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.pause(1)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
     ###############################################################################
 
@@ -1072,10 +1270,28 @@ class inverse_problem:
         x = np.arange(len(sigma_xx))
         plot_ref_sL = np.ones(len(sigma_xx))*ref_sL
         plot_ref_sT = np.ones(len(sigma_xx))*ref_sT
+        fig, ax = plt.subplots(figsize=(6.0, 5.0))
+
+        ax.plot(x, sigma_xx, label='σxx', linewidth=1.0)
+        ax.plot(x, sigma_xy, label='σxy', linewidth=1.0)
+        ax.plot(x, sigma_yy, label='σyy', linewidth=1.0)
+        ax.plot(x, sigma_L, label='σL', linewidth=2.0, linestyle=':')
+        ax.plot(x, sigma_T, label='σT', linewidth=2.0, linestyle=':')
+        ax.plot(x, plot_ref_sL, label='Ref_σL', linewidth=3.0, linestyle='--')
+        ax.plot(x, plot_ref_sT, label='Ref_σT', linewidth=3.0, linestyle='--')
         
+        ax.set_title(titulo, fontsize=14)
+        ax.set_xlabel('Element', fontsize=10)
+        ax.set_ylabel('Conductivity [S/m]', fontsize=10)
         
-        plt.figure(figsize=(6, 6.05))
-    
+        ax.grid(True, linestyle='--', alpha=0.5)
+        ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=4, fontsize=10)
+        
+        fig.tight_layout()
+        '''
+        fig, ax = plt.subplots(figsize=(6.0, 6.0))
+        #plt.figure(figsize=(6.0, 6.0))
+        ax.set_aspect('equal', adjustable='box')
         plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
         plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
         plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
@@ -1095,12 +1311,12 @@ class inverse_problem:
         #plt.legend()
     
         plt.tight_layout()
-
+        '''
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
             plt.show() 
             plt.close()   # importante
         else:
@@ -1143,7 +1359,7 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
             plt.show() 
             plt.close()   # importante
         else:
@@ -1183,7 +1399,7 @@ class inverse_problem:
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=150)
-            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
             plt.show() 
             plt.close()   # importante
         else:
@@ -1248,7 +1464,7 @@ class inverse_problem:
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
         
-
+    '''
     def salvar_html_todos_lambdas(self,pasta, html_name="resultado_completo"):
         print('pasta_salvar_html_todos_lambdas', pasta)
         arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
@@ -1265,7 +1481,15 @@ class inverse_problem:
             nome = os.path.basename(arq)
     
             # lambda = último pedaço antes de .webp
-            lambda_str = nome.replace(".webp", "").split("_")[-1]
+            #lambda_str = nome.replace(".webp", "").split("_")[-1]
+            partes = nome.replace(".webp", "").split("_")
+
+            if partes[-1] in ("AutoScale", "SameScale"):
+                tipo_escala = partes[-1]
+                lambda_str = partes[-2]
+            else:
+                tipo_escala = "AutoScale"
+                lambda_str = partes[-1]
     
             if "sigma_xx" in nome:
                 grupos[lambda_str]["sigma_xx"] = nome
@@ -1403,11 +1627,256 @@ class inverse_problem:
     
         print("HTML salvo em:", html_path)
     
+    '''
+    def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
     
+
+        print('pasta_salvar_html_todos_lambdas', pasta)
+    
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
+    
+        grupos = defaultdict(lambda: {
+            "AutoScale": {},
+            "SameScale": {}
+        })
+    
+        for arq in arquivos:
+    
+            nome = os.path.basename(arq)
+            partes = nome.replace(".webp", "").split("_")
+    
+            if partes[-1] in ("AutoScale", "SameScale"):
+                tipo_escala = partes[-1]
+                lambda_str = partes[-2]
+            else:
+                tipo_escala = "AutoScale"
+                lambda_str = partes[-1]
+    
+            if "sigma_xx" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_xx"] = nome
+    
+            elif "sigma_xy" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_xy"] = nome
+    
+            elif "sigma_yy" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_yy"] = nome
+    
+            elif "sigma_xl" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_l"] = nome
+    
+            elif "sigma_xt" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_t"] = nome
+    
+            elif "sigma_Dif" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
+    
+            elif "theta" in nome:
+                grupos[lambda_str][tipo_escala]["theta"] = nome
+    
+            elif "sigma_linhas" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_linhas"] = nome
+    
+            elif "iterations" in nome:
+                grupos[lambda_str][tipo_escala]["iterations"] = nome
+    
+            elif "plot_theta_deg" in nome:
+                grupos[lambda_str][tipo_escala]["Sorting"] = nome
+    
+        colunas = [
+            ("sigma_xx", "σxx"),
+            ("sigma_xy", "σxy"),
+            ("sigma_yy", "σyy"),
+            ("sigma_l", "σ_l"),
+            ("sigma_t", "σ_t"),
+            ("sigma_Dif", "(σ_l - σ_t)"),
+            ("theta", "Angle [°]"),
+            ("sigma_linhas", "Summary"),
+            ("iterations", "Optimization"),
+        ]
+    
+        html_path = os.path.join(pasta, f"{html_name}.html")
+    
+        with open(html_path, "w", encoding="utf-8") as f:
+    
+            f.write("""
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    
+    <style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+        color: white;
+    }
+    
+    .info {
+        color: lime;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+    
+    th {
+        font-size: 24px;
+        padding: 10px;
+        color: white;
+    }
+    
+    td {
+        padding: 2px;
+        margin: 0px;
+        text-align: center;
+        vertical-align: top;
+    }
+    
+    img {
+        width: 200px;
+        height: auto;
+        background-color: white;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .titulo {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    
+    .escala {
+        color: cyan;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .lambda_bloco {
+        color: orange;
+        font-size: 22px;
+        font-weight: bold;
+        padding-top: 18px;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+    </style>
+    </head>
+    
+    <body>
+    """)
+    
+            f.write("""
+    <p class="info">
+    Results obtained for a maximum of 25 iterations.
+    &nbsp;&nbsp;&nbsp;
+    First row: AutoScale.
+    &nbsp;&nbsp;&nbsp;
+    Second row: SameScale.
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
+    </p>
+    <hr>
+    """)
+    
+            f.write("<table>\n")
+    
+            # Cabeçalho das colunas
+            f.write("<tr>\n")
+            for _, titulo in colunas:
+                f.write(f"<th>{titulo}</th>\n")
+            f.write("</tr>\n")
+    
+            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):
+    
+                # Linha separadora com o lambda
+                f.write(f"""
+    <tr>
+        <td colspan="{len(colunas)}" class="lambda_bloco">
+            λ = {lambda_str}
+        </td>
+    </tr>
+    """)
+    
+                # =====================================================
+                # Primeira linha: AutoScale
+                # =====================================================
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+    
+                    img = grupos[lambda_str]["AutoScale"].get(chave)
+    
+                    if img is not None:
+    
+                        titulo = dict(colunas)[chave]
+    
+                        f.write(f"""
+    <td>
+        <div class="titulo">{titulo}</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
+    
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    
+                # =====================================================
+                # Segunda linha: SameScale
+                # =====================================================
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+    
+                    img = grupos[lambda_str]["SameScale"].get(chave)
+    
+                    if img is not None:
+    
+                        titulo = dict(colunas)[chave]
+    
+                        f.write(f"""
+    <td>
+        <div class="titulo">{titulo}</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
+    
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    
+            f.write("""
+    </table>
+    </body>
+    </html>
+    """)
+
+    #print("HTML salvo em:", html_path)
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
-    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-6, iteration=0, html_name = None):
+    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-3, iteration=0, html_name = None):
         print('html_name_solve',html_name)
         itr_start = int(iteration)
         ultimos10 = []
@@ -1722,60 +2191,60 @@ class inverse_problem:
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
         #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp'
-        nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}.webp' 
+        nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.6f}.webp' 
+        nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.6f}' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}.webp'  
+        nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
              
 
-        nome4 = f'{pasta_teste}/{html_name}_sigma_xl_{Lambda:.6f}.webp'          
+        nome4 = f'{pasta_teste}/{html_name}_sigma_xl_{Lambda:.6f}'          
         self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
-        nome5 = f'{pasta_teste}/{html_name}_sigma_xt_{Lambda:.6f}.webp'  
+        nome5 = f'{pasta_teste}/{html_name}_sigma_xt_{Lambda:.6f}'  
         self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
         # Diferença anisotrópica
-        nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}.webp' 
+        nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
         lista_imgs.append(nome6)
         
         # Theta amgle
-        nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}.webp' 
+        nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}' 
         self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         lista_imgs.append(nome7)  
         
         # Gráfico tipo linha (o que você mandou)
-        nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}.webp'
+        nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}'
         self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome8)
         lista_imgs.append(nome8)
         #print('plot_sigma_banana_solver', theta_deg)
         
-        nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.6f}.webp'
+        nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.6f}'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
         
-        
+        '''
         # Gráfico tipo linha (o que você mandou)
-        nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}.webp'
+        nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
         lista_imgs.append(nome10)
         
 
-        '''
-        nome11 = f'{pasta_teste}/{html_name}_Mask_{Lambda:.6f}.webp'  
+        
+        nome11 = f'{pasta_teste}/{html_name}_Mask_{Lambda:.6f}'  
         self.plotMask(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome11)
         lista_imgs.append(nome11)
 
-        nome12 = f'{pasta_teste}/{html_name}_Sorting_{Lambda:.6f}.webp'
+        nome12 = f'{pasta_teste}/{html_name}_Sorting_{Lambda:.6f}'
         self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome12)
         lista_imgs.append(nome12)
         '''
