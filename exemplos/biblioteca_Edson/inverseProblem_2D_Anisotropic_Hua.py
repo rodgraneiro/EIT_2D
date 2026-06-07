@@ -10,6 +10,7 @@ Created on Sun Oct 26 13:56:12 2025
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+
 import mesh
 import elements
 import gmsh
@@ -18,12 +19,15 @@ import plotly.graph_objects as go
 import os
 import glob
 from collections import defaultdict
-    
+#import matplotlib.cm as cm
+import matplotlib.colors as colors
+
 
 from datetime import datetime
 from matplotlib import cm
 from matplotlib.colors import TwoSlopeNorm
 from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.patches import Ellipse
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
@@ -1067,7 +1071,7 @@ class inverse_problem:
         ###############################################################################
 
     ###############################################################################   
-    def plotElipse(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
+    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -1076,12 +1080,29 @@ class inverse_problem:
         # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
         elems_2D = np.array([el for el in topo if len(el) == 3])
         elems_1D = np.array([el for el in topo if len(el) == 2])
-        '''
-        #fig, ax = plt.subplots(figsize=(6, 5))
-        fig, ax = plt.subplots(figsize=(6,6))
-        #ax.set_aspect('equal')
-        ax.set_aspect('equal', adjustable='box')
-        '''
+
+        # parâmetros
+        R_circ = 0.15
+        R_temp = 0.145      # raio do círculo
+        dx = 0.01    # espaçamento
+        
+        x_pts = []
+        y_pts = []
+        
+        # número de passos
+        N = int(np.floor(R_temp/dx))
+        
+        # gera pontos internos
+        for i in range(-N, N+1):
+            for j in range(-N, N+1):
+        
+                x_temp = i * dx
+                y_temp = j * dx
+        
+                # mantém apenas pontos internos
+                if x_temp**2 +  y_temp**2 <= R_temp**2:
+                    x_pts.append(x_temp)
+                    y_pts.append(y_temp)
         #if len(elems_2D) > 0:
         triang = tri.Triangulation(x, y, elems_2D)
         #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
@@ -1089,28 +1110,90 @@ class inverse_problem:
         fc = sigma.ravel()[:ntri]
         
         finder = triang.get_trifinder()
-        pontos = np.array([
-                [0.075, 0.0],
-                [0.075, 0.075],
-                [0.075, -0.075],
-                [-0.075, 0.0],
-                [-0.075, 0.075],
-                [-0.075, -0.075],
-                [0.0, 0.09]
-            ])
-            
+        pontos = np.column_stack((x_pts, y_pts))
+        print("pontos:", pontos.shape)
+
         ex = pontos[:,0]
         ey = pontos[:,1]
         #ex, ey = 0.02, 0.07
     
         idx_elem = finder(ex, ey) 
         idx_elem_global = finder(ex, ey) + ajuste
-        print("Elemento:", idx_elem_global)
-        #print("Nós:", elems_2D[idx_elem])
-        #if idx_elem != -1:
-        #    print("Nós:", elems_2D[idx_elem])
-        #else:
-        #    print("Ponto fora da malha")
+        print("Elemento:", idx_elem)
+        
+        mask = idx_elem  >= 0
+
+        pontos_validos = pontos[mask]
+        idx_validos = idx_elem[mask]
+        
+        
+        # pega os valores correspondentes aos elementos onde caíram os pontos
+        sigma_L_pts = sigma_L[idx_validos]
+        sigma_T_pts = sigma_T[idx_validos]
+        theta_pts   = theta_deg[idx_validos]
+        
+        dados_elipses = np.column_stack([
+                                        idx_validos,
+                                        pontos_validos[:, 0],
+                                        pontos_validos[:, 1],
+                                        sigma_L_pts,
+                                        sigma_T_pts,
+                                        theta_pts
+                                    ])
+        
+
+        fig, ax = plt.subplots(figsize=(7, 7))
+        
+        norm = colors.Normalize(vmin=0, vmax=1)
+        #sigmaL_max = np.max(sigma_L)
+        sigmaL_max = max(np.max(np.abs(sigma_L)), 1e-12)
+        
+        escala = 0.005
+        
+        for linha in dados_elipses:
+        
+            _, x0, y0, sL, sT, theta = linha
+            
+            AI = (sL - sT)/(sL + sT)
+            
+            a = escala * abs(sL) / sigmaL_max
+            b = escala * abs(sT) / sigmaL_max
+            
+            cor = cm.jet(norm(AI))
+        
+            elipse = Ellipse(
+                xy=(x0, y0),
+                width=2 * a,
+                height=2 * b,
+                angle=theta,
+                fill=True,
+                facecolor=cor,       
+                #edgecolor='black',
+                edgecolor=cor,
+                linewidth=0.5,
+                alpha=0.8
+                )
+        
+            ax.add_patch(elipse)
+        theta_circ = np.linspace(0, 2*np.pi, 400)
+
+        ax.plot(
+            R_circ*np.cos(theta_circ),
+            R_circ*np.sin(theta_circ),
+            'k-',
+            linewidth=1.0
+        )
+        
+        ax.set_xlim(-R_circ - 0.02, R_circ + 0.02)
+        ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
+        
+        ax.set_aspect('equal', adjustable='box')
+        ax.set_xlabel('[m]')
+        ax.set_ylabel('[m]')
+        ax.grid(False)
+        
+        plt.show()
+ 
                 
         '''
             lim = np.max(np.abs(fc))
@@ -1662,10 +1745,10 @@ class inverse_problem:
                 grupos[lambda_str][tipo_escala]["sigma_yy"] = nome
     
             elif "sigma_xl" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_l"] = nome
+                grupos[lambda_str][tipo_escala]["sigma_L"] = nome
     
             elif "sigma_xt" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_t"] = nome
+                grupos[lambda_str][tipo_escala]["sigma_T"] = nome
     
             elif "sigma_Dif" in nome:
                 grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
@@ -1892,7 +1975,7 @@ class inverse_problem:
 
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
 
-        L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D, std=0.01)
+        L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D, std=0.0175)
 
         #print(f"Filtro gaussiano: std = {std_auto:.6e}")
         #print(f"Número de elementos no domínio físico = {len(idx_dom)}")
@@ -2160,25 +2243,37 @@ class inverse_problem:
         Smed = 0.5 * (sigmaInicial[:, 0] + sigmaInicial[:, 2])
         D = np.sqrt(((sigmaInicial[:, 0] - sigmaInicial[:, 2])/2)**2 + sigmaInicial[:, 1]**2)
 
-        sigma_x = Smed + D
-        sigma_y = Smed - D
+        sigma_L = Smed + D
+        sigma_T = Smed - D
         
         
-        DifAnisotropia = sigma_x - sigma_y
+        DifAnisotropia = sigma_L - sigma_T
         DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
         
         # para evitar saturação para  +/- 90 devido a arctan
 
-        anisotropia = np.abs(sigma_x - sigma_y)       # verifica se a diferença Sxx - Syy é muito pequena
-
+        #anisotropia = np.abs(sigma_L - sigma_T)       # verifica se a diferença Sxx - Syy é muito pequena
+        #np.savetxt("sigmaInicialTheta.txt", sigmaInicial)
+        
+        #anisotropia = np.abs(sigmaInicial[:, 0] - sigmaInicial[:, 2])       # verifica se a diferença Sxx - Syy é muito pequena
+        #np.savetxt("anisotropia.txt", anisotropia)  # formato binário
+        
         sigma_theta = sigmaInicial[:, 0] - sigmaInicial[:, 2]
+        #np.savetxt("sigma_theta.txt", sigma_theta)
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], sigma_theta)
+        #np.savetxt("theta_rad.txt", theta_rad)
         theta_deg = np.rad2deg(theta_rad)
-        tolerance = 0.01 * np.max(anisotropia)
+        #np.savetxt("theta_deg.txt", theta_deg)
+        #tolerance = 0.01* np.max(anisotropia)
 
-        theta_deg[anisotropia < tolerance] = 0.0
+        #theta_deg[anisotropia < tolerance] = 0.0
+        #np.savetxt("theta_final.txt", theta_deg)
+        #print('tolerance',tolerance)
+        #print('anisotropia',anisotropia)
+       
         
-        
+     
+          # formato binário
         #theta_rad = 0.5 * np.arctan2(2*sigma_xy, sigma_xx - sigma_xy)
         #theta_deg = np.rad2deg(theta_rad)
         
@@ -2190,6 +2285,7 @@ class inverse_problem:
         print('pasta_teste', pasta_teste)
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
+        '''
         #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp'
         nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
@@ -2204,17 +2300,17 @@ class inverse_problem:
         lista_imgs.append(nome3)
              
 
-        nome4 = f'{pasta_teste}/{html_name}_sigma_xl_{Lambda:.6f}'          
-        self.plotMSH(sigma_x, Lambda, itr, save=True, SigmaXXXYYY='x', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
+        nome4 = f'{pasta_teste}/{html_name}_sigma_L_{Lambda:.6f}'          
+        self.plotMSH(sigma_L, Lambda, itr, save=True, SigmaXXXYYY='L', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
-        nome5 = f'{pasta_teste}/{html_name}_sigma_xt_{Lambda:.6f}'  
-        self.plotMSH(sigma_y, Lambda, itr, save=True, SigmaXXXYYY='y', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
+        nome5 = f'{pasta_teste}/{html_name}_sigma_T_{Lambda:.6f}'  
+        self.plotMSH(sigma_T, Lambda, itr, save=True, SigmaXXXYYY='T', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
         # Diferença anisotrópica
         nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
-        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='x-σy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
+        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='L-σT', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
         lista_imgs.append(nome6)
         
         # Theta amgle
@@ -2232,7 +2328,7 @@ class inverse_problem:
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
         
-        '''
+       
         # Gráfico tipo linha (o que você mandou)
         nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
@@ -2247,8 +2343,8 @@ class inverse_problem:
         nome12 = f'{pasta_teste}/{html_name}_Sorting_{Lambda:.6f}'
         self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome12)
         lista_imgs.append(nome12)
-        '''
-        # Theta amgle
+       
+        # Theta angle
 
         
         # Criar HTML
@@ -2256,9 +2352,10 @@ class inverse_problem:
         #nome_html = f'../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
         #self.salvar_html(lista_imgs, nome_html)
         self.salvar_html_todos_lambdas(pasta_teste, html_name)
-       
-        
-        self.plotElipse(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
+        '''
+        nome13 = f'{pasta_teste}/{html_name}_Batatinha_{Lambda:.6f}'
+        #def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, nome_arquivo= None):      
+        self.plotElipse(sigmaInicial, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, nome_arquivo=nome13)
         
 
         
