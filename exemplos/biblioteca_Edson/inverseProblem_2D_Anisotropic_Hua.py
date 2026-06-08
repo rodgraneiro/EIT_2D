@@ -1968,7 +1968,7 @@ class inverse_problem:
 
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
 
-        L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D, std=0.0175)
+        L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D, std=0.01)
 
         #print(f"Filtro gaussiano: std = {std_auto:.6e}")
         #print(f"Número de elementos no domínio físico = {len(idx_dom)}")
