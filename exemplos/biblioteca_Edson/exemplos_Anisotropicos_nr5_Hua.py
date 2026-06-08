@@ -25,7 +25,7 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
     
     
-    nomePhanton = 'circ16_2object_SqrCirc_Hua_v1'
+    nomePhanton = 'circ16_1object_Square_left_v1C__Elipse_ZeroDegree'
     MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
@@ -90,10 +90,13 @@ def runFWD_InverseProblemAnisotropicHua():
     print(f'V_mesured\n {V_measured_phaton}')
     print(f'meus_sigmas\n {meus_sigmas}')
 
-#############################################################################################
-#############################################################################################
-#############################################################################################
 
+
+runFWD_InverseProblemAnisotropicHua()
+#############################################################################################
+#############################################################################################
+#############################################################################################
+'''
 def runInverseProblemAnisotropicHua():
 
     #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
@@ -143,11 +146,11 @@ def runInverseProblemAnisotropicHua():
     for idx in range(MinhaMalha_base.NumberOfElements):
         if not MinhaMalha_base.Elements[idx].FlagIsElectrode:
             MinhaMalha_base.Elements[idx].CalcKgeo()
-    '''
-    for idx in range(MinhaMalha.NumberOfElements):
-        if MinhaMalha.Elements[idx].FlagIsElectrode:
-            MinhaMalha.Elements[idx].CalcKgeo()
-    '''
+
+    #for idx in range(MinhaMalha.NumberOfElements):
+    #    if MinhaMalha.Elements[idx].FlagIsElectrode:
+    #        MinhaMalha.Elements[idx].CalcKgeo()
+    
 
     start = [3.0, 0.0, 3.0]
 
@@ -168,11 +171,11 @@ def runInverseProblemAnisotropicHua():
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
     invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.01,  Lambda = 0.001, max_iter=10,Tol=1.0e-6)
     #print('Y_jacobian',invProblem.Y_jacobian)
+'''
 
 
 
 
-runFWD_InverseProblemAnisotropicHua()
 
 #runInverseProblemAnisotropicHua()
 

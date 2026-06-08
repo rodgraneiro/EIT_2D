@@ -1071,7 +1071,7 @@ class inverse_problem:
         ###############################################################################
 
     ###############################################################################   
-    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, nome_arquivo= None):
+    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, DifAniso=None, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -1140,26 +1140,40 @@ class inverse_problem:
                                         sigma_T_pts,
                                         theta_pts
                                     ])
-        
-
         fig, ax = plt.subplots(figsize=(7, 7))
-        
-        norm = colors.Normalize(vmin=0, vmax=1)
-        #sigmaL_max = np.max(sigma_L)
-        sigmaL_max = max(np.max(np.abs(sigma_L)), 1e-12)
+
+        sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
         
         escala = 0.005
+        
+        # ===== índice de anisotropia para todos os pontos =====
+        AI_all = sigma_L_pts - sigma_T_pts
+        
+        AI_min = np.min(AI_all)
+        AI_max = np.max(AI_all)
+        
+        # evita erro se todos os valores forem iguais
+        if abs(AI_max - AI_min) < 1e-12:
+            AI_min = AI_min - 1.0
+            AI_max = AI_max + 1.0
+        
+        norm = colors.Normalize(
+            vmin=AI_min,
+            vmax=AI_max
+        )
+        
+        cmap = cm.jet
         
         for linha in dados_elipses:
         
             _, x0, y0, sL, sT, theta = linha
-            
-            AI = (sL - sT)/(sL + sT)
-            
+        
+            AI = sL - sT
+        
             a = escala * abs(sL) / sigmaL_max
             b = escala * abs(sT) / sigmaL_max
-            
-            cor = cm.jet(norm(AI))
+        
+            cor = cmap(norm(AI))
         
             elipse = Ellipse(
                 xy=(x0, y0),
@@ -1167,16 +1181,27 @@ class inverse_problem:
                 height=2 * b,
                 angle=theta,
                 fill=True,
-                facecolor=cor,       
-                #edgecolor='black',
-                edgecolor=cor,
-                linewidth=0.5,
+                facecolor=cor,
+                edgecolor='black',
+                linewidth=0.3,
                 alpha=0.8
-                )
+            )
         
             ax.add_patch(elipse)
+        
+        # ===== colorbar =====
+        sm = cm.ScalarMappable(
+            cmap=cmap,
+            norm=norm
+        )
+        
+        sm.set_array([])
+        
+        cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
+        cbar.set_label(r"$AI = \sigma_L - \sigma_T$")
+        
         theta_circ = np.linspace(0, 2*np.pi, 400)
-
+        
         ax.plot(
             R_circ*np.cos(theta_circ),
             R_circ*np.sin(theta_circ),
@@ -1187,66 +1212,30 @@ class inverse_problem:
         ax.set_xlim(-R_circ - 0.02, R_circ + 0.02)
         ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
         
+        ax.set_title(
+            f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+            fontsize=11
+        )
+        
         ax.set_aspect('equal', adjustable='box')
         ax.set_xlabel('[m]')
         ax.set_ylabel('[m]')
         ax.grid(False)
         
-        plt.show()
- 
-                
-        '''
-            lim = np.max(np.abs(fc))
-            if lim == 0:
-                lim = 1e-12
-            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
-            #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
-            #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-            
-            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
-                
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')#, norm=norm )
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
-            #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
-            if SigmaXXXYYY not in ('xy', 'θ°'):
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow')#, vmin=0.0, vmax=4.0 )
-            
-            if SigmaXXXYYY != 'θ°':
-                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
-            else:
-                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Angle θ° ')
-                
-            if save == True:
-                timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
-            if save == False:
-                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+        #plt.show()
         
-        plt.tight_layout()
-        plt.ticklabel_format(style='plain')
-        if save == True:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
-            #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
-        plt.show(block=False)   # mostra sem travar
-        plt.pause(3)            # mantém aberto por 3 segundos
-        plt.close('all')        # fecha automaticamente
-        '''
+                
+        if save:
+            #plt.savefig(nome_arquivo, dpi=100)
+            #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
+            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.show() 
+            plt.close()   # importante
+        else:
+            plt.show()    
+        
+
     ###############################################################################
-
-
-
-
-
-
-
-
-
-
 
     
     ###############################################################################
@@ -1744,10 +1733,10 @@ class inverse_problem:
             elif "sigma_yy" in nome:
                 grupos[lambda_str][tipo_escala]["sigma_yy"] = nome
     
-            elif "sigma_xl" in nome:
+            elif "sigma_L" in nome:
                 grupos[lambda_str][tipo_escala]["sigma_L"] = nome
     
-            elif "sigma_xt" in nome:
+            elif "sigma_T" in nome:
                 grupos[lambda_str][tipo_escala]["sigma_T"] = nome
     
             elif "sigma_Dif" in nome:
@@ -1755,6 +1744,9 @@ class inverse_problem:
     
             elif "theta" in nome:
                 grupos[lambda_str][tipo_escala]["theta"] = nome
+                
+            elif "Elipses" in nome:
+                grupos[lambda_str][tipo_escala]["Elipses"] = nome
     
             elif "sigma_linhas" in nome:
                 grupos[lambda_str][tipo_escala]["sigma_linhas"] = nome
@@ -1769,10 +1761,11 @@ class inverse_problem:
             ("sigma_xx", "σxx"),
             ("sigma_xy", "σxy"),
             ("sigma_yy", "σyy"),
-            ("sigma_l", "σ_l"),
-            ("sigma_t", "σ_t"),
-            ("sigma_Dif", "(σ_l - σ_t)"),
+            ("sigma_L", "σ_L"),
+            ("sigma_T", "σ_T"),
+            ("sigma_Dif", "(σ_L-σ_T)"),
             ("theta", "Angle [°]"),
+            ("Elipses", "Anisotropy"),
             ("sigma_linhas", "Summary"),
             ("iterations", "Optimization"),
         ]
@@ -2285,7 +2278,7 @@ class inverse_problem:
         print('pasta_teste', pasta_teste)
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
-        '''
+        
         #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp'
         nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
@@ -2320,7 +2313,7 @@ class inverse_problem:
         
         # Gráfico tipo linha (o que você mandou)
         nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}'
-        self.plot_sigma(sigmaInicial, salvar=True, nome_arquivo=nome8)
+        self.plot_sigma(sigmaInicial,  ref_sL = 3.0, ref_sT = 1.0, salvar=True, nome_arquivo=nome8)
         lista_imgs.append(nome8)
         #print('plot_sigma_banana_solver', theta_deg)
         
@@ -2328,7 +2321,7 @@ class inverse_problem:
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
         
-       
+        '''
         # Gráfico tipo linha (o que você mandou)
         nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
@@ -2343,7 +2336,10 @@ class inverse_problem:
         nome12 = f'{pasta_teste}/{html_name}_Sorting_{Lambda:.6f}'
         self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome12)
         lista_imgs.append(nome12)
-       
+        '''
+        nome13 = f'{pasta_teste}/{html_name}_Elipses_{Lambda:.6f}'     
+        self.plotElipse(sigmaInicial, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, DifAniso = DifAnisotropia_Med, nome_arquivo=nome13)
+        lista_imgs.append(nome13)
         # Theta angle
 
         
@@ -2352,11 +2348,8 @@ class inverse_problem:
         #nome_html = f'../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
         #self.salvar_html(lista_imgs, nome_html)
         self.salvar_html_todos_lambdas(pasta_teste, html_name)
-        '''
-        nome13 = f'{pasta_teste}/{html_name}_Batatinha_{Lambda:.6f}'
-        #def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, nome_arquivo= None):      
-        self.plotElipse(sigmaInicial, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, nome_arquivo=nome13)
         
+    
 
         
         #self.plot_espectro(sigmaInicial)
