@@ -1702,6 +1702,7 @@ class inverse_problem:
         print("HTML salvo em:", html_path)
     
     '''
+    '''
     def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
     
 
@@ -1939,6 +1940,253 @@ class inverse_problem:
     </td>
     """)
     
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    # linha separadora entre lambdas
+                        # separador entre lambdas
+            f.write(f"""
+            <tr>
+                <td colspan="{len(colunas)}"
+                    style="padding-top:10px; padding-bottom:10px;">
+                    <hr style="border:1px solid white;">
+                </td>
+            </tr>
+            """)
+            f.write("""
+    </table>
+    </body>
+    </html>
+    """)
+    '''
+    def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
+    
+        print('pasta_salvar_html_todos_lambdas', pasta)
+    
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
+    
+        grupos = defaultdict(lambda: {
+            "AutoScale": {},
+            "SameScale": {}
+        })
+    
+        for arq in arquivos:
+    
+            nome = os.path.basename(arq)
+            partes = nome.replace(".webp", "").split("_")
+    
+            if partes[-1] in ("AutoScale", "SameScale"):
+                tipo_escala = partes[-1]
+                lambda_str = partes[-2]
+            else:
+                tipo_escala = "AutoScale"
+                lambda_str = partes[-1]
+    
+            if "sigma_xx" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_xx"] = nome
+            elif "sigma_xy" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_xy"] = nome
+            elif "sigma_yy" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_yy"] = nome
+            elif "sigma_L" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_L"] = nome
+            elif "sigma_T" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_T"] = nome
+            elif "sigma_Dif" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
+            elif "theta" in nome:
+                grupos[lambda_str][tipo_escala]["theta"] = nome
+            elif "Elipses" in nome:
+                grupos[lambda_str][tipo_escala]["Elipses"] = nome
+            elif "sigma_linhas" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_linhas"] = nome
+            elif "iterations" in nome:
+                grupos[lambda_str][tipo_escala]["iterations"] = nome
+            elif "plot_theta_deg" in nome:
+                grupos[lambda_str][tipo_escala]["Sorting"] = nome
+    
+        colunas = [
+            ("sigma_xx", "σxx"),
+            ("sigma_xy", "σxy"),
+            ("sigma_yy", "σyy"),
+            ("sigma_L", "σ_L"),
+            ("sigma_T", "σ_T"),
+            ("sigma_Dif", "(σ_L-σ_T)"),
+            ("theta", "Angle [°]"),
+            ("Elipses", "Anisotropy"),
+            ("sigma_linhas", "Summary"),
+            ("iterations", "Optimization"),
+        ]
+    
+        html_path = os.path.join(pasta, f"{html_name}.html")
+    
+        with open(html_path, "w", encoding="utf-8") as f:
+    
+            f.write("""
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    
+    <style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+    .info {
+        color: lime;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+    
+    th {
+        font-size: 24px;
+        padding: 10px;
+        color: white;
+    }
+    
+    td {
+        padding: 2px;
+        margin: 0px;
+        text-align: center;
+        vertical-align: top;
+    }
+    
+    img {
+        width: 200px;
+        height: auto;
+        background-color: white;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .titulo {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    
+    .escala {
+        color: cyan;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .lambda_bloco {
+        color: orange;
+        font-size: 22px;
+        font-weight: bold;
+        padding-top: 18px;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+    
+    .separador_lambda td {
+        border-top: 3px solid white;
+        height: 18px;
+        padding: 0px;
+    }
+    </style>
+    </head>
+    
+    <body>
+    """)
+    
+            f.write("""
+    <p class="info">
+    Results obtained for a maximum of 25 iterations.
+    &nbsp;&nbsp;&nbsp;
+    First row: AutoScale.
+    &nbsp;&nbsp;&nbsp;
+    Second row: SameScale.
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
+    </p>
+    <hr>
+    """)
+    
+            f.write("<table>\n")
+    
+            f.write("<tr>\n")
+            for _, titulo in colunas:
+                f.write(f"<th>{titulo}</th>\n")
+            f.write("</tr>\n")
+    
+            lambdas_ordenados = sorted(grupos.keys(), key=lambda x: float(x))
+    
+            for lambda_str in lambdas_ordenados:
+    
+                # separador ANTES de cada lambda
+                f.write(f"""
+    <tr class="separador_lambda">
+        <td colspan="{len(colunas)}"></td>
+    </tr>
+    """)
+    
+                f.write(f"""
+    <tr>
+        <td colspan="{len(colunas)}" class="lambda_bloco">
+            λ = {lambda_str}
+        </td>
+    </tr>
+    """)
+    
+                # AutoScale
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+    
+                    img = grupos[lambda_str]["AutoScale"].get(chave)
+    
+                    if img is not None:
+                        titulo = dict(colunas)[chave]
+    
+                        f.write(f"""
+    <td>
+        <div class="titulo">{titulo}</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    
+                # SameScale
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+    
+                    img = grupos[lambda_str]["SameScale"].get(chave)
+    
+                    if img is not None:
+                        titulo = dict(colunas)[chave]
+    
+                        f.write(f"""
+    <td>
+        <div class="titulo">{titulo}</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
                     else:
                         f.write("<td></td>\n")
     
