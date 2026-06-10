@@ -1143,6 +1143,7 @@ class inverse_problem:
         fig, ax = plt.subplots(figsize=(7, 7))
 
         sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
+        #sigmaT_max = max(np.max(np.abs(sigma_T_pts)), 1e-12)
         
         escala = 0.005
         
