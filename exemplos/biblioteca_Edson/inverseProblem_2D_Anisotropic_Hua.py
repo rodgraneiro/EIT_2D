@@ -1142,8 +1142,9 @@ class inverse_problem:
                                     ])
         fig, ax = plt.subplots(figsize=(7, 7))
 
-        sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
+        #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
         #sigmaT_max = max(np.max(np.abs(sigma_T_pts)), 1e-12)
+        sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
         
         escala = 0.005
         
@@ -1171,8 +1172,8 @@ class inverse_problem:
         
             AI = sL - sT
         
-            a = escala * abs(sL) / sigmaL_max
-            b = escala * abs(sT) / sigmaL_max
+            a = escala * abs(sL) / sigma_max
+            b = escala * abs(sT) / sigma_max
         
             cor = cmap(norm(AI))
         
