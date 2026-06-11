@@ -1,0 +1,2797 @@
+
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+    body {background-color: black; color: white; font-family: Arial, sans-serif;}
+    
+    h1 {color: white;}
+    
+    .info {color: lime;font-weight: bold; margin-bottom: 6px;}
+    
+    table {border-collapse: collapse;width: 100%;}
+    
+    th {font-size: 24px; padding: 10px; color: white;}
+    
+    
+    td {padding: 0px; margin: 0px; text-align: center; vertical-align: top; }
+    
+    img {width: 200px;height: auto; background-color: white;}
+    
+    .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
+    .titulo {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+            .equation{
+            font-size: 24px;
+            color: #88ccff;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .equation-left {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 24px;
+        }  
+        </style>
+        </head>
+    
+    <body>
+       <h1>Results of the Anisotropic Inverse Problem EIT with Hua virtual electrode</h1>
+    <h1>Anisotropic domain with an Square object phantom -  Angle 0°</h1>
+    <p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the anisotropic inverse problem 
+    using the Hua virtual electrode model in Electrical Impedance Tomography (EIT).
+
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The anisotropy;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σxx = 3 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
+    Object 1 conductivity: σxx = 3 , σxy = 0, σyy = 1 S/m and angle 0°.<br>
+    Object 2 conductivity: σxx = 1 , σxy = 0, σyy = 3 S/m and angle 0°.<br>
+    Number of phantom elements mesh: 2590<br>
+    Number of elements in the base mesh: 1164<br>
+    Maximum iterations: 5<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-6, -2, 20)<br>
+
+    [1.00000000e-06 1.62377674e-06 2.63665090e-06 4.28133240e-06<br>
+    6.95192796e-06 1.12883789e-05 1.83298071e-05 2.97635144e-05<br>
+    4.83293024e-05 7.84759970e-05 1.27427499e-04 2.06913808e-04<br>
+    3.35981829e-04 5.45559478e-04 8.85866790e-04 1.43844989e-03<br>
+    2.33572147e-03 3.79269019e-03 6.15848211e-03 1.00000000e-02]
+    </div>
+    <p>
+    The anisotropic conductivity tensor is represented by:
+    </p>
+
+    <!-- <p style="font-size:24px;">
+    σ = [ σxx  σxy ; σxy  σyy ]
+    </p> 
+    <div class="equation">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div> -->
+    <div class="equation-left">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div>
+    
+    <p class="info">
+    Results obtained for a maximum of 50 iterations.
+    &nbsp;&nbsp;&nbsp;
+    
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, -2, 20).
+    </p>
+    <hr>
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma; [3-0-3] [S/m]. Object &sigma; [3-0-1]  [S/m] and angle 0° for all. </h4>
+    <div style="display:flex; gap:20px;">
+    <img src="circ2Objects_Sxx.webp" width="300">
+    <img src="circ2Objects_Sxy.webp" width="300">
+    <img src="circ2Objects_Syy.webp" width="300">
+    <img src="circ16_2object_SqrCirc_Hua__Elipse_ZeroDegree_Elipse.webp" width="300">
+    </div>
+    <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution for σxx. Object with the same conductivity as the domain on the X-axis
+    <br>
+    Figure 2 — Phantom conductivity distribution for σxy.
+    <br>
+    Figure 3 — Phantom conductivity distribution for σyy. Object with conductivity different from the domain on the Y-axis
+    <br>
+    Figure 4 — Phantom Anisotopy
+    </p>
+    <hr>
+    <table>
+<tr>
+<th>σxx</th>
+<th>σxy</th>
+<th>σyy</th>
+<th>σ_L</th>
+<th>σ_T</th>
+<th>(σ_L-σ_T)</th>
+<th>Angle [°]</th>
+<th>Anisotropy</th>
+<th>Summary</th>
+<th>Optimization</th>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000001
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000001.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000001.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000001.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000001_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000002
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000002.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000002.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000002.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000002_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000003
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000003.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000003.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000003.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000003_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000004
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000004.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000004.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000004.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000004_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000007
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000007.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000007.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000007.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000007_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000011
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000011.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000011.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000011.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000011_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000018
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000018_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000018.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000018.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000018.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000018_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000018_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000018_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000018_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000018_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000018_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000018</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000018_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000030
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000030_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000030.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000030.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000030.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000030_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000030_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000030_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000030_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000030_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000030_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000030</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000030_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000048
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000048_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000048.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000048.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000048.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000048_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000048_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000048_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000048_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000048_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000048_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000048</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000048_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000078
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000078_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000078.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000078.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000078.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000078_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000078_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000078_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000078_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000078_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000078_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000078</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000078_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000127
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000127_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000127.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000127.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000127.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000127_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000127_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000127_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000127_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000127_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000127_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000127</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000127_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000207
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000207_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000207.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000207.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000207.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000207_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000207_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000207_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000207_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000207_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000207_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000207</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000207_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000336
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000336.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000336.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000336.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000336_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000546
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000546_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000546.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000546.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000546.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000546_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000546_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000546_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000546_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000546_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000546_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000546</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000546_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000886
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000886_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.000886.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.000886.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.000886.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.000886_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.000886_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.000886_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.000886_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.000886_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.000886_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000886</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.000886_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.001438
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.001438_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.001438.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.001438.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.001438.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.001438_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.001438_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.001438_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.001438_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.001438_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.001438_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001438</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.001438_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.002336
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.002336_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.002336.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.002336.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.002336.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.002336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.002336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.002336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.002336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.002336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.002336_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.002336</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.002336_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.003793
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.003793_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.003793.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.003793.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.003793.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.003793_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.003793_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.003793_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.003793_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.003793_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.003793_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.003793</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.003793_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.006158
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.006158_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.006158.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.006158.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.006158.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.006158_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.006158_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.006158_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.006158_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.006158_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.006158_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.006158</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.006158_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.010000
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.010000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_Elipses_0.010000.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_linhas_0.010000.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_iterations_0.010000.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xx_0.010000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_xy_0.010000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_yy_0.010000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_L_0.010000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_T_0.010000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_sigma_Dif_0.010000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.010000</div>
+        <img src="circ16_2object_SqrCirc_Hua_v1_Elipse_50itr_ZeroDegree_B_theta_deg_0.010000_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    </table>
+    </body>
+    </html>
+    
