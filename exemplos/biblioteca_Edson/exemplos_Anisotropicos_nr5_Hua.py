@@ -25,7 +25,7 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
     
     
-    nomePhanton = 'circ16_1object_Square_left_v1C__Elipse_ZeroDegree'
+    nomePhanton = 'circ16_1object_Square_left__Elipse_ZeroDegree'
     MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
@@ -39,7 +39,7 @@ def runFWD_InverseProblemAnisotropicHua():
     meus_sigmas = {
         1000: [3.0, 0.0, 3.0],
         1001: [3.0, 0.0, 1.0],
-        1002: [3.0, 0.0, 1.0],
+        1002: [1.0, 0.0, 3.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
         5002: [1.0, 0.0, 1.0],

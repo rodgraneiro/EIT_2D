@@ -18,6 +18,26 @@ from matplotlib.colors import TwoSlopeNorm
 #import os
 
 
+import plotly.graph_objects as go
+import os
+import glob
+from collections import defaultdict
+#import matplotlib.cm as cm
+import matplotlib.colors as colors
+
+
+from datetime import datetime
+from matplotlib import cm
+from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.patches import Ellipse
+
+
+
+
+
+
+
+
 class forward_problem: 
     def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3, name = None,  imageSave = False):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
@@ -149,6 +169,173 @@ class forward_problem:
 
         plt.pause(0.1)  
 
+
+    ###############################################################################   
+    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, save = False,  nome_arquivo= None):
+
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+        ajuste  = self.mymesh.NumberOfElectrodes*4 +1
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+
+        # parâmetros
+        R_circ = 0.15
+        R_temp = 0.145      # raio do círculo
+        dx = 0.01    # espaçamento
+        
+        x_pts = []
+        y_pts = []
+        
+        # número de passos
+        N = int(np.floor(R_temp/dx))
+        
+        # gera pontos internos
+        for i in range(-N, N+1):
+            for j in range(-N, N+1):
+        
+                x_temp = i * dx
+                y_temp = j * dx
+        
+                # mantém apenas pontos internos
+                if x_temp**2 +  y_temp**2 <= R_temp**2:
+                    x_pts.append(x_temp)
+                    y_pts.append(y_temp)
+        #if len(elems_2D) > 0:
+        triang = tri.Triangulation(x, y, elems_2D)
+        #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+        ntri = triang.triangles.shape[0]
+        fc = sigma.ravel()[:ntri]
+        
+        finder = triang.get_trifinder()
+        pontos = np.column_stack((x_pts, y_pts))
+        print("pontos:", pontos.shape)
+
+        ex = pontos[:,0]
+        ey = pontos[:,1]
+        #ex, ey = 0.02, 0.07
+    
+        idx_elem = finder(ex, ey) 
+        idx_elem_global = finder(ex, ey) + ajuste
+        print("Elemento:", idx_elem)
+        
+        mask = idx_elem  >= 0
+
+        pontos_validos = pontos[mask]
+        idx_validos = idx_elem[mask]
+        
+        
+        # pega os valores correspondentes aos elementos onde caíram os pontos
+        sigma_L_pts = sigma_L[idx_validos]
+        sigma_T_pts = sigma_T[idx_validos]
+        theta_pts   = theta_deg[idx_validos]
+        
+        dados_elipses = np.column_stack([
+                                        idx_validos,
+                                        pontos_validos[:, 0],
+                                        pontos_validos[:, 1],
+                                        sigma_L_pts,
+                                        sigma_T_pts,
+                                        theta_pts
+                                    ])
+        fig, ax = plt.subplots(figsize=(7, 7))
+
+        #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
+        #sigmaT_max = max(np.max(np.abs(sigma_T_pts)), 1e-12)
+        sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
+        
+        escala = 0.005
+        
+        # ===== índice de anisotropia para todos os pontos =====
+        AI_all = sigma_L_pts - sigma_T_pts
+        
+        AI_min = np.min(AI_all)
+        AI_max = np.max(AI_all)
+        
+        # evita erro se todos os valores forem iguais
+        if abs(AI_max - AI_min) < 1e-12:
+            AI_min = AI_min - 1.0
+            AI_max = AI_max + 1.0
+        
+        norm = colors.Normalize(
+            vmin=AI_min,
+            vmax=AI_max
+        )
+        
+        cmap = cm.jet
+        
+        for linha in dados_elipses:
+        
+            _, x0, y0, sL, sT, theta = linha
+        
+            AI = sL - sT
+        
+            a = escala * abs(sL) / sigma_max
+            b = escala * abs(sT) / sigma_max
+        
+            cor = cmap(norm(AI))
+        
+            elipse = Ellipse(
+                xy=(x0, y0),
+                width=2 * a,
+                height=2 * b,
+                angle=theta,
+                fill=True,
+                facecolor=cor,
+                edgecolor='black',
+                linewidth=0.3,
+                alpha=0.8
+            )
+        
+            ax.add_patch(elipse)
+        
+        # ===== colorbar =====
+        sm = cm.ScalarMappable(
+            cmap=cmap,
+            norm=norm
+        )
+        
+        sm.set_array([])
+        
+        cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
+        cbar.set_label(r"$AI = \sigma_L - \sigma_T$")
+        
+        theta_circ = np.linspace(0, 2*np.pi, 400)
+        
+        ax.plot(
+            R_circ*np.cos(theta_circ),
+            R_circ*np.sin(theta_circ),
+            'k-',
+            linewidth=1.0
+        )
+        
+        ax.set_xlim(-R_circ - 0.02, R_circ + 0.02)
+        ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
+        
+        ax.set_title(
+            f"Phantom  Anisotropy ",
+            fontsize=11
+        )
+        
+        ax.set_aspect('equal', adjustable='box')
+        ax.set_xlabel('[m]')
+        ax.set_ylabel('[m]')
+        ax.grid(False)
+        
+        #plt.show()
+        
+                
+        if save:
+            #plt.savefig(nome_arquivo, dpi=100)
+            #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
+            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.show() 
+            plt.close()   # importante
+        else:
+            plt.show()    
+
     def Solve(self, forceKGolbalCalc=False):
         if self.imageSave == True:
             #self.plotMSH(self.mymesh.sigma_vec)
@@ -156,6 +343,33 @@ class forward_problem:
             #self.plotMSH(self.mymesh.sigma_vec[:, 1],  save = True, SigmaXXXYYY='xy')
             #self.plotMSH(self.mymesh.sigma_vec[:, 2],  save = True, SigmaXXXYYY='yy')
             #### plotMSH(self, sigma, iteration = None, save = False, SigmaXXXYYY = None):
+                
+        
+            Smed = 0.5 * (self.mymesh.sigma_vec[:, 0] + self.mymesh.sigma_vec[:, 2])
+            D = np.sqrt(((self.mymesh.sigma_vec[:, 0] - self.mymesh.sigma_vec[:, 2])/2)**2 + self.mymesh.sigma_vec[:, 1]**2)
+    
+            sigma_L = Smed + D
+            sigma_T = Smed - D
+            
+            
+            DifAnisotropia = sigma_L - sigma_T
+            DifAnisotropia_Med =  np.abs(np.mean(DifAnisotropia))
+            
+            # para evitar saturação para  +/- 90 devido a arctan
+    
+            #anisotropia = np.abs(sigma_L - sigma_T)       # verifica se a diferença Sxx - Syy é muito pequena
+            #np.savetxt("sigmaInicialTheta.txt", sigmaInicial)
+            
+            #anisotropia = np.abs(sigmaInicial[:, 0] - sigmaInicial[:, 2])       # verifica se a diferença Sxx - Syy é muito pequena
+            #np.savetxt("anisotropia.txt", anisotropia)  # formato binário
+            
+            sigma_theta = self.mymesh.sigma_vec[:, 0] - self.mymesh.sigma_vec[:, 2]
+            #np.savetxt("sigma_theta.txt", sigma_theta)
+            theta_rad = 0.5 * np.arctan2(2.0 * self.mymesh.sigma_vec[:, 1], sigma_theta)
+            #np.savetxt("theta_rad.txt", theta_rad)
+            theta_deg = np.rad2deg(theta_rad)                
+                
+            
             #nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}.webp'
             nome1 = f"../../docs/{self.name}_sigma_xx.webp" 
             self.plotMSH(self.mymesh.sigma_vec[:, 0],  save = True, SigmaXXXYYY='xx', nome_arquivo=nome1)
@@ -167,10 +381,15 @@ class forward_problem:
             #lista_imgs.append(nome2)
             
             #nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}.webp'
-            nome3 =f"../../docs/{self.name}_sigma_yy.webp"
+            nome3 = f"../../docs/{self.name}_sigma_yy.webp"
             self.plotMSH(self.mymesh.sigma_vec[:, 2],  save = True, SigmaXXXYYY='yy', nome_arquivo=nome3)
             #lista_imgs.append(nome3)
-            
+
+
+            nome4 =  f"../../docs/{self.name}_Elipse.webp"     
+            #self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
+            self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg,  save=True, nome_arquivo=nome4)
+            #lista_imgs.append(nome13)            
             
         #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)
         if (self.mymesh.KGlobal is None) or (forceKGolbalCalc):
