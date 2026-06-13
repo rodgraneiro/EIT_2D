@@ -104,13 +104,13 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
     #nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
     #nome = '../../malhasMSH/test_Olavo_60graus.msh'
-    nome = '../../malhasMSH/Hua_domain16e_base_v2D.msh'
-    
+    #nome = '../../malhasMSH/Hua_domain16e_base_v2D.msh'
+    nome = '../../malhasMSH/Domain32_Hua_Base.msh'
 
     
 
 
-    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(32, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha_base.ReadMesh() 
@@ -118,6 +118,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     print('MinhaMalha.Elements[2]',MinhaMalha_base.Elements[2])
     print(f"Centroid: {MinhaMalha_base.Elements[2].Centroid}")
     #print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
+
 
     meus_sigmas = {
         1000: [1.0, 0.0, 1.0],
@@ -139,7 +140,25 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
         5013: [1.0, 0.0, 1.0],
         5014: [1.0, 0.0, 1.0],
         5015: [1.0, 0.0, 1.0],
-        5016: [1.0, 0.0, 1.0]
+        5016: [1.0, 0.0, 1.0],
+        5017: [1.0, 0.0, 1.0],
+        5018: [1.0, 0.0, 1.0],
+        5019: [1.0, 0.0, 1.0],
+        5020: [1.0, 0.0, 1.0],
+        5021: [1.0, 0.0, 1.0],
+        5022: [1.0, 0.0, 1.0],
+        5023: [1.0, 0.0, 1.0],
+        5024: [1.0, 0.0, 1.0],
+        5025: [1.0, 0.0, 1.0],
+        5026: [1.0, 0.0, 1.0],
+        5027: [1.0, 0.0, 1.0],
+        5028: [1.0, 0.0, 1.0],
+        5029: [1.0, 0.0, 1.0],
+        5030: [1.0, 0.0, 1.0],
+        5031: [1.0, 0.0, 1.0],
+        5032: [1.0, 0.0, 1.0]        
+        
+        
     }
 
     MinhaMalha_base.SetSigmaAnisotropicElementsHua(meus_sigmas)
@@ -157,7 +176,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=7, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     #print(f'Vmedido \n {fwd.Vmedido[:10]}')
@@ -232,8 +251,8 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.00000000e-06]#, 4.32876128e-06, 1.87381742e-05]# 8.11130831e-05]
 # 3.51119173e-04 1.51991108e-03 6.57933225e-03 2.84803587e-02
 # 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
-#lambdas= [3.51119173e-04]
-lambdas= [6.57933225e-03, 1.424e-02,  2.84803587e-02]#, 5.696e-02]
+lambdas= [1.87381742e-05]
+#lambdas= [6.57933225e-03, 1.424e-02,  2.84803587e-02]#, 5.696e-02]
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
@@ -241,7 +260,7 @@ lambdas= [6.57933225e-03, 1.424e-02,  2.84803587e-02]#, 5.696e-02]
 
 resultados = {}
 
-nome_html="circ16_1object_Square_left_v1C__Elipse_ZeroDegreeLIXO"
+nome_html="Domain32_2Obj_SqrtCirc_Hua_Elipse_ZeroDegreeLIXOoooo"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

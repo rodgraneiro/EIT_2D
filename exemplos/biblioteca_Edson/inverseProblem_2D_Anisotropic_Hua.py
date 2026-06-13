@@ -2406,8 +2406,8 @@ class inverse_problem:
             ########### sigmaInicial[:,1] = 0 # zerar σxy  # tentar usa sigma XY
 
             # Impõe condutividade mínima
-            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, 5.0)  # σxx           
-            sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, 5.0)  # σyy
+            sigmaInicial[:, 0] = np.clip(sigmaInicial[:, 0], 0.1, 6.0)  # σxx           
+            sigmaInicial[:, 2] = np.clip(sigmaInicial[:, 2], 0.1, 6.0)  # σyy
 
             alphaFator = 0.5
             limite = alphaFator * np.sqrt(sigmaInicial[:, 0] * sigmaInicial[:, 2])        

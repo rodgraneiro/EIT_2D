@@ -21,12 +21,17 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
     #nome = '../../malhasMSH/test_Olavo_Hua.msh'
     #nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
-    nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
+    #nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
     #nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
+    #nome = '../../malhasMSH/Domain32_sqtr_left.msh'
+    nome = '../../malhasMSH/Domain32_2Obj_SqrtCirc_Hua.msh'
     
     
-    nomePhanton = 'circ16_1object_Square_left__Elipse_ZeroDegree'
-    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    
+    
+    
+    nomePhanton = 'Domain32_2Obj_SqrtCirc_Hua_Elipse_ZeroDegree'
+    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(32, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha.ReadMesh() 
@@ -56,7 +61,25 @@ def runFWD_InverseProblemAnisotropicHua():
         5013: [1.0, 0.0, 1.0],
         5014: [1.0, 0.0, 1.0],
         5015: [1.0, 0.0, 1.0],
-        5016: [1.0, 0.0, 1.0]
+        5016: [1.0, 0.0, 1.0],
+        5017: [1.0, 0.0, 1.0],
+        5018: [1.0, 0.0, 1.0],
+        5019: [1.0, 0.0, 1.0],
+        5020: [1.0, 0.0, 1.0],
+        5021: [1.0, 0.0, 1.0],
+        5022: [1.0, 0.0, 1.0],
+        5023: [1.0, 0.0, 1.0],
+        5024: [1.0, 0.0, 1.0],
+        5025: [1.0, 0.0, 1.0],
+        5026: [1.0, 0.0, 1.0],
+        5027: [1.0, 0.0, 1.0],
+        5028: [1.0, 0.0, 1.0],
+        5029: [1.0, 0.0, 1.0],
+        5030: [1.0, 0.0, 1.0],
+        5031: [1.0, 0.0, 1.0],
+        5032: [1.0, 0.0, 1.0]        
+        
+        
     }
 
     MinhaMalha.SetSigmaAnisotropicElementsHua(meus_sigmas)
@@ -76,7 +99,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
     MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3, name = nomePhanton, imageSave = True)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=7, VirtualNode = True, I =1.0e-3, name = nomePhanton, imageSave = True)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     print(f'Vmedido \n {fwd.Vmedido[:10]}')
