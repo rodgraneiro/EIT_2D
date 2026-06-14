@@ -21,17 +21,17 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
     #nome = '../../malhasMSH/test_Olavo_Hua.msh'
     #nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
-    #nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
+    nome = '../../malhasMSH/circ16_1object_Square_left_v1C.msh'
     #nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
     #nome = '../../malhasMSH/Domain32_sqtr_left.msh'
-    nome = '../../malhasMSH/Domain32_2Obj_SqrtCirc_Hua.msh'
+    #nome = '../../malhasMSH/Domain32_2Obj_SqrtCirc_Hua.msh'
     
     
     
     
     
-    nomePhanton = 'Domain32_2Obj_SqrtCirc_Hua_Elipse_ZeroDegree'
-    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(32, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    nomePhanton = 'circ16_sqtr_left_Elipse_pos30Degree'
+    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha.ReadMesh() 
@@ -43,8 +43,8 @@ def runFWD_InverseProblemAnisotropicHua():
 
     meus_sigmas = {
         1000: [3.0, 0.0, 3.0],
-        1001: [3.0, 0.0, 1.0],
-        1002: [1.0, 0.0, 3.0],
+        1001: [3.0, 1.732051, 1.0], # 0.866025 1.732051
+        1002: [1.0, 0.0, 1.0],
         1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
         5002: [1.0, 0.0, 1.0],
@@ -99,7 +99,7 @@ def runFWD_InverseProblemAnisotropicHua():
 
     MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=7, VirtualNode = True, I =1.0e-3, name = nomePhanton, imageSave = True)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3, name = nomePhanton, imageSave = True)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     print(f'Vmedido \n {fwd.Vmedido[:10]}')

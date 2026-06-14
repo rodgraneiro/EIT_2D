@@ -17,7 +17,7 @@ import inverseProblem_2D_Anisotropic_Hua
 import matplotlib.pyplot as plt
 import os
 
-
+'''
 def runFWD_InverseProblemAnisotropicHua():
 
     #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
@@ -87,7 +87,7 @@ def runFWD_InverseProblemAnisotropicHua():
     np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
     print(f'V_mesured\n {V_measured_phaton}')
     print(f'meus_sigmas\n {meus_sigmas}')
-
+'''
 #############################################################################################
 #############################################################################################
 #############################################################################################
@@ -104,13 +104,13 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #nome = '../../malhasMSH/test_Olavo_baseZeroGrau.msh'
     #nome = '../../malhasMSH/test_Olavo_30grausNeg.msh'
     #nome = '../../malhasMSH/test_Olavo_60graus.msh'
-    #nome = '../../malhasMSH/Hua_domain16e_base_v2D.msh'
-    nome = '../../malhasMSH/Domain32_Hua_Base.msh'
+    nome = '../../malhasMSH/Hua_domain16e_base_v2D.msh'
+    #nome = '../../malhasMSH/Domain32_Hua_Base.msh'
 
     
 
 
-    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(32, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha_base.ReadMesh() 
@@ -176,7 +176,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
 
-    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=7, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
+    fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
 
     mtz_Vmedido = fwd.Solve()
     #print(f'Vmedido \n {fwd.Vmedido[:10]}')
@@ -190,7 +190,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter= 1,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter= 10,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -251,16 +251,17 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.00000000e-06]#, 4.32876128e-06, 1.87381742e-05]# 8.11130831e-05]
 # 3.51119173e-04 1.51991108e-03 6.57933225e-03 2.84803587e-02
 # 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
-lambdas= [1.87381742e-05]
+#lambdas= [1.87381742e-05]
 #lambdas= [6.57933225e-03, 1.424e-02,  2.84803587e-02]#, 5.696e-02]
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
 #lambdas = np.logspace(-6, 1, 12)
 
+lambdas =[2.06913808e-04]
 resultados = {}
 
-nome_html="Domain32_2Obj_SqrtCirc_Hua_Elipse_ZeroDegreeLIXOoooo"
+nome_html="circ16_sqtr_left_Elipse_pos30Degree"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

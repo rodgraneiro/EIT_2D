@@ -1151,6 +1151,8 @@ class inverse_problem:
         # ===== índice de anisotropia para todos os pontos =====
         AI_all = sigma_L_pts - sigma_T_pts
         
+        #sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
+        
         AI_min = np.min(AI_all)
         AI_max = np.max(AI_all)
         
