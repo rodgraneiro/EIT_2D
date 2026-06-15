@@ -17,77 +17,6 @@ import inverseProblem_2D_Anisotropic_Hua
 import matplotlib.pyplot as plt
 import os
 
-'''
-def runFWD_InverseProblemAnisotropicHua():
-
-    #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
-    #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
-
-
-    #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
-    #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
-    nome = '../../malhasMSH/test_Olavo_Hua.msh'
-    #nome = '../../malhasMSH/circ16_anom1_Square_Hua_a_esquerda_denso.msh'
-    
-
-    MinhaMalha = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
-    #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
-
-    MinhaMalha.ReadMesh() 
-
-    print('MinhaMalha.Elements[2]',MinhaMalha.Elements[2])
-    print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
-    #print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
-
-
-    meus_sigmas = {
-        1000: [3.0, 0.0, 1.0],
-        1001: [3.0, 0.0, 1.0],
-        1002: [1.0, 0.0, 1.0],
-        1003: [1.0, 0.0, 1.0],
-        5001: [1.0, 0.0, 1.0],
-        5002: [1.0, 0.0, 1.0],
-        5003: [1.0, 0.0, 1.0],
-        5004: [1.0, 0.0, 1.0],
-        5005: [1.0, 0.0, 1.0],
-        5006: [1.0, 0.0, 1.0],
-        5007: [1.0, 0.0, 1.0],
-        5008: [1.0, 0.0, 1.0],
-        5009: [1.0, 0.0, 1.0],
-        5010: [1.0, 0.0, 1.0],
-        5011: [1.0, 0.0, 1.0],
-        5012: [1.0, 0.0, 1.0],
-        5013: [1.0, 0.0, 1.0],
-        5014: [1.0, 0.0, 1.0],
-        5015: [1.0, 0.0, 1.0],
-        5016: [1.0, 0.0, 1.0]
-    }
-
-    MinhaMalha.SetSigmaAnisotropicElementsHua(meus_sigmas)
-
-
-    
-    for idx in range(MinhaMalha.NumberOfElements):
-        if not MinhaMalha.Elements[idx].FlagIsElectrode:
-            MinhaMalha.Elements[idx].CalcKgeo()
-
-
-    MinhaMalha.CalcKGlobal() # calculando KGlobal usando Sigmas
-
-    fwd = forwardProblem.forward_problem(MinhaMalha, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3, name = None, imageSave = True)   # __init__ roda aqui
-
-    mtz_Vmedido = fwd.Solve()
-    print(f'Vmedido \n {fwd.Vmedido[:10]}')
-
-    nome_arquivo = 'ParaVernoGmshPto'
-    fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
-    fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
-
-    V_measured_phaton = fwd.Vmedido_eletrodos
-    np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
-    print(f'V_mesured\n {V_measured_phaton}')
-    print(f'meus_sigmas\n {meus_sigmas}')
-'''
 #############################################################################################
 #############################################################################################
 #############################################################################################
@@ -190,7 +119,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.05,  Lambda = lambda_val, max_iter= 25,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter= 1,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -256,12 +185,12 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
-lambdas = np.logspace(-5, -3, 20)
+#lambdas = np.logspace(-5, -3, 20)
 
-#lambdas =[2.06913808e-04]
+lambdas =[1.00000000e-06]
 resultados = {}
 
-nome_html="circ16_sqtr_left_Elipse_neg30Degree"
+nome_html="circ16_sqtr_left_Elipse_neg30DegreeLIXOOOOOOOO"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
