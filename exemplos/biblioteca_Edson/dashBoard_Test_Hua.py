@@ -40,7 +40,7 @@ def safe_int(s, default=0):
 class ConfigDashboard(tk.Tk):
 
     
-    def _row_tensor(self, parent, r, titulo, sxx, sxy, syy, theta):
+    def _row_tensor(self, parent, r, titulo, sxx, syy, theta):
         ttk.Label(parent, text=titulo).grid(
             row=r, column=0, sticky="w", pady=3
         )
@@ -50,7 +50,6 @@ class ConfigDashboard(tk.Tk):
     
         campos = [
             ("σxx", sxx),
-            ("σxy", sxy),
             ("σyy", syy),
             ("θ°", theta),
         ]
@@ -78,32 +77,32 @@ class ConfigDashboard(tk.Tk):
         # =========================================================
         # Variáveis - Forward problem / Mesh
         # =========================================================
-        self.nome_arquivo = tk.StringVar(value="test_Hua_01")
+        self.nome_arquivo = tk.StringVar(value="test_Banana_Hua_01")
         #self.raio = tk.StringVar(value="0.15")
-        self.phaton_msh = tk.StringVar(value="../../malhasMSH/circ16_1object_Square_left_v1C.msh")
+        self.phaton_msh = tk.StringVar(value="../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh")
         self.n_eletrodos = tk.IntVar(value=16)
         self.SkipPattern = tk.IntVar(value=3)
         #self.lc1 = tk.StringVar(value="2e-2")
         #self.lenth_e = tk.StringVar(value="0.02")
         #self.out_dir = tk.StringVar(value=str(Path.cwd() / "malhasMSH"))
         self.domain_sxx = tk.DoubleVar(value=3.0)
-        self.domain_sxy = tk.DoubleVar(value=0.0)
+        #self.domain_sxy = tk.DoubleVar(value=0.0)
         self.domain_syy = tk.DoubleVar(value=3.0)
         self.domain_theta = tk.DoubleVar(value=0.0)
         
         self.obj1_sxx = tk.DoubleVar(value=3.0)
-        self.obj1_sxy = tk.DoubleVar(value=0.0)
+        #self.obj1_sxy = tk.DoubleVar(value=0.0)
         self.obj1_syy = tk.DoubleVar(value=1.0)
         self.obj1_theta = tk.DoubleVar(value=0.0)
         
-        self.obj2_sxx = tk.DoubleVar(value=1.0)
-        self.obj2_sxy = tk.DoubleVar(value=0.0)
-        self.obj2_syy = tk.DoubleVar(value=1.0)
+        self.obj2_sxx = tk.DoubleVar(value=3.0)
+        #self.obj2_sxy = tk.DoubleVar(value=0.0)
+        self.obj2_syy = tk.DoubleVar(value=2.0)
         self.obj2_theta = tk.DoubleVar(value=0.0)
         
-        self.obj3_sxx = tk.DoubleVar(value=1.0)
-        self.obj3_sxy = tk.DoubleVar(value=0.0)
-        self.obj3_syy = tk.DoubleVar(value=1.0)
+        self.obj3_sxx = tk.DoubleVar(value=2.0)
+        #self.obj3_sxy = tk.DoubleVar(value=0.0)
+        self.obj3_syy = tk.DoubleVar(value=3.0)
         self.obj3_theta = tk.DoubleVar(value=0.0)
 
         # =========================================================
@@ -152,6 +151,7 @@ class ConfigDashboard(tk.Tk):
 
         self.use_gauss_newton = tk.IntVar(value=1)
         self.use_autoscale = tk.IntVar(value=1)
+        self.use_POS_Gmsh_graph = tk.BooleanVar(value=False)
         self.plot_ellipses = tk.IntVar(value=0)
 
         # =========================================================
@@ -171,6 +171,7 @@ class ConfigDashboard(tk.Tk):
         )
         forward_frame.grid(row=0, column=0, sticky="ew", pady=(0, 8))
         forward_frame.columnconfigure(1, weight=1)
+        
 
         r = 0
         r = self._row(forward_frame, r, "File name:", self.nome_arquivo, width=50)
@@ -182,38 +183,38 @@ class ConfigDashboard(tk.Tk):
         r = self._row_tensor(forward_frame, r,
             "Domain Anisotropy",
             self.domain_sxx,
-            self.domain_sxy,
             self.domain_syy,
             self.domain_theta)
         r = self._row_tensor(forward_frame, r,
             "1st Object Anisotropy",
             self.obj1_sxx,
-            self.obj1_sxy,
             self.obj1_syy,
             self.obj1_theta)
         
         r = self._row_tensor(forward_frame, r,
             "2nd Object Anisotropy",
             self.obj2_sxx,
-            self.obj2_sxy,
             self.obj2_syy,
             self.obj2_theta)
         
         r = self._row_tensor(forward_frame, r,
             "3rd Object Anisotropy",
             self.obj3_sxx,
-            self.obj3_sxy,
             self.obj3_syy,
             self.obj3_theta)
 
         out_frame = ttk.Frame(forward_frame)
         out_frame.grid(row=r, column=0, columnspan=2, sticky="ew", pady=(8, 0))
         out_frame.columnconfigure(1, weight=1)
+        
+        check_frame = ttk.Frame(forward_frame)
+        check_frame.grid(row=r, column=0, columnspan=2, sticky="w", pady=(8, 0))
 
-        #ttk.Label(out_frame, text="Output folder:").grid(row=0, column=0, sticky="w")
-        #self.out_entry = ttk.Entry(out_frame, textvariable=self.out_dir)
-        #self.out_entry.grid(row=0, column=1, sticky="ew", padx=(6, 6))
-        #ttk.Button(out_frame, text="Choose...", command=self.choose_dir).grid(row=0, column=2, sticky="e")
+        ttk.Checkbutton(
+            check_frame,
+            text="Plot POS Gmsh graph",
+            variable=self.use_POS_Gmsh_graph
+        ).pack(side="left", padx=(0, 10))
         '''
         # =========================================================
         # Frame 2 - Objects / Phantom parameters
@@ -343,13 +344,35 @@ class ConfigDashboard(tk.Tk):
         print('MinhaMalha.Elements[2]',MinhaMalha.Elements[2])
         print(f"Centroid: {MinhaMalha.Elements[2].Centroid}")
         #print(f"KGeo: \n{MinhaMalha.Elements[2].KGeo}")
-    
+        
+
+        # conversão para radianos
+        thetaDomain_rad = np.deg2rad(self.domain_theta.get())
+        thetaObj1_rad = np.deg2rad(self.obj1_theta.get())
+        thetaObj2_rad = np.deg2rad(self.obj2_theta.get())
+        thetaObj3_rad = np.deg2rad(self.obj3_theta.get())
+
+        # cálculo de sigma_xy
+        sigmaDomain_xy = 0.5 * (self.domain_sxx.get() - self.domain_syy.get()) * np.tan(2 * thetaDomain_rad)
+        sigmaObj1_xy = 0.5 * (self.obj1_sxx.get() - self.obj1_syy.get()) * np.tan(2 * thetaObj1_rad)
+        sigmaObj2_xy = 0.5 * (self.obj2_sxx.get() - self.obj2_syy.get()) * np.tan(2 * thetaObj2_rad)
+        sigmaObj3_xy = 0.5 * (self.obj3_sxx.get() - self.obj3_syy.get()) * np.tan(2 * thetaObj2_rad)
+
+        print(f"sigmaDomain_xy = {sigmaDomain_xy:.6f}")
+        print(f"sigmaObj1_xy = {sigmaObj1_xy:.6f}")
+        print(f"sigmaObj2_xy = {sigmaObj2_xy:.6f}")
+        print(f"sigmaObj3_xy = {sigmaObj3_xy:.6f}")
+        
+        print(f"thetaDomain_rad = {thetaDomain_rad:.6f}")
+        print(f"thetaObj1_rad = {thetaObj1_rad:.6f}")
+        print(f"thetaObj2_rad = {thetaObj2_rad:.6f}")
+        print(f"thetaObj3_rad = {thetaObj3_rad:.6f}")
     
         meus_sigmas = {
-            1000: [self.domain_sxx.get(), self.domain_sxy.get(), self.domain_syy.get()],
-            1001: [self.obj1_sxx.get(), self.obj1_sxy.get(), self.obj1_syy.get()],
-            1002: [self.obj2_sxx.get(), self.obj2_sxy.get(), self.obj2_syy.get()],
-            1003: [self.obj3_sxx.get(), self.obj3_sxy.get(), self.obj3_syy.get()],
+            1000: [self.domain_sxx.get(), sigmaDomain_xy, self.domain_syy.get()],
+            1001: [self.obj1_sxx.get(), sigmaObj1_xy, self.obj1_syy.get()],
+            1002: [self.obj2_sxx.get(), sigmaObj2_xy, self.obj2_syy.get()],
+            1003: [self.obj3_sxx.get(), sigmaObj3_xy, self.obj3_syy.get()],
             5001: [1.0, 0.0, 1.0],
             5002: [1.0, 0.0, 1.0],
             5003: [1.0, 0.0, 1.0],
@@ -390,9 +413,10 @@ class ConfigDashboard(tk.Tk):
         mtz_Vmedido = fwd.Solve()
         print(f'Vmedido \n {fwd.Vmedido[:10]}')
     
-        nome_arquivo = 'ParaVernoGmshPto'
-        fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
-        fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
+        if self.use_POS_Gmsh_graph.get(): 
+            nome_arquivo = 'ParaVernoGmshPto'
+            fwd.criar_arquivo_pos_2D( fwd.Vmedido, nome_arquivo)
+            fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
     
         V_measured_phaton = fwd.Vmedido_eletrodos
         np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
