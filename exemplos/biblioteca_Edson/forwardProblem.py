@@ -245,34 +245,35 @@ class forward_problem:
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
         #sigmaT_max = max(np.max(np.abs(sigma_T_pts)), 1e-12)
         sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
-        
+        sigma_min = min(np.min(np.abs(sigma_L_pts)), np.min(np.abs(sigma_T_pts)), 1e-12)
         escala = 0.005
         
         # ===== índice de anisotropia para todos os pontos =====
-        AI_all = sigma_L_pts - sigma_T_pts
+        #AI_all =  sigma_T_pts / sigma_L_pts
         
         #sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
         
-        AI_min = np.min(AI_all)
-        AI_max = np.max(AI_all)
-        
+        #AI_min = np.min(sigma_max)
+        #AI_max = np.max(sigma_max)
+        '''
         # evita erro se todos os valores forem iguais
         if abs(AI_max - AI_min) < 1e-12:
             AI_min = AI_min - 1.0
             AI_max = AI_max + 1.0
         
         norm = colors.Normalize(
-            vmin=AI_min,
-            vmax=AI_max
+            vmin=sigma_min,
+            vmax=sigma_max
         )
-        
+        '''
+        norm = colors.Normalize(vmin=0.0, vmax=1.0)
         cmap = cm.jet
         
         for linha in dados_elipses:
         
             _, x0, y0, sL, sT, theta = linha
         
-            AI = sL - sT
+            AI = sT / sL
         
             a = escala * abs(sL) / sigma_max
             b = escala * abs(sT) / sigma_max
@@ -299,6 +300,7 @@ class forward_problem:
         sm = cm.ScalarMappable(
             cmap=cmap,
             norm=norm
+            
         )
         
         sm.set_array([])

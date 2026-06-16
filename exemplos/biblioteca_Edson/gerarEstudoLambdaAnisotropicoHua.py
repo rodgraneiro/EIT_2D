@@ -185,12 +185,12 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
-lambdas = np.logspace(-6, -4, 15)
+lambdas = np.logspace(-6, -4, 20)
 
 #lambdas =[1.00000000e-06]
 resultados = {}
 
-nome_html="circ16_sqtr_left_Elipse_0Degree_sparse"
+nome_html="circ16_sqtr_left_Elipse_30Degree_sparse_L6_4_20"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

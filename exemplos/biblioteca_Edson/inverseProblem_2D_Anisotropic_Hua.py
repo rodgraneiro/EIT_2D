@@ -536,9 +536,9 @@ class inverse_problem:
         self.TempJ = np.concatenate(listTempJ, axis=1)
         self.JTJ = self.TempJ.T @ self.TempJ
     
-        print("norm J =", np.linalg.norm(self.TempJ))
-        print("min J =", np.min(self.TempJ))
-        print("max J =", np.max(self.TempJ))
+        #print("norm J =", np.linalg.norm(self.TempJ))
+        #print("min J =", np.min(self.TempJ))
+        #print("max J =", np.max(self.TempJ))
 
     ###############################################################################
     ###############################################################################
@@ -1005,10 +1005,10 @@ class inverse_problem:
         sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
         
         escala = 0.005
-        
+        '''
         # ===== índice de anisotropia para todos os pontos =====
-        AI_all = sigma_L_pts - sigma_T_pts
-        
+        AI_all = sigma_T_pts / sigma_L_pts
+
         #sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
         
         AI_min = np.min(AI_all)
@@ -1023,14 +1023,17 @@ class inverse_problem:
             vmin=AI_min,
             vmax=AI_max
         )
-        
+        '''
+        norm = colors.Normalize(vmin=0.0, vmax=1.0)
         cmap = cm.jet
         
         for linha in dados_elipses:
         
             _, x0, y0, sL, sT, theta = linha
         
-            AI = sL - sT
+            AI = sT / sL
+            if AI > 1.0:
+                AI = 1 / AI
         
             a = escala * abs(sL) / sigma_max
             b = escala * abs(sT) / sigma_max
@@ -1060,7 +1063,7 @@ class inverse_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"$AI = \sigma_L - \sigma_T$")
+        cbar.set_label(r"$AI = \sigma_T / \sigma_L$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -1806,10 +1809,10 @@ class inverse_problem:
             secondTerm = -JTW_H - regularization
             secondTerm = np.asarray(secondTerm, dtype=np.float64).ravel()
             
-            print("firstTerm dtype:", firstTerm.dtype)
-            print("secondTerm dtype:", secondTerm.dtype)
-            print("firstTerm shape:", firstTerm.shape)
-            print("secondTerm shape:", secondTerm.shape)
+            #print("firstTerm dtype:", firstTerm.dtype)
+            #print("secondTerm dtype:", secondTerm.dtype)
+            #print("firstTerm shape:", firstTerm.shape)
+            #print("secondTerm shape:", secondTerm.shape)
             
             deltaSigma = spsolve(firstTerm, secondTerm).reshape(-1, 1)
             
