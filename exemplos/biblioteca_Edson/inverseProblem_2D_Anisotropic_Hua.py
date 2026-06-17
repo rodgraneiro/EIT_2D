@@ -1237,12 +1237,17 @@ class inverse_problem:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
             plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
-            plt.show() 
-            plt.close()   # importante
+            #plt.show() 
+            #plt.close()   # importante
+            plt.show(block=False)
+            plt.pause(3)
+            plt.close(fig)
         else:
             plt.show()    
         
-
+            #plt.show(block=False)
+            #plt.pause(3)
+            #plt.close(fig)
     ###############################################################################
 
     
