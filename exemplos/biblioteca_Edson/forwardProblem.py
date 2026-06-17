@@ -274,6 +274,9 @@ class forward_problem:
             _, x0, y0, sL, sT, theta = linha
         
             AI = sT / sL
+            if AI > 1.0:
+                AI = 1 /AI
+                
         
             a = escala * abs(sL) / sigma_max
             b = escala * abs(sT) / sigma_max

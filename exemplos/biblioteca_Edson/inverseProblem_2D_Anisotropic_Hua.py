@@ -22,9 +22,6 @@ from collections import defaultdict
 #import matplotlib.cm as cm
 import matplotlib.colors as colors
 
-from scipy.sparse import lil_matrix, csr_matrix, eye, kron
-from scipy.sparse.linalg import factorized, spsolve
-from scipy.spatial import cKDTree
 
 from datetime import datetime
 from matplotlib import cm
@@ -148,8 +145,7 @@ class inverse_problem:
             self.Y_jacobian[node_l-1, node_n-1] += Y_local[0, 2]
             self.Y_jacobian[node_m-1, node_n-1] += Y_local[1, 2]
             self.Y_jacobian[node_n-1, node_n-1] += Y_local[2, 2]
-            #temp = self.apply_boundary_conditions(self.Y_jacobian)
-            temp = self.apply_boundary_conditions_sparse(self.Y_jacobian)
+            temp = self.apply_boundary_conditions(self.Y_jacobian)
             self.listJacobian.append(temp)
             
             #print('Y_jacobian calc_Y_jacobian \n',self.Y_jacobian)
@@ -158,7 +154,7 @@ class inverse_problem:
         #print('self.listJacobian.append \n',self.listJacobian)
         #return Y_jacobiano
     ###############################################################################
-    '''
+
     def calc_Y_jacobian_anisotropic_hua(self):
         """
         Monta uma lista de derivadas parciais globais:
@@ -195,41 +191,11 @@ class inverse_problem:
                         no_j = int(topo[j])
                         dK_global[no_i, no_j] += dKe[i, j]
 
-                #dK_global_cc = self.apply_boundary_conditions(dK_global.copy())
-                #dK_global_cc = self.apply_boundary_conditions_sparse(dK_global.copy())
-                dK_global_cc = lil_matrix((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+                dK_global_cc = self.apply_boundary_conditions(dK_global.copy())
                 self.listJacobian.append(dK_global_cc)
 
         #print("Número de derivadas parciais =", len(self.listJacobian))
-    '''
-    def calc_Y_jacobian_anisotropic_hua(self):
-    
-        self.listJacobian = []
-    
-        for elem_idx in range(self.mymesh.NumberOfElements):
-            elem = self.mymesh.Elements[elem_idx]
-    
-            if elem.FlagIsElectrode:
-                continue
-    
-            topo = elem.Topology
-            dKe_list = [elem.Kxx, elem.Kxy, elem.Kyy]
-    
-            for dKe in dKe_list:
-    
-                dK_global = lil_matrix(
-                    (self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes),
-                    dtype=float
-                )
-    
-                for i in range(len(topo)):
-                    no_i = int(topo[i])
-                    for j in range(len(topo)):
-                        no_j = int(topo[j])
-                        dK_global[no_i, no_j] += dKe[i, j]
-    
-                dK_global_cc = self.apply_boundary_conditions_sparse(dK_global)
-                self.listJacobian.append(dK_global_cc)
+
 
 
 
@@ -270,28 +236,7 @@ class inverse_problem:
               Kmatrix[noh_cond_contorno][noh_cond_contorno] = 1
         return Kmatrix
     ###############################################################################
-    def apply_boundary_conditions_sparse(self, Kmatrix):
 
-        K = Kmatrix.tolil()
-        self.vetor_corrente_cond_contorno = self.corrente.copy()
-    
-        for noh, valor in self.V_imposto:
-            noh = int(noh)
-    
-            if valor != 0:
-                col = K[:, noh].toarray()
-                self.vetor_corrente_cond_contorno -= col * valor
-    
-            self.vetor_corrente_cond_contorno[noh, :] = valor
-    
-        for noh, valor in self.V_imposto:
-            noh = int(noh)
-    
-            K[noh, :] = 0.0
-            K[:, noh] = 0.0
-            K[noh, noh] = 1.0
-    
-        return K.tocsr()
     
     ###############################################################################
     # Essa função monta a matriz do Filtro Passa Alta
@@ -447,34 +392,89 @@ class inverse_problem:
         #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
 
         return self.KGlobalTemp
+    '''
+    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
+        self.KGlobalTemp = np.zeros(
+            (self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes),
+            dtype=float
+        )
 
-    ###############################################################################
-    def CalcTempKGlobalAnisotropicHua_sparse(self, SigmaTemp):
-
-        N = self.mymesh.NumberOfNodes
-        K = lil_matrix((N, N), dtype=float)
-    
         k_phys = 0
-    
-        for elem_idx in range(self.mymesh.NumberOfElements):
-            elem = self.mymesh.Elements[elem_idx]
-    
-            if elem.FlagIsElectrode:
-                Ke = elem.KGeo
+
+        for elem in range(self.mymesh.NumberOfElements):
+            elemento = self.mymesh.Elements[elem]
+
+            if elemento.FlagIsElectrode:
+                Ke = elemento.KGeo
             else:
                 sxx, sxy, syy = SigmaTemp[k_phys]
-                Ke = sxx * elem.Kxx + sxy * elem.Kxy + syy * elem.Kyy
+                Ke = sxx * elemento.Kxx + sxy * elemento.Kxy + syy * elemento.Kyy
                 k_phys += 1
+
+            for i in range(len(elemento.Topology)):
+                no_i = int(elemento.Topology[i])
+                for j in range(len(elemento.Topology)):
+                    no_j = int(elemento.Topology[j])
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+
+        return self.KGlobalTemp
     
-            topo = elem.Topology
+    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
+        print('SigmaTemp', SigmaTemp.shape)
+        #self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float  )
+        self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+        #sigma_xx, sigma_xy, sigma_yy = SigmaTemp
+
+        sigma_xx = SigmaTemp[:, 0]
+        sigma_xy = SigmaTemp[:, 1]
+        sigma_yy = SigmaTemp[:, 2]
+
+        k_phys = 0
+
+        for elem in range(self.mymesh.NumberOfElements):    
+            if self.mymesh.Elements[elem].FlagIsElectrode:
+                continue
+
+            sigma_xx, sigma_xy, sigma_yy = SigmaTemp[k_phys]
+
+            Kxx = self.mymesh.Elements[elem].Kxx
+            Kxy = self.mymesh.Elements[elem].Kxy
+            Kyy = self.mymesh.Elements[elem].Kyy
+
+            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
+
+            for i in range(len(self.mymesh.Elements[elem].Topology)):
+                no_i = self.mymesh.Elements[elem].Topology[i]
+
+                for j in range(len(self.mymesh.Elements[elem].Topology)):
+                    no_j = self.mymesh.Elements[elem].Topology[j]
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+
+            k_phys += 1
+        np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
+        return self.KGlobalTemp
+        
+        for elem in range(self.mymesh.NumberOfElements):
     
-            for i, no_i in enumerate(topo):
-                no_i = int(no_i)
-                for j, no_j in enumerate(topo):
-                    no_j = int(no_j)
-                    K[no_i, no_j] += Ke[i, j]
+            # Matrizes separadas (você precisa ter isso no elemento!)
+            Kxx = self.mymesh.Elements[elem].Kxx
+            Kxy = self.mymesh.Elements[elem].Kxy
+            Kyy = self.mymesh.Elements[elem].Kyy
     
-        return K.tocsr()
+            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
+    
+            for i in range(len(self.mymesh.Elements[elem].Topology)):
+                no_i = self.mymesh.Elements[elem].Topology[i]
+    
+                for j in range(len(self.mymesh.Elements[elem].Topology)):
+                    no_j = self.mymesh.Elements[elem].Topology[j]
+    
+                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
+    
+        print(f'KGlobalTemp \n {self.KGlobalTemp.shape}')
+    
+        #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
+        '''
     ###############################################################################
     def Calc_J(self, invVtemp):
         listTempJ = []
@@ -495,51 +495,35 @@ class inverse_problem:
 
         #print("TempJ.shape =", self.TempJ.shape)
         #print("JTJ.shape =", self.JTJ.shape)
-        '''
         J = self.TempJ
 
         corr_xx_yy = np.corrcoef(J[:, 0::3].ravel(), J[:, 2::3].ravel())[0, 1]
         print("corr σxx-σyy =", corr_xx_yy)
-        '''
-        J = self.TempJ
-
-        a = J[:, 0::3].ravel()
-        b = J[:, 2::3].ravel()
         
-        if np.std(a) > 1e-14 and np.std(b) > 1e-14:
-            corr_xx_yy = np.corrcoef(a, b)[0, 1]
-        else:
-            corr_xx_yy = np.nan
-        
-        print("corr σxx-σyy =", corr_xx_yy)
-        
-    ###############################################################################    
-        
-    def Calc_J_sparse(self, solve_K):
-    
-        listTempJ = []
-    
-        termo1 = solve_K(self.vetor_corrente_cond_contorno)
-    
-        for dK in self.listJacobian:
-    
-            dK = dK.tocsr()
-    
-            termo2 = dK @ termo1
-            termo3 = -solve_K(termo2)
-    
+    '''
+    def Calc_J(self, invVtemp):
+        listTempJ=[]
+        #for idx in range(self.mymesh.NumberOfElements):
+        for idx in range(0, self.mymesh.msh_topology.shape[0]):
+            termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
+            #print('termo1 \n', termo1.shape)
+            termo2 = np.dot(self.listJacobian[idx], termo1)
+            #print('idx', idx)
+            #print('termo2 \n', termo2)
+            termo3 = -np.dot(invVtemp, termo2)
             termo3 = termo3[self.mymesh.ElectrodeNodes]
-            termo3 = termo3.reshape(-1, 1, order='F')
-    
+            #print('termo3 \n', termo3.shape)
+            termo3 = termo3.reshape(-1,1,  order='F')
+            #print('termo3b \n', termo3.shape)
             listTempJ.append(termo3)
-    
+            listTempJa = np.array(listTempJ)
+            #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
         self.TempJ = np.concatenate(listTempJ, axis=1)
-        self.JTJ = self.TempJ.T @ self.TempJ
-    
-        #print("norm J =", np.linalg.norm(self.TempJ))
-        #print("min J =", np.min(self.TempJ))
-        #print("max J =", np.max(self.TempJ))
-
+        #print('self.TempJ \n',self.TempJ.shape)
+        #JTJ = np.dot(self.TempJ.T, self.TempJ)
+        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
+        #print('JTJ \n', self.JTJ.shape)
+    '''
     ###############################################################################
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
@@ -616,6 +600,57 @@ class inverse_problem:
     ###############################################################################
     # Essa função calcula FPA com distância média entre os elementoss
     ###############################################################################    
+    '''
+    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
+   
+        d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
+        std = 0.05*d_media
+        #print(f'std = {std}')
+        ne = centroids_2D.shape[0]
+        L = np.zeros((ne, ne), dtype=np.float64)
+    
+        for j in range(ne):                    # coluna 
+            cj = centroids_2D[j]
+            soma = 0.0
+    
+            for i in range(ne):                # linha 
+                ci = centroids_2D[i]
+                dist = np.linalg.norm(ci - cj)
+                if dist <= 5 * std:
+                    g = np.exp(-dist**2 / (2 * std**2))
+                else:
+                    g = 0.0   
+                L[i, j] = g
+                soma += g
+    
+            if soma > 0:
+                L[:, j] /= soma
+    
+        L[np.abs(L) < tol] = 0.0 
+        I = np.eye(ne)
+    
+        # filtro passa–alta
+        L2 = I - L
+        
+        i, j =  np.nonzero(L)
+        values = L2[i, j]
+
+
+        # plot  matrix sparsity 
+        plt.figure(figsize=(6, 5))
+        plt.spy(L2, markersize=1)
+        plt.title('HPFilter matrix sparsity pattern', fontsize=15)
+        plt.xlabel('Colun', fontsize=12)
+        plt.ylabel('Line', fontsize=12)
+        plt.tight_layout()
+        plt.show()
+
+        plt.show(block = False)
+        plt.pause(0.1)
+
+        return L2
+
+    '''
 
     def calc_L2_gauss_2D_only_domain(self, centroids_2D, std=None, tol=1e-9, raio=1.5):
         """
@@ -726,7 +761,28 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
-
+    '''
+    def plotar_iteracoes(self,lista_indice, lista_valor,  nome_arquivo="Optimization.png"):#, nome = None):
+        plt.figure(figsize=(6, 6))
+        ax.set_aspect('equal', adjustable='box')
+        plt.plot(lista_indice,
+                lista_valor,
+                marker='.',
+                linestyle='-',
+                color='b',
+                label='Norm $\Delta\sigma$')        # plota gráfico das iterações,
+        plt.xlabel("Iteration", fontsize=12)
+        plt.ylabel("Norm [$\Delta\sigma$]", fontsize=12)
+        plt.title("Optimization", fontsize=15)
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.ticklabel_format(style='plain')
+        plt.savefig(f"{nome_arquivo}.webp", dpi=150, bbox_inches='tight')
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
+    '''
     def plotar_iteracoes(self,
                      lista_indice,
                      lista_valor,
@@ -773,6 +829,92 @@ class inverse_problem:
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
 
+    '''
+    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
+
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+        ajuste  = self.mymesh.NumberOfElectrodes*4 +1
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
+    
+        #fig, ax = plt.subplots(figsize=(6, 5))
+        fig, ax = plt.subplots(figsize=(6,6))
+        #ax.set_aspect('equal')
+        ax.set_aspect('equal', adjustable='box')
+        # ============================================================
+        #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
+        # ============================================================
+        if len(elems_2D) > 0:
+            triang = tri.Triangulation(x, y, elems_2D)
+            #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+            ntri = triang.triangles.shape[0]
+            fc = sigma.ravel()[:ntri]
+            
+            #finder = triang.get_trifinder()
+            #ex, ey = 0.02, 0.07
+            #idx_elem = finder(ex, ey) 
+            #idx_elem_global = finder(ex, ey) + ajuste
+            #print("Elemento:", idx_elem_global)
+            #print("Nós:", elems_2D[idx_elem])
+            #if idx_elem != -1:
+            #    print("Nós:", elems_2D[idx_elem])
+            #else:
+            #    print("Ponto fora da malha")
+            lim = np.max(np.abs(fc))
+            if lim == 0:
+                lim = 1e-12
+            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
+            #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
+            #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+            
+            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
+                
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')#, norm=norm )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
+            #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
+            if SigmaXXXYYY not in ('xy', 'θ°'):
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
+                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
+                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow')#, vmin=0.0, vmax=4.0 )
+            
+            if SigmaXXXYYY != 'θ°':
+                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
+            else:
+                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Angle θ° ')
+                
+            if save == True:
+                timestamp = datetime.now().strftime("%m%d_%H%M")
+                ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
+            if save == False:
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+        # ============================================================
+        #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
+        # ============================================================
+        if len(elems_1D) > 0:
+            for (n1, n2) in elems_1D:
+                x_coords = [x[n1], x[n2]]
+                y_coords = [y[n1], y[n2]]
+                ax.plot(x_coords, y_coords, color='red', linewidth=2)
+    
+        # ------------------------------------------------------------
+        ax.set_xlabel("[m]", fontsize=12)
+        ax.set_ylabel("[m]", fontsize=12)
+        
+        plt.tight_layout()
+        plt.ticklabel_format(style='plain')
+        if save == True:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
+            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
+            #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{nome_arquivo}_AutoScale.webp',  dpi=200, pil_kwargs={"quality": 70})
+        plt.show(block=False)   # mostra sem travar
+        plt.pause(3)            # mantém aberto por 3 segundos
+        plt.close('all')        # fecha automaticamente
+    '''
     def plotMSH(self, sigma, Lambda=None, iteration=None, save=False,   SigmaXXXYYY=None, DifAniso=None, nome_arquivo=None):
 
 
@@ -1007,8 +1149,8 @@ class inverse_problem:
         escala = 0.005
         '''
         # ===== índice de anisotropia para todos os pontos =====
-        AI_all = sigma_T_pts / sigma_L_pts
-
+        AI_all = sigma_L_pts - sigma_T_pts
+        
         #sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
         
         AI_min = np.min(AI_all)
@@ -1031,10 +1173,11 @@ class inverse_problem:
         
             _, x0, y0, sL, sT, theta = linha
         
+
             AI = sT / sL
             if AI > 1.0:
-                AI = 1 / AI
-        
+                AI = 1 /AI  
+                
             a = escala * abs(sL) / sigma_max
             b = escala * abs(sT) / sigma_max
         
@@ -1063,7 +1206,7 @@ class inverse_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"$AI = \sigma_T / \sigma_L$")
+        cbar.set_label(r"$AI = \sigma_L - \sigma_T$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -1225,7 +1368,30 @@ class inverse_problem:
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=4, fontsize=10)
         
         fig.tight_layout()
-
+        '''
+        fig, ax = plt.subplots(figsize=(6.0, 6.0))
+        #plt.figure(figsize=(6.0, 6.0))
+        ax.set_aspect('equal', adjustable='box')
+        plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
+        plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
+        plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
+        #plt.plot(x, sigma_Dif, label='σL-σT', linewidth=1.0, linestyle='-.')
+        plt.plot(x, sigma_L, label='σL', linewidth=2.0,linestyle=':')
+        plt.plot(x, sigma_T, label='σT', linewidth=2.0,linestyle=':')
+        plt.plot(x, plot_ref_sL, label='Ref_σL', linewidth=3.0,linestyle='--')
+        plt.plot(x, plot_ref_sT, label='Ref_σT', linewidth=3.0,linestyle='--')
+        
+    
+        plt.title(titulo, fontsize=14)
+        plt.xlabel('Element', fontsize=10)
+        plt.ylabel('Conductivity [S/m]', fontsize=10)
+    
+        plt.grid(True, linestyle='--', alpha=0.5)
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=4, fontsize=10)
+        #plt.legend()
+    
+        plt.tight_layout()
+        '''
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
@@ -1378,6 +1544,428 @@ class inverse_problem:
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
         
+    '''
+    def salvar_html_todos_lambdas(self,pasta, html_name="resultado_completo"):
+        print('pasta_salvar_html_todos_lambdas', pasta)
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
+        #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
+        #print(padrao)
+
+        #arquivos = glob.glob(padrao)
+
+        #print(arquivos)
+    
+        grupos = defaultdict(dict)
+    
+        for arq in arquivos:
+            nome = os.path.basename(arq)
+    
+            # lambda = último pedaço antes de .webp
+            #lambda_str = nome.replace(".webp", "").split("_")[-1]
+            partes = nome.replace(".webp", "").split("_")
+
+            if partes[-1] in ("AutoScale", "SameScale"):
+                tipo_escala = partes[-1]
+                lambda_str = partes[-2]
+            else:
+                tipo_escala = "AutoScale"
+                lambda_str = partes[-1]
+    
+            if "sigma_xx" in nome:
+                grupos[lambda_str]["sigma_xx"] = nome
+            elif "sigma_xy" in nome:
+                grupos[lambda_str]["sigma_xy"] = nome
+            elif "sigma_yy" in nome:
+                grupos[lambda_str]["sigma_yy"] = nome
+            elif "sigma_xl" in nome:
+                grupos[lambda_str]["sigma_l"] = nome
+            elif "sigma_xt" in nome:
+                grupos[lambda_str]["sigma_t"] = nome            
+            elif "sigma_Dif" in nome:
+                grupos[lambda_str]["sigma_Dif"] = nome
+            elif "theta" in nome:
+                grupos[lambda_str]["theta"] = nome
+            elif "sigma_linhas" in nome:
+                grupos[lambda_str]["sigma_linhas"] = nome                           
+            elif "iterations" in nome:
+                grupos[lambda_str]["iterations"] = nome
+            elif "plot_theta_deg" in nome:
+                grupos[lambda_str]["Sorting"] = nome
+            #elif "Mask" in nome:
+            #    grupos[lambda_str]["Mask"] = nome
+    
+        colunas = [
+            ("sigma_xx", "σxx"),
+            ("sigma_xy", "σxy"),
+            ("sigma_yy", "σyy"),
+            ("sigma_l", "σ_l"),
+            ("sigma_t", "σ_t"),          
+            ("sigma_Dif", "(σ_l - σ_t)"),
+            ("theta", "Angle [°]"),            
+            ("sigma_linhas", "Summary"),
+            ("iterations", "Optimization"),           
+            #("plot_theta_deg", "Angle [°]"),  
+            #("Sorting", "Sorting"),
+            #("Mask", "Mask"),
+        ]
+    
+        html_path = os.path.join(pasta, f"{html_name}.html") 
+    
+        with open(html_path, "w", encoding="utf-8") as f:
+            f.write("""
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    
+    <style>
+    body {background-color: black; color: white; font-family: Arial, sans-serif;}
+    
+    h1 {color: white;}
+    
+    .info {color: lime;font-weight: bold; margin-bottom: 6px;}
+    
+    table {border-collapse: collapse;width: 100%;}
+    
+    th {font-size: 24px; padding: 10px; color: white;}
+    
+    
+    td {padding: 0px; margin: 0px; text-align: center; vertical-align: top; }
+    
+    img {width: 200px;height: auto; background-color: white;}
+    
+    .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
+    .titulo {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+        </style>
+        </head>
+    
+    <body>
+    """)
+    
+            #f.write("<p>Above are some examples of simulated electrical fields in the phantom.</p>\n")
+            f.write("""
+    <p class="info">
+    Results obtained for a maximum of 25 iterations.
+    &nbsp;&nbsp;&nbsp;
+    Auto scale for all graphs.
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
+    </p>
+    <hr>
+    """)
+    
+            f.write("<table>\n")
+    
+            f.write("<tr>\n")
+            #for _, titulo in colunas:
+            #    f.write(f"<th>{titulo}</th>\n")
+            #f.write("</tr>\n")
+    
+            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):#, reverse=True):
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+                    img = grupos[lambda_str].get(chave)
+    
+                    if img is not None:
+                        titulo = dict(colunas)[chave]
+
+                        f.write(f"""
+        <td>
+            <div class="titulo">{titulo}</div>
+            <div class="lambda">λ = {lambda_str}</div>
+            <img src="{img}">
+        </td>
+    """)
+#                        f.write(f"""
+#    <td>
+#        <div class="lambda">λ = {lambda_str}</div>
+#        <img src= "{img}">
+#    </td>
+#    """)
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    
+            f.write("""
+    </table>
+    </body>
+    </html>
+    """)
+    
+        print("HTML salvo em:", html_path)
+    
+    '''
+    '''
+    def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
+    
+
+        print('pasta_salvar_html_todos_lambdas', pasta)
+    
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
+    
+        grupos = defaultdict(lambda: {
+            "AutoScale": {},
+            "SameScale": {}
+        })
+    
+        for arq in arquivos:
+    
+            nome = os.path.basename(arq)
+            partes = nome.replace(".webp", "").split("_")
+    
+            if partes[-1] in ("AutoScale", "SameScale"):
+                tipo_escala = partes[-1]
+                lambda_str = partes[-2]
+            else:
+                tipo_escala = "AutoScale"
+                lambda_str = partes[-1]
+    
+            if "sigma_xx" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_xx"] = nome
+    
+            elif "sigma_xy" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_xy"] = nome
+    
+            elif "sigma_yy" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_yy"] = nome
+    
+            elif "sigma_L" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_L"] = nome
+    
+            elif "sigma_T" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_T"] = nome
+    
+            elif "sigma_Dif" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
+    
+            elif "theta" in nome:
+                grupos[lambda_str][tipo_escala]["theta"] = nome
+                
+            elif "Elipses" in nome:
+                grupos[lambda_str][tipo_escala]["Elipses"] = nome
+    
+            elif "sigma_linhas" in nome:
+                grupos[lambda_str][tipo_escala]["sigma_linhas"] = nome
+    
+            elif "iterations" in nome:
+                grupos[lambda_str][tipo_escala]["iterations"] = nome
+    
+            elif "plot_theta_deg" in nome:
+                grupos[lambda_str][tipo_escala]["Sorting"] = nome
+    
+        colunas = [
+            ("sigma_xx", "σxx"),
+            ("sigma_xy", "σxy"),
+            ("sigma_yy", "σyy"),
+            ("sigma_L", "σ_L"),
+            ("sigma_T", "σ_T"),
+            ("sigma_Dif", "(σ_L-σ_T)"),
+            ("theta", "Angle [°]"),
+            ("Elipses", "Anisotropy"),
+            ("sigma_linhas", "Summary"),
+            ("iterations", "Optimization"),
+        ]
+    
+        html_path = os.path.join(pasta, f"{html_name}.html")
+    
+        with open(html_path, "w", encoding="utf-8") as f:
+    
+            f.write("""
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    
+    <style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+    h1 {
+        color: white;
+    }
+    
+    .info {
+        color: lime;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 35px;
+    }
+    
+    th {
+        font-size: 24px;
+        padding: 10px;
+        color: white;
+    }
+    
+    td {
+        padding: 2px;
+        margin: 0px;
+        text-align: center;
+        vertical-align: top;
+    }
+    
+    img {
+        width: 200px;
+        height: auto;
+        background-color: white;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .titulo {
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    
+    .escala {
+        color: cyan;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    
+    .lambda_bloco {
+        color: orange;
+        font-size: 22px;
+        font-weight: bold;
+        padding-top: 18px;
+        padding-bottom: 8px;
+        text-align: left;
+    }
+    </style>
+    </head>
+    
+    <body>
+    """)
+    
+            f.write("""
+    <p class="info">
+    Results obtained for a maximum of 25 iterations.
+    &nbsp;&nbsp;&nbsp;
+    First row: AutoScale.
+    &nbsp;&nbsp;&nbsp;
+    Second row: SameScale.
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
+    </p>
+    <hr>
+    """)
+    
+            f.write("<table>\n")
+    
+            # Cabeçalho das colunas
+            f.write("<tr>\n")
+            for _, titulo in colunas:
+                f.write(f"<th>{titulo}</th>\n")
+            f.write("</tr>\n")
+    
+            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):
+    
+                # Linha separadora com o lambda
+                f.write(f"""
+    <tr>
+        <td colspan="{len(colunas)}" class="lambda_bloco">
+            λ = {lambda_str}
+        </td>
+    </tr>
+    """)
+    
+                # =====================================================
+                # Primeira linha: AutoScale
+                # =====================================================
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+    
+                    img = grupos[lambda_str]["AutoScale"].get(chave)
+    
+                    if img is not None:
+    
+                        titulo = dict(colunas)[chave]
+    
+                        f.write(f"""
+    <td>
+        <div class="titulo">{titulo}</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
+    
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    
+                # =====================================================
+                # Segunda linha: SameScale
+                # =====================================================
+                f.write("<tr>\n")
+    
+                for chave, _ in colunas:
+    
+                    img = grupos[lambda_str]["SameScale"].get(chave)
+    
+                    if img is not None:
+    
+                        titulo = dict(colunas)[chave]
+    
+                        f.write(f"""
+    <td>
+        <div class="titulo">{titulo}</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = {lambda_str}</div>
+        <img src="{img}">
+    </td>
+    """)
+    
+                    else:
+                        f.write("<td></td>\n")
+    
+                f.write("</tr>\n")
+    # linha separadora entre lambdas
+                        # separador entre lambdas
+            f.write(f"""
+            <tr>
+                <td colspan="{len(colunas)}"
+                    style="padding-top:10px; padding-bottom:10px;">
+                    <hr style="border:1px solid white;">
+                </td>
+            </tr>
+            """)
+            f.write("""
+    </table>
+    </body>
+    </html>
+    """)
+    '''
     def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
     
         print('pasta_salvar_html_todos_lambdas', pasta)
@@ -1696,22 +2284,16 @@ class inverse_problem:
         for itr in range(itr_start,max_iter):
             #np.savetxt("lastIteration.txt", np.array([itr]), fmt="%d") # Main Loop
             contItr = contItr + 1
-            #Vtemp = self.CalcTempKGlobalAnisotropicHua(sigmaInicial)
-            Vtemp = self.CalcTempKGlobalAnisotropicHua_sparse(sigmaInicial)
-            #Vtemp = self.apply_boundary_conditions(Vtemp.copy())
-            Vtemp = self.apply_boundary_conditions_sparse(Vtemp.copy())
+            Vtemp = self.CalcTempKGlobalAnisotropicHua(sigmaInicial)
+            Vtemp = self.apply_boundary_conditions(Vtemp.copy())
 
             #print("posto Vtemp =", np.linalg.matrix_rank(Vtemp))
             #print("shape Vtemp =", Vtemp.shape)
 
-            #invVtemp = np.linalg.inv(Vtemp)
+            invVtemp = np.linalg.inv(Vtemp)
 
             
-            solve_K = factorized(Vtemp.tocsc())
-
-            V_calc = solve_K(self.vetor_corrente_cond_contorno)
-
-            #V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
+            V_calc = np.dot(invVtemp, self.vetor_corrente_cond_contorno)       # Calcula Valor estimado
             V_calc_noh = V_calc[self.mymesh.ElectrodeNodes]                    # pega somente valores dos eletrodos
             
             V_calc_noh = V_calc_noh.T
@@ -1732,21 +2314,15 @@ class inverse_problem:
             
             # ***** Cálculo J = - Y_inv * (dY/ds_k) * (Y_inv * C) *****
             #self.Calc_J(invVtempJ)
-            #self.Calc_J(invVtemp)
-            self.Calc_J_sparse(solve_K)
+            self.Calc_J(invVtemp)
             
             # ***** Cálculo do termo 1a JT_W1_J *****
 
             #L2_aniso = np.kron(np.eye(3), L2)
-            ###L2_aniso = np.kron(L2, np.eye(3))
+            L2_aniso = np.kron(L2, np.eye(3))
             # ***** Cálculo do termo 1b Lambda^2 * LT_L *****
             #LTL =np.dot(L2.T, L2)
-            ####LTL = L2_aniso.T @ L2_aniso
-            
-            L2_aniso = kron(csr_matrix(L2), eye(3, format="csr"), format="csr")
             LTL = L2_aniso.T @ L2_aniso
-            termo_L = (Lambda**2) * LTL
-            
             termo_L = (Lambda**2) * LTL
             #firstTerm = self.JTJ + termo_L
             #ztermo_reg = (sigma_inicial - self.sigmaStar)
@@ -1760,14 +2336,11 @@ class inverse_problem:
             #print('termo_L',termo_L.shape)
             #print('self.JTJ',self.JTJ.shape)
             
-            '''
+            
             # ***** Cálcula e inverte termo 1 -> (JTWJ + Lambda^2*LTL)^-1 *****
             firstTerm = self.JTJ + termo_L
             
-            #inv_firstTerm = np.linalg.inv(firstTerm)
-            
-            firstTerm = csr_matrix(self.JTJ) + termo_L
-            
+            inv_firstTerm = np.linalg.inv(firstTerm)
             
             # ***** Cálculo do termo 2a (JT_W1_residue) *****
     
@@ -1789,32 +2362,7 @@ class inverse_problem:
             
             
             # ***** Produto entre termo 1 e termo 2 *****
-            #deltaSigma = np.dot(inv_firstTerm, secondTerm)
-            
-            deltaSigma = spsolve(firstTerm.tocsc(), secondTerm).reshape(-1, 1)
-            '''
-            JTJ_sparse = csr_matrix(np.asarray(self.JTJ, dtype=np.float64))
-
-            firstTerm = JTJ_sparse + termo_L
-            firstTerm = firstTerm.astype(np.float64).tocsc()
-            
-            JTW_H = self.TempJ.T @ residue
-            JTW_H = np.asarray(JTW_H, dtype=np.float64)
-            
-            regTerm = np.asarray(sigmaInicial_vec, dtype=np.float64)
-            
-            regularization = termo_L @ regTerm
-            regularization = np.asarray(regularization, dtype=np.float64)
-            
-            secondTerm = -JTW_H - regularization
-            secondTerm = np.asarray(secondTerm, dtype=np.float64).ravel()
-            
-            #print("firstTerm dtype:", firstTerm.dtype)
-            #print("secondTerm dtype:", secondTerm.dtype)
-            #print("firstTerm shape:", firstTerm.shape)
-            #print("secondTerm shape:", secondTerm.shape)
-            
-            deltaSigma = spsolve(firstTerm, secondTerm).reshape(-1, 1)
+            deltaSigma = np.dot(inv_firstTerm, secondTerm)
             
             ######## deltaSigma[1::3] = 0.0 # zerar Δσxy   # tentar usa sigma XY
             
@@ -1898,6 +2446,27 @@ class inverse_problem:
             #    self.plotMSH(sigmaInicial[:, 0],Lambda, itr, save = True)
             #    self.plotMSH(sigmaInicial[:, 2],Lambda, itr, save = True)
             
+        #print('sigmaInicial \n', sigmaInicial) 
+        #np.savetxt('sigma_inicial_cont.txt', sigmaInicial, fmt="%.8f")
+        #print('sigma_xxS',sigmaInicial[:, 0])
+        #print('sigma_xyS',sigmaInicial[:, 1])
+        #print('sigma_yyS',sigmaInicial[:, 2])
+        '''
+        sigma_xx = sigmaInicial[:, 0]
+        sigma_xy = sigmaInicial[:, 1]
+        sigma_yy = sigmaInicial[:, 2]
+        #sigma_Dif = sigma_xx - sigma_yy
+        print('sigma_xx_Solve',sigma_xx[:3])
+        print('sigma_xy_Solve',sigma_xy[:3])
+        print('sigma_yy_Solve',sigma_yy[:3])
+        
+        
+        Smed = 0.5 * (sigma_xx + sigma_yy)
+        D = np.sqrt(((sigma_xx - sigma_yy)/2)**2 + sigma_xy**2)
+        sigma_x = Smed + D
+        sigma_y = Smed - D
+        sigma_Dif = sigma_x - sigma_y
+        '''
         ##################################################################################
         # Deteminação das condutividas longitudinal e transversal do material anisotrópico
         # e do ângulo theta.
