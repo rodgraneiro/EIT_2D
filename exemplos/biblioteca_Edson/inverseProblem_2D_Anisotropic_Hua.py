@@ -1119,7 +1119,7 @@ class inverse_problem:
     
         idx_elem = finder(ex, ey) 
         idx_elem_global = finder(ex, ey) + ajuste
-        print("Elemento:", idx_elem)
+        #print("Elemento:", idx_elem)
         
         mask = idx_elem  >= 0
 

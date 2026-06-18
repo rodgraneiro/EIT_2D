@@ -317,56 +317,6 @@ class LinearTriangleAnisotropic(MyElement):
     ###############################################################################
     # OBS: só parte geométrica (que nunca muda), sem multiplicar por sigma (que muda)
     #def CalcKgeo(self, elem):
-    '''
-    def CalcKgeo(self):
-        noh1 = int(self.Topology[0])
-        noh2 = int(self.Topology[1])
-        noh3 = int(self.Topology[2])
-        
-        if self.PhysicalEntity >= 1000:
-            
-            sigma = self.mymesh.sigma_vec[self.ElementIndex]
-            
-            Sx  = sigma[0]   # σxx
-            Sxy = sigma[1]   # σxy
-            Sy  = sigma[2]   # σyy
-
-        #print(f"msh_physical_groups found (type {self.element_type}): {self.msh_physical_groups}.")
-        x = [self.Coordinates[noh1][0], self.Coordinates[noh2][0], self.Coordinates[noh3][0]]
-        y = [self.Coordinates[noh1][1], self.Coordinates[noh2][1], self.Coordinates[noh3][1]]
-
-        triangulo = np.array([ [1, x[0],  y[0]], [1, x[1],  y[1]], [1, x[2],  y[2]]], dtype=np.float64)
-        area_triangulo = abs((np.linalg.det(triangulo))/2)
-        #print('area_triangulo',area_triangulo)
-        B_l = (y[1]-y[2])
-        B_m = (y[2]-y[0])
-        B_n = (y[0]-y[1])
-        G_l = (x[2]-x[1])
-        G_m = (x[0]-x[2])
-        G_n = (x[1]-x[0])
-
-        atheta_deg = self.thetaAngle
-        atheta =  np.deg2rad(atheta_deg)
-        Sxx =  Sx*np.cos(atheta)**2 + Sy*np.sin(atheta)**2
-        Sxy = Sx*np.sin(atheta)*np.cos(atheta) - Sy*np.sin(atheta)*np.cos(atheta)
-        Syy = Sx*np.sin(atheta)**2 + Sy*np.cos(atheta)**2
-        
-
-        C_11 = Sxx*B_l**2 + 2.0*Sxy*B_l*G_l + Syy*G_l**2
-        C_22 = Sxx*B_m**2 + 2.0*Sxy*B_m*G_m + Syy*G_m**2
-        C_33 = Sxx*B_n**2 + 2.0*Sxy*B_n*G_n + Syy*G_n**2
-
-        C_12 = Sxx*B_l*B_m + Sxy*(B_l*G_m + G_l*B_m) + Syy*G_l*G_m
-        C_13 = Sxx*B_l*B_n + Sxy*(B_l*G_n + G_l*B_n) + Syy*G_l*G_n
-        C_23 = Sxx*B_m*B_n + Sxy*(B_m*G_n + G_m*B_n) + Syy*G_m*G_n
-
-        #print('C_xx',C_11,C_12,C_13,C_22,C_23,C_33)
-        
-        self.KGeo = (self.Altura2D /(4.0*area_triangulo))*np.array([[C_11, C_12, C_13], 
-                                [C_12, C_22, C_23],      
-                                [C_13, C_23, C_33]       
-                                ])
-        '''
 
     def CalcKgeo(self):
         noh1 = int(self.Topology[0])
@@ -411,18 +361,32 @@ class LinearTriangleAnisotropic(MyElement):
             [G_m*G_l, G_m*G_m, G_m*G_n],
             [G_n*G_l, G_n*G_m, G_n*G_n]
         ], dtype=np.float64)
-    
+        
         # Se houver sigma definido, monta também a matriz local completa
         if self.PhysicalEntity >= 1000 and self.mymesh.sigma_vec is not None:
     
             sigma = self.mymesh.sigma_vec[self.ElementIndex]
-    
+            
+            
+            sigma_xx = sigma[0]
+            sigma_xy = sigma[1]
+            sigma_yy = sigma[2]            
+            
+            
+            
+            self.KGeo = (
+                sigma_xx * self.Kxx
+                + sigma_xy * self.Kxy
+                + sigma_yy * self.Kyy )
+            ''' 
             Sx = sigma[0]
             Sxy_original = sigma[1]
             Sy = sigma[2]
-    
+            
+            
             # Ângulo de rotação em graus
             atheta_deg = self.mymesh.thetaAngle  # ou self.thetaAngle, se estiver no elemento
+            #atheta_deg = 0.0  # ou self.thetaAngle, se estiver no elemento
             atheta = np.deg2rad(atheta_deg)
     
             c = np.cos(atheta)
@@ -432,12 +396,13 @@ class LinearTriangleAnisotropic(MyElement):
             sigma_xx = Sx*c**2 + Sy*s**2
             sigma_xy = (Sx - Sy)*s*c
             sigma_yy = Sx*s**2 + Sy*c**2
-    
+            
             self.KGeo = (
                 sigma_xx * self.Kxx
                 + sigma_xy * self.Kxy
-                + sigma_yy * self.Kyy
-            )
+                + sigma_yy * self.Kyy )
+            '''
+
 
 
 

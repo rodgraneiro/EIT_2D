@@ -119,7 +119,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter= 10,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.1,  Lambda = lambda_val, max_iter= 5,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -185,12 +185,12 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
-#lambdas = np.logspace(-6, -4, 20)
+#lambdas = np.logspace(-5, -4, 10)
 
-lambdas =[1.00000000e-04]
+lambdas =[6.57933225e-03]
 resultados = {}
 
-nome_html="circ16_sqtr_left_Elipse_30Degree_NosparseLIXOOOOOOO"
+nome_html="circ16_sqtr_left_skip3_30Degree_NosparseLIXXXXOOOOO"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

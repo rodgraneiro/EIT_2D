@@ -219,7 +219,7 @@ class forward_problem:
     
         idx_elem = finder(ex, ey) 
         idx_elem_global = finder(ex, ey) + ajuste
-        print("Elemento:", idx_elem)
+        #print("Elemento:", idx_elem)
         
         mask = idx_elem  >= 0
 
@@ -240,6 +240,7 @@ class forward_problem:
                                         sigma_T_pts,
                                         theta_pts
                                     ])
+        print('dados_elipses', dados_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
