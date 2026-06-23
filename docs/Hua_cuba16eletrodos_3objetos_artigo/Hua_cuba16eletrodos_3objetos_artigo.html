@@ -1,0 +1,3839 @@
+
+    <html>
+    <head>
+    <meta charset="utf-8">
+    <title>Resultados TIE</title>
+    <script> window.MathJax = {chtml: {displayAlign: 'left' }};</script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+    body {background-color: black; color: white; font-family: Arial, sans-serif;}
+    
+    h1 {color: white;}
+    
+    .info {color: lime;font-weight: bold; margin-bottom: 6px;}
+    
+    table {border-collapse: collapse;width: 100%;}
+    
+    th {font-size: 24px; padding: 10px; color: white;}
+    
+    
+    td {padding: 0px; margin: 0px; text-align: center; vertical-align: top; }
+    
+    img {width: 200px;height: auto; background-color: white;}
+    
+    .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
+    .titulo {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 3px;
+    }
+    
+    .lambda {
+        color: yellow;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+            .equation{
+            font-size: 24px;
+            color: #88ccff;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        .equation-left {
+            text-align: left;
+            margin-left: 20px;
+            font-size: 24px;
+        }  
+    
+    .separador_lambda td {
+        border-top: 3px solid white;
+        height: 18px;
+        padding: 0px;
+    }
+    </style>
+    </head>
+    
+    
+    <body>
+       <h1>Results of the Anisotropic Inverse Problem EIT with Hua virtual electrode</h1>
+    <h1>Anisotropic domain with 3 objects phantom </h1>
+    <p style="max-width:1200px; line-height:1.6;">
+    This page presents the results of the anisotropic inverse problem 
+    using the Hua virtual electrode model in Electrical Impedance Tomography (EIT).
+
+    The figures below show:
+    <ul>
+    <li>The conductivity distribution of the phantom;</li>
+    <li>The anisotropy;</li>
+    <li>The reconstructed conductivity obtained from the inverse problem;</li>
+    <li>The influence of different regularization parameters λ.</li>
+    </ul>
+    </p>
+    <div class="infoBox">
+    <b>Simulation Parameters</b><br><br>
+
+    Current pattern: Skip - 3<br>
+    Electrodes: 16<br>
+    Domain conductivity: σ_L = 3 , σ_T = 3 S/m and angle 0°.<br>
+    Object 1 conductivity:σ_L = 3 , σ_T = 1 S/m and angle 30°.<br>
+    Object 2 conductivity: σ_L = 3 , σ_T = 1 S/m and angle -30°.<br>
+    Object 3 conductivity: σ_L = 3 , σ_T = 1 S/m and angle 0°.<br>
+    Number of phantom elements mesh: 2660<br>
+    Number of elements in the base mesh: 1164<br>
+    Maximum iterations: 5<br>
+    Regularization: Gaussian HPF<br>
+    Virtual electrode model: Hua<br>
+    lambdas = np.logspace(-6, -3, 30)<br>
+[1.00000000e-06 1.26896100e-06 1.61026203e-06 2.04335972e-06<br>
+ 2.59294380e-06 3.29034456e-06 4.17531894e-06 5.29831691e-06<br>
+ 6.72335754e-06 8.53167852e-06 1.08263673e-05 1.37382380e-05<br>
+ 1.74332882e-05 2.21221629e-05 2.80721620e-05 3.56224789e-05<br>
+ 4.52035366e-05 5.73615251e-05 7.27895384e-05 9.23670857e-05<br>
+ 1.17210230e-04 1.48735211e-04 1.88739182e-04 2.39502662e-04<br>
+ 3.03919538e-04 3.85662042e-04 4.89390092e-04 6.21016942e-04<br>
+ 7.88046282e-04 1.00000000e-03]
+    </div>
+    <p>
+    The anisotropic conductivity tensor is represented by:
+    </p>
+
+    <!-- <p style="font-size:24px;">
+    σ = [ σxx  σxy ; σxy  σyy ]
+    </p> 
+    <div class="equation">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div> -->
+    <div class="equation-left">
+    $$
+    \sigma =
+    \begin{bmatrix}
+    \sigma_{xx} & \sigma_{xy} \\
+    \sigma_{xy} & \sigma_{yy}
+    \end{bmatrix}
+    $$
+    </div>
+    
+    <p class="info">
+    Results obtained for a maximum of 50 iterations.
+    &nbsp;&nbsp;&nbsp;
+    
+    &nbsp;&nbsp;&nbsp;
+    Lambda values are obtained by: lambdas = np.logspace(-4, -2, 20).
+    </p>
+    <hr>
+    <h2>Phanton</h2>
+    <h4>Domain - &sigma; [3-0-3] [S/m]. Objects &sigma; [3-0-1]  [S/m] and angle 30°,  -30° and 0°. </h4>
+    <div style="display:flex; gap:20px;">
+    <img src="circ16_3Obj_Sxx.webp" width="300">
+    <img src="circ16_3Obj_Sxy.webp" width="300">
+    <img src="circ16_3Obj_Syy.webp" width="300">
+    <img src="circ16_3Obj_Elipse.webp" width="300">
+    </div>
+    <p style="color:#aaaaaa; font-size:14px;">
+    <br>
+    Figure 1 — Phantom conductivity distribution for σxx. Object with the same conductivity as the domain on the X-axis
+    <br>
+    Figure 2 — Phantom conductivity distribution for σxy.
+    <br>
+    Figure 3 — Phantom conductivity distribution for σyy. Object with conductivity different from the domain on the Y-axis
+    <br>
+    Figure 4 — Phantom Anisotopy
+    </p>
+    <hr>
+    <table>
+<tr>
+<th>σxx</th>
+<th>σxy</th>
+<th>σyy</th>
+<th>σ_L</th>
+<th>σ_T</th>
+<th>(σ_L-σ_T)</th>
+<th>Angle [°]</th>
+<th>Anisotropy</th>
+<th>Summary</th>
+<th>Optimization</th>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000001
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000001_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000001.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000001.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000001.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000001_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000001</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000001_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000002
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000002_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000002.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000002.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000002.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000002_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000002</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000002_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000003
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000003_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000003.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000003.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000003.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000003_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000003</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000003_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000004
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000004_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000004.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000004.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000004.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000004_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000004</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000004_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000005
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000005_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000005.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000005.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000005.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000005_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000005_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000005_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000005_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000005_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000005_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000005</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000005_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000007
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000007_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000007.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000007.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000007.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000007_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000007</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000007_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000009
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000009_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000009.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000009.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000009.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000009_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000009_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000009_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000009_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000009_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000009_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000009</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000009_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000011
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000011_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000011.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000011.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000011.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000011_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000011</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000011_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000014
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000014_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000014.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000014.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000014.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000014_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000014_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000014_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000014_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000014_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000014_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000014</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000014_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000017
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000017_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000017.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000017.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000017.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000017_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000017_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000017_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000017_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000017_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000017_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000017</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000017_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000022
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000022_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000022.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000022.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000022.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000022_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000022_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000022_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000022_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000022_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000022_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000022</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000022_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000028
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000028_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000028.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000028.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000028.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000028_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000028_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000028_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000028_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000028_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000028_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000028</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000028_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000036
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000036_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000036.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000036.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000036.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000036_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000036_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000036_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000036_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000036_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000036_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000036</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000036_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000045
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000045_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000045.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000045.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000045.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000045_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000045_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000045_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000045_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000045_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000045_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000045</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000045_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000057
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000057_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000057.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000057.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000057.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000057_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000057_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000057_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000057_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000057_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000057_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000057</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000057_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000073
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000073_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000073.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000073.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000073.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000073_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000073_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000073_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000073_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000073_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000073_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000073</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000073_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000092
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000092_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000092.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000092.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000092.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000092_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000092_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000092_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000092_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000092_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000092_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000092</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000092_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000117
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000117_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000117.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000117.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000117.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000117_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000117_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000117_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000117_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000117_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000117_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000117</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000117_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000149
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000149_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000149.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000149.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000149.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000149_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000149_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000149_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000149_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000149_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000149_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000149</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000149_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000189
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000189_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000189.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000189.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000189.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000189_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000189_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000189_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000189_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000189_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000189_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000189</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000189_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000240
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000240_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000240.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000240.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000240.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000240_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000240</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000240_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000304
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000304_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000304.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000304.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000304.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000304_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000304_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000304_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000304_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000304_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000304_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000304</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000304_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000386
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000386_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000386.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000386.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000386.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000386_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000386_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000386_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000386_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000386_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000386_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000386</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000386_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000489
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000489_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000489.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000489.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000489.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000489_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000489_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000489_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000489_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000489_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000489_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000489</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000489_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000621
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000621_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000621.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000621.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000621.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000621_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000621_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000621_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000621_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000621_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000621_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000621</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000621_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.000788
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000788_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.000788.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.000788.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.000788.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.000788_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.000788_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.000788_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.000788_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.000788_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.000788_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.000788</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.000788_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    <tr class="separador_lambda">
+        <td colspan="10"></td>
+    </tr>
+    
+    <tr>
+        <td colspan="10" class="lambda_bloco">
+            λ = 0.001000
+        </td>
+    </tr>
+    <tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.001000_AutoScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Anisotropy</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_Elipses_0.001000.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Summary</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_linhas_0.001000.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Optimization</div>
+        <div class="escala">AutoScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_iterations_0.001000.webp">
+    </td>
+    </tr>
+<tr>
+
+    <td>
+        <div class="titulo">σxx</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xx_0.001000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σxy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_xy_0.001000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σyy</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_yy_0.001000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_L</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_L_0.001000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">σ_T</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_T_0.001000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">(σ_L-σ_T)</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_sigma_Dif_0.001000_SameScale.webp">
+    </td>
+    
+    <td>
+        <div class="titulo">Angle [°]</div>
+        <div class="escala">SameScale</div>
+        <div class="lambda">λ = 0.001000</div>
+        <img src="Hua_cuba16eletrodos_3objetos_artigo_theta_deg_0.001000_SameScale.webp">
+    </td>
+    <td></td>
+<td></td>
+<td></td>
+</tr>
+
+    </table>
+    </body>
+    </html>
+    
