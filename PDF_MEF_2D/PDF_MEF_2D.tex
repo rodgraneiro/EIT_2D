@@ -332,12 +332,16 @@ sumario=tradicional
     Das A equação da lei de Ohm na forma diferencial, sabemos ques:
     
     \begin{equation}
-    	J_x = \sigma_{xx} \frac{\partial \phi}{\partial x}
+    	J_x = \sigma_{xx}\frac{\partial \phi}{\partial x}  
+    	+  
+    	\sigma_{xy}\frac{\partial \phi}{\partial y}  
     	\label{eq:c_calor_x}
     \end{equation}
     e
     \begin{equation}
-    	J_y = \sigma_{yy} \frac{\partial \phi}{\partial y}
+    	J_y = \sigma_{xy}\frac{\partial \phi}{\partial x}  
+    	+  
+    	\sigma_{yy}\frac{\partial \phi}{\partial y}
     	\label{eq:c_calor_y}
     \end{equation}
     
@@ -363,18 +367,35 @@ sumario=tradicional
     temos:
     
     \begin{equation}
-    	\begin{Bmatrix}J_x\\J_y\end{Bmatrix} = [D] \{ \nabla\phi \} =
-    	[D][B] \{ \phi \}
+    	\begin{Bmatrix}  
+    		J_x\\  
+    		J_y  
+    	\end{Bmatrix}
+    	= \begin{bmatrix}  
+    		\sigma_{xx} & \sigma_{xy}\\  
+    		\sigma_{xy} & \sigma_{yy}  
+    	\end{bmatrix}  
+    	\begin{Bmatrix}  
+    		\frac{\partial \phi}{\partial x}\\  
+    		\frac{\partial \phi}{\partial y}  
+    	\end{Bmatrix}=
+    	[D][B]{\phi}  
     	\label{eq:matriz_D2}
     \end{equation}
     
     O funcional que governa o problema eletrostático pode ser dado por:
     
     \begin{equation}
-    	\pi = \frac{1}{2}\int_V 
-    	\begin{bmatrix}\sigma_{xx} (\frac{\partial \phi}{\partial x})^2 +
-    	\sigma_{yy} (\frac{\partial \phi}{\partial y})^2 \end{bmatrix}dV -
-    	\int_{S_2} J^*\nabla\phi dS
+    			\pi = \frac{1}{2}\int_V
+    	\Bigg[
+    	\sigma_{xx}\left(\frac{\partial \phi}{\partial x}\right)^2
+    	+2\sigma_{xy}
+    	\frac{\partial \phi}{\partial x}
+    	\frac{\partial \phi}{\partial y}
+    	\\
+    	+\sigma_{yy}\left(\frac{\partial \phi}{\partial y}\right)^2
+    	\Bigg]\,dV
+    	-\int_{S_2}J^{*}\phi\,dS
     	\label{eq:funcional2}
     \end{equation}
     
@@ -389,9 +410,205 @@ sumario=tradicional
     	\label{eq:funcional3}
     \end{equation}
     
+    
+    \begin{equation}
+    	\pi =
+    	\frac{1}{2}
+    	\int_V
+    	\{\nabla \phi\}^{T}
+    	[D]
+    	\{\nabla \phi\}
+    	\,dV
+    	-
+    	\int_{S_2}
+    	J^{*}
+    	[N]
+    	\{\phi\}
+    	\,dS
+    \end{equation}
+    \begin{equation}
+    	\pi =
+    	\frac{1}{2}
+    	\int_V
+    	\{\phi\}^{T}
+    	[B]^{T}
+    	[D]
+    	[B]
+    	\{\phi\}
+    	\,dV
+    	-
+    	\int_{S_2}
+    	J^{*}
+    	[N]
+    	\{\phi\}
+    	\,dS
+    \end{equation}
     \begin{equation*}
     \vdots
     \end{equation*}
+    
+    ```latex
+    \begin{equation}
+    	\pi =
+    	\frac{1}{2}
+    	\int_V
+    	\{\nabla \phi\}^{T}
+    	[D]
+    	\{\nabla \phi\}
+    	\,dV
+    	-
+    	\int_{S_2}
+    	J^{*}
+    	[N]\{\phi\}
+    	\,dS
+    	\tag{1.24}
+    \end{equation}
+    
+    Pelo método dos elementos finitos, o potencial elétrico no interior de cada elemento pode ser aproximado por
+    
+    \begin{equation}
+    	\phi =
+    	[N]\{\phi\}^{(e)}
+    	\tag{1.25}
+    \end{equation}
+    
+    onde
+    
+    \begin{equation}
+    	\{\phi\}^{(e)}
+    	=
+    	\begin{Bmatrix}
+    		\phi_1 & \phi_2 & \phi_3
+    	\end{Bmatrix}^{T}.
+    	\tag{1.26}
+    \end{equation}
+    
+    Assim, o gradiente do potencial é dado por
+    
+    \begin{equation}
+    	\{\nabla \phi\}
+    	=
+    	[B]\{\phi\}^{(e)}
+    	\tag{1.27}
+    \end{equation}
+    
+    com
+    
+    \begin{equation}
+    	[B]
+    	=
+    	\begin{bmatrix}
+    		\dfrac{\partial N_1}{\partial x} &
+    		\dfrac{\partial N_2}{\partial x} &
+    		\dfrac{\partial N_3}{\partial x}
+    		\\[6pt]
+    		\dfrac{\partial N_1}{\partial y} &
+    		\dfrac{\partial N_2}{\partial y} &
+    		\dfrac{\partial N_3}{\partial y}
+    	\end{bmatrix}.
+    	\tag{1.28}
+    \end{equation}
+    
+    Substituindo a Eq. (1.27) na Eq. (1.24), obtém-se
+    
+    \begin{equation}
+    	\pi^{(e)}
+    	=
+    	\frac{1}{2}
+    	\int_{V_e}
+    	\{\phi\}^{(e)T}
+    	[B]^T[D][B]
+    	\{\phi\}^{(e)}
+    	\,dV
+    	-
+    	\int_{S_2^{(e)}}
+    	J^{*}
+    	[N]\{\phi\}^{(e)}
+    	\,dS .
+    	\tag{1.29}
+    \end{equation}
+    
+    Como o vetor nodal $\{\phi\}^{(e)}$ não depende das coordenadas espaciais, pode-se escrever
+    
+    \begin{equation}
+    	\pi^{(e)}
+    	=
+    	\frac{1}{2}
+    	\{\phi\}^{(e)T}
+    	\left[
+    	\int_{V_e}
+    	[B]^T[D][B]\,dV
+    	\right]
+    	\{\phi\}^{(e)}
+    	-
+    	\{\phi\}^{(e)T}
+    	\left[
+    	\int_{S_2^{(e)}}
+    	[N]^T J^{*}\,dS
+    	\right].
+    	\tag{1.30}
+    \end{equation}
+    
+    Portanto, definindo a matriz de rigidez local do elemento como
+    
+    \begin{equation}
+    	[K]^{(e)}
+    	=
+    	\int_{V_e}
+    	[B]^T[D][B]\,dV,
+    	\tag{1.31}
+    \end{equation}
+    
+    e o vetor de corrente nodal equivalente como
+    
+    \begin{equation}
+    	\{F\}^{(e)}
+    	=
+    	\int_{S_2^{(e)}}
+    	[N]^T J^{*}\,dS,
+    	\tag{1.32}
+    \end{equation}
+    
+    o funcional local pode ser escrito como
+    
+    \begin{equation}
+    	\pi^{(e)}
+    	=
+    	\frac{1}{2}
+    	\{\phi\}^{(e)T}
+    	[K]^{(e)}
+    	\{\phi\}^{(e)}
+    	-
+    	\{\phi\}^{(e)T}
+    	\{F\}^{(e)}.
+    	\tag{1.33}
+    \end{equation}
+    
+    A condição de estacionariedade do funcional exige que
+    
+    \begin{equation}
+    	\frac{\partial \pi^{(e)}}{\partial \{\phi\}^{(e)}}=0.
+    	\tag{1.34}
+    \end{equation}
+    
+    Logo,
+    
+    \begin{equation}
+    	[K]^{(e)}
+    	\{\phi\}^{(e)}
+    	=
+    	\{F\}^{(e)}.
+    	\tag{1.35}
+    \end{equation}
+    
+    Finalmente, após a montagem de todos os elementos da malha, obtém-se o sistema global
+    
+    \begin{equation}
+    	[K]\{\phi\}=\{F\}.
+    	\tag{1.36}
+    \end{equation}
+    ```
+    
     
     \textcolor{red}{EDITAR DESENVOLVIMENTO}
         \begin{equation*}
@@ -530,7 +747,7 @@ C_{32} &= \beta_n(\sigma_{xx}\beta_m+\sigma_{xy}\gamma_m)+\gamma_n(\sigma_{yx}\b
 C_{33} &= \beta_n^2\sigma_{xx}+2\gamma_n\beta_n\sigma_{xy}+\gamma_n^2\sigma_{yy}.
 \end{align*}
 }
-
+onde:
 
 
     \begin{equation*}
@@ -2296,20 +2513,20 @@ ou,
 \end{equation*}
 Dividindo por $\cos(2\theta)$ e encontrando a tangente de ($2\theta$):
 \begin{equation*}  
-\frac{\sigma_{xx}-\sigma_{yy}}{2}\tan(2\theta)
+\frac{\sigma_{xx}-\sigma_{yy}}{2}\tan(2\theta) =
 -\sigma_{xy}  
 	\end{equation*}
 Então:
 \begin{equation*}
 \tan(2\theta)
 =
-\frac{2\sigma_{xy}}{\sigma_{xx}-\sigma_{yy}}  
+\frac{-2\sigma_{xy}}{\sigma_{xx}-\sigma_{yy}}  
 \end{equation*}
 Aplicando arco-tangente:
 \begin{equation*} 
 2\theta=  
 \arctan\left(  
-\frac{2\sigma_{xy}}  
+\frac{-2\sigma_{xy}}  
 {\sigma_{xx}-\sigma_{yy}}  
 \right)  
 \end{equation*}
@@ -2332,7 +2549,7 @@ Portanto:
 		\theta=  
 		\frac{1}{2}  
 		\arctan\left(  
-		\frac{2\sigma_{xy}}  
+		\frac{-2\sigma_{xy}}  
 		{\sigma_{xx}-\sigma_{yy}}  
 		\right)  
 		\label{eq:AngleTheta_001}
