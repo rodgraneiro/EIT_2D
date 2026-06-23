@@ -310,7 +310,7 @@ class forward_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"$AI = \sigma_L - \sigma_T$")
+        cbar.set_label(r"$AI = \sigma_L / \sigma_T$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
