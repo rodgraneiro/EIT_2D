@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 def runFWD_InverseProblemAnisotropicHua():
 
     #nome = '../../malhasMSH/circ4_objetoUm_Hua_coarse.msh'
-    nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
+    #nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos.msh'
     #nome = '../../malhasMSH/Hua_cuba4eletrodos_1objetoDireita.msh'
     #nome = '../../malhasMSH/Hua_cuba16eletrodos_1objeto_denso.msh'
     #nome = '../../malhasMSH/test_Olavo_Hua.msh'
@@ -23,7 +23,7 @@ def runFWD_InverseProblemAnisotropicHua():
     #nome = '../../malhasMSH/circ16_2object_SqrCirc_Hua_v1.msh'
     #nome = '../../malhasMSH/Domain32_sqtr_left.msh'
     #nome = '../../malhasMSH/Domain32_2Obj_SqrtCirc_Hua.msh'
-    
+    nome = '../../malhasMSH/Hua_cuba16eletrodos_3objetos_denso.msh'
     
     
     

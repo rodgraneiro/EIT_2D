@@ -139,7 +139,7 @@ class forward_problem:
             #triang = tri.Triangulation(x, y, elems_2D)
             #tpc = ax.tripcolor(triang, facecolors=sigma[:len(elems_2D)], edgecolors='k', cmap='Blues',min=0.0, vmax=5.0 )
             #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=0.0, vmax=5.0 )
-            fig.colorbar(tpc, ax=ax, label='σ (Conductivity)')
+            fig.colorbar(tpc, ax=ax, label='σ (Conductivity) [S/m]')
             if save == True:
                 #timestamp = datetime.now().strftime("%Y%m%d_%H%M")
                 #ax.set_title(f"Conductivity Real (σ) ", fontsize=12)
@@ -159,9 +159,10 @@ class forward_problem:
         ax.set_xlabel("[m]", fontsize=12)
         ax.set_ylabel("[m]", fontsize=12)
         plt.tight_layout()
-        nome_arquivo = f"../../docs/{self.name}.webp"
-        plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
-        plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight') 
+        nome_arquivo = f"../../docs/{self.name}.svg"
+        #plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
+        #plt.savefig(nome_arquivo, dpi=300, bbox_inches='tight')
+        plt.savefig(nome_arquivo, format="svg", dpi=300)
         plt.show() 
          
         
@@ -310,7 +311,7 @@ class forward_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"$AI = \sigma_L / \sigma_T$")
+        cbar.set_label(r"$AI = \sigma_{min} / \sigma_{max}$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -340,7 +341,8 @@ class forward_problem:
         if save:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            #plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(nome_arquivo, format="svg", dpi=300, bbox_inches="tight")
             plt.show() 
             plt.close()   # importante
         else:
@@ -381,22 +383,22 @@ class forward_problem:
                 
             
             #nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}.webp'
-            nome1 = f"../../docs/{self.name}_sigma_xx.webp" 
+            nome1 = f"../../docs/{self.name}_sigma_xx.svg" 
             self.plotMSH(self.mymesh.sigma_vec[:, 0],  save = True, SigmaXXXYYY='xx', nome_arquivo=nome1)
             #lista_imgs.append(nome1)
             
             #nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.6f}.webp'
-            nome2 =  f"../../docs/{self.name}_sigma_xy.webp"
+            nome2 =  f"../../docs/{self.name}_sigma_xy.svg"
             self.plotMSH(self.mymesh.sigma_vec[:, 1],  save = True, SigmaXXXYYY='xy', nome_arquivo=nome2)
             #lista_imgs.append(nome2)
             
             #nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}.webp'
-            nome3 = f"../../docs/{self.name}_sigma_yy.webp"
+            nome3 = f"../../docs/{self.name}_sigma_yy.svg"
             self.plotMSH(self.mymesh.sigma_vec[:, 2],  save = True, SigmaXXXYYY='yy', nome_arquivo=nome3)
             #lista_imgs.append(nome3)
 
 
-            nome4 =  f"../../docs/{self.name}_Elipse.webp"     
+            nome4 =  f"../../docs/{self.name}_Elipse.svg"     
             #self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
             self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg,  save=True, nome_arquivo=nome4)
             #lista_imgs.append(nome13)            

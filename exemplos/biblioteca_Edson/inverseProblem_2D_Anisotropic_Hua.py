@@ -778,7 +778,7 @@ class inverse_problem:
         plt.grid(True)
         plt.tight_layout()
         plt.ticklabel_format(style='plain')
-        plt.savefig(f"{nome_arquivo}.webp", dpi=150, bbox_inches='tight')
+        plt.savefig(f"{nome_arquivo}.svg", dpi=150, bbox_inches='tight')
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -814,11 +814,7 @@ class inverse_problem:
         ax.ticklabel_format(style='plain')
     
         fig.savefig(
-            f"{nome_arquivo}.webp",
-            dpi=150,
-            bbox_inches='tight',
-            pil_kwargs={"quality": 70}
-        )
+            f"{nome_arquivo}.svg", format="svg", dpi=300)
     
         plt.show(block=False)
         plt.pause(3)
@@ -910,7 +906,7 @@ class inverse_problem:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}_AutoScale.webp',  dpi=200, pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}_AutoScale.svg',  dpi=200, pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
         plt.pause(3)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
@@ -1029,7 +1025,7 @@ class inverse_problem:
             # -------------------------------
             if save:
                 ax.set_title(
-                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
                     fontsize=11
                 )
             else:
@@ -1048,16 +1044,11 @@ class inverse_problem:
     
                 if nome_arquivo is None:
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-                    nome_saida = f"Conductivity_{tipo_escala}_{timestamp}.webp"
+                    nome_saida = f"Conductivity_{tipo_escala}_{timestamp}.svg"
                 else:
-                    nome_saida = f"{nome_arquivo}_{tipo_escala}.webp"
+                    nome_saida = f"{nome_arquivo}_{tipo_escala}.svg"
     
-                plt.savefig(
-                    nome_saida,
-                    dpi=200,
-                    bbox_inches='tight',
-                    pil_kwargs={"quality": 70}
-                )
+                plt.savefig(nome_saida, format="svg", dpi=300)
     
             plt.show(block=False)
             plt.pause(3)
@@ -1221,7 +1212,7 @@ class inverse_problem:
         ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
         
         ax.set_title(
-            f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+            f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration}",
             fontsize=11
         )
         
@@ -1236,7 +1227,7 @@ class inverse_problem:
         if save:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
             #plt.show() 
             #plt.close()   # importante
             plt.show(block=False)
@@ -1312,7 +1303,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=150, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=300)
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
@@ -1401,7 +1392,7 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.svg',  format="svg", dpi=300)
             plt.show() 
             plt.close()   # importante
         else:
@@ -1417,7 +1408,7 @@ class inverse_problem:
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
 
-    def plot_Sorting(self, sigma_Dif, titulo="Results (σx-σy)", salvar=False, nome_arquivo="plot_Sorting.webp"):
+    def plot_Sorting(self, sigma_Dif, titulo="Results (σx-σy)", salvar=False, nome_arquivo="plot_Sorting.svg"):
         
         #sigma_dif = sigma_x - sigma_y
         
@@ -1444,7 +1435,7 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=300)
             plt.show() 
             plt.close()   # importante
         else:
@@ -1484,7 +1475,7 @@ class inverse_problem:
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=150)
-            plt.savefig(f'{nome_arquivo}.webp',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
+            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=300)
             plt.show() 
             plt.close()   # importante
         else:
@@ -1552,8 +1543,8 @@ class inverse_problem:
     '''
     def salvar_html_todos_lambdas(self,pasta, html_name="resultado_completo"):
         print('pasta_salvar_html_todos_lambdas', pasta)
-        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
-        #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.webp"))
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
+        #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.svg"))
         #print(padrao)
 
         #arquivos = glob.glob(padrao)
@@ -1565,9 +1556,9 @@ class inverse_problem:
         for arq in arquivos:
             nome = os.path.basename(arq)
     
-            # lambda = último pedaço antes de .webp
-            #lambda_str = nome.replace(".webp", "").split("_")[-1]
-            partes = nome.replace(".webp", "").split("_")
+            # lambda = último pedaço antes de .svg
+            #lambda_str = nome.replace(".svg", "").split("_")[-1]
+            partes = nome.replace(".svg", "").split("_")
 
             if partes[-1] in ("AutoScale", "SameScale"):
                 tipo_escala = partes[-1]
@@ -1719,7 +1710,7 @@ class inverse_problem:
 
         print('pasta_salvar_html_todos_lambdas', pasta)
     
-        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
     
         grupos = defaultdict(lambda: {
             "AutoScale": {},
@@ -1729,7 +1720,7 @@ class inverse_problem:
         for arq in arquivos:
     
             nome = os.path.basename(arq)
-            partes = nome.replace(".webp", "").split("_")
+            partes = nome.replace(".svg", "").split("_")
     
             if partes[-1] in ("AutoScale", "SameScale"):
                 tipo_escala = partes[-1]
@@ -1975,7 +1966,7 @@ class inverse_problem:
     
         print('pasta_salvar_html_todos_lambdas', pasta)
     
-        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.webp"))
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
     
         grupos = defaultdict(lambda: {
             "AutoScale": {},
@@ -1985,7 +1976,7 @@ class inverse_problem:
         for arq in arquivos:
     
             nome = os.path.basename(arq)
-            partes = nome.replace(".webp", "").split("_")
+            partes = nome.replace(".svg", "").split("_")
     
             if partes[-1] in ("AutoScale", "SameScale"):
                 tipo_escala = partes[-1]
@@ -2540,7 +2531,7 @@ class inverse_problem:
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
         
-        #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.webp'
+        #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.svg'
         nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
