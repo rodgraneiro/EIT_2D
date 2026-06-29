@@ -757,10 +757,7 @@ class inverse_problem:
     
         ax.ticklabel_format(style='plain')
     
-        fig.savefig(
-            f"{nome_arquivo}.svg", format="svg", dpi=200)
-        )
-    
+        fig.savefig("{nome_arquivo}.svg", format="svg", dpi=200)    
         plt.show(block=False)
         plt.pause(3)
     

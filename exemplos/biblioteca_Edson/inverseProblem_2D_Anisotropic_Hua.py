@@ -814,7 +814,7 @@ class inverse_problem:
         ax.ticklabel_format(style='plain')
     
         fig.savefig(
-            f"{nome_arquivo}.svg", format="svg", dpi=300)
+            f"{nome_arquivo}.svg", format="svg", dpi=200)
     
         plt.show(block=False)
         plt.pause(3)
@@ -947,6 +947,7 @@ class inverse_problem:
                         triang,
                         facecolors=fc,
                         edgecolors='k',
+                        linewidths=0.1,
                         cmap='RdBu_r'
                     )
                 else:
@@ -954,6 +955,7 @@ class inverse_problem:
                         triang,
                         facecolors=fc,
                         edgecolors='k',
+                        linewidths=0.1,
                         cmap='rainbow'
                     )
     
@@ -979,6 +981,7 @@ class inverse_problem:
                         triang,
                         facecolors=fc,
                         edgecolors='k',
+                        linewidths=0.1,
                         cmap='RdBu_r',
                         norm=norm
                     )
@@ -988,6 +991,7 @@ class inverse_problem:
                         triang,
                         facecolors=fc,
                         edgecolors='k',
+                        linewidths=0.1,
                         cmap='rainbow',
                         vmin=0.0,
                         vmax=4.0
@@ -1031,8 +1035,8 @@ class inverse_problem:
             else:
                 ax.set_title("Conductivity Real (σ)", fontsize=15)
     
-            ax.set_xlabel("[m]", fontsize=12)
-            ax.set_ylabel("[m]", fontsize=12)
+            ax.set_xlabel("Lenght [m]", fontsize=12)
+            ax.set_ylabel("Lenght [m]", fontsize=12)
     
             plt.tight_layout()
             plt.ticklabel_format(style='plain')
@@ -1048,7 +1052,7 @@ class inverse_problem:
                 else:
                     nome_saida = f"{nome_arquivo}_{tipo_escala}.svg"
     
-                plt.savefig(nome_saida, format="svg", dpi=300)
+                plt.savefig(nome_saida, format="svg", dpi=200)
     
             plt.show(block=False)
             plt.pause(3)
@@ -1197,7 +1201,7 @@ class inverse_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"$AI = \sigma_L - \sigma_T$")
+        cbar.set_label(r"Anisotropy $AI = \sigma_min / \sigma_max$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -1217,8 +1221,8 @@ class inverse_problem:
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('[m]')
-        ax.set_ylabel('[m]')
+        ax.set_xlabel('Lenght [m]')
+        ax.set_ylabel('Lenght [m]')
         ax.grid(False)
         
         #plt.show()
@@ -1303,7 +1307,7 @@ class inverse_problem:
         if save == True:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M")
             #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=150, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=300)
+            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
@@ -1392,7 +1396,7 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.svg',  format="svg", dpi=300)
+            plt.savefig(f'{nome_arquivo}.svg',  format="svg", dpi=200)
             plt.show() 
             plt.close()   # importante
         else:
@@ -1435,7 +1439,7 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=300)
+            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
             plt.show() 
             plt.close()   # importante
         else:
@@ -1475,7 +1479,7 @@ class inverse_problem:
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=150)
-            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=300)
+            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
             plt.show() 
             plt.close()   # importante
         else:
