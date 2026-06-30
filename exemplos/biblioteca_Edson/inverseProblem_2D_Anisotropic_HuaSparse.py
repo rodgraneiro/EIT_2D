@@ -802,14 +802,14 @@ class inverse_problem:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='k',
+                        edgecolors='0.9',
                         cmap='RdBu_r'
                     )
                 else:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='k',
+                        edgecolors='0.9',
                         cmap='rainbow'
                     )
     
@@ -834,7 +834,7 @@ class inverse_problem:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='k',
+                        edgecolors='0.9',
                         cmap='RdBu_r',
                         norm=norm
                     )
@@ -843,7 +843,7 @@ class inverse_problem:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='k',
+                        edgecolors='0.9',
                         cmap='rainbow',
                         vmin=0.0,
                         vmax=4.0
