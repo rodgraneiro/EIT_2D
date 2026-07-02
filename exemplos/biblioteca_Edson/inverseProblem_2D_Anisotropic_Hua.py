@@ -392,89 +392,7 @@ class inverse_problem:
         #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
 
         return self.KGlobalTemp
-    '''
-    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
-        self.KGlobalTemp = np.zeros(
-            (self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes),
-            dtype=float
-        )
-
-        k_phys = 0
-
-        for elem in range(self.mymesh.NumberOfElements):
-            elemento = self.mymesh.Elements[elem]
-
-            if elemento.FlagIsElectrode:
-                Ke = elemento.KGeo
-            else:
-                sxx, sxy, syy = SigmaTemp[k_phys]
-                Ke = sxx * elemento.Kxx + sxy * elemento.Kxy + syy * elemento.Kyy
-                k_phys += 1
-
-            for i in range(len(elemento.Topology)):
-                no_i = int(elemento.Topology[i])
-                for j in range(len(elemento.Topology)):
-                    no_j = int(elemento.Topology[j])
-                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
-
-        return self.KGlobalTemp
-    
-    def CalcTempKGlobalAnisotropicHua(self, SigmaTemp):
-        print('SigmaTemp', SigmaTemp.shape)
-        #self.KGlobalTemp = np.zeros((self.mymesh.msh_topology.shape[0], self.mymesh.msh_topology.shape[0]), dtype=float  )
-        self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
-        #sigma_xx, sigma_xy, sigma_yy = SigmaTemp
-
-        sigma_xx = SigmaTemp[:, 0]
-        sigma_xy = SigmaTemp[:, 1]
-        sigma_yy = SigmaTemp[:, 2]
-
-        k_phys = 0
-
-        for elem in range(self.mymesh.NumberOfElements):    
-            if self.mymesh.Elements[elem].FlagIsElectrode:
-                continue
-
-            sigma_xx, sigma_xy, sigma_yy = SigmaTemp[k_phys]
-
-            Kxx = self.mymesh.Elements[elem].Kxx
-            Kxy = self.mymesh.Elements[elem].Kxy
-            Kyy = self.mymesh.Elements[elem].Kyy
-
-            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
-
-            for i in range(len(self.mymesh.Elements[elem].Topology)):
-                no_i = self.mymesh.Elements[elem].Topology[i]
-
-                for j in range(len(self.mymesh.Elements[elem].Topology)):
-                    no_j = self.mymesh.Elements[elem].Topology[j]
-                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
-
-            k_phys += 1
-        np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
-        return self.KGlobalTemp
-        
-        for elem in range(self.mymesh.NumberOfElements):
-    
-            # Matrizes separadas (você precisa ter isso no elemento!)
-            Kxx = self.mymesh.Elements[elem].Kxx
-            Kxy = self.mymesh.Elements[elem].Kxy
-            Kyy = self.mymesh.Elements[elem].Kyy
-    
-            Ke = sigma_xx * Kxx + sigma_xy * Kxy + sigma_yy * Kyy
-    
-            for i in range(len(self.mymesh.Elements[elem].Topology)):
-                no_i = self.mymesh.Elements[elem].Topology[i]
-    
-                for j in range(len(self.mymesh.Elements[elem].Topology)):
-                    no_j = self.mymesh.Elements[elem].Topology[j]
-    
-                    self.KGlobalTemp[no_i, no_j] += Ke[i, j]
-    
-        print(f'KGlobalTemp \n {self.KGlobalTemp.shape}')
-    
-        #np.savetxt("CalcTempKGlobal.txt", self.KGlobalTemp, fmt="%e")
-        '''
+   
     ###############################################################################
     def Calc_J(self, invVtemp):
         listTempJ = []
@@ -500,30 +418,6 @@ class inverse_problem:
         corr_xx_yy = np.corrcoef(J[:, 0::3].ravel(), J[:, 2::3].ravel())[0, 1]
         print("corr σxx-σyy =", corr_xx_yy)
         
-    '''
-    def Calc_J(self, invVtemp):
-        listTempJ=[]
-        #for idx in range(self.mymesh.NumberOfElements):
-        for idx in range(0, self.mymesh.msh_topology.shape[0]):
-            termo1 = np.dot(invVtemp, self.vetor_corrente_cond_contorno) 
-            #print('termo1 \n', termo1.shape)
-            termo2 = np.dot(self.listJacobian[idx], termo1)
-            #print('idx', idx)
-            #print('termo2 \n', termo2)
-            termo3 = -np.dot(invVtemp, termo2)
-            termo3 = termo3[self.mymesh.ElectrodeNodes]
-            #print('termo3 \n', termo3.shape)
-            termo3 = termo3.reshape(-1,1,  order='F')
-            #print('termo3b \n', termo3.shape)
-            listTempJ.append(termo3)
-            listTempJa = np.array(listTempJ)
-            #print('listTempJxxxxxxxxxxx \n', listTempJa.shape)
-        self.TempJ = np.concatenate(listTempJ, axis=1)
-        #print('self.TempJ \n',self.TempJ.shape)
-        #JTJ = np.dot(self.TempJ.T, self.TempJ)
-        self.JTJ = np.dot(self.TempJ.T, self.TempJ)
-        #print('JTJ \n', self.JTJ.shape)
-    '''
     ###############################################################################
     ###############################################################################
     # Essa função calcula FPA com distância de cada elemento
@@ -600,57 +494,6 @@ class inverse_problem:
     ###############################################################################
     # Essa função calcula FPA com distância média entre os elementoss
     ###############################################################################    
-    '''
-    def calc_L2_gauss_mean_2D(self, centroids_2D,  tol=1e-9):
-   
-        d_media = np.mean(np.linalg.norm(centroids_2D[1:] - centroids_2D[:-1], axis=1))
-        std = 0.05*d_media
-        #print(f'std = {std}')
-        ne = centroids_2D.shape[0]
-        L = np.zeros((ne, ne), dtype=np.float64)
-    
-        for j in range(ne):                    # coluna 
-            cj = centroids_2D[j]
-            soma = 0.0
-    
-            for i in range(ne):                # linha 
-                ci = centroids_2D[i]
-                dist = np.linalg.norm(ci - cj)
-                if dist <= 5 * std:
-                    g = np.exp(-dist**2 / (2 * std**2))
-                else:
-                    g = 0.0   
-                L[i, j] = g
-                soma += g
-    
-            if soma > 0:
-                L[:, j] /= soma
-    
-        L[np.abs(L) < tol] = 0.0 
-        I = np.eye(ne)
-    
-        # filtro passa–alta
-        L2 = I - L
-        
-        i, j =  np.nonzero(L)
-        values = L2[i, j]
-
-
-        # plot  matrix sparsity 
-        plt.figure(figsize=(6, 5))
-        plt.spy(L2, markersize=1)
-        plt.title('HPFilter matrix sparsity pattern', fontsize=15)
-        plt.xlabel('Colun', fontsize=12)
-        plt.ylabel('Line', fontsize=12)
-        plt.tight_layout()
-        plt.show()
-
-        plt.show(block = False)
-        plt.pause(0.1)
-
-        return L2
-
-    '''
 
     def calc_L2_gauss_2D_only_domain(self, centroids_2D, std=None, tol=1e-9, raio=1.5):
         """
@@ -761,28 +604,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
-    '''
-    def plotar_iteracoes(self,lista_indice, lista_valor,  nome_arquivo="Optimization.png"):#, nome = None):
-        plt.figure(figsize=(6, 6))
-        ax.set_aspect('equal', adjustable='box')
-        plt.plot(lista_indice,
-                lista_valor,
-                marker='.',
-                linestyle='-',
-                color='b',
-                label='Norm $\Delta\sigma$')        # plota gráfico das iterações,
-        plt.xlabel("Iteration", fontsize=12)
-        plt.ylabel("Norm [$\Delta\sigma$]", fontsize=12)
-        plt.title("Optimization", fontsize=15)
-        plt.legend()
-        plt.grid(True)
-        plt.tight_layout()
-        plt.ticklabel_format(style='plain')
-        plt.savefig(f"{nome_arquivo}.svg", dpi=150, bbox_inches='tight')
-        plt.show(block=False)   # mostra sem travar
-        plt.pause(3)            # mantém aberto por 3 segundos
-        plt.close('all')        # fecha automaticamente
-    '''
+
     def plotar_iteracoes(self,
                      lista_indice,
                      lista_valor,
@@ -825,92 +647,6 @@ class inverse_problem:
     # Essa função plota o gráfico da condutividade da malha
     ###############################################################################
 
-    '''
-    def plotMSH(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
-
-        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
-        topo = self.mymesh.msh_topology
-        ajuste  = self.mymesh.NumberOfElectrodes*4 +1
-    
-        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
-        elems_2D = np.array([el for el in topo if len(el) == 3])
-        elems_1D = np.array([el for el in topo if len(el) == 2])
-    
-        #fig, ax = plt.subplots(figsize=(6, 5))
-        fig, ax = plt.subplots(figsize=(6,6))
-        #ax.set_aspect('equal')
-        ax.set_aspect('equal', adjustable='box')
-        # ============================================================
-        #  1) PLOTAR ELEMENTOS 2D (TRIANGULARES)
-        # ============================================================
-        if len(elems_2D) > 0:
-            triang = tri.Triangulation(x, y, elems_2D)
-            #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
-            ntri = triang.triangles.shape[0]
-            fc = sigma.ravel()[:ntri]
-            
-            #finder = triang.get_trifinder()
-            #ex, ey = 0.02, 0.07
-            #idx_elem = finder(ex, ey) 
-            #idx_elem_global = finder(ex, ey) + ajuste
-            #print("Elemento:", idx_elem_global)
-            #print("Nós:", elems_2D[idx_elem])
-            #if idx_elem != -1:
-            #    print("Nós:", elems_2D[idx_elem])
-            #else:
-            #    print("Ponto fora da malha")
-            lim = np.max(np.abs(fc))
-            if lim == 0:
-                lim = 1e-12
-            norm = TwoSlopeNorm(vmin=-lim, vcenter=0, vmax=lim)
-            #norm = TwoSlopeNorm(vmin=-5, vcenter=0, vmax=5)
-            #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-            
-            if SigmaXXXYYY == 'xy' or SigmaXXXYYY == 'θ°':
-                
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')#, norm=norm )
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r')
-            #if not SigmaXXXYYY == 'xy' or not SigmaXXXYYY == 'θ°':           
-            if SigmaXXXYYY not in ('xy', 'θ°'):
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=-5.0, vmax=5.0 )
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', vmin=0.0, vmax=4.0 )
-                #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='RdBu_r', norm=norm )
-                tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='rainbow')#, vmin=0.0, vmax=4.0 )
-            
-            if SigmaXXXYYY != 'θ°':
-                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Conductivity σ [S/m]')
-            else:
-                fig.colorbar(tpc, ax=ax, shrink=0.70, label='Angle θ° ')
-                
-            if save == True:
-                timestamp = datetime.now().strftime("%m%d_%H%M")
-                ax.set_title(f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}", fontsize=11)
-            if save == False:
-                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
-        # ============================================================
-        #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
-        # ============================================================
-        if len(elems_1D) > 0:
-            for (n1, n2) in elems_1D:
-                x_coords = [x[n1], x[n2]]
-                y_coords = [y[n1], y[n2]]
-                ax.plot(x_coords, y_coords, color='red', linewidth=2)
-    
-        # ------------------------------------------------------------
-        ax.set_xlabel("[m]", fontsize=12)
-        ax.set_ylabel("[m]", fontsize=12)
-        
-        plt.tight_layout()
-        plt.ticklabel_format(style='plain')
-        if save == True:
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-            #plt.savefig(f"Conductivity_itr_{iteration}.png", dpi=200, bbox_inches='tight')
-            #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
-            plt.savefig(f'{nome_arquivo}_AutoScale.svg',  dpi=200, pil_kwargs={"quality": 70})
-        plt.show(block=False)   # mostra sem travar
-        plt.pause(3)            # mantém aberto por 3 segundos
-        plt.close('all')        # fecha automaticamente
-    '''
     def plotMSH(self, sigma, Lambda=None, iteration=None, save=False,   SigmaXXXYYY=None, DifAniso=None, nome_arquivo=None):
 
 
@@ -1368,30 +1104,7 @@ class inverse_problem:
         ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=4, fontsize=10)
         
         fig.tight_layout()
-        '''
-        fig, ax = plt.subplots(figsize=(6.0, 6.0))
-        #plt.figure(figsize=(6.0, 6.0))
-        ax.set_aspect('equal', adjustable='box')
-        plt.plot(x, sigma_xx, label='σxx', linewidth=1.0)
-        plt.plot(x, sigma_xy, label='σxy', linewidth=1.0)
-        plt.plot(x, sigma_yy, label='σyy', linewidth=1.0)
-        #plt.plot(x, sigma_Dif, label='σL-σT', linewidth=1.0, linestyle='-.')
-        plt.plot(x, sigma_L, label='σL', linewidth=2.0,linestyle=':')
-        plt.plot(x, sigma_T, label='σT', linewidth=2.0,linestyle=':')
-        plt.plot(x, plot_ref_sL, label='Ref_σL', linewidth=3.0,linestyle='--')
-        plt.plot(x, plot_ref_sT, label='Ref_σT', linewidth=3.0,linestyle='--')
-        
-    
-        plt.title(titulo, fontsize=14)
-        plt.xlabel('Element', fontsize=10)
-        plt.ylabel('Conductivity [S/m]', fontsize=10)
-    
-        plt.grid(True, linestyle='--', alpha=0.5)
-        plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.12), ncol=4, fontsize=10)
-        #plt.legend()
-    
-        plt.tight_layout()
-        '''
+
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
@@ -1446,15 +1159,7 @@ class inverse_problem:
             plt.show()    
     ###############################################################################    
 
-
-
-
-
-
-
-
-       
-            
+     
     def plot_theta_deg(self, theta_deg, titulo="Results of the calculated θ angle ", salvar=False, nome_arquivo="plot_theta.png"):
     
         data_theta = theta_deg
@@ -1543,429 +1248,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
-        
-    '''
-    def salvar_html_todos_lambdas(self,pasta, html_name="resultado_completo"):
-        print('pasta_salvar_html_todos_lambdas', pasta)
-        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
-        #padrao  = glob.glob(os.path.join(pasta, f"{nome_html}*.svg"))
-        #print(padrao)
 
-        #arquivos = glob.glob(padrao)
-
-        #print(arquivos)
-    
-        grupos = defaultdict(dict)
-    
-        for arq in arquivos:
-            nome = os.path.basename(arq)
-    
-            # lambda = último pedaço antes de .svg
-            #lambda_str = nome.replace(".svg", "").split("_")[-1]
-            partes = nome.replace(".svg", "").split("_")
-
-            if partes[-1] in ("AutoScale", "SameScale"):
-                tipo_escala = partes[-1]
-                lambda_str = partes[-2]
-            else:
-                tipo_escala = "AutoScale"
-                lambda_str = partes[-1]
-    
-            if "sigma_xx" in nome:
-                grupos[lambda_str]["sigma_xx"] = nome
-            elif "sigma_xy" in nome:
-                grupos[lambda_str]["sigma_xy"] = nome
-            elif "sigma_yy" in nome:
-                grupos[lambda_str]["sigma_yy"] = nome
-            elif "sigma_xl" in nome:
-                grupos[lambda_str]["sigma_l"] = nome
-            elif "sigma_xt" in nome:
-                grupos[lambda_str]["sigma_t"] = nome            
-            elif "sigma_Dif" in nome:
-                grupos[lambda_str]["sigma_Dif"] = nome
-            elif "theta" in nome:
-                grupos[lambda_str]["theta"] = nome
-            elif "sigma_linhas" in nome:
-                grupos[lambda_str]["sigma_linhas"] = nome                           
-            elif "iterations" in nome:
-                grupos[lambda_str]["iterations"] = nome
-            elif "plot_theta_deg" in nome:
-                grupos[lambda_str]["Sorting"] = nome
-            #elif "Mask" in nome:
-            #    grupos[lambda_str]["Mask"] = nome
-    
-        colunas = [
-            ("sigma_xx", "σxx"),
-            ("sigma_xy", "σxy"),
-            ("sigma_yy", "σyy"),
-            ("sigma_l", "σ_l"),
-            ("sigma_t", "σ_t"),          
-            ("sigma_Dif", "(σ_l - σ_t)"),
-            ("theta", "Angle [°]"),            
-            ("sigma_linhas", "Summary"),
-            ("iterations", "Optimization"),           
-            #("plot_theta_deg", "Angle [°]"),  
-            #("Sorting", "Sorting"),
-            #("Mask", "Mask"),
-        ]
-    
-        html_path = os.path.join(pasta, f"{html_name}.html") 
-    
-        with open(html_path, "w", encoding="utf-8") as f:
-            f.write("""
-    <html>
-    <head>
-    <meta charset="utf-8">
-    <title>Resultados TIE</title>
-    
-    <style>
-    body {background-color: black; color: white; font-family: Arial, sans-serif;}
-    
-    h1 {color: white;}
-    
-    .info {color: lime;font-weight: bold; margin-bottom: 6px;}
-    
-    table {border-collapse: collapse;width: 100%;}
-    
-    th {font-size: 24px; padding: 10px; color: white;}
-    
-    
-    td {padding: 0px; margin: 0px; text-align: center; vertical-align: top; }
-    
-    img {width: 200px;height: auto; background-color: white;}
-    
-    .lambda {color: yellow; font-size: 12px; margin-bottom: 5px; }
-    .titulo {
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 3px;
-    }
-    
-    .lambda {
-        color: yellow;
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
-        </style>
-        </head>
-    
-    <body>
-    """)
-    
-            #f.write("<p>Above are some examples of simulated electrical fields in the phantom.</p>\n")
-            f.write("""
-    <p class="info">
-    Results obtained for a maximum of 25 iterations.
-    &nbsp;&nbsp;&nbsp;
-    Auto scale for all graphs.
-    &nbsp;&nbsp;&nbsp;
-    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
-    </p>
-    <hr>
-    """)
-    
-            f.write("<table>\n")
-    
-            f.write("<tr>\n")
-            #for _, titulo in colunas:
-            #    f.write(f"<th>{titulo}</th>\n")
-            #f.write("</tr>\n")
-    
-            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):#, reverse=True):
-                f.write("<tr>\n")
-    
-                for chave, _ in colunas:
-                    img = grupos[lambda_str].get(chave)
-    
-                    if img is not None:
-                        titulo = dict(colunas)[chave]
-
-                        f.write(f"""
-        <td>
-            <div class="titulo">{titulo}</div>
-            <div class="lambda">λ = {lambda_str}</div>
-            <img src="{img}">
-        </td>
-    """)
-#                        f.write(f"""
-#    <td>
-#        <div class="lambda">λ = {lambda_str}</div>
-#        <img src= "{img}">
-#    </td>
-#    """)
-                    else:
-                        f.write("<td></td>\n")
-    
-                f.write("</tr>\n")
-    
-            f.write("""
-    </table>
-    </body>
-    </html>
-    """)
-    
-        print("HTML salvo em:", html_path)
-    
-    '''
-    '''
-    def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
-    
-
-        print('pasta_salvar_html_todos_lambdas', pasta)
-    
-        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
-    
-        grupos = defaultdict(lambda: {
-            "AutoScale": {},
-            "SameScale": {}
-        })
-    
-        for arq in arquivos:
-    
-            nome = os.path.basename(arq)
-            partes = nome.replace(".svg", "").split("_")
-    
-            if partes[-1] in ("AutoScale", "SameScale"):
-                tipo_escala = partes[-1]
-                lambda_str = partes[-2]
-            else:
-                tipo_escala = "AutoScale"
-                lambda_str = partes[-1]
-    
-            if "sigma_xx" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_xx"] = nome
-    
-            elif "sigma_xy" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_xy"] = nome
-    
-            elif "sigma_yy" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_yy"] = nome
-    
-            elif "sigma_L" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_L"] = nome
-    
-            elif "sigma_T" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_T"] = nome
-    
-            elif "sigma_Dif" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
-    
-            elif "theta" in nome:
-                grupos[lambda_str][tipo_escala]["theta"] = nome
-                
-            elif "Elipses" in nome:
-                grupos[lambda_str][tipo_escala]["Elipses"] = nome
-    
-            elif "sigma_linhas" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_linhas"] = nome
-    
-            elif "iterations" in nome:
-                grupos[lambda_str][tipo_escala]["iterations"] = nome
-    
-            elif "plot_theta_deg" in nome:
-                grupos[lambda_str][tipo_escala]["Sorting"] = nome
-    
-        colunas = [
-            ("sigma_xx", "σxx"),
-            ("sigma_xy", "σxy"),
-            ("sigma_yy", "σyy"),
-            ("sigma_L", "σ_L"),
-            ("sigma_T", "σ_T"),
-            ("sigma_Dif", "(σ_L-σ_T)"),
-            ("theta", "Angle [°]"),
-            ("Elipses", "Anisotropy"),
-            ("sigma_linhas", "Summary"),
-            ("iterations", "Optimization"),
-        ]
-    
-        html_path = os.path.join(pasta, f"{html_name}.html")
-    
-        with open(html_path, "w", encoding="utf-8") as f:
-    
-            f.write("""
-    <html>
-    <head>
-    <meta charset="utf-8">
-    <title>Resultados TIE</title>
-    
-    <style>
-    body {
-        background-color: black;
-        color: white;
-        font-family: Arial, sans-serif;
-    }
-    
-    h1 {
-        color: white;
-    }
-    
-    .info {
-        color: lime;
-        font-weight: bold;
-        margin-bottom: 6px;
-    }
-    
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        margin-bottom: 35px;
-    }
-    
-    th {
-        font-size: 24px;
-        padding: 10px;
-        color: white;
-    }
-    
-    td {
-        padding: 2px;
-        margin: 0px;
-        text-align: center;
-        vertical-align: top;
-    }
-    
-    img {
-        width: 200px;
-        height: auto;
-        background-color: white;
-    }
-    
-    .lambda {
-        color: yellow;
-        font-size: 12px;
-        margin-bottom: 5px;
-    }
-    
-    .titulo {
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 3px;
-    }
-    
-    .escala {
-        color: cyan;
-        font-size: 13px;
-        font-weight: bold;
-        margin-bottom: 4px;
-    }
-    
-    .lambda_bloco {
-        color: orange;
-        font-size: 22px;
-        font-weight: bold;
-        padding-top: 18px;
-        padding-bottom: 8px;
-        text-align: left;
-    }
-    </style>
-    </head>
-    
-    <body>
-    """)
-    
-            f.write("""
-    <p class="info">
-    Results obtained for a maximum of 25 iterations.
-    &nbsp;&nbsp;&nbsp;
-    First row: AutoScale.
-    &nbsp;&nbsp;&nbsp;
-    Second row: SameScale.
-    &nbsp;&nbsp;&nbsp;
-    Lambda values are obtained by: lambdas = np.logspace(-6, 1, 12).
-    </p>
-    <hr>
-    """)
-    
-            f.write("<table>\n")
-    
-            # Cabeçalho das colunas
-            f.write("<tr>\n")
-            for _, titulo in colunas:
-                f.write(f"<th>{titulo}</th>\n")
-            f.write("</tr>\n")
-    
-            for lambda_str in sorted(grupos.keys(), key=lambda x: float(x)):
-    
-                # Linha separadora com o lambda
-                f.write(f"""
-    <tr>
-        <td colspan="{len(colunas)}" class="lambda_bloco">
-            λ = {lambda_str}
-        </td>
-    </tr>
-    """)
-    
-                # =====================================================
-                # Primeira linha: AutoScale
-                # =====================================================
-                f.write("<tr>\n")
-    
-                for chave, _ in colunas:
-    
-                    img = grupos[lambda_str]["AutoScale"].get(chave)
-    
-                    if img is not None:
-    
-                        titulo = dict(colunas)[chave]
-    
-                        f.write(f"""
-    <td>
-        <div class="titulo">{titulo}</div>
-        <div class="escala">AutoScale</div>
-        <div class="lambda">λ = {lambda_str}</div>
-        <img src="{img}">
-    </td>
-    """)
-    
-                    else:
-                        f.write("<td></td>\n")
-    
-                f.write("</tr>\n")
-    
-                # =====================================================
-                # Segunda linha: SameScale
-                # =====================================================
-                f.write("<tr>\n")
-    
-                for chave, _ in colunas:
-    
-                    img = grupos[lambda_str]["SameScale"].get(chave)
-    
-                    if img is not None:
-    
-                        titulo = dict(colunas)[chave]
-    
-                        f.write(f"""
-    <td>
-        <div class="titulo">{titulo}</div>
-        <div class="escala">SameScale</div>
-        <div class="lambda">λ = {lambda_str}</div>
-        <img src="{img}">
-    </td>
-    """)
-    
-                    else:
-                        f.write("<td></td>\n")
-    
-                f.write("</tr>\n")
-    # linha separadora entre lambdas
-                        # separador entre lambdas
-            f.write(f"""
-            <tr>
-                <td colspan="{len(colunas)}"
-                    style="padding-top:10px; padding-bottom:10px;">
-                    <hr style="border:1px solid white;">
-                </td>
-            </tr>
-            """)
-            f.write("""
-    </table>
-    </body>
-    </html>
-    """)
-    '''
     def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
     
         print('pasta_salvar_html_todos_lambdas', pasta)
@@ -2556,12 +1839,12 @@ class inverse_problem:
         nome5 = f'{pasta_teste}/{html_name}_sigma_T_{Lambda:.6f}'  
         self.plotMSH(sigma_T, Lambda, itr, save=True, SigmaXXXYYY='T', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
-        
+        '''
         # Diferença anisotrópica
         nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='L-σT', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
         lista_imgs.append(nome6)
-        
+        '''
         # Theta amgle
         nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}' 
         self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
@@ -2578,7 +1861,7 @@ class inverse_problem:
         lista_imgs.append(nome9)  
         
         '''
-        # Gráfico tipo linha (o que você mandou)
+        # Gráfico tipo linha 
         nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}'
         self.plot_theta_deg(theta_deg, salvar=True, nome_arquivo=nome10)
         lista_imgs.append(nome10)

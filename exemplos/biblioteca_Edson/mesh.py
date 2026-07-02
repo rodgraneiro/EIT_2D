@@ -613,7 +613,8 @@ class PointElectrodes1DMeshEdson(MyMesh):
 
 
 class PointElectrodes2DMeshAnisotropic(MyMesh):
-    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, thetaAngle=None, sigmaX = None, sigmaY = None, useEdson=True):
+    #def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, thetaAngle=None, sigmaX = None, sigmaY = None, useEdson=True):
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, useEdson=True):
         super().__init__(nome_msh)
 
         if type(NumberOfEletrodes) == int:
@@ -623,9 +624,9 @@ class PointElectrodes2DMeshAnisotropic(MyMesh):
 
         self.altura2D = altura2D
         self.useEdson = useEdson
-        self.thetaAngle = thetaAngle
-        self.sigmaX = sigmaX
-        self.sigmaY = sigmaY
+        #self.thetaAngle = thetaAngle
+        #self.sigmaX = sigmaX
+        #self.sigmaY = sigmaY
 
     '''
     - O corpo (background) é physical_group 1.
@@ -726,7 +727,8 @@ class HuaElectrodes2DAnisotropic(MyMesh):
 
     #    self.altura2D = altura2D
     
-    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, thetaAngle=None, sigmaX = None, sigmaY = None, useEdson=True):
+    #def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, thetaAngle=None, sigmaX = None, sigmaY = None, useEdson=True):
+    def __init__(self, NumberOfEletrodes, nome_msh=None, altura2D = 0.1, useEdson=True):
         super().__init__(nome_msh)
 
         if type(NumberOfEletrodes) == int:
@@ -736,9 +738,9 @@ class HuaElectrodes2DAnisotropic(MyMesh):
 
         self.altura2D = altura2D
         self.useEdson = useEdson
-        self.thetaAngle = thetaAngle
-        self.sigmaX = sigmaX
-        self.sigmaY = sigmaY
+        #self.thetaAngle = thetaAngle
+        #self.sigmaX = sigmaX
+        #self.sigmaY = sigmaY
         
     '''
     - O corpo (background) é physical_group 1000 formado por triângulos.
@@ -816,7 +818,7 @@ class HuaElectrodes2DAnisotropic(MyMesh):
         # Setando variáveis das classes elemento (a mesma variável para toda a classe)
         elements.LinearTriangleAnisotropic.Coordinates = self.Coordinates
         elements.LinearTriangleAnisotropic.Altura2D = self.altura2D # define a altura padrão como 1cm
-        elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
+        #elements.LinearTriangleAnisotropic.thetaAngle = self.thetaAngle # define a altura padrão como 1cm
         #elements.LinearTriangleAnisotropic.sigmaX = self.sigmaX # define a altura padrão como 1cm
         #elements.LinearTriangleAnisotropic.sigmaY = self.sigmaY # define a altura padrão como 1cm
 

@@ -39,7 +39,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     
 
 
-    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
+    MinhaMalha_base = mesh.HuaElectrodes2DAnisotropic(16, nome_msh=nome, altura2D = 0.02)#, thetaAngle = 0.0)#, sigmaX = 1.00, sigmaY = 1.0000)
     #MinhaMalha = mesh.HuaElectrodes2DAnisotropic(8, nome_msh=nome, altura2D = 0.02, thetaAngle = -45.0, sigmaX = 1000.00, sigmaY = 1.0)
 
     MinhaMalha_base.ReadMesh() 
@@ -119,78 +119,19 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_Hua.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 250,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 1,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
 #print(sigma_inicial_cont)
-#lambdas = np.logspace(-4, 2, 10)
-#lambdas [1.00000000e-04 4.64158883e-04 2.15443469e-03 1.00000000e-02
-#4.64158883e-02 2.15443469e-01 1.00000000e+00 4.64158883e+00
-# 2.15443469e+01 1.00000000e+02]
-
-
-#lambdas = np.logspace(-4, 1, 10)
-#lambdas [1.00000000e-04 3.59381366e-04 1.29154967e-03 4.64158883e-03
-# 1.66810054e-02 5.99484250e-02 2.15443469e-01 7.74263683e-01
-# 2.78255940e+00 1.00000000e+01]
-
-
-
-#lambdas = np.logspace(-5, 0, 10)
-#e-5
-#lambdas [1.00000000e-05 3.59381366e-05 1.29154967e-04 4.64158883e-04
-# 1.66810054e-03 5.99484250e-03 2.15443469e-02 7.74263683e-02
-# 2.78255940e-01 1.00000000e+00]
-
-#lambdas = np.logspace(-6, 0, 10)
-#e-6
-#lambdas [1.00000000e-06 4.64158883e-06 2.15443469e-05 1.00000000e-04
-# 4.64158883e-04 2.15443469e-03 1.00000000e-02 4.64158883e-02
-# 2.15443469e-01 1.00000000e+00]
-
-#lambdas = np.logspace(-7, 0, 10)
-#e-7
-#lambdas [1.00000000e-07 5.99484250e-07 3.59381366e-06 2.15443469e-05
-# 1.29154967e-04 7.74263683e-04 4.64158883e-03 2.78255940e-02
-# 1.66810054e-01 1.00000000e+00]
-
-#lambdas = np.logspace(-9, 1, 20)
-#lambdas = [1.00000000e-09, 3.35981829e-09]#, 1.12883789e-08, 3.79269019e-08,
-# 1.27427499e-07, 4.28133240e-07, 1.43844989e-06, 4.83293024e-06,
-# 1.62377674e-05, 5.45559478e-05]# 
-#lambdas = [1.83298071e-04, 6.15848211e-04,
-# 2.06913808e-03, 6.95192796e-03, 2.33572147e-02, 7.84759970e-02,
-# 2.63665090e-01, 8.85866790e-01, 2.97635144e+00, 1.00000000e+01]
-
-#lambdas = np.logspace(-9, 1, 10)
-#lambdas [1.00000000e-09 1.29154967e-08 1.66810054e-07 2.15443469e-06
-# 2.78255940e-05 3.59381366e-04 4.64158883e-03 5.99484250e-02
-# 7.74263683e-01 1.00000000e+01]
-
-
-#lambdas = np.logspace(-9, 0, 10)
-#lambdas [1.e-09 1.e-08 1.e-07 1.e-06 1.e-05 1.e-04 1.e-03 1.e-02 1.e-01 1.e+00]
-#lambdas = np.logspace(-9, 1, 12)
-#lambdas [1.00000000e-09 8.11130831e-09 6.57933225e-08 5.33669923e-07
-# 4.32876128e-06 3.51119173e-05 2.84803587e-04 2.31012970e-03
-# 1.87381742e-02 1.51991108e-01 1.23284674e+00 1.00000000e+01]
-
-#lambdas = np.logspace(-6, 1, 12)
-#lambdas= [1.00000000e-06]#, 4.32876128e-06, 1.87381742e-05]# 8.11130831e-05]
-# 3.51119173e-04 1.51991108e-03 6.57933225e-03 2.84803587e-02
-# 1.23284674e-01 5.33669923e-01 2.31012970e+00 1.00000000e+01]
-#lambdas= [1.87381742e-05]
-#lambdas= [6.57933225e-03, 1.424e-02,  2.84803587e-02]#, 5.696e-02]
-#lambdas= [1.424e-02,  2.84803587e-02]
 
 
 #lambdas = np.logspace(-5, -4, 10)
 
-lambdas =[7.01703829e-05]
+lambdas =[1.0e-05]
 resultados = {}
 
-nome_html="Hua_cuba16eletrodos_3objetos_v4denso_artigoB"
+nome_html="LIXOTESTE"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
@@ -203,24 +144,3 @@ for lam in lambdas:
 
 #rodar_simulacao(6.57933225e-03, None)
 
-'''
-# depois que TODAS imagens foram salvas:
-#inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta="../../docs/figureTemp",nome_html="resultado_completo.html")
-import os
-
-nome_html = "XXXrectangularHomogeneousAnisotropy30Neg"
-
-pasta_base = "../../docs/figureTemp"
-pasta_teste = os.path.join(pasta_base, nome_html)
-
-os.makedirs(pasta_teste, exist_ok=True)
-
-pasta2 = "../../docs"
-
-for lam in lambdas:
-    print(f"\nRodando lambda = {lam:.5f}")
-    
-    resultados[lam] = rodar_simulacao(lam, None, nome_html = pasta_teste)
-
-inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta_teste)
-'''

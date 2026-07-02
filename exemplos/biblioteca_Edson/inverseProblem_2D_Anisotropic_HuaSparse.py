@@ -1976,7 +1976,7 @@ class inverse_problem:
         nome5 = f'{pasta_teste}/{html_name}_sigma_T_{Lambda:.6f}'  
         self.plotMSH(sigma_T, Lambda, itr, save=True, SigmaXXXYYY='T', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
-        
+        '''
         # Diferença anisotrópica
         nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='L-σT', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
@@ -1986,8 +1986,8 @@ class inverse_problem:
         nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}' 
         self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         lista_imgs.append(nome7)  
-        
-        # Gráfico tipo linha (o que você mandou)
+        '''
+        # Gráfico tipo linha 
         nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}'
         self.plot_sigma(sigmaInicial,  ref_sL = 3.0, ref_sT = 1.0, salvar=True, nome_arquivo=nome8)
         lista_imgs.append(nome8)
