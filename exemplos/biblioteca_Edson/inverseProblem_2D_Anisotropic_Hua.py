@@ -750,7 +750,7 @@ class inverse_problem:
                     tpc,
                     ax=ax,
                     shrink=0.70,
-                    label='Conductivity σ [S/m]'
+                    label='Conductivity σ (S/m)'
                 )
             else:
                 fig.colorbar(
@@ -765,14 +765,15 @@ class inverse_problem:
             # -------------------------------
             if save:
                 ax.set_title(
-                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
+                    #f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
+                    f"Conductivity σ{SigmaXXXYYY}",
                     fontsize=11
                 )
             else:
                 ax.set_title("Conductivity Real (σ)", fontsize=15)
     
-            ax.set_xlabel("Lenght [m]", fontsize=12)
-            ax.set_ylabel("Lenght [m]", fontsize=12)
+            ax.set_xlabel("Length (m)", fontsize=12)
+            ax.set_ylabel("Length (m)", fontsize=12)
     
             plt.tight_layout()
             plt.ticklabel_format(style='plain')
@@ -937,7 +938,7 @@ class inverse_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"Anisotropy $AI = \sigma_min / \sigma_max$")
+        cbar.set_label(r"Anisotropy $AI = \sigma_{\min} / \sigma_{\max}$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -952,13 +953,13 @@ class inverse_problem:
         ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
         
         ax.set_title(
-            f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration}",
+            f"Anisotropy",
             fontsize=11
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('Lenght [m]')
-        ax.set_ylabel('Lenght [m]')
+        ax.set_xlabel('Length (m)')
+        ax.set_ylabel('Length (m)')
         ax.grid(False)
         
         #plt.show()

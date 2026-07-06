@@ -139,7 +139,7 @@ class forward_problem:
             #triang = tri.Triangulation(x, y, elems_2D)
             #tpc = ax.tripcolor(triang, facecolors=sigma[:len(elems_2D)], edgecolors='k', cmap='Blues',min=0.0, vmax=5.0 )
             #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=0.0, vmax=5.0 )
-            fig.colorbar(tpc, ax=ax, label='σ (Conductivity) [S/m]')
+            fig.colorbar(tpc, ax=ax, label='σ (Conductivity) (S/m)')
             if save == True:
                 #timestamp = datetime.now().strftime("%Y%m%d_%H%M")
                 #ax.set_title(f"Conductivity Real (σ) ", fontsize=12)
@@ -156,8 +156,8 @@ class forward_problem:
                 ax.plot(x_coords, y_coords, color='red', linewidth=2)
     
         # ------------------------------------------------------------
-        ax.set_xlabel("Lenght [m]", fontsize=12)
-        ax.set_ylabel("Lenght [m]", fontsize=12)
+        ax.set_xlabel("Length (m)", fontsize=12)
+        ax.set_ylabel("Length (m)", fontsize=12)
         plt.tight_layout()
         nome_arquivo = f"../../docs/{self.name}.svg"
         #plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
@@ -311,7 +311,7 @@ class forward_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"Anisotropy $AI = \sigma_{min} / \sigma_{max}$")
+        cbar.set_label(r"Anisotropy $AI = \sigma_{\min} / \sigma_{\max}$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -331,8 +331,8 @@ class forward_problem:
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('Lenght [m]')
-        ax.set_ylabel('Lenght [m]')
+        ax.set_xlabel('Length (m)')
+        ax.set_ylabel('Length (m)')
         ax.grid(False)
         
         #plt.show()
