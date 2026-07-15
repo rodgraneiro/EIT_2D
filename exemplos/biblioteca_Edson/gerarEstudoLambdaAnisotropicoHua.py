@@ -131,7 +131,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 lambdas =[7.02e-06]
 resultados = {}
 
-nome_html="CorrecaoArtigo"
+nome_html="CorrecaoArtigoComTabela"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

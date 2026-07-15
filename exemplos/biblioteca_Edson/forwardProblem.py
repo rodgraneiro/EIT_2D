@@ -232,6 +232,7 @@ class forward_problem:
         sigma_L_pts = sigma_L[idx_validos]
         sigma_T_pts = sigma_T[idx_validos]
         theta_pts   = theta_deg[idx_validos]
+        print('sigma_L_pts',sigma_L_pts)
         
         dados_elipses = np.column_stack([
                                         idx_validos,
@@ -242,6 +243,7 @@ class forward_problem:
                                         theta_pts
                                     ])
         print('dados_elipses', dados_elipses)
+        np.savetxt("dados_elipses.txt", dados_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
@@ -298,7 +300,7 @@ class forward_problem:
                 linewidth=0.3,
                 alpha=0.8
             )
-        
+            print('elipse', elipse)
             ax.add_patch(elipse)
         
         # ===== colorbar =====

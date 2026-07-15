@@ -872,6 +872,7 @@ class inverse_problem:
                                         sigma_T_pts,
                                         theta_pts
                                     ])
+        np.savetxt("dados_elipses_invProblem.txt", dados_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
