@@ -1793,7 +1793,8 @@ class inverse_problem:
         #np.savetxt("anisotropia.txt", anisotropia)  # formato binário
         
         sigma_theta = sigmaInicial[:, 0] - sigmaInicial[:, 2]
-        #np.savetxt("sigma_theta.txt", sigma_theta)
+        sigma_thetaSuperLIXO = sigmaInicial[:, 1]
+        np.savetxt("sigma_thetaSuperLIXO.txt", sigma_thetaSuperLIXO)
         theta_rad = 0.5 * np.arctan2(2.0 * sigmaInicial[:, 1], sigma_theta)
         #np.savetxt("theta_rad.txt", theta_rad)
         theta_deg = np.rad2deg(theta_rad)
