@@ -757,9 +757,11 @@ class inverse_problem:
     
         ax.ticklabel_format(style='plain')
     
-        fig.savefig("{nome_arquivo}.svg", format="svg", dpi=200)    
+        fig.savefig(f"{nome_arquivo}.svg", format="svg", dpi=200)
+    
+    
         plt.show(block=False)
-        plt.pause(3)
+        plt.pause(0.1)
     
         plt.close(fig)
     ###############################################################################
@@ -802,14 +804,16 @@ class inverse_problem:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='0.9',
+                        edgecolors='k',
+                        linewidths=0.1,
                         cmap='RdBu_r'
                     )
                 else:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='0.9',
+                        edgecolors='k',
+                        linewidths=0.1,
                         cmap='rainbow'
                     )
     
@@ -834,7 +838,8 @@ class inverse_problem:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='0.9',
+                        edgecolors='k',
+                        linewidths=0.1,
                         cmap='RdBu_r',
                         norm=norm
                     )
@@ -843,7 +848,8 @@ class inverse_problem:
                     tpc = ax.tripcolor(
                         triang,
                         facecolors=fc,
-                        edgecolors='0.9',
+                        edgecolors='k',
+                        linewidths=0.1,
                         cmap='rainbow',
                         vmin=0.0,
                         vmax=4.0
@@ -881,14 +887,14 @@ class inverse_problem:
             # -------------------------------
             if save:
                 ax.set_title(
-                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
                     fontsize=11
                 )
             else:
                 ax.set_title("Conductivity Real (σ)", fontsize=15)
     
-            ax.set_xlabel("[m]", fontsize=12)
-            ax.set_ylabel("[m]", fontsize=12)
+            ax.set_xlabel("Lenght [m]", fontsize=12)
+            ax.set_ylabel("Lenght [m]", fontsize=12)
     
             plt.tight_layout()
             plt.ticklabel_format(style='plain')
@@ -907,7 +913,7 @@ class inverse_problem:
                 plt.savefig(nome_saida, format="svg", dpi=200)
     
             plt.show(block=False)
-            plt.pause(3)
+            plt.pause(0.1)
             plt.close(fig)
     
         # ============================================================
@@ -987,6 +993,7 @@ class inverse_problem:
                                         sigma_T_pts,
                                         theta_pts
                                     ])
+        np.savetxt("dados_elipses_invProblem.txt", dados_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
@@ -1052,7 +1059,7 @@ class inverse_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"$AI = \sigma_T / \sigma_L$")
+        cbar.set_label(r"Anisotropy $AI = \sigma_{min} / \sigma_{max}$")
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -1072,8 +1079,8 @@ class inverse_problem:
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('[m]')
-        ax.set_ylabel('[m]')
+        ax.set_xlabel('Lenght [m]')
+        ax.set_ylabel('Lenght [m]')
         ax.grid(False)
         
         #plt.show()
@@ -1083,7 +1090,9 @@ class inverse_problem:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
             plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
-            plt.show() 
+            #plt.show()
+            plt.show(block=False)
+            plt.pause(0.1)  
             plt.close()   # importante
         else:
             plt.show()    
@@ -1157,7 +1166,7 @@ class inverse_problem:
             #plt.savefig(f'{nome_arquivo}', dpi=300, bbox_inches='tight')
             #plt.savefig(f'{nome_arquivo}',  dpi=150, bbox_inches='tight', pil_kwargs={"quality": 70})
         plt.show(block=False)   # mostra sem travar
-        plt.pause(1)            # mantém aberto por 3 segundos
+        plt.pause(0.1)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
     ###############################################################################
 
@@ -1220,7 +1229,9 @@ class inverse_problem:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
             plt.savefig(f'{nome_arquivo}.svg',  format="svg", dpi=200)
-            plt.show() 
+            #plt.show()
+            plt.show(block=False)
+            plt.pause(0.1)  
             plt.close()   # importante
         else:
             plt.show()    
@@ -1263,7 +1274,9 @@ class inverse_problem:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
             plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
-            plt.show() 
+            #plt.show()
+            plt.show(block=False)
+            plt.pause(0.1)  
             plt.close()   # importante
         else:
             plt.show()    
@@ -1303,7 +1316,9 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=150)
             plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
-            plt.show() 
+            #plt.show()
+            plt.show(block=False)
+            plt.pause(0.1)  
             plt.close()   # importante
         else:
             plt.show()    
@@ -1939,7 +1954,11 @@ class inverse_problem:
         #np.savetxt("theta_final.txt", theta_deg)
         #print('tolerance',tolerance)
         #print('anisotropia',anisotropia)
-       
+        tol_aniso = 1e-3
+
+        quase_isotropico = np.abs(sigma_L - sigma_T) < tol_aniso
+
+        theta_deg[quase_isotropico] = 0.0
         
      
           # formato binário
@@ -1976,7 +1995,7 @@ class inverse_problem:
         nome5 = f'{pasta_teste}/{html_name}_sigma_T_{Lambda:.6f}'  
         self.plotMSH(sigma_T, Lambda, itr, save=True, SigmaXXXYYY='T', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
-        '''
+        
         # Diferença anisotrópica
         nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
         self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='L-σT', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
@@ -1986,8 +2005,8 @@ class inverse_problem:
         nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}' 
         self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         lista_imgs.append(nome7)  
-        '''
-        # Gráfico tipo linha 
+        print('theta_deg', theta_deg)
+        # Gráfico tipo linha (o que você mandou)
         nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}'
         self.plot_sigma(sigmaInicial,  ref_sL = 3.0, ref_sT = 1.0, salvar=True, nome_arquivo=nome8)
         lista_imgs.append(nome8)
