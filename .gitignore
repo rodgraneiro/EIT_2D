@@ -5,7 +5,7 @@
 *.png
 *.html
 *.webp
-*.svg
+#*.svg
 
 lastIteration.txt
 sigma_inicial_cont.txt
