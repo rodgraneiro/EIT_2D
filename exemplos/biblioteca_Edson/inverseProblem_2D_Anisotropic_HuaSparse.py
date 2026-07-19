@@ -1954,11 +1954,11 @@ class inverse_problem:
         #np.savetxt("theta_final.txt", theta_deg)
         #print('tolerance',tolerance)
         #print('anisotropia',anisotropia)
-        tol_aniso = 1e-3
+        tol_aniso = 5e-1
 
         quase_isotropico = np.abs(sigma_L - sigma_T) < tol_aniso
 
-        theta_deg[quase_isotropico] = 0.0
+        theta_deg[quase_isotropico] = -0.0
         
      
           # formato binário
