@@ -22,6 +22,8 @@ from collections import defaultdict
 #import matplotlib.cm as cm
 import matplotlib.colors as colors
 
+import pandas as pd
+
 from scipy.sparse import lil_matrix, csr_matrix, eye, kron
 from scipy.sparse.linalg import factorized, spsolve
 from scipy.spatial import cKDTree
@@ -1005,8 +1007,8 @@ class inverse_problem:
                                         theta_pts
                                     ])
 
-        quantitative_elipses = np.column_stack((dados_elipses_phantom, dados_elipses))
-        np.savetxt("quantitative_elipses.txt", quantitative_elipses)
+        self.quantitative_elipses = np.column_stack((dados_elipses_phantom, dados_elipses))
+        #np.savetxt("quantitative_elipses.txt",  self.quantitative_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
@@ -1362,7 +1364,129 @@ class inverse_problem:
         #plt.show()
         plt.show(block=False)
         plt.pause(0.1)      
+
+    ###############################################################################
+    # Essa função plota o resultado do sigma calculado no problema inverso
+    ############################################################################### 
+    
+    def plot_Table(self, nome_arquivo="plot_theta.png"):
         
+        background = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1000]
+        object_1 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1001]
+        object_2 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1002]
+        object_3 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1003]
+   
+        
+        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])       
+        error_bkgd_perc = 100 * (background[:, 10] - background[:, 3]) / background[:, 3]
+        #print("error_bkgd_abs:", np.mean(error_bkgd_abs))
+        #print("error_bkgd_perc:", np.mean(error_bkgd_perc))          
+        
+
+        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])       
+        error_obj1_perc = 100 * (object_1[:, 10] - object_1[:, 3]) / object_1[:, 3]
+        #print("error_obj1_abs:", np.mean(error_obj1_abs))
+        #print("error_obj1_perc:", np.mean(error_obj1_perc))  
+        
+        
+        error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
+        error_obj2_perc = 100 * (object_2[:, 10] - object_2[:, 3]) / object_2[:, 3]
+        #print("error_obj2_abs:", np.mean(error_obj2_abs))
+        #print("error_obj2_perc:", np.mean(error_obj2_perc))
+
+        error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
+        error_obj3_perc = 100 * (object_3[:, 10] - object_3[:, 3]) / object_3[:, 3]
+        #print("error_obj3_abs:", np.mean(error_obj3_abs))
+        #print("error_obj3_perc:", np.mean(error_obj3_perc))
+        
+        
+        
+        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])       
+        error1_bkgd_perc = 100 * (background[:, 11] - background[:, 4]) / background[:, 4]
+        #print("error1_bkgd_abs:", np.mean(error1_bkgd_abs))
+        #print("error1_bkgd_perc:", np.mean(error1_bkgd_perc))          
+        
+
+        error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
+        error1_obj1_perc = 100 * (object_1[:, 11] - object_1[:, 4]) / object_1[:, 4]
+        #print("error1_obj1_abs:", np.mean(error1_obj1_abs))
+        #print("error1_obj1_perc:", np.mean(error1_obj1_perc))  
+        
+        
+        error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
+        error1_obj2_perc = 100 * (object_2[:, 11] - object_2[:, 4]) / object_2[:, 4]
+        #print("error1_obj2_abs:", np.mean(error1_obj2_abs))
+        #print("error1_obj2_perc:", np.mean(error1_obj2_perc))
+
+        error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
+        error1_obj3_perc = 100 * (object_3[:, 11] - object_3[:, 4]) / object_3[:, 4]
+        #print("error1_obj3_abs:", np.mean(error1_obj3_abs))
+        #print("error1_obj3_perc:", np.mean(error1_obj3_perc))        
+        
+        
+        
+        
+        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])       
+        #error2_bkgd_perc = 100 * (background[:, 12] - background[:, 5]) / background[:, 5]
+        #print("error2_bkgd_abs:", np.mean(error2_bkgd_abs))
+        #print("error2_bkgd_perc:", np.mean(error2_bkgd_perc))          
+        
+
+        error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
+        error2_obj1_perc = 100 * (object_1[:, 12] - object_1[:, 5]) / object_1[:, 5]
+        #print("error2_obj1_abs:", np.mean(error2_obj1_abs))
+        #print("error2_obj1_perc:", np.mean(error2_obj1_perc))  
+        
+        
+        error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
+        error2_obj2_perc = 100 * (object_2[:, 12] - object_2[:, 5]) / object_2[:, 5]
+        #print("error2_obj2_abs:", np.mean(error2_obj2_abs))
+        #print("error2_obj2_perc:", np.mean(error2_obj2_perc))
+
+        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])       
+        #error2_obj3_perc = 100 * (object_3[:, 12] - object_3[:, 5]) / object_3[:, 5]
+        #print("error2_obj3_abs:", np.mean(error2_obj3_abs))
+        #print("error2_obj3_perc:", np.mean(error2_obj3_perc))        
+        T11 =   round(np.mean(error_bkgd_abs), 3)
+        T12 =   round(np.mean(error_obj1_abs), 3)    
+        T13 =   round(np.mean(error_obj2_abs), 3)    
+        T14 =   round(np.mean(error_obj3_abs), 3)    
+        T21 =   round(np.mean(error1_bkgd_abs), 3)    
+        T22 =   round(np.mean(error1_obj1_abs), 3)
+        T23 =   round(np.mean(error1_obj2_abs), 3) 
+        T24 =   round(np.mean(error1_obj3_abs), 3) 
+        T31 =   round(np.mean(error2_bkgd_abs), 3)    
+        T32 =   round(np.mean(error2_obj1_abs), 3)
+        T33 =   round(np.mean(error2_obj2_abs), 3) 
+        T34 =   round(np.mean(error2_obj3_abs), 3) 
+        
+        df = pd.DataFrame({
+            "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3',],
+            "σL": [T11, T12, T13, T14],
+            "σT":  [T21, T22, T23, T24],
+            "θ (°)": [T31, T32, T33, T34],
+        })
+
+        fig, ax = plt.subplots(figsize=(6,2.5))
+        ax.axis('off')
+
+        tabela = ax.table(
+            cellText=df.values,
+            colLabels=df.columns,
+            loc='center'
+        )
+
+        tabela.auto_set_font_size(False)
+        tabela.set_fontsize(11)
+        tabela.scale(1.2, 1.5)
+
+        plt.tight_layout()
+        plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
+        plt.show()
+
+        #theta_rad = 0.5*np.arctan2(2.0*3.14, 1)
+        #theta_deg = np.rad2deg(theta_rad)
+        #print('theta_deg',theta_deg)
 
     ###############################################################################
     # Essa função salva arqui html do resultado doproblema inverso
@@ -1441,6 +1565,8 @@ class inverse_problem:
                 grupos[lambda_str][tipo_escala]["iterations"] = nome
             elif "plot_theta_deg" in nome:
                 grupos[lambda_str][tipo_escala]["Sorting"] = nome
+            elif "Table" in nome:
+                 grupos[lambda_str][tipo_escala]["Table"] = nome
     
         colunas = [
             ("sigma_xx", "σxx"),
@@ -1453,6 +1579,7 @@ class inverse_problem:
             ("Elipses", "Anisotropy"),
             ("sigma_linhas", "Summary"),
             ("iterations", "Optimization"),
+            ("Table", "Results"),
         ]
     
         html_path = os.path.join(pasta, f"{html_name}.html")
@@ -1638,7 +1765,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função calcula o problema inverso
     ###############################################################################
-    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-3, iteration=0, html_name = None):
+    def solve(self, V_measured,initialEstimate=1.0, alpha =1.0,  Lambda = 0.50, max_iter=500, Tol=1.0e-4, iteration=0, html_name = None):
         print('html_name_solve',html_name)
         itr_start = int(iteration)
         ultimos10 = []
@@ -2051,6 +2178,10 @@ class inverse_problem:
         lista_imgs.append(nome13)
         # Theta angle
 
+        nome14 = f'{pasta_teste}/{html_name}_Table_{Lambda:.6f}'     
+        self.plot_Table(nome_arquivo=nome14)
+        lista_imgs.append(nome14)
+        
         
         # Criar HTML
         #nome_html = '../docs/figureTemp/{html_name}_{Lambda}.html'
@@ -2081,4 +2212,87 @@ class inverse_problem:
         tol = 1e-6 * s[0]          # ou outro fator
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
+        '''
+        print('self.quantitative_elipses', self.quantitative_elipses)
+        
+        background = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1000]
+        object_1 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1001]
+        object_2 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1002]
+        object_3 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1003]
+        print(background.shape)
+        print(object_1.shape)
+        print(object_2.shape)
+        print(object_3.shape)      
+        
+        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])       
+        error_bkgd_perc = 100 * (background[:, 10] - background[:, 3]) / background[:, 3]
+        print("error_bkgd_abs:", np.mean(error_bkgd_abs))
+        print("error_bkgd_perc:", np.mean(error_bkgd_perc))          
+        
+
+        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])       
+        error_obj1_perc = 100 * (object_1[:, 10] - object_1[:, 3]) / object_1[:, 3]
+        print("error_obj1_abs:", np.mean(error_obj1_abs))
+        print("error_obj1_perc:", np.mean(error_obj1_perc))  
+        
+        
+        error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
+        error_obj2_perc = 100 * (object_2[:, 10] - object_2[:, 3]) / object_2[:, 3]
+        print("error_obj2_abs:", np.mean(error_obj2_abs))
+        print("error_obj2_perc:", np.mean(error_obj2_perc))
+
+        error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
+        error_obj3_perc = 100 * (object_3[:, 10] - object_3[:, 3]) / object_3[:, 3]
+        print("error_obj3_abs:", np.mean(error_obj3_abs))
+        print("error_obj3_perc:", np.mean(error_obj3_perc))
+        
+        
+        
+        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])       
+        error1_bkgd_perc = 100 * (background[:, 11] - background[:, 4]) / background[:, 4]
+        print("error1_bkgd_abs:", np.mean(error1_bkgd_abs))
+        print("error1_bkgd_perc:", np.mean(error1_bkgd_perc))          
+        
+
+        error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
+        error1_obj1_perc = 100 * (object_1[:, 11] - object_1[:, 4]) / object_1[:, 4]
+        print("error1_obj1_abs:", np.mean(error1_obj1_abs))
+        print("error1_obj1_perc:", np.mean(error1_obj1_perc))  
+        
+        
+        error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
+        error1_obj2_perc = 100 * (object_2[:, 11] - object_2[:, 4]) / object_2[:, 4]
+        print("error1_obj2_abs:", np.mean(error1_obj2_abs))
+        print("error1_obj2_perc:", np.mean(error1_obj2_perc))
+
+        error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
+        error1_obj3_perc = 100 * (object_3[:, 11] - object_3[:, 4]) / object_3[:, 4]
+        print("error1_obj3_abs:", np.mean(error1_obj3_abs))
+        print("error1_obj3_perc:", np.mean(error1_obj3_perc))        
+        
+        
+        
+        
+        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])       
+        #error2_bkgd_perc = 100 * (background[:, 12] - background[:, 5]) / background[:, 5]
+        print("error2_bkgd_abs:", np.mean(error2_bkgd_abs))
+        #print("error2_bkgd_perc:", np.mean(error2_bkgd_perc))          
+        
+
+        error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
+        error2_obj1_perc = 100 * (object_1[:, 12] - object_1[:, 5]) / object_1[:, 5]
+        print("error2_obj1_abs:", np.mean(error2_obj1_abs))
+        print("error2_obj1_perc:", np.mean(error2_obj1_perc))  
+        
+        
+        error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
+        error2_obj2_perc = 100 * (object_2[:, 12] - object_2[:, 5]) / object_2[:, 5]
+        print("error2_obj2_abs:", np.mean(error2_obj2_abs))
+        print("error2_obj2_perc:", np.mean(error2_obj2_perc))
+
+        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])       
+        #error2_obj3_perc = 100 * (object_3[:, 12] - object_3[:, 5]) / object_3[:, 5]
+        print("error2_obj3_abs:", np.mean(error2_obj3_abs))
+        #print("error2_obj3_perc:", np.mean(error2_obj3_perc))        
+        '''        
         
