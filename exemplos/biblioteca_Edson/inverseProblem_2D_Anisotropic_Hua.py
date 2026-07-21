@@ -767,13 +767,13 @@ class inverse_problem:
                 ax.set_title(
                     #f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
                     f"Conductivity σ{SigmaXXXYYY}",
-                    fontsize=11
+                    fontsize=15
                 )
             else:
                 ax.set_title("Conductivity Real (σ)", fontsize=15)
     
-            ax.set_xlabel("Length (m)", fontsize=12)
-            ax.set_ylabel("Length (m)", fontsize=12)
+            ax.set_xlabel("Length (m)", fontsize=15)
+            ax.set_ylabel("Length (m)", fontsize=15)
     
             plt.tight_layout()
             plt.ticklabel_format(style='plain')

@@ -139,13 +139,16 @@ class forward_problem:
             #triang = tri.Triangulation(x, y, elems_2D)
             #tpc = ax.tripcolor(triang, facecolors=sigma[:len(elems_2D)], edgecolors='k', cmap='Blues',min=0.0, vmax=5.0 )
             #tpc = ax.tripcolor(triang,facecolors = fc,edgecolors='k', cmap='Blues', vmin=0.0, vmax=5.0 )
-            fig.colorbar(tpc, ax=ax, label='σ (Conductivity) (S/m)')
+            cbar = fig.colorbar(tpc, ax=ax)
+            cbar.set_label('σ (Conductivity) (S/m)', fontsize=15)
+            #cbar.ax.tick_params(labelsize=12)
+            #fig.colorbar(tpc, ax=ax, label='σ (Conductivity) (S/m)')
             if save == True:
                 #timestamp = datetime.now().strftime("%Y%m%d_%H%M")
                 #ax.set_title(f"Conductivity Real (σ) ", fontsize=12)
-                ax.set_title(f"Conductivity (σ{SigmaXXXYYY})", fontsize=11)
+                ax.set_title(f"Conductivity (σ{SigmaXXXYYY})", fontsize=20)
             if save == False:
-                ax.set_title(f"Conductivity Real (σ) ", fontsize=15)
+                ax.set_title(f"Conductivity Real (σ) ", fontsize=20)
         # ============================================================
         #  2) PLOTAR ELEMENTOS 1D (SEGMENTOS)
         # ============================================================
@@ -156,8 +159,8 @@ class forward_problem:
                 ax.plot(x_coords, y_coords, color='red', linewidth=2)
     
         # ------------------------------------------------------------
-        ax.set_xlabel("Length (m)", fontsize=12)
-        ax.set_ylabel("Length (m)", fontsize=12)
+        ax.set_xlabel("Length (m)", fontsize=15)
+        ax.set_ylabel("Length (m)", fontsize=15)
         plt.tight_layout()
         nome_arquivo = f"../../docs/{self.name}.svg"
         #plt.savefig(f'{nome_arquivo}',  dpi=200, pil_kwargs={"quality": 70})
@@ -172,7 +175,7 @@ class forward_problem:
 
 
     ###############################################################################   
-    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, save = False,  nome_arquivo= None):
+    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, grupo_fisico, save = False,  nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
@@ -232,6 +235,7 @@ class forward_problem:
         sigma_L_pts = sigma_L[idx_validos]
         sigma_T_pts = sigma_T[idx_validos]
         theta_pts   = theta_deg[idx_validos]
+        grupo_fisico_pts =  grupo_fisico[idx_validos]
         print('sigma_L_pts',sigma_L_pts)
         
         dados_elipses = np.column_stack([
@@ -240,10 +244,11 @@ class forward_problem:
                                         pontos_validos[:, 1],
                                         sigma_L_pts,
                                         sigma_T_pts,
-                                        theta_pts
+                                        theta_pts,
+                                        grupo_fisico_pts
                                     ])
         print('dados_elipses', dados_elipses)
-        np.savetxt("dados_elipses.txt", dados_elipses)
+        np.savetxt("dados_elipses_phantom.txt", dados_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
@@ -275,7 +280,7 @@ class forward_problem:
         
         for linha in dados_elipses:
         
-            _, x0, y0, sL, sT, theta = linha
+            _, x0, y0, sL, sT, theta, grupo_fisico = linha
         
             AI = sT / sL
             if AI > 1.0:
@@ -300,7 +305,7 @@ class forward_problem:
                 linewidth=0.3,
                 alpha=0.8
             )
-            print('elipse', elipse)
+            #print('elipse', elipse)
             ax.add_patch(elipse)
         
         # ===== colorbar =====
@@ -313,7 +318,8 @@ class forward_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"Anisotropy $AI = \sigma_{\min} / \sigma_{\max}$")
+        cbar.set_label(r"Anisotropy $AI = \sigma_{\min} / \sigma_{\max}$", fontsize=15)
+        
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -329,12 +335,12 @@ class forward_problem:
         
         ax.set_title(
             f"Phantom  Anisotropy ",
-            fontsize=11
+            fontsize=20
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('Length (m)')
-        ax.set_ylabel('Length (m)')
+        ax.set_xlabel('Length (m)', fontsize=15)
+        ax.set_ylabel('Length (m)', fontsize=15)
         ax.grid(False)
         
         #plt.show()
@@ -402,7 +408,7 @@ class forward_problem:
 
             nome4 =  f"../../docs/{self.name}_Elipse.svg"     
             #self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
-            self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg,  save=True, nome_arquivo=nome4)
+            self.plotElipse(self.mymesh.sigma_vec, sigma_L, sigma_T, theta_deg,  self.mymesh.msh_physical_groups, save=True, nome_arquivo=nome4)
             #lista_imgs.append(nome13)            
             
         #print('self.mymesh.sigma_vec',self.mymesh.sigma_vec)

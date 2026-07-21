@@ -119,7 +119,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_HuaSparse.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente)
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 250,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 1,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -190,7 +190,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 lambdas =[7.02e-06]
 resultados = {}
 
-nome_html="teste_3_AniDiferenteslixaoooo"
+nome_html="teste_Quantitativo_inv"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
@@ -202,6 +202,9 @@ for lam in lambdas:
 #inverseProblem_2D_Anisotropic_Hua.inverse_problem.salvar_html_todos_lambdas(pasta2, nome_html)
 
 #rodar_simulacao(6.57933225e-03, None)
+
+
+
 
 '''
 # depois que TODAS imagens foram salvas:

@@ -867,6 +867,8 @@ class inverse_problem:
             # -------------------------------
             # Colorbar
             # -------------------------------
+            
+            '''
             if SigmaXXXYYY != 'θ°':
                 fig.colorbar(
                     tpc,
@@ -881,20 +883,27 @@ class inverse_problem:
                     shrink=0.70,
                     label='Angle θ°'
                 )
-    
+            '''
+            if SigmaXXXYYY != 'θ°':
+                cbar = fig.colorbar(tpc, ax=ax, shrink=0.7)
+                cbar.set_label('σ (Conductivity) (S/m)', fontsize=15)
+            else:
+                cbar = fig.colorbar(tpc, ax=ax, shrink=0.7)
+                cbar.set_label('Angle θ°', fontsize=15)
             # -------------------------------
             # Título
             # -------------------------------
             if save:
                 ax.set_title(
-                    f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
-                    fontsize=11
+                    #f"σ{SigmaXXXYYY} - λ_{Lambda:.2e}-it_{iteration}",
+                    f"Conductivity σ{SigmaXXXYYY}",
+                    fontsize=15
                 )
             else:
                 ax.set_title("Conductivity Real (σ)", fontsize=15)
     
-            ax.set_xlabel("Lenght [m]", fontsize=12)
-            ax.set_ylabel("Lenght [m]", fontsize=12)
+            ax.set_xlabel("Lenght [m]", fontsize=15)
+            ax.set_ylabel("Lenght [m]", fontsize=15)
     
             plt.tight_layout()
             plt.ticklabel_format(style='plain')
@@ -925,7 +934,9 @@ class inverse_problem:
 
     ###############################################################################   
     def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, DifAniso=None, nome_arquivo= None):
-
+        dados_elipses_phantom = np.loadtxt("dados_elipses_phantom.txt")
+        #print(f'dados_elipses_phantom\n {dados_elipses_phantom}')
+        
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
         ajuste  = self.mymesh.NumberOfElectrodes*4 +1
@@ -993,7 +1004,9 @@ class inverse_problem:
                                         sigma_T_pts,
                                         theta_pts
                                     ])
-        np.savetxt("dados_elipses_invProblem.txt", dados_elipses)
+
+        quantitative_elipses = np.column_stack((dados_elipses_phantom, dados_elipses))
+        np.savetxt("quantitative_elipses.txt", quantitative_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
@@ -1059,7 +1072,7 @@ class inverse_problem:
         sm.set_array([])
         
         cbar = plt.colorbar(sm, ax=ax, shrink=0.7)
-        cbar.set_label(r"Anisotropy $AI = \sigma_{min} / \sigma_{max}$")
+        cbar.set_label(r"Anisotropy $AI = \sigma_{min} / \sigma_{max}$", fontsize=15)
         
         theta_circ = np.linspace(0, 2*np.pi, 400)
         
@@ -1074,13 +1087,14 @@ class inverse_problem:
         ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
         
         ax.set_title(
+            #f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
             f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
-            fontsize=11
+            fontsize=20
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('Lenght [m]')
-        ax.set_ylabel('Lenght [m]')
+        ax.set_xlabel('Lenght [m]', fontsize = 15)
+        ax.set_ylabel('Lenght [m]', fontsize = 15)
         ax.grid(False)
         
         #plt.show()
