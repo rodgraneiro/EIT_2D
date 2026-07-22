@@ -187,10 +187,10 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 
 #lambdas = np.logspace(-6, -4, 40)
 
-lambdas =[7.02e-06]
+lambdas =[8.37677649e-06]
 resultados = {}
 
-nome_html="teste_Quantitativo_inv"
+nome_html="teste_Quantitativo_inv_artigo"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 

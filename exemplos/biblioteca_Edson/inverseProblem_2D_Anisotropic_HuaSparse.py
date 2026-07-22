@@ -1008,7 +1008,7 @@ class inverse_problem:
                                     ])
 
         self.quantitative_elipses = np.column_stack((dados_elipses_phantom, dados_elipses))
-        #np.savetxt("quantitative_elipses.txt",  self.quantitative_elipses)
+        np.savetxt("quantitative_elipses_artigo.txt",  self.quantitative_elipses)
         fig, ax = plt.subplots(figsize=(7, 7))
 
         #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
@@ -1090,7 +1090,7 @@ class inverse_problem:
         
         ax.set_title(
             #f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
-            f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+            f"σ Anisotropy",
             fontsize=20
         )
         
