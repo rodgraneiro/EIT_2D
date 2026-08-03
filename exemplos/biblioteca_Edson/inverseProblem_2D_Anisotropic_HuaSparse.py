@@ -41,7 +41,7 @@ timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
 class inverse_problem: 
-    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, SkipPattern=None, VirtualNode = False, I =1.0e-3):
+    def __init__(self, mymesh, V_imposto=None, Pcorrente=None, formatImage = None, SkipPattern=None, VirtualNode = False, I =1.0e-3):
         if not hasattr(mymesh, "KGlobal"): # verifica se o objeto mymesh tem um atributo chamado KGlobal.
             raise TypeError("Parâmetro incorreto: mymesh.")
 
@@ -49,6 +49,7 @@ class inverse_problem:
         self.Vmedido = None
         self.TempJ = None
         self.KGlobalTemp = np.zeros((self.mymesh.NumberOfNodes, self.mymesh.NumberOfNodes), dtype=float)
+        self.imgFotmat = formatImage
 
         if V_imposto is None:
             V_imposto = [[mymesh.GndNode, 0.0]]
@@ -729,10 +730,9 @@ class inverse_problem:
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
 
-    def plotar_iteracoes(self,
-                     lista_indice,
-                     lista_valor,
-                     nome_arquivo="Optimization"):
+    def plotar_iteracoes(self, lista_indice, lista_valor, nome_arquivo="Optimization"):
+        
+        imgFormat = 'webp'
 
         fig, ax = plt.subplots(figsize=(6, 5))
     
@@ -759,8 +759,8 @@ class inverse_problem:
     
         ax.ticklabel_format(style='plain')
     
-        fig.savefig(f"{nome_arquivo}.svg", format="svg", dpi=200)
-    
+        #fig.savefig(f"{nome_arquivo}.svg", format="svg", dpi=200) 
+        fig.savefig(f"{nome_arquivo}.{imgFormat}", format=imgFormat, dpi=200)
     
         plt.show(block=False)
         plt.pause(0.1)
@@ -777,7 +777,8 @@ class inverse_problem:
         x = self.mymesh.Coordinates[:, 0]
         y = self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
-    
+        imgFormat = self.imgFotmat
+        
         elems_2D = np.array([el for el in topo if len(el) == 3])
         elems_1D = np.array([el for el in topo if len(el) == 2])
     
@@ -917,11 +918,14 @@ class inverse_problem:
     
                 if nome_arquivo is None:
                     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-                    nome_saida = f"Conductivity_{tipo_escala}_{timestamp}.svg"
+                    #nome_saida = f"Conductivity_{tipo_escala}_{timestamp}.svg" 
+                    nome_saida = f"Conductivity_{tipo_escala}_{timestamp}.{imgFormat}" 
+                    
                 else:
-                    nome_saida = f"{nome_arquivo}_{tipo_escala}.svg"
-    
-                plt.savefig(nome_saida, format="svg", dpi=200)
+                    #nome_saida = f"{nome_arquivo}_{tipo_escala}.svg"
+                    nome_saida = f"{nome_arquivo}_{tipo_escala}.{imgFormat}"
+                #plt.savefig(nome_saida, format="svg", dpi=200)
+                plt.savefig(nome_saida, format=imgFormat, dpi=200)
     
             plt.show(block=False)
             plt.pause(0.1)
@@ -942,6 +946,7 @@ class inverse_problem:
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
         topo = self.mymesh.msh_topology
         ajuste  = self.mymesh.NumberOfElectrodes*4 +1
+        imgFormat = self.imgFotmat
     
         # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
         elems_2D = np.array([el for el in topo if len(el) == 3])
@@ -1105,7 +1110,8 @@ class inverse_problem:
         if save:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
+            #plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300) 
+            plt.savefig(f'{nome_arquivo}.{imgFormat}',   format=imgFormat, dpi=300) 
             #plt.show()
             plt.show(block=False)
             plt.pause(0.1)  
@@ -1123,7 +1129,7 @@ class inverse_problem:
     ###############################################################################
 
 
-
+    '''
     def plotMask(self, sigma, Lambda = None, iteration = None, save = False, SigmaXXXYYY = None, DifAniso = None, nome_arquivo= None):
 
         x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
@@ -1185,13 +1191,8 @@ class inverse_problem:
         plt.pause(0.1)            # mantém aberto por 3 segundos
         plt.close('all')        # fecha automaticamente
     ###############################################################################
+    '''
 
-
-
-
-
-# plot
-#fig, ax = plt.subplots(figsize=(6,6))
 
 
 
@@ -1203,6 +1204,7 @@ class inverse_problem:
     def plot_sigma(self, sigmaResult, ref_sL = 3.0, ref_sT = 1.0, titulo="Results of  σxx, σxy, σyy, σL and σT", salvar=False, nome_arquivo="plot_sigma.png"):
     
         data = sigmaResult
+        imgFormat = self.imgFotmat
     
         sigma_xx = data[:, 0]
         sigma_xy = data[:, 1]
@@ -1244,7 +1246,8 @@ class inverse_problem:
         if salvar:
             #plt.savefig(nome_arquivo, dpi=100)
             #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
-            plt.savefig(f'{nome_arquivo}.svg',  format="svg", dpi=200)
+            #plt.savefig(f'{nome_arquivo}.svg',  format="svg", dpi=200)
+            plt.savefig(f'{nome_arquivo}.{imgFormat}',  format= imgFormat, dpi=200)
             #plt.show()
             plt.show(block=False)
             plt.pause(0.1)  
@@ -1257,7 +1260,7 @@ class inverse_problem:
 
 
 
-
+    '''
     ###############################################################################
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
@@ -1297,7 +1300,7 @@ class inverse_problem:
         else:
             plt.show()    
     ###############################################################################    
-
+    '''
 
 
 
@@ -1310,6 +1313,7 @@ class inverse_problem:
     def plot_theta_deg(self, theta_deg, titulo="Results of the calculated θ angle ", salvar=False, nome_arquivo="plot_theta.png"):
     
         data_theta = theta_deg
+        imgFormat = self.imgFotmat
     
         x = np.arange(len(data_theta))
     
@@ -1331,20 +1335,24 @@ class inverse_problem:
         
         if salvar:
             #plt.savefig(nome_arquivo, dpi=150)
-            plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
+            #plt.savefig(f'{nome_arquivo}.svg', format="svg", dpi=200)
+            plt.savefig(f'{nome_arquivo}.{imgFormat}', format=imgFormat, dpi=200)
             #plt.show()
             plt.show(block=False)
             plt.pause(0.1)  
             plt.close()   # importante
         else:
             plt.show()    
-    ###############################################################################    
+    ###############################################################################
+    '''    
     def plot_espectro(self,x, titulo="Espectro (FFT)"):
         X = np.fft.fft(x)
         w = np.fft.fftfreq(len(x))
         
         X_shifted = np.fft.fftshift(X)
         w_shifted = np.fft.fftshift(w)
+        
+        
 
 
 
@@ -1364,7 +1372,7 @@ class inverse_problem:
         #plt.show()
         plt.show(block=False)
         plt.pause(0.1)      
-
+    '''
     ###############################################################################
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
@@ -1375,6 +1383,8 @@ class inverse_problem:
         object_1 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1001]
         object_2 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1002]
         object_3 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1003]
+        
+        imgFormat = self.imgFotmat
    
         
         error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])       
@@ -1481,7 +1491,8 @@ class inverse_problem:
         tabela.scale(1.2, 1.5)
 
         plt.tight_layout()
-        plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
+        #plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
+        plt.savefig(f'{nome_arquivo}.{imgFormat}',   format = imgFormat, dpi=300) 
         plt.show()
 
         #theta_rad = 0.5*np.arctan2(2.0*3.14, 1)
@@ -1489,6 +1500,7 @@ class inverse_problem:
         #print('theta_deg',theta_deg)
 
     ###############################################################################
+    '''
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
     @staticmethod
@@ -1516,6 +1528,7 @@ class inverse_problem:
             
 
             f.write("</body>\n</html>")
+    '''
     ###############################################################################
     # Essa função salva arqui html do resultado doproblema inverso
     ###############################################################################         
@@ -1523,8 +1536,11 @@ class inverse_problem:
     def salvar_html_todos_lambdas(self, pasta, html_name="resultado_completo"):
     
         print('pasta_salvar_html_todos_lambdas', pasta)
+        
+        imgFormat = self.imgFotmat
     
-        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
+        #arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.svg"))
+        arquivos = glob.glob(os.path.join(pasta, f"{html_name}*.{imgFormat}"))
     
         grupos = defaultdict(lambda: {
             "AutoScale": {},
@@ -1534,7 +1550,7 @@ class inverse_problem:
         for arq in arquivos:
     
             nome = os.path.basename(arq)
-            partes = nome.replace(".svg", "").split("_")
+            partes = nome.replace(f".{imgFormat}", "").split("_")
     
             if partes[-1] in ("AutoScale", "SameScale"):
                 tipo_escala = partes[-1]
@@ -2212,87 +2228,5 @@ class inverse_problem:
         tol = 1e-6 * s[0]          # ou outro fator
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
-        '''
-        print('self.quantitative_elipses', self.quantitative_elipses)
-        
-        background = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1000]
-        object_1 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1001]
-        object_2 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1002]
-        object_3 = self.quantitative_elipses[self.quantitative_elipses[:, 6] == 1003]
-        print(background.shape)
-        print(object_1.shape)
-        print(object_2.shape)
-        print(object_3.shape)      
-        
-        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])       
-        error_bkgd_perc = 100 * (background[:, 10] - background[:, 3]) / background[:, 3]
-        print("error_bkgd_abs:", np.mean(error_bkgd_abs))
-        print("error_bkgd_perc:", np.mean(error_bkgd_perc))          
-        
-
-        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])       
-        error_obj1_perc = 100 * (object_1[:, 10] - object_1[:, 3]) / object_1[:, 3]
-        print("error_obj1_abs:", np.mean(error_obj1_abs))
-        print("error_obj1_perc:", np.mean(error_obj1_perc))  
-        
-        
-        error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
-        error_obj2_perc = 100 * (object_2[:, 10] - object_2[:, 3]) / object_2[:, 3]
-        print("error_obj2_abs:", np.mean(error_obj2_abs))
-        print("error_obj2_perc:", np.mean(error_obj2_perc))
-
-        error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
-        error_obj3_perc = 100 * (object_3[:, 10] - object_3[:, 3]) / object_3[:, 3]
-        print("error_obj3_abs:", np.mean(error_obj3_abs))
-        print("error_obj3_perc:", np.mean(error_obj3_perc))
-        
-        
-        
-        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])       
-        error1_bkgd_perc = 100 * (background[:, 11] - background[:, 4]) / background[:, 4]
-        print("error1_bkgd_abs:", np.mean(error1_bkgd_abs))
-        print("error1_bkgd_perc:", np.mean(error1_bkgd_perc))          
-        
-
-        error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
-        error1_obj1_perc = 100 * (object_1[:, 11] - object_1[:, 4]) / object_1[:, 4]
-        print("error1_obj1_abs:", np.mean(error1_obj1_abs))
-        print("error1_obj1_perc:", np.mean(error1_obj1_perc))  
-        
-        
-        error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
-        error1_obj2_perc = 100 * (object_2[:, 11] - object_2[:, 4]) / object_2[:, 4]
-        print("error1_obj2_abs:", np.mean(error1_obj2_abs))
-        print("error1_obj2_perc:", np.mean(error1_obj2_perc))
-
-        error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
-        error1_obj3_perc = 100 * (object_3[:, 11] - object_3[:, 4]) / object_3[:, 4]
-        print("error1_obj3_abs:", np.mean(error1_obj3_abs))
-        print("error1_obj3_perc:", np.mean(error1_obj3_perc))        
-        
-        
-        
-        
-        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])       
-        #error2_bkgd_perc = 100 * (background[:, 12] - background[:, 5]) / background[:, 5]
-        print("error2_bkgd_abs:", np.mean(error2_bkgd_abs))
-        #print("error2_bkgd_perc:", np.mean(error2_bkgd_perc))          
-        
-
-        error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
-        error2_obj1_perc = 100 * (object_1[:, 12] - object_1[:, 5]) / object_1[:, 5]
-        print("error2_obj1_abs:", np.mean(error2_obj1_abs))
-        print("error2_obj1_perc:", np.mean(error2_obj1_perc))  
-        
-        
-        error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
-        error2_obj2_perc = 100 * (object_2[:, 12] - object_2[:, 5]) / object_2[:, 5]
-        print("error2_obj2_abs:", np.mean(error2_obj2_abs))
-        print("error2_obj2_perc:", np.mean(error2_obj2_perc))
-
-        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])       
-        #error2_obj3_perc = 100 * (object_3[:, 12] - object_3[:, 5]) / object_3[:, 5]
-        print("error2_obj3_abs:", np.mean(error2_obj3_abs))
-        #print("error2_obj3_perc:", np.mean(error2_obj3_perc))        
-        '''        
+     
         
