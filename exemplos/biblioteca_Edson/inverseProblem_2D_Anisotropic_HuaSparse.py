@@ -1387,76 +1387,21 @@ class inverse_problem:
         imgFormat = self.imgFotmat
    
         
-        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])       
-        error_bkgd_perc = 100 * (background[:, 10] - background[:, 3]) / background[:, 3]
-        #print("error_bkgd_abs:", np.mean(error_bkgd_abs))
-        #print("error_bkgd_perc:", np.mean(error_bkgd_perc))          
-        
-
-        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])       
-        error_obj1_perc = 100 * (object_1[:, 10] - object_1[:, 3]) / object_1[:, 3]
-        #print("error_obj1_abs:", np.mean(error_obj1_abs))
-        #print("error_obj1_perc:", np.mean(error_obj1_perc))  
-        
-        
+        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])              
+        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])                
         error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
-        error_obj2_perc = 100 * (object_2[:, 10] - object_2[:, 3]) / object_2[:, 3]
-        #print("error_obj2_abs:", np.mean(error_obj2_abs))
-        #print("error_obj2_perc:", np.mean(error_obj2_perc))
-
         error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
-        error_obj3_perc = 100 * (object_3[:, 10] - object_3[:, 3]) / object_3[:, 3]
-        #print("error_obj3_abs:", np.mean(error_obj3_abs))
-        #print("error_obj3_perc:", np.mean(error_obj3_perc))
         
-        
-        
-        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])       
-        error1_bkgd_perc = 100 * (background[:, 11] - background[:, 4]) / background[:, 4]
-        #print("error1_bkgd_abs:", np.mean(error1_bkgd_abs))
-        #print("error1_bkgd_perc:", np.mean(error1_bkgd_perc))          
-        
-
+        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])              
         error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
-        error1_obj1_perc = 100 * (object_1[:, 11] - object_1[:, 4]) / object_1[:, 4]
-        #print("error1_obj1_abs:", np.mean(error1_obj1_abs))
-        #print("error1_obj1_perc:", np.mean(error1_obj1_perc))  
-        
-        
         error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
-        error1_obj2_perc = 100 * (object_2[:, 11] - object_2[:, 4]) / object_2[:, 4]
-        #print("error1_obj2_abs:", np.mean(error1_obj2_abs))
-        #print("error1_obj2_perc:", np.mean(error1_obj2_perc))
-
         error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
-        error1_obj3_perc = 100 * (object_3[:, 11] - object_3[:, 4]) / object_3[:, 4]
-        #print("error1_obj3_abs:", np.mean(error1_obj3_abs))
-        #print("error1_obj3_perc:", np.mean(error1_obj3_perc))        
-        
-        
-        
-        
-        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])       
-        #error2_bkgd_perc = 100 * (background[:, 12] - background[:, 5]) / background[:, 5]
-        #print("error2_bkgd_abs:", np.mean(error2_bkgd_abs))
-        #print("error2_bkgd_perc:", np.mean(error2_bkgd_perc))          
-        
-
+         
+        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])               
         error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
-        error2_obj1_perc = 100 * (object_1[:, 12] - object_1[:, 5]) / object_1[:, 5]
-        #print("error2_obj1_abs:", np.mean(error2_obj1_abs))
-        #print("error2_obj1_perc:", np.mean(error2_obj1_perc))  
-        
-        
         error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
-        error2_obj2_perc = 100 * (object_2[:, 12] - object_2[:, 5]) / object_2[:, 5]
-        #print("error2_obj2_abs:", np.mean(error2_obj2_abs))
-        #print("error2_obj2_perc:", np.mean(error2_obj2_perc))
-
         error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])       
-        #error2_obj3_perc = 100 * (object_3[:, 12] - object_3[:, 5]) / object_3[:, 5]
-        #print("error2_obj3_abs:", np.mean(error2_obj3_abs))
-        #print("error2_obj3_perc:", np.mean(error2_obj3_perc))        
+        
         T11 =   round(np.mean(error_bkgd_abs), 3)
         T12 =   round(np.mean(error_obj1_abs), 3)    
         T13 =   round(np.mean(error_obj2_abs), 3)    
@@ -1469,12 +1414,19 @@ class inverse_problem:
         T32 =   round(np.mean(error2_obj1_abs), 3)
         T33 =   round(np.mean(error2_obj2_abs), 3) 
         T34 =   round(np.mean(error2_obj3_abs), 3) 
-        
+        '''
         df = pd.DataFrame({
-            "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3',],
+            "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
             "σL": [T11, T12, T13, T14],
             "σT":  [T21, T22, T23, T24],
             "θ (°)": [T31, T32, T33, T34],
+        })
+        '''
+        df = pd.DataFrame({
+            "ref": ['Elemento','Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
+            "": ['σL',T11, T12, T13, T14],
+            "":  ['σT',T21, T22, T23, T24],
+            "d": ['θ°',T31, T32, T33, T34],
         })
 
         fig, ax = plt.subplots(figsize=(6,2.5))
@@ -1569,8 +1521,8 @@ class inverse_problem:
                 grupos[lambda_str][tipo_escala]["sigma_L"] = nome
             elif "sigma_T" in nome:
                 grupos[lambda_str][tipo_escala]["sigma_T"] = nome
-            elif "sigma_Dif" in nome:
-                grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
+            #elif "sigma_Dif" in nome:
+                #grupos[lambda_str][tipo_escala]["sigma_Dif"] = nome
             elif "theta" in nome:
                 grupos[lambda_str][tipo_escala]["theta"] = nome
             elif "Elipses" in nome:
@@ -1590,7 +1542,7 @@ class inverse_problem:
             ("sigma_yy", "σyy"),
             ("sigma_L", "σ_L"),
             ("sigma_T", "σ_T"),
-            ("sigma_Dif", "(σ_L-σ_T)"),
+            #("sigma_Dif", "(σ_L-σ_T)"),
             ("theta", "Angle [°]"),
             ("Elipses", "Anisotropy"),
             ("sigma_linhas", "Summary"),
@@ -1720,7 +1672,7 @@ class inverse_problem:
                 f.write(f"""
     <tr>
         <td colspan="{len(colunas)}" class="lambda_bloco">
-            λ = {lambda_str}
+            λ = {float(lambda_str):.2e}
         </td>
     </tr>
     """)
@@ -1739,7 +1691,7 @@ class inverse_problem:
     <td>
         <div class="titulo">{titulo}</div>
         <div class="escala">AutoScale</div>
-        <div class="lambda">λ = {lambda_str}</div>
+        <div class="lambda">λ = {float(lambda_str):.2e}</div>
         <img src="{img}">
     </td>
     """)
@@ -1762,7 +1714,7 @@ class inverse_problem:
     <td>
         <div class="titulo">{titulo}</div>
         <div class="escala">SameScale</div>
-        <div class="lambda">λ = {lambda_str}</div>
+        <div class="lambda">λ = {float(lambda_str):.2e}</div>
         <img src="{img}">
     </td>
     """)
@@ -2111,11 +2063,11 @@ class inverse_problem:
         #np.savetxt("theta_final.txt", theta_deg)
         #print('tolerance',tolerance)
         #print('anisotropia',anisotropia)
-        tol_aniso = 5e-1
+        tol_aniso = 1e-4
 
         quase_isotropico = np.abs(sigma_L - sigma_T) < tol_aniso
 
-        theta_deg[quase_isotropico] = -0.0
+        theta_deg[quase_isotropico] = 0.0
         
      
           # formato binário
@@ -2132,44 +2084,44 @@ class inverse_problem:
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
         
         #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.svg'
-        nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.6f}' 
+        nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.10f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
         
-        nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.6f}' 
+        nome2 =  f'{pasta_teste}/{html_name}_sigma_xy_{Lambda:.10f}' 
         self.plotMSH(sigmaInicial[:,1], Lambda, itr, save=True, SigmaXXXYYY='xy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome2)
         lista_imgs.append(nome2)
         
-        nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.6f}'  
+        nome3 = f'{pasta_teste}/{html_name}_sigma_yy_{Lambda:.10f}'  
         self.plotMSH(sigmaInicial[:,2], Lambda, itr, save=True, SigmaXXXYYY='yy', DifAniso = DifAnisotropia_Med, nome_arquivo=nome3)
         lista_imgs.append(nome3)
              
 
-        nome4 = f'{pasta_teste}/{html_name}_sigma_L_{Lambda:.6f}'          
+        nome4 = f'{pasta_teste}/{html_name}_sigma_L_{Lambda:.10f}'          
         self.plotMSH(sigma_L, Lambda, itr, save=True, SigmaXXXYYY='L', DifAniso = DifAnisotropia_Med, nome_arquivo=nome4)
         lista_imgs.append(nome4)
         
-        nome5 = f'{pasta_teste}/{html_name}_sigma_T_{Lambda:.6f}'  
+        nome5 = f'{pasta_teste}/{html_name}_sigma_T_{Lambda:.10f}'  
         self.plotMSH(sigma_T, Lambda, itr, save=True, SigmaXXXYYY='T', DifAniso = DifAnisotropia_Med, nome_arquivo=nome5)
         lista_imgs.append(nome5)
         
         # Diferença anisotrópica
-        nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
-        self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='L-σT', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
-        lista_imgs.append(nome6)
+        #nome6 =  f'{pasta_teste}/{html_name}_sigma_Dif_{Lambda:.6f}' 
+        #self.plotMSH(DifAnisotropia, Lambda, itr, save=True, SigmaXXXYYY='L-σT', DifAniso = DifAnisotropia_Med, nome_arquivo=nome6)
+        #lista_imgs.append(nome6)
         
         # Theta amgle
-        nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.6f}' 
+        nome7 =  f'{pasta_teste}/{html_name}_theta_deg_{Lambda:.10f}' 
         self.plotMSH(theta_deg, Lambda, itr, save=True, SigmaXXXYYY='θ°', DifAniso = DifAnisotropia_Med, nome_arquivo=nome7)
         lista_imgs.append(nome7)  
         print('theta_deg', theta_deg)
         # Gráfico tipo linha (o que você mandou)
-        nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.6f}'
+        nome8 = f'{pasta_teste}/{html_name}_sigma_linhas_{Lambda:.10f}'
         self.plot_sigma(sigmaInicial,  ref_sL = 3.0, ref_sT = 1.0, salvar=True, nome_arquivo=nome8)
         lista_imgs.append(nome8)
         #print('plot_sigma_banana_solver', theta_deg)
         
-        nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.6f}'
+        nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.10f}'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
         
@@ -2189,12 +2141,12 @@ class inverse_problem:
         self.plot_Sorting(DifAnisotropia, titulo="Results (σx-σy)", salvar=True, nome_arquivo=nome12)
         lista_imgs.append(nome12)
         '''
-        nome13 = f'{pasta_teste}/{html_name}_Elipses_{Lambda:.6f}'     
+        nome13 = f'{pasta_teste}/{html_name}_Elipses_{Lambda:.10f}'     
         self.plotElipse(sigmaInicial, sigma_L, sigma_T, theta_deg, Lambda, itr, save=True, DifAniso = DifAnisotropia_Med, nome_arquivo=nome13)
         lista_imgs.append(nome13)
         # Theta angle
 
-        nome14 = f'{pasta_teste}/{html_name}_Table_{Lambda:.6f}'     
+        nome14 = f'{pasta_teste}/{html_name}_Table_{Lambda:.10f}'     
         self.plot_Table(nome_arquivo=nome14)
         lista_imgs.append(nome14)
         
