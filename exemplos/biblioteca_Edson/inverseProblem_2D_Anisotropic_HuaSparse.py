@@ -1373,6 +1373,261 @@ class inverse_problem:
         plt.show(block=False)
         plt.pause(0.1)      
     '''
+
+        
+    def configurar_celula(self,
+            celula,
+            fontsize=10,
+            bold=False,
+            linewidth=0.8,
+            facecolor="white"
+    ):
+        """Aplica a formatação básica a uma célula da tabela."""
+    
+        celula.set_edgecolor("black")
+        celula.set_linewidth(linewidth)
+        celula.set_facecolor(facecolor)
+    
+        celula.get_text().set_fontsize(fontsize)
+        celula.get_text().set_weight("bold" if bold else "normal")
+        celula.get_text().set_ha("center")
+        celula.get_text().set_va("center")
+        
+    
+    def plotar_tabela_condutividade(self, ax):
+        """Desenha a TABLE I."""
+    
+        ax.axis("off")
+    
+        # Títulos
+        ax.text(
+            0.5,
+            0.97,
+            "TABLE I",
+            transform=ax.transAxes,
+            ha="center",
+            va="top",
+            fontsize=11,
+            fontfamily="serif"
+        )
+    
+        ax.text(
+            0.5,
+            0.89,
+            "REFERENCE AND RECONSTRUCTED CONDUCTIVITY PARAMETERS",
+            transform=ax.transAxes,
+            ha="center",
+            va="top",
+            fontsize=10,
+            fontfamily="serif",
+            fontvariant="small-caps"
+        )
+    
+        # Duas linhas de cabeçalho
+        cabecalho_1 = [
+            "",
+            "Reference", "",
+            "Results", "",
+            "Mean Error", ""
+        ]
+    
+        cabecalho_2 = [
+            "Region",
+            r"${\overline{\sigma L}}_{ref}$",
+            r"$\overline{\sigma T}_{ref}$",
+            r"$\overline{\sigma L}_{calc}$",
+            r"$\overline{\sigma T}_{calc}$",
+            r"$\overline{\sigma L}_{error}$",
+            r"$\overline{\sigma T}_{error}$"
+        ]
+    
+        dados = [
+            ["Bkgd", "3.00", "3.00", "3.23", "2.66", "-0.230", "0.334"],
+            ["Obj 1", "3.00", "1.00", "2.81", "1.37", "0.187", "-0.374"],
+            ["Obj 2", "3.00", "1.00", "2.88", "1.34", "0.099", "-0.339"],
+            ["Obj 3", "3.00", "1.00", "2.87", "1.31", "0.130", "-0.313"],
+            ["All",   "3.00", "2.63", "3.17", "2.43", "-0.173", "0.199"]
+        ]
+    
+        conteudo = [cabecalho_1, cabecalho_2] + dados
+    
+        tabela = ax.table(
+            cellText=conteudo,
+            cellLoc="center",
+            #bbox=[0.16, 0.20, 0.68, 0.56],
+            #colWidths=[0.16, 0.14, 0.14, 0.14, 0.14, 0.16, 0.16]
+            bbox=[0.09, 0.08, 0.82, 0.61],
+            colWidths=[0.14, 0.14, 0.14, 0.15, 0.15, 0.16, 0.16]
+        )
+    
+        tabela.auto_set_font_size(False)
+    
+        numero_linhas = len(conteudo)
+        numero_colunas = len(conteudo[0])
+    
+        for linha in range(numero_linhas):
+            for coluna in range(numero_colunas):
+    
+                celula = tabela[(linha, coluna)]
+    
+                self.configurar_celula(
+                    celula,
+                    fontsize=9,
+                    bold=(linha <= 1),
+                    linewidth=0.8
+                )
+    
+                celula.get_text().set_fontfamily("serif")
+    
+        # Ajusta a altura das linhas
+        for coluna in range(numero_colunas):
+            tabela[(0, coluna)].set_height(0.12)
+            tabela[(1, coluna)].set_height(0.14)
+    
+        for linha in range(2, numero_linhas):
+            for coluna in range(numero_colunas):
+                tabela[(linha, coluna)].set_height(0.105)
+    
+        # Simulação das células mescladas
+        # Reference: colunas 1 e 2
+        tabela[(0, 1)].visible_edges = "LTB"
+        tabela[(0, 2)].visible_edges = "RTB"
+    
+        # Results: colunas 3 e 4
+        tabela[(0, 3)].visible_edges = "LTB"
+        tabela[(0, 4)].visible_edges = "RTB"
+    
+        # Mean Error: colunas 5 e 6
+        tabela[(0, 5)].visible_edges = "LTB"
+        tabela[(0, 6)].visible_edges = "RTB"
+    
+        # Célula superior de Region
+        tabela[(0, 0)].visible_edges = "LTR"
+        tabela[(1, 0)].visible_edges = "LBR"
+    
+        # Remove o texto da primeira célula
+        tabela[(0, 0)].get_text().set_text("")
+    
+        # Nota
+        ax.text(
+            0.18,
+            0.04,
+            r"Note: Conductivities $\sigma$ in S/m.",
+            transform=ax.transAxes,
+            ha="left",
+            va="center",
+            fontsize=9,
+            fontfamily="serif"
+        )
+    
+    
+    def plotar_tabela_anisotropia(self, ax):
+        """Desenha a TABLE II."""
+    
+        ax.axis("off")
+    
+        # Títulos
+        ax.text(
+            0.5,
+            0.97,
+            "TABLE II",
+            transform=ax.transAxes,
+            ha="center",
+            va="top",
+            fontsize=11,
+            fontfamily="serif"
+        )
+    
+        ax.text(
+            0.5,
+            0.89,
+            "REFERENCE AND RECONSTRUCTED ANISOTROPY PARAMETERS",
+            transform=ax.transAxes,
+            ha="center",
+            va="top",
+            fontsize=10,
+            fontfamily="serif",
+            fontvariant="small-caps"
+        )
+    
+        cabecalho_1 = [
+            "",
+            "Reference", "",
+            "Results", "",
+            "Mean Error", ""
+        ]
+    
+        cabecalho_2 = [
+            "Region",
+            r"$\overline{AI}_{ref}$",
+            r"$\overline{\theta}_{ref}$",
+            r"$\overline{AI}_{calc}$",
+            r"$\overline{\theta}_{calc}$",
+            r"$\overline{AI}_{error}$",
+            r"$\overline{\theta}_{error}$"
+        ]
+    
+        dados = [
+            ["Bkgd", "1.00", "0.00°",   "0.826", "-1.20°",  "-0.140", "4.10°"],
+            ["Obj 1", "0.33", "30.00°",  "0.483", "30.43°",   "0.147", "1.67°"],
+            ["Obj 2", "0.33", "-30.00°", "0.457", "-38.75°",  "0.127", "4.66°"],
+            ["Obj 3", "0.33", "0.00°",   "0.453", "7.53°",    "0.117", "3.26°"],
+            ["All",   "0.87", "0.01°",   "0.760", "1.00°",    "0.117", "3.99°"]
+        ]
+    
+        conteudo = [cabecalho_1, cabecalho_2] + dados
+    
+        tabela = ax.table(
+            cellText=conteudo,
+            cellLoc="center",
+            bbox=[0.09, 0.08, 0.82, 0.61],
+            colWidths=[0.14, 0.14, 0.14, 0.15, 0.15, 0.16, 0.16]
+        )
+    
+        tabela.auto_set_font_size(False)
+    
+        numero_linhas = len(conteudo)
+        numero_colunas = len(conteudo[0])
+    
+        for linha in range(numero_linhas):
+            for coluna in range(numero_colunas):
+    
+                celula = tabela[(linha, coluna)]
+    
+                self.configurar_celula(
+                    celula,
+                    fontsize=9,
+                    bold=(linha <= 1),
+                    linewidth=0.8
+                )
+    
+                celula.get_text().set_fontfamily("serif")
+    
+        # Altura das linhas
+        for coluna in range(numero_colunas):
+            tabela[(0, coluna)].set_height(0.12)
+            tabela[(1, coluna)].set_height(0.15)
+    
+        for linha in range(2, numero_linhas):
+            for coluna in range(numero_colunas):
+                tabela[(linha, coluna)].set_height(0.105)
+    
+        # Simula células agrupadas
+        tabela[(0, 1)].visible_edges = "LTB"
+        tabela[(0, 2)].visible_edges = "RTB"
+    
+        tabela[(0, 3)].visible_edges = "LTB"
+        tabela[(0, 4)].visible_edges = "RTB"
+    
+        tabela[(0, 5)].visible_edges = "LTB"
+        tabela[(0, 6)].visible_edges = "RTB"
+    
+        # Region ocupando as duas linhas de cabeçalho
+        tabela[(0, 0)].visible_edges = "LTR"
+        tabela[(1, 0)].visible_edges = "LBR"
+        tabela[(0, 0)].get_text().set_text("")
+
+
     ###############################################################################
     # Essa função plota o resultado do sigma calculado no problema inverso
     ############################################################################### 
@@ -1400,7 +1655,12 @@ class inverse_problem:
         error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])               
         error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
         error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
-        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])       
+        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])  
+        
+        
+        Z11a = np.abs(background[:, 3]) 
+        Z11 = round(np.mean(Z11a), 3)
+        print('Z11',Z11)
         
         T11 =   round(np.mean(error_bkgd_abs), 3)
         T12 =   round(np.mean(error_obj1_abs), 3)    
@@ -1415,13 +1675,12 @@ class inverse_problem:
         T33 =   round(np.mean(error2_obj2_abs), 3) 
         T34 =   round(np.mean(error2_obj3_abs), 3) 
         '''
-        df = pd.DataFrame({
-            "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
-            "σL": [T11, T12, T13, T14],
-            "σT":  [T21, T22, T23, T24],
-            "θ (°)": [T31, T32, T33, T34],
-        })
-        '''
+        #df = pd.DataFrame({
+        #    "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
+        #    "σL": [T11, T12, T13, T14],
+        #    "σT":  [T21, T22, T23, T24],
+        #    "θ (°)": [T31, T32, T33, T34],})
+        
         df = pd.DataFrame({
             "ref": ['Elemento','Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
             "": ['σL',T11, T12, T13, T14],
@@ -1450,7 +1709,42 @@ class inverse_problem:
         #theta_rad = 0.5*np.arctan2(2.0*3.14, 1)
         #theta_deg = np.rad2deg(theta_rad)
         #print('theta_deg',theta_deg)
-
+        '''
+    # ============================================================
+    # Figura principal
+    # ============================================================
+        imgFormat = self.imgFotmat
+    
+        fig, eixos = plt.subplots(
+            nrows=2,
+            ncols=1,
+            figsize=(7.3, 6.2),
+            gridspec_kw={
+                "height_ratios": [1.0, 1.08],
+                "hspace": 0.05
+            }
+        )
+    
+        self.plotar_tabela_condutividade(eixos[0])
+        self.plotar_tabela_anisotropia(eixos[1])
+    
+        # Ajustes das margens
+        plt.subplots_adjust(
+            left=0.03,
+            right=0.97,
+            top=0.98,
+            bottom=0.03,
+            hspace=0.02
+        )
+    
+        # Salvar a imagem
+        #plt.savefig("Tabelas_IEEE.png", dpi=300, bbox_inches="tight", pad_inches=0.05)
+        plt.savefig(f'{nome_arquivo}.{imgFormat}',   format = imgFormat, dpi=300)
+        # Também pode salvar em formato vetorial:
+        # plt.savefig("Tabelas_IEEE.svg", bbox_inches="tight")
+        # plt.savefig("Tabelas_IEEE.pdf", bbox_inches="tight")
+    
+        plt.show()
     ###############################################################################
     '''
     # Essa função salva arqui html do resultado doproblema inverso
@@ -2181,4 +2475,299 @@ class inverse_problem:
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
      
+'''
         
+        def configurar_celula(
+                celula,
+                fontsize=10,
+                bold=False,
+                linewidth=0.8,
+                facecolor="white"
+        ):
+            """Aplica a formatação básica a uma célula da tabela."""
+        
+            celula.set_edgecolor("black")
+            celula.set_linewidth(linewidth)
+            celula.set_facecolor(facecolor)
+        
+            celula.get_text().set_fontsize(fontsize)
+            celula.get_text().set_weight("bold" if bold else "normal")
+            celula.get_text().set_ha("center")
+            celula.get_text().set_va("center")
+        
+        
+        def plotar_tabela_condutividade(ax):
+            """Desenha a TABLE I."""
+        
+            ax.axis("off")
+        
+            # Títulos
+            ax.text(
+                0.5,
+                0.97,
+                "TABLE I",
+                transform=ax.transAxes,
+                ha="center",
+                va="top",
+                fontsize=11,
+                fontfamily="serif"
+            )
+        
+            ax.text(
+                0.5,
+                0.89,
+                "REFERENCE AND RECONSTRUCTED CONDUCTIVITY PARAMETERS",
+                transform=ax.transAxes,
+                ha="center",
+                va="top",
+                fontsize=10,
+                fontfamily="serif",
+                fontvariant="small-caps"
+            )
+        
+            # Duas linhas de cabeçalho
+            cabecalho_1 = [
+                "",
+                "Reference", "",
+                "Results", "",
+                "Mean Error", ""
+            ]
+        
+            cabecalho_2 = [
+                "Region",
+                r"${\overline{\sigma L}}_{ref}$",
+                r"$\overline{\sigma T}_{ref}$",
+                r"$\overline{\sigma L}_{calc}$",
+                r"$\overline{\sigma T}_{calc}$",
+                r"$\overline{\sigma L}_{error}$",
+                r"$\overline{\sigma T}_{error}$"
+            ]
+        
+            dados = [
+                ["Bkgd", "3.00", "3.00", "3.23", "2.66", "-0.230", "0.334"],
+                ["Obj 1", "3.00", "1.00", "2.81", "1.37", "0.187", "-0.374"],
+                ["Obj 2", "3.00", "1.00", "2.88", "1.34", "0.099", "-0.339"],
+                ["Obj 3", "3.00", "1.00", "2.87", "1.31", "0.130", "-0.313"],
+                ["All",   "3.00", "2.63", "3.17", "2.43", "-0.173", "0.199"]
+            ]
+        
+            conteudo = [cabecalho_1, cabecalho_2] + dados
+        
+            tabela = ax.table(
+                cellText=conteudo,
+                cellLoc="center",
+                #bbox=[0.16, 0.20, 0.68, 0.56],
+                #colWidths=[0.16, 0.14, 0.14, 0.14, 0.14, 0.16, 0.16]
+                bbox=[0.09, 0.08, 0.82, 0.61],
+                colWidths=[0.14, 0.14, 0.14, 0.15, 0.15, 0.16, 0.16]
+            )
+        
+            tabela.auto_set_font_size(False)
+        
+            numero_linhas = len(conteudo)
+            numero_colunas = len(conteudo[0])
+        
+            for linha in range(numero_linhas):
+                for coluna in range(numero_colunas):
+        
+                    celula = tabela[(linha, coluna)]
+        
+                    configurar_celula(
+                        celula,
+                        fontsize=9,
+                        bold=(linha <= 1),
+                        linewidth=0.8
+                    )
+        
+                    celula.get_text().set_fontfamily("serif")
+        
+            # Ajusta a altura das linhas
+            for coluna in range(numero_colunas):
+                tabela[(0, coluna)].set_height(0.12)
+                tabela[(1, coluna)].set_height(0.14)
+        
+            for linha in range(2, numero_linhas):
+                for coluna in range(numero_colunas):
+                    tabela[(linha, coluna)].set_height(0.105)
+        
+            # Simulação das células mescladas
+            # Reference: colunas 1 e 2
+            tabela[(0, 1)].visible_edges = "LTB"
+            tabela[(0, 2)].visible_edges = "RTB"
+        
+            # Results: colunas 3 e 4
+            tabela[(0, 3)].visible_edges = "LTB"
+            tabela[(0, 4)].visible_edges = "RTB"
+        
+            # Mean Error: colunas 5 e 6
+            tabela[(0, 5)].visible_edges = "LTB"
+            tabela[(0, 6)].visible_edges = "RTB"
+        
+            # Célula superior de Region
+            tabela[(0, 0)].visible_edges = "LTR"
+            tabela[(1, 0)].visible_edges = "LBR"
+        
+            # Remove o texto da primeira célula
+            tabela[(0, 0)].get_text().set_text("")
+        
+            # Nota
+            ax.text(
+                0.18,
+                0.04,
+                r"Note: Conductivities $\sigma$ in S/m.",
+                transform=ax.transAxes,
+                ha="left",
+                va="center",
+                fontsize=9,
+                fontfamily="serif"
+            )
+        
+        
+        def plotar_tabela_anisotropia(ax):
+            """Desenha a TABLE II."""
+        
+            ax.axis("off")
+        
+            # Títulos
+            ax.text(
+                0.5,
+                0.97,
+                "TABLE II",
+                transform=ax.transAxes,
+                ha="center",
+                va="top",
+                fontsize=11,
+                fontfamily="serif"
+            )
+        
+            ax.text(
+                0.5,
+                0.89,
+                "REFERENCE AND RECONSTRUCTED ANISOTROPY PARAMETERS",
+                transform=ax.transAxes,
+                ha="center",
+                va="top",
+                fontsize=10,
+                fontfamily="serif",
+                fontvariant="small-caps"
+            )
+        
+            cabecalho_1 = [
+                "",
+                "Reference", "",
+                "Results", "",
+                "Mean Error", ""
+            ]
+        
+            cabecalho_2 = [
+                "Region",
+                r"$\overline{AI}_{ref}$",
+                r"$\overline{\theta}_{ref}$",
+                r"$\overline{AI}_{calc}$",
+                r"$\overline{\theta}_{calc}$",
+                r"$\overline{AI}_{error}$",
+                r"$\overline{\theta}_{error}$"
+            ]
+        
+            dados = [
+                ["Bkgd", "1.00", "0.00°",   "0.826", "-1.20°",  "-0.140", "4.10°"],
+                ["Obj 1", "0.33", "30.00°",  "0.483", "30.43°",   "0.147", "1.67°"],
+                ["Obj 2", "0.33", "-30.00°", "0.457", "-38.75°",  "0.127", "4.66°"],
+                ["Obj 3", "0.33", "0.00°",   "0.453", "7.53°",    "0.117", "3.26°"],
+                ["All",   "0.87", "0.01°",   "0.760", "1.00°",    "0.117", "3.99°"]
+            ]
+        
+            conteudo = [cabecalho_1, cabecalho_2] + dados
+        
+            tabela = ax.table(
+                cellText=conteudo,
+                cellLoc="center",
+                bbox=[0.09, 0.08, 0.82, 0.61],
+                colWidths=[0.14, 0.14, 0.14, 0.15, 0.15, 0.16, 0.16]
+            )
+        
+            tabela.auto_set_font_size(False)
+        
+            numero_linhas = len(conteudo)
+            numero_colunas = len(conteudo[0])
+        
+            for linha in range(numero_linhas):
+                for coluna in range(numero_colunas):
+        
+                    celula = tabela[(linha, coluna)]
+        
+                    configurar_celula(
+                        celula,
+                        fontsize=9,
+                        bold=(linha <= 1),
+                        linewidth=0.8
+                    )
+        
+                    celula.get_text().set_fontfamily("serif")
+        
+            # Altura das linhas
+            for coluna in range(numero_colunas):
+                tabela[(0, coluna)].set_height(0.12)
+                tabela[(1, coluna)].set_height(0.15)
+        
+            for linha in range(2, numero_linhas):
+                for coluna in range(numero_colunas):
+                    tabela[(linha, coluna)].set_height(0.105)
+        
+            # Simula células agrupadas
+            tabela[(0, 1)].visible_edges = "LTB"
+            tabela[(0, 2)].visible_edges = "RTB"
+        
+            tabela[(0, 3)].visible_edges = "LTB"
+            tabela[(0, 4)].visible_edges = "RTB"
+        
+            tabela[(0, 5)].visible_edges = "LTB"
+            tabela[(0, 6)].visible_edges = "RTB"
+        
+            # Region ocupando as duas linhas de cabeçalho
+            tabela[(0, 0)].visible_edges = "LTR"
+            tabela[(1, 0)].visible_edges = "LBR"
+            tabela[(0, 0)].get_text().set_text("")
+
+
+# ============================================================
+# Figura principal
+# ============================================================
+
+fig, eixos = plt.subplots(
+    nrows=2,
+    ncols=1,
+    figsize=(7.3, 6.2),
+    gridspec_kw={
+        "height_ratios": [1.0, 1.08],
+        "hspace": 0.05
+    }
+)
+
+plotar_tabela_condutividade(eixos[0])
+plotar_tabela_anisotropia(eixos[1])
+
+# Ajustes das margens
+plt.subplots_adjust(
+    left=0.03,
+    right=0.97,
+    top=0.98,
+    bottom=0.03,
+    hspace=0.02
+)
+
+# Salvar a imagem
+plt.savefig(
+    "Tabelas_IEEE.png",
+    dpi=300,
+    bbox_inches="tight",
+    pad_inches=0.05
+)
+
+# Também pode salvar em formato vetorial:
+# plt.savefig("Tabelas_IEEE.svg", bbox_inches="tight")
+# plt.savefig("Tabelas_IEEE.pdf", bbox_inches="tight")
+
+plt.show()
+
+'''        
