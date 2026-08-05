@@ -990,7 +990,7 @@ class inverse_problem:
     
         idx_elem = finder(ex, ey) 
         idx_elem_global = finder(ex, ey) + ajuste
-        print("Elemento:", idx_elem)
+        #print("Elemento:", idx_elem)
         
         mask = idx_elem  >= 0
 
@@ -1394,9 +1394,38 @@ class inverse_problem:
         celula.get_text().set_va("center")
         
     
-    def plotar_tabela_condutividade(self, ax):
+    def plotar_tabela_condutividade(self, ax, background, object_1, object_2, object_3):
         """Desenha a TABLE I."""
-    
+        #print('background', background)
+        
+        Z11 = round(np.mean(background[:, 3]), 3)
+        Z12 = round(np.mean(background[:, 4]), 3)
+        Z13 = round(np.mean(background[:, 10]), 3)
+        Z14 = round(np.mean(background[:, 11]), 3)
+        Z15 = round(Z13 - Z11, 3)
+        Z16 = round(Z14 - Z12, 3)
+        
+        Z21 = round(np.mean(object_1[:, 3]), 3)
+        Z22 = round(np.mean(object_1[:, 4]), 3)
+        Z23 = round(np.mean(object_1[:, 10]), 3)
+        Z24 = round(np.mean(object_1[:, 11]), 3)
+        Z25 = round(Z23 - Z21, 3)
+        Z26 = round(Z24 - Z22, 3)
+        
+        Z31 = round(np.mean(object_2[:, 3]), 3)
+        Z32 = round(np.mean(object_2[:, 4]), 3)
+        Z33 = round(np.mean(object_2[:, 10]), 3)
+        Z34 = round(np.mean(object_2[:, 11]), 3)
+        Z35 = round(Z33 - Z31, 3)
+        Z36 = round(Z34 - Z32, 3)
+        
+        Z41 = round(np.mean(object_3[:, 3]), 3)
+        Z42 = round(np.mean(object_3[:, 4]), 3)
+        Z43 = round(np.mean(object_3[:, 10]), 3)
+        Z44 = round(np.mean(object_3[:, 11]), 3)
+        Z45 = round(Z43 - Z41, 3)
+        Z46 = round(Z44 - Z42, 3)
+        
         ax.axis("off")
     
         # Títulos
@@ -1442,10 +1471,10 @@ class inverse_problem:
         ]
     
         dados = [
-            ["Bkgd", "3.00", "3.00", "3.23", "2.66", "-0.230", "0.334"],
-            ["Obj 1", "3.00", "1.00", "2.81", "1.37", "0.187", "-0.374"],
-            ["Obj 2", "3.00", "1.00", "2.88", "1.34", "0.099", "-0.339"],
-            ["Obj 3", "3.00", "1.00", "2.87", "1.31", "0.130", "-0.313"],
+            ["Bkgd", Z11, Z12, Z13, Z14, Z15, Z16],
+            ["Obj 1", Z21, Z22, Z23, Z24, Z25, Z26],
+            ["Obj 2", Z31, Z32, Z33, Z34, Z35, Z36],
+            ["Obj 3", Z41, Z42, Z43, Z44, Z45, Z46],
             ["All",   "3.00", "2.63", "3.17", "2.43", "-0.173", "0.199"]
         ]
     
@@ -1641,79 +1670,10 @@ class inverse_problem:
         
         imgFormat = self.imgFotmat
    
-        
-        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])              
-        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])                
-        error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
-        error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
-        
-        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])              
-        error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
-        error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
-        error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
-         
-        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])               
-        error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
-        error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
-        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])  
-        
-        
-        Z11a = np.abs(background[:, 3]) 
-        Z11 = round(np.mean(Z11a), 3)
-        print('Z11',Z11)
-        
-        T11 =   round(np.mean(error_bkgd_abs), 3)
-        T12 =   round(np.mean(error_obj1_abs), 3)    
-        T13 =   round(np.mean(error_obj2_abs), 3)    
-        T14 =   round(np.mean(error_obj3_abs), 3)    
-        T21 =   round(np.mean(error1_bkgd_abs), 3)    
-        T22 =   round(np.mean(error1_obj1_abs), 3)
-        T23 =   round(np.mean(error1_obj2_abs), 3) 
-        T24 =   round(np.mean(error1_obj3_abs), 3) 
-        T31 =   round(np.mean(error2_bkgd_abs), 3)    
-        T32 =   round(np.mean(error2_obj1_abs), 3)
-        T33 =   round(np.mean(error2_obj2_abs), 3) 
-        T34 =   round(np.mean(error2_obj3_abs), 3) 
-        '''
-        #df = pd.DataFrame({
-        #    "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
-        #    "σL": [T11, T12, T13, T14],
-        #    "σT":  [T21, T22, T23, T24],
-        #    "θ (°)": [T31, T32, T33, T34],})
-        
-        df = pd.DataFrame({
-            "ref": ['Elemento','Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
-            "": ['σL',T11, T12, T13, T14],
-            "":  ['σT',T21, T22, T23, T24],
-            "d": ['θ°',T31, T32, T33, T34],
-        })
 
-        fig, ax = plt.subplots(figsize=(6,2.5))
-        ax.axis('off')
-
-        tabela = ax.table(
-            cellText=df.values,
-            colLabels=df.columns,
-            loc='center'
-        )
-
-        tabela.auto_set_font_size(False)
-        tabela.set_fontsize(11)
-        tabela.scale(1.2, 1.5)
-
-        plt.tight_layout()
-        #plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
-        plt.savefig(f'{nome_arquivo}.{imgFormat}',   format = imgFormat, dpi=300) 
-        plt.show()
-
-        #theta_rad = 0.5*np.arctan2(2.0*3.14, 1)
-        #theta_deg = np.rad2deg(theta_rad)
-        #print('theta_deg',theta_deg)
-        '''
     # ============================================================
     # Figura principal
     # ============================================================
-        imgFormat = self.imgFotmat
     
         fig, eixos = plt.subplots(
             nrows=2,
@@ -1725,7 +1685,7 @@ class inverse_problem:
             }
         )
     
-        self.plotar_tabela_condutividade(eixos[0])
+        self.plotar_tabela_condutividade(eixos[0], background, object_1, object_2, object_3)
         self.plotar_tabela_anisotropia(eixos[1])
     
         # Ajustes das margens
@@ -2377,7 +2337,7 @@ class inverse_problem:
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
         
-        #nome1 =  f'../../docs/figureTemp/{html_name}_sigma_xx_{Lambda:.6f}.svg'
+        '''
         nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.10f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
@@ -2418,6 +2378,7 @@ class inverse_problem:
         nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.10f}'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
+        '''
         
         '''
         # Gráfico tipo linha (o que você mandou)
@@ -2770,4 +2731,73 @@ plt.savefig(
 
 plt.show()
 
-'''        
+''' 
+'''
+        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])              
+        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])                
+        error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
+        error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
+        
+        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])              
+        error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
+        error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
+        error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
+         
+        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])               
+        error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
+        error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
+        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])  
+        
+        
+        Z11a = np.abs(background[:, 3]) 
+        Z11 = round(np.mean(Z11a), 3)
+        print('Z11',Z11)
+        
+        T11 =   round(np.mean(error_bkgd_abs), 3)
+        T12 =   round(np.mean(error_obj1_abs), 3)    
+        T13 =   round(np.mean(error_obj2_abs), 3)    
+        T14 =   round(np.mean(error_obj3_abs), 3)    
+        T21 =   round(np.mean(error1_bkgd_abs), 3)    
+        T22 =   round(np.mean(error1_obj1_abs), 3)
+        T23 =   round(np.mean(error1_obj2_abs), 3) 
+        T24 =   round(np.mean(error1_obj3_abs), 3) 
+        T31 =   round(np.mean(error2_bkgd_abs), 3)    
+        T32 =   round(np.mean(error2_obj1_abs), 3)
+        T33 =   round(np.mean(error2_obj2_abs), 3) 
+        T34 =   round(np.mean(error2_obj3_abs), 3) 
+        
+        #df = pd.DataFrame({
+        #    "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
+        #    "σL": [T11, T12, T13, T14],
+        #    "σT":  [T21, T22, T23, T24],
+        #    "θ (°)": [T31, T32, T33, T34],})
+        
+        df = pd.DataFrame({
+            "ref": ['Elemento','Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
+            "": ['σL',T11, T12, T13, T14],
+            "":  ['σT',T21, T22, T23, T24],
+            "d": ['θ°',T31, T32, T33, T34],
+        })
+
+        fig, ax = plt.subplots(figsize=(6,2.5))
+        ax.axis('off')
+
+        tabela = ax.table(
+            cellText=df.values,
+            colLabels=df.columns,
+            loc='center'
+        )
+
+        tabela.auto_set_font_size(False)
+        tabela.set_fontsize(11)
+        tabela.scale(1.2, 1.5)
+
+        plt.tight_layout()
+        #plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
+        plt.savefig(f'{nome_arquivo}.{imgFormat}',   format = imgFormat, dpi=300) 
+        plt.show()
+
+        #theta_rad = 0.5*np.arctan2(2.0*3.14, 1)
+        #theta_deg = np.rad2deg(theta_rad)
+        #print('theta_deg',theta_deg)
+'''       
