@@ -10,6 +10,14 @@ Created on Sun Oct 26 13:56:12 2025
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+from matplotlib import cm
+from matplotlib.colors import TwoSlopeNorm
+from matplotlib.colors import ListedColormap, BoundaryNorm
+import matplotlib.colors as colors
+from matplotlib.patches import Ellipse
+#from mpl_toolkits.mplot3d import art3d
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
 
 import mesh
 import elements
@@ -20,7 +28,7 @@ import os
 import glob
 from collections import defaultdict
 #import matplotlib.cm as cm
-import matplotlib.colors as colors
+
 
 import pandas as pd
 
@@ -29,10 +37,7 @@ from scipy.sparse.linalg import factorized, spsolve
 from scipy.spatial import cKDTree
 
 from datetime import datetime
-from matplotlib import cm
-from matplotlib.colors import TwoSlopeNorm
-from matplotlib.colors import ListedColormap, BoundaryNorm
-from matplotlib.patches import Ellipse
+
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
 
@@ -937,7 +942,7 @@ class inverse_problem:
         desenhar_figura("AutoScale")
         desenhar_figura("SameScale")
         ###############################################################################
-
+    '''
     ###############################################################################   
     def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, DifAniso=None, nome_arquivo= None):
         dados_elipses_phantom = np.loadtxt("dados_elipses_phantom.txt")
@@ -1021,25 +1026,29 @@ class inverse_problem:
         sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
         
         escala = 0.005
-        '''
-        # ===== índice de anisotropia para todos os pontos =====
-        AI_all = sigma_T_pts / sigma_L_pts
-
-        #sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
         
-        AI_min = np.min(AI_all)
-        AI_max = np.max(AI_all)
+        
+        
+        # ===== índice de anisotropia para todos os pontos =====
+        #AI_all = sigma_T_pts / sigma_L_pts
+
+        ##sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
+        
+        #AI_min = np.min(AI_all)
+        #AI_max = np.max(AI_all)
         
         # evita erro se todos os valores forem iguais
-        if abs(AI_max - AI_min) < 1e-12:
-            AI_min = AI_min - 1.0
-            AI_max = AI_max + 1.0
+        #if abs(AI_max - AI_min) < 1e-12:
+        #    AI_min = AI_min - 1.0
+        #    AI_max = AI_max + 1.0
         
-        norm = colors.Normalize(
-            vmin=AI_min,
-            vmax=AI_max
-        )
-        '''
+        #norm = colors.Normalize(
+        #    vmin=AI_min,
+        #    vmax=AI_max
+        #)
+        
+        
+        
         norm = colors.Normalize(vmin=0.0, vmax=1.0)
         cmap = cm.jet
         
@@ -1119,7 +1128,274 @@ class inverse_problem:
         else:
             plt.show()    
         
+    '''
+    ###############################################################################   
+    def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, DifAniso=None, nome_arquivo= None):
+        dados_elipses_phantom = np.loadtxt("dados_elipses_phantom.txt")
+        #print(f'dados_elipses_phantom\n {dados_elipses_phantom}')
+        
+        x, y = self.mymesh.Coordinates[:, 0], self.mymesh.Coordinates[:, 1]
+        topo = self.mymesh.msh_topology
+        ajuste  = self.mymesh.NumberOfElectrodes*4 +1
+        imgFormat = self.imgFotmat
+    
+        # --- Separar elementos 2D (triangulares) e 1D (linhas) ---
+        elems_2D = np.array([el for el in topo if len(el) == 3])
+        elems_1D = np.array([el for el in topo if len(el) == 2])
 
+        # parâmetros
+        R_circ = 0.15
+        R_temp = 0.145      # raio do círculo
+        dx = 0.01    # espaçamento
+        
+        x_pts = []
+        y_pts = []
+        
+        # número de passos
+        N = int(np.floor(R_temp/dx))
+        
+        # gera pontos internos
+        for i in range(-N, N+1):
+            for j in range(-N, N+1):
+        
+                x_temp = i * dx
+                y_temp = j * dx
+        
+                # mantém apenas pontos internos
+                if x_temp**2 +  y_temp**2 <= R_temp**2:
+                    x_pts.append(x_temp)
+                    y_pts.append(y_temp)
+        #if len(elems_2D) > 0:
+        triang = tri.Triangulation(x, y, elems_2D)
+        #tpc = ax.tripcolor(triang,facecolors=sigma[:len(elems_2D)],edgecolors='k', cmap='Blues')#,vmin=1.0 )
+        ntri = triang.triangles.shape[0]
+        fc = sigma.ravel()[:ntri]
+        
+        finder = triang.get_trifinder()
+        pontos = np.column_stack((x_pts, y_pts))
+        print("pontos:", pontos.shape)
+
+        ex = pontos[:,0]
+        ey = pontos[:,1]
+        #ex, ey = 0.02, 0.07
+    
+        idx_elem = finder(ex, ey) 
+        idx_elem_global = finder(ex, ey) + ajuste
+        #print("Elemento:", idx_elem)
+        
+        mask = idx_elem  >= 0
+
+        pontos_validos = pontos[mask]
+        idx_validos = idx_elem[mask]
+        
+        
+        # pega os valores correspondentes aos elementos onde caíram os pontos
+        sigma_L_pts = sigma_L[idx_validos]
+        sigma_T_pts = sigma_T[idx_validos]
+        theta_pts   = theta_deg[idx_validos]
+        #HPF_pts = HPF[idx_validos]
+        HPF_pts = (sigma_T[idx_validos] / sigma_L[idx_validos])/20
+        
+        dados_elipses = np.column_stack([
+                                        idx_validos,
+                                        pontos_validos[:, 0],
+                                        pontos_validos[:, 1],
+                                        sigma_L_pts,
+                                        sigma_T_pts,
+                                        theta_pts,
+                                        HPF_pts
+                                    ])
+
+        self.quantitative_elipses = np.column_stack((dados_elipses_phantom, dados_elipses))
+        np.savetxt("quantitative_elipses_artigo_2b.txt",  self.quantitative_elipses)
+        
+        #fig, ax = plt.subplots(figsize=(7, 7))
+        fig = plt.figure(figsize=(10, 9))
+        ax = fig.add_subplot(111, projection='3d')
+
+        #sigmaL_max = max(np.max(np.abs(sigma_L_pts)), 1e-12)
+        #sigmaT_max = max(np.max(np.abs(sigma_T_pts)), 1e-12)
+        sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
+        
+        escala = 0.005
+        '''
+        # ===== índice de anisotropia para todos os pontos =====
+        AI_all = sigma_T_pts / sigma_L_pts
+
+        #sigma_max = max(np.max(np.abs(AI_all)), 1e-12)
+        
+        AI_min = np.min(AI_all)
+        AI_max = np.max(AI_all)
+        
+        # evita erro se todos os valores forem iguais
+        if abs(AI_max - AI_min) < 1e-12:
+            AI_min = AI_min - 1.0
+            AI_max = AI_max + 1.0
+        
+        norm = colors.Normalize(
+            vmin=AI_min,
+            vmax=AI_max
+        )
+        '''
+        norm = colors.Normalize(vmin=0.0, vmax=1.0)
+        cmap = cm.jet
+        '''
+        for linha in dados_elipses:
+            
+            #_, x0, y0, sL, sT, theta = linha
+            _, x0, y0, sL, sT, theta, z0 = linha
+        
+            AI = sT / sL
+            if AI > 1.0:
+                AI = 1 / AI
+        
+            a = escala * abs(sL) / sigma_max
+            b = escala * abs(sT) / sigma_max
+        
+            cor = cmap(norm(AI))
+        '''
+        for linha in dados_elipses:
+        
+            _, x0, y0, sL, sT, theta, z0 = linha
+        
+            # ========================================================
+            # Índice de anisotropia
+            # ========================================================
+        
+            AI = sT / sL
+        
+            if AI > 1.0:
+                AI = 1 / AI
+        
+            # ========================================================
+            # Dimensões da elipse
+            # ========================================================
+        
+            a = escala * abs(sL) / sigma_max
+            b = escala * abs(sT) / sigma_max
+        
+            # ========================================================
+            # Cor
+            # ========================================================
+        
+            cor = cmap(norm(AI))
+        
+            # ========================================================
+            # Coordenadas da elipse
+            # ========================================================
+        
+            phi = np.linspace(
+                0,
+                2*np.pi,
+                50
+            )
+        
+            theta_rad = np.deg2rad(theta)
+        
+            # elipse sem rotação
+            xe = a * np.cos(phi)
+            ye = b * np.sin(phi)
+        
+            # rotação
+            xr = (
+                xe * np.cos(theta_rad)
+                - ye * np.sin(theta_rad)
+            )
+        
+            yr = (
+                xe * np.sin(theta_rad)
+                + ye * np.cos(theta_rad)
+            )
+        
+            # translação para x0,y0
+            Xelipse = x0 + xr
+            Yelipse = y0 + yr
+        
+            # altura = efeito do filtro
+            Zelipse = np.full_like(
+                Xelipse,
+                z0
+            )
+        
+            # ========================================================
+            # Cria polígono 3D
+            # ========================================================
+        
+            vertices = [
+                list(
+                    zip(
+                        Xelipse,
+                        Yelipse,
+                        Zelipse
+                    )
+                )
+            ]
+        
+            poly = Poly3DCollection(
+                vertices,
+                facecolor=cor,
+                edgecolor='black',
+                linewidth=0.3,
+                alpha=0.8
+            )
+        
+            ax.add_collection3d(poly)
+        # ===== colorbar =====
+        sm = cm.ScalarMappable(
+            cmap=cmap,
+            norm=norm
+        )
+        
+        #sm.set_array([])
+        
+        #cbar = plt.colorbar(sm, ax=ax, shrink=0.7, pad=0.10)
+        #cbar.set_label(r"Anisotropy $AI = \sigma_{min} / \sigma_{max}$", fontsize=15)
+        
+        theta_circ = np.linspace(0, 2*np.pi, 400)
+        
+        ax.plot(
+            R_circ*np.cos(theta_circ),
+            R_circ*np.sin(theta_circ),
+            np.zeros_like(theta_circ),
+            'k-',
+            linewidth=1.0
+        )
+        
+        ax.set_xlim(-R_circ - 0.02, R_circ + 0.02)
+        ax.set_ylim(-R_circ - 0.02, R_circ + 0.02)
+        ax.set_zlim(0,0.1)
+        ax.set_title(
+            #f"σ Anisotropy - λ_{Lambda:.2e}-it_{iteration} - Aniso_{DifAniso:.1f}",
+            f"σ Anisotropy",
+            fontsize=20
+        )
+        
+        ax.set_aspect('equal', adjustable='box')
+        ax.set_xlabel('Lenght [m]', fontsize = 15)
+        ax.set_ylabel('Lenght [m]', fontsize = 15)
+        # ============================================================
+        # Ângulo da câmera
+        # ============================================================
+
+        ax.view_init(elev=30, azim=-60 )
+        #ax.set_box_aspect((1, 1, 0.4), zoom=2.0)
+        ax.grid(False)
+        
+        #plt.show()
+        
+                
+        if save:
+            #plt.savefig(nome_arquivo, dpi=100)
+            #plt.savefig(nome_arquivo, dpi=200,bbox_inches="tight")
+            #plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300) 
+            plt.savefig(f'{nome_arquivo}.{imgFormat}',   format=imgFormat, dpi=300) 
+            #plt.show()
+            plt.tight_layout()
+            plt.show(block=False)
+            plt.pause(0.1)  
+            plt.close()   # importante
+        else:
+            plt.show()    
     ###############################################################################
 
     
@@ -1397,34 +1673,42 @@ class inverse_problem:
     def plotar_tabela_condutividade(self, ax, background, object_1, object_2, object_3):
         """Desenha a TABLE I."""
         #print('background', background)
+        Z11 = f"{np.mean(background[:, 3]):.2e}"
+        Z12 = f"{np.mean(background[:, 4]):.2e}"
+        Z13 = f"{np.mean(background[:,10]):.2e}"
+        Z14 = f"{np.mean(background[:,11]):.2e}"
+        Z15 = f"{(np.mean(background[:,3]) - np.mean(background[:,10])):.2e}"
+        Z16 = f"{(np.mean(background[:,4]) - np.mean(background[:,11])):.2e}"
         
-        Z11 = round(np.mean(background[:, 3]), 3)
-        Z12 = round(np.mean(background[:, 4]), 3)
-        Z13 = round(np.mean(background[:, 10]), 3)
-        Z14 = round(np.mean(background[:, 11]), 3)
-        Z15 = round(Z13 - Z11, 3)
-        Z16 = round(Z14 - Z12, 3)
+        Z21 = f"{np.mean(object_1[:, 3]):.2e}"
+        Z22 = f"{np.mean(object_1[:, 4]):.2e}"
+        Z23 = f"{np.mean(object_1[:,10]):.2e}"
+        Z24 = f"{np.mean(object_1[:,11]):.2e}"
+        Z25 = f"{(np.mean(object_1[:,3]) - np.mean(object_1[:,10])):.2e}"
+        Z26 = f"{(np.mean(object_1[:,4]) - np.mean(object_1[:,11])):.2e}"
         
-        Z21 = round(np.mean(object_1[:, 3]), 3)
-        Z22 = round(np.mean(object_1[:, 4]), 3)
-        Z23 = round(np.mean(object_1[:, 10]), 3)
-        Z24 = round(np.mean(object_1[:, 11]), 3)
-        Z25 = round(Z23 - Z21, 3)
-        Z26 = round(Z24 - Z22, 3)
+        Z31 = f"{np.mean(object_2[:, 3]):.2e}"
+        Z32 = f"{np.mean(object_2[:, 4]):.2e}"
+        Z33 = f"{np.mean(object_2[:,10]):.2e}"
+        Z34 = f"{np.mean(object_2[:,11]):.2e}"
+        Z35 = f"{(np.mean(object_2[:,3]) - np.mean(object_2[:,10])):.2e}"
+        Z36 = f"{(np.mean(object_2[:,4]) - np.mean(object_2[:,11])):.2e}"
         
-        Z31 = round(np.mean(object_2[:, 3]), 3)
-        Z32 = round(np.mean(object_2[:, 4]), 3)
-        Z33 = round(np.mean(object_2[:, 10]), 3)
-        Z34 = round(np.mean(object_2[:, 11]), 3)
-        Z35 = round(Z33 - Z31, 3)
-        Z36 = round(Z34 - Z32, 3)
+        Z41 = f"{np.mean(object_3[:, 3]):.2e}"
+        Z42 = f"{np.mean(object_3[:, 4]):.2e}"
+        Z43 = f"{np.mean(object_3[:,10]):.2e}"
+        Z44 = f"{np.mean(object_3[:,11]):.2e}"
+        Z45 = f"{(np.mean(object_3[:,3]) - np.mean(object_3[:,10])):.2e}"
+        Z46 = f"{(np.mean(object_3[:,4]) - np.mean(object_3[:,11])):.2e}"
         
-        Z41 = round(np.mean(object_3[:, 3]), 3)
-        Z42 = round(np.mean(object_3[:, 4]), 3)
-        Z43 = round(np.mean(object_3[:, 10]), 3)
-        Z44 = round(np.mean(object_3[:, 11]), 3)
-        Z45 = round(Z43 - Z41, 3)
-        Z46 = round(Z44 - Z42, 3)
+        Z51 = f"{np.mean(self.quantitative_elipses[:, 3]):.2e}"
+        Z52 = f"{np.mean(self.quantitative_elipses[:, 4]):.2e}"
+        Z53 = f"{np.mean(self.quantitative_elipses[:,10]):.2e}"
+        Z54 = f"{np.mean(self.quantitative_elipses[:,11]):.2e}"
+        Z55 = f"{(np.mean(self.quantitative_elipses[:,3]) - np.mean(self.quantitative_elipses[:,10])):.2e}"
+        Z56 = f"{(np.mean(self.quantitative_elipses[:,4]) - np.mean(self.quantitative_elipses[:,11])):.2e}"
+        
+        
         
         ax.axis("off")
     
@@ -1475,7 +1759,7 @@ class inverse_problem:
             ["Obj 1", Z21, Z22, Z23, Z24, Z25, Z26],
             ["Obj 2", Z31, Z32, Z33, Z34, Z35, Z36],
             ["Obj 3", Z41, Z42, Z43, Z44, Z45, Z46],
-            ["All",   "3.00", "2.63", "3.17", "2.43", "-0.173", "0.199"]
+            ["All",  Z51, Z52, Z53, Z54, Z55, Z56]
         ]
     
         conteudo = [cabecalho_1, cabecalho_2] + dados
@@ -1550,8 +1834,51 @@ class inverse_problem:
         )
     
     
-    def plotar_tabela_anisotropia(self, ax):
+    def plotar_tabela_anisotropia(self, ax, background, object_1, object_2, object_3):
         """Desenha a TABLE II."""
+
+        #Acalc = (1 - background[:, 11]/background[:, 10])
+        #S2 = 1 - Acalc
+       
+        #S2a = np.sqrt((1 - background[:, 11]/background[:, 10])*(background[:, 12] - background[:, 5])**2)  
+        #print('S2a',S2a)
+        
+        ZZ11 = f"{np.mean(background[:, 4]/background[:, 3]):.2e}"
+        ZZ12 = f"{np.mean(background[:, 5]):.2e}°"
+        ZZ13 =  f"{np.mean(background[:, 11]/background[:, 10]):.2e}"
+        ZZ14 = f"{np.mean(background[:,12]):.2e}°"
+        ZZ15 = f"{((np.mean(background[:, 11]/background[:, 10]))-(np.mean(background[:, 4]/background[:, 3]))):.2e}"
+        ZZ16 = f"{np.sqrt(np.mean(((1 - background[:, 11] / background[:, 10])*(background[:, 12] - background[:, 5]))**2)):.2e}°"
+        
+        ZZ21 = f"{np.mean(object_1[:, 4]/object_1[:, 3]):.2e}"
+        ZZ22 = f"{np.mean(object_1[:, 5]):.2e}°"
+        ZZ23 =  f"{np.mean(object_1[:, 11]/object_1[:, 10]):.2e}"
+        ZZ24 = f"{np.mean(object_1[:,12]):.2e}°"
+        ZZ25 =f"{((np.mean(object_1[:, 11]/object_1[:, 10]))-(np.mean(object_1[:, 4]/object_1[:, 3]))):.2e}"
+        ZZ26 = f"{np.sqrt(np.mean(((1 - object_1[:, 11] / object_1[:, 10])*(object_1[:, 12] - object_1[:, 5]))**2)):.2e}°"
+        
+        ZZ31 = f"{np.mean(object_2[:, 4]/object_2[:, 3]):.2e}"
+        ZZ32 = f"{np.mean(object_2[:, 5]):.2e}°"
+        ZZ33 =  f"{np.mean(object_2[:, 11]/object_2[:, 10]):.2e}"
+        ZZ34 = f"{np.mean(object_2[:,12]):.2e}°"
+        ZZ35 = f"{((np.mean(object_2[:, 11]/object_2[:, 10]))-(np.mean(object_2[:, 4]/object_2[:, 3]))):.2e}"
+        ZZ36 = f"{np.sqrt(np.mean(((1 - object_2[:, 11] / object_2[:, 10])*(object_2[:, 12] - object_2[:, 5]))**2)):.2e}°"
+        
+        ZZ41 = f"{np.mean(object_3[:, 4]/object_3[:, 3]):.2e}"
+        ZZ42 = f"{np.mean(object_3[:, 5]):.2e}°"
+        ZZ43 =  f"{np.mean(object_3[:, 11]/object_3[:, 10]):.2e}"
+        ZZ44 = f"{np.mean(object_3[:,12]):.2e}°"
+        ZZ45 =f"{((np.mean(object_3[:, 11]/object_3[:, 10]))-(np.mean(object_3[:, 4]/object_3[:, 3]))):.2e}"
+        ZZ46 = f"{np.sqrt(np.mean(((1 - object_3[:, 11] / object_3[:, 10])*(object_3[:, 12] - object_3[:, 5]))**2)):.2e}°"
+        
+        ZZ51 = f"{np.mean(self.quantitative_elipses[:, 4]/self.quantitative_elipses[:, 3]):.2e}"
+        ZZ52 = f"{np.mean(self.quantitative_elipses[:, 5]):.2e}°"
+        ZZ53 =  f"{np.mean(self.quantitative_elipses[:, 11]/self.quantitative_elipses[:, 10]):.2e}"
+        ZZ54 = f"{np.mean(self.quantitative_elipses[:,12]):.2e}°"
+        ZZ55 = f"{((np.mean(self.quantitative_elipses[:, 11]/self.quantitative_elipses[:, 10]))-(np.mean(self.quantitative_elipses[:, 4]/self.quantitative_elipses[:, 3]))):.2e}"
+        ZZ56 = f"{np.sqrt(np.mean(((1 - self.quantitative_elipses[:, 11] / self.quantitative_elipses[:, 10])*(self.quantitative_elipses[:, 12] - self.quantitative_elipses[:, 5]))**2)):.2e}°"
+        
+        
     
         ax.axis("off")
     
@@ -1597,11 +1924,11 @@ class inverse_problem:
         ]
     
         dados = [
-            ["Bkgd", "1.00", "0.00°",   "0.826", "-1.20°",  "-0.140", "4.10°"],
-            ["Obj 1", "0.33", "30.00°",  "0.483", "30.43°",   "0.147", "1.67°"],
-            ["Obj 2", "0.33", "-30.00°", "0.457", "-38.75°",  "0.127", "4.66°"],
-            ["Obj 3", "0.33", "0.00°",   "0.453", "7.53°",    "0.117", "3.26°"],
-            ["All",   "0.87", "0.01°",   "0.760", "1.00°",    "0.117", "3.99°"]
+            ["Bkgd", ZZ11, ZZ12, ZZ13, ZZ14, ZZ15, ZZ16],
+            ["Obj 1", ZZ21, ZZ22, ZZ23, ZZ24, ZZ25, ZZ26],
+            ["Obj 2", ZZ31, ZZ32, ZZ33, ZZ34, ZZ35, ZZ36],
+            ["Obj 3", ZZ41, ZZ42, ZZ43, ZZ44, ZZ45, ZZ46],
+            ["All",  ZZ51, ZZ52, ZZ53, ZZ54, ZZ55, ZZ56]
         ]
     
         conteudo = [cabecalho_1, cabecalho_2] + dados
@@ -1686,7 +2013,7 @@ class inverse_problem:
         )
     
         self.plotar_tabela_condutividade(eixos[0], background, object_1, object_2, object_3)
-        self.plotar_tabela_anisotropia(eixos[1])
+        self.plotar_tabela_anisotropia(eixos[1], background, object_1, object_2, object_3)
     
         # Ajustes das margens
         plt.subplots_adjust(
@@ -2410,6 +2737,7 @@ class inverse_problem:
         #nome_html = '../docs/figureTemp/{html_name}_{Lambda}.html'
         #nome_html = f'../docs/figureTemp/{html_name}_{Lambda:.6f}.html'
         #self.salvar_html(lista_imgs, nome_html)
+        
         self.salvar_html_todos_lambdas(pasta_teste, html_name)
         
     
@@ -2436,368 +2764,4 @@ class inverse_problem:
         rank_eff = np.sum(s > tol)
         print(f'rank efetivo ~ {rank_eff} (tol={tol:g})')
      
-'''
-        
-        def configurar_celula(
-                celula,
-                fontsize=10,
-                bold=False,
-                linewidth=0.8,
-                facecolor="white"
-        ):
-            """Aplica a formatação básica a uma célula da tabela."""
-        
-            celula.set_edgecolor("black")
-            celula.set_linewidth(linewidth)
-            celula.set_facecolor(facecolor)
-        
-            celula.get_text().set_fontsize(fontsize)
-            celula.get_text().set_weight("bold" if bold else "normal")
-            celula.get_text().set_ha("center")
-            celula.get_text().set_va("center")
-        
-        
-        def plotar_tabela_condutividade(ax):
-            """Desenha a TABLE I."""
-        
-            ax.axis("off")
-        
-            # Títulos
-            ax.text(
-                0.5,
-                0.97,
-                "TABLE I",
-                transform=ax.transAxes,
-                ha="center",
-                va="top",
-                fontsize=11,
-                fontfamily="serif"
-            )
-        
-            ax.text(
-                0.5,
-                0.89,
-                "REFERENCE AND RECONSTRUCTED CONDUCTIVITY PARAMETERS",
-                transform=ax.transAxes,
-                ha="center",
-                va="top",
-                fontsize=10,
-                fontfamily="serif",
-                fontvariant="small-caps"
-            )
-        
-            # Duas linhas de cabeçalho
-            cabecalho_1 = [
-                "",
-                "Reference", "",
-                "Results", "",
-                "Mean Error", ""
-            ]
-        
-            cabecalho_2 = [
-                "Region",
-                r"${\overline{\sigma L}}_{ref}$",
-                r"$\overline{\sigma T}_{ref}$",
-                r"$\overline{\sigma L}_{calc}$",
-                r"$\overline{\sigma T}_{calc}$",
-                r"$\overline{\sigma L}_{error}$",
-                r"$\overline{\sigma T}_{error}$"
-            ]
-        
-            dados = [
-                ["Bkgd", "3.00", "3.00", "3.23", "2.66", "-0.230", "0.334"],
-                ["Obj 1", "3.00", "1.00", "2.81", "1.37", "0.187", "-0.374"],
-                ["Obj 2", "3.00", "1.00", "2.88", "1.34", "0.099", "-0.339"],
-                ["Obj 3", "3.00", "1.00", "2.87", "1.31", "0.130", "-0.313"],
-                ["All",   "3.00", "2.63", "3.17", "2.43", "-0.173", "0.199"]
-            ]
-        
-            conteudo = [cabecalho_1, cabecalho_2] + dados
-        
-            tabela = ax.table(
-                cellText=conteudo,
-                cellLoc="center",
-                #bbox=[0.16, 0.20, 0.68, 0.56],
-                #colWidths=[0.16, 0.14, 0.14, 0.14, 0.14, 0.16, 0.16]
-                bbox=[0.09, 0.08, 0.82, 0.61],
-                colWidths=[0.14, 0.14, 0.14, 0.15, 0.15, 0.16, 0.16]
-            )
-        
-            tabela.auto_set_font_size(False)
-        
-            numero_linhas = len(conteudo)
-            numero_colunas = len(conteudo[0])
-        
-            for linha in range(numero_linhas):
-                for coluna in range(numero_colunas):
-        
-                    celula = tabela[(linha, coluna)]
-        
-                    configurar_celula(
-                        celula,
-                        fontsize=9,
-                        bold=(linha <= 1),
-                        linewidth=0.8
-                    )
-        
-                    celula.get_text().set_fontfamily("serif")
-        
-            # Ajusta a altura das linhas
-            for coluna in range(numero_colunas):
-                tabela[(0, coluna)].set_height(0.12)
-                tabela[(1, coluna)].set_height(0.14)
-        
-            for linha in range(2, numero_linhas):
-                for coluna in range(numero_colunas):
-                    tabela[(linha, coluna)].set_height(0.105)
-        
-            # Simulação das células mescladas
-            # Reference: colunas 1 e 2
-            tabela[(0, 1)].visible_edges = "LTB"
-            tabela[(0, 2)].visible_edges = "RTB"
-        
-            # Results: colunas 3 e 4
-            tabela[(0, 3)].visible_edges = "LTB"
-            tabela[(0, 4)].visible_edges = "RTB"
-        
-            # Mean Error: colunas 5 e 6
-            tabela[(0, 5)].visible_edges = "LTB"
-            tabela[(0, 6)].visible_edges = "RTB"
-        
-            # Célula superior de Region
-            tabela[(0, 0)].visible_edges = "LTR"
-            tabela[(1, 0)].visible_edges = "LBR"
-        
-            # Remove o texto da primeira célula
-            tabela[(0, 0)].get_text().set_text("")
-        
-            # Nota
-            ax.text(
-                0.18,
-                0.04,
-                r"Note: Conductivities $\sigma$ in S/m.",
-                transform=ax.transAxes,
-                ha="left",
-                va="center",
-                fontsize=9,
-                fontfamily="serif"
-            )
-        
-        
-        def plotar_tabela_anisotropia(ax):
-            """Desenha a TABLE II."""
-        
-            ax.axis("off")
-        
-            # Títulos
-            ax.text(
-                0.5,
-                0.97,
-                "TABLE II",
-                transform=ax.transAxes,
-                ha="center",
-                va="top",
-                fontsize=11,
-                fontfamily="serif"
-            )
-        
-            ax.text(
-                0.5,
-                0.89,
-                "REFERENCE AND RECONSTRUCTED ANISOTROPY PARAMETERS",
-                transform=ax.transAxes,
-                ha="center",
-                va="top",
-                fontsize=10,
-                fontfamily="serif",
-                fontvariant="small-caps"
-            )
-        
-            cabecalho_1 = [
-                "",
-                "Reference", "",
-                "Results", "",
-                "Mean Error", ""
-            ]
-        
-            cabecalho_2 = [
-                "Region",
-                r"$\overline{AI}_{ref}$",
-                r"$\overline{\theta}_{ref}$",
-                r"$\overline{AI}_{calc}$",
-                r"$\overline{\theta}_{calc}$",
-                r"$\overline{AI}_{error}$",
-                r"$\overline{\theta}_{error}$"
-            ]
-        
-            dados = [
-                ["Bkgd", "1.00", "0.00°",   "0.826", "-1.20°",  "-0.140", "4.10°"],
-                ["Obj 1", "0.33", "30.00°",  "0.483", "30.43°",   "0.147", "1.67°"],
-                ["Obj 2", "0.33", "-30.00°", "0.457", "-38.75°",  "0.127", "4.66°"],
-                ["Obj 3", "0.33", "0.00°",   "0.453", "7.53°",    "0.117", "3.26°"],
-                ["All",   "0.87", "0.01°",   "0.760", "1.00°",    "0.117", "3.99°"]
-            ]
-        
-            conteudo = [cabecalho_1, cabecalho_2] + dados
-        
-            tabela = ax.table(
-                cellText=conteudo,
-                cellLoc="center",
-                bbox=[0.09, 0.08, 0.82, 0.61],
-                colWidths=[0.14, 0.14, 0.14, 0.15, 0.15, 0.16, 0.16]
-            )
-        
-            tabela.auto_set_font_size(False)
-        
-            numero_linhas = len(conteudo)
-            numero_colunas = len(conteudo[0])
-        
-            for linha in range(numero_linhas):
-                for coluna in range(numero_colunas):
-        
-                    celula = tabela[(linha, coluna)]
-        
-                    configurar_celula(
-                        celula,
-                        fontsize=9,
-                        bold=(linha <= 1),
-                        linewidth=0.8
-                    )
-        
-                    celula.get_text().set_fontfamily("serif")
-        
-            # Altura das linhas
-            for coluna in range(numero_colunas):
-                tabela[(0, coluna)].set_height(0.12)
-                tabela[(1, coluna)].set_height(0.15)
-        
-            for linha in range(2, numero_linhas):
-                for coluna in range(numero_colunas):
-                    tabela[(linha, coluna)].set_height(0.105)
-        
-            # Simula células agrupadas
-            tabela[(0, 1)].visible_edges = "LTB"
-            tabela[(0, 2)].visible_edges = "RTB"
-        
-            tabela[(0, 3)].visible_edges = "LTB"
-            tabela[(0, 4)].visible_edges = "RTB"
-        
-            tabela[(0, 5)].visible_edges = "LTB"
-            tabela[(0, 6)].visible_edges = "RTB"
-        
-            # Region ocupando as duas linhas de cabeçalho
-            tabela[(0, 0)].visible_edges = "LTR"
-            tabela[(1, 0)].visible_edges = "LBR"
-            tabela[(0, 0)].get_text().set_text("")
-
-
-# ============================================================
-# Figura principal
-# ============================================================
-
-fig, eixos = plt.subplots(
-    nrows=2,
-    ncols=1,
-    figsize=(7.3, 6.2),
-    gridspec_kw={
-        "height_ratios": [1.0, 1.08],
-        "hspace": 0.05
-    }
-)
-
-plotar_tabela_condutividade(eixos[0])
-plotar_tabela_anisotropia(eixos[1])
-
-# Ajustes das margens
-plt.subplots_adjust(
-    left=0.03,
-    right=0.97,
-    top=0.98,
-    bottom=0.03,
-    hspace=0.02
-)
-
-# Salvar a imagem
-plt.savefig(
-    "Tabelas_IEEE.png",
-    dpi=300,
-    bbox_inches="tight",
-    pad_inches=0.05
-)
-
-# Também pode salvar em formato vetorial:
-# plt.savefig("Tabelas_IEEE.svg", bbox_inches="tight")
-# plt.savefig("Tabelas_IEEE.pdf", bbox_inches="tight")
-
-plt.show()
-
-''' 
-'''
-        error_bkgd_abs = np.abs(background[:, 10] - background[:, 3])              
-        error_obj1_abs = np.abs(object_1[:, 10] - object_1[:, 3])                
-        error_obj2_abs = np.abs(object_2[:, 10] - object_2[:, 3])       
-        error_obj3_abs = np.abs(object_3[:, 10] - object_3[:, 3])       
-        
-        error1_bkgd_abs = np.abs(background[:, 11] - background[:, 4])              
-        error1_obj1_abs = np.abs(object_1[:, 11] - object_1[:, 4])       
-        error1_obj2_abs = np.abs(object_2[:, 11] - object_2[:, 4])       
-        error1_obj3_abs = np.abs(object_3[:, 11] - object_3[:, 4])       
-         
-        error2_bkgd_abs = np.abs(background[:, 12] - background[:, 5])               
-        error2_obj1_abs = np.abs(object_1[:, 12] - object_1[:, 5])       
-        error2_obj2_abs = np.abs(object_2[:, 12] - object_2[:, 5])       
-        error2_obj3_abs = np.abs(object_3[:, 12] - object_3[:, 5])  
-        
-        
-        Z11a = np.abs(background[:, 3]) 
-        Z11 = round(np.mean(Z11a), 3)
-        print('Z11',Z11)
-        
-        T11 =   round(np.mean(error_bkgd_abs), 3)
-        T12 =   round(np.mean(error_obj1_abs), 3)    
-        T13 =   round(np.mean(error_obj2_abs), 3)    
-        T14 =   round(np.mean(error_obj3_abs), 3)    
-        T21 =   round(np.mean(error1_bkgd_abs), 3)    
-        T22 =   round(np.mean(error1_obj1_abs), 3)
-        T23 =   round(np.mean(error1_obj2_abs), 3) 
-        T24 =   round(np.mean(error1_obj3_abs), 3) 
-        T31 =   round(np.mean(error2_bkgd_abs), 3)    
-        T32 =   round(np.mean(error2_obj1_abs), 3)
-        T33 =   round(np.mean(error2_obj2_abs), 3) 
-        T34 =   round(np.mean(error2_obj3_abs), 3) 
-        
-        #df = pd.DataFrame({
-        #    "Elemento": ['Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
-        #    "σL": [T11, T12, T13, T14],
-        #    "σT":  [T21, T22, T23, T24],
-        #    "θ (°)": [T31, T32, T33, T34],})
-        
-        df = pd.DataFrame({
-            "ref": ['Elemento','Bkgd', 'Obgect 1',  'Obgect 2', 'Obgect 3'],
-            "": ['σL',T11, T12, T13, T14],
-            "":  ['σT',T21, T22, T23, T24],
-            "d": ['θ°',T31, T32, T33, T34],
-        })
-
-        fig, ax = plt.subplots(figsize=(6,2.5))
-        ax.axis('off')
-
-        tabela = ax.table(
-            cellText=df.values,
-            colLabels=df.columns,
-            loc='center'
-        )
-
-        tabela.auto_set_font_size(False)
-        tabela.set_fontsize(11)
-        tabela.scale(1.2, 1.5)
-
-        plt.tight_layout()
-        #plt.savefig(f'{nome_arquivo}.svg',   format="svg", dpi=300)
-        plt.savefig(f'{nome_arquivo}.{imgFormat}',   format = imgFormat, dpi=300) 
-        plt.show()
-
-        #theta_rad = 0.5*np.arctan2(2.0*3.14, 1)
-        #theta_deg = np.rad2deg(theta_rad)
-        #print('theta_deg',theta_deg)
-'''       
+ 
