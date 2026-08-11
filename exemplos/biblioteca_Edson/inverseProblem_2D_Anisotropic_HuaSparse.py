@@ -942,7 +942,7 @@ class inverse_problem:
         desenhar_figura("AutoScale")
         desenhar_figura("SameScale")
         ###############################################################################
-    '''
+    
     ###############################################################################   
     def plotElipse(self, sigma, sigma_L, sigma_T, theta_deg, Lambda = None, iteration = None, save = False, DifAniso=None, nome_arquivo= None):
         dados_elipses_phantom = np.loadtxt("dados_elipses_phantom.txt")
@@ -1218,7 +1218,8 @@ class inverse_problem:
         sigma_max = max(np.max(np.abs(sigma_L_pts)), np.max(np.abs(sigma_T_pts)), 1e-12)
         
         escala = 0.005
-        '''
+    '''
+    '''
         # ===== índice de anisotropia para todos os pontos =====
         AI_all = sigma_T_pts / sigma_L_pts
 
@@ -1236,10 +1237,12 @@ class inverse_problem:
             vmin=AI_min,
             vmax=AI_max
         )
-        '''
+    '''
+    '''
         norm = colors.Normalize(vmin=0.0, vmax=1.0)
         cmap = cm.jet
-        '''
+    '''
+    '''
         for linha in dados_elipses:
             
             #_, x0, y0, sL, sT, theta = linha
@@ -1253,7 +1256,8 @@ class inverse_problem:
             b = escala * abs(sT) / sigma_max
         
             cor = cmap(norm(AI))
-        '''
+    '''
+    '''
         for linha in dados_elipses:
         
             _, x0, y0, sL, sT, theta, z0 = linha
@@ -1395,7 +1399,8 @@ class inverse_problem:
             plt.pause(0.1)  
             plt.close()   # importante
         else:
-            plt.show()    
+            plt.show()
+    '''
     ###############################################################################
 
     
@@ -2664,7 +2669,7 @@ class inverse_problem:
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
         
-        '''
+        
         nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.10f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
         lista_imgs.append(nome1)
@@ -2705,7 +2710,7 @@ class inverse_problem:
         nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.10f}'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
         lista_imgs.append(nome9)  
-        '''
+        
         
         '''
         # Gráfico tipo linha (o que você mandou)
