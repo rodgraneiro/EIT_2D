@@ -910,8 +910,8 @@ class inverse_problem:
             else:
                 ax.set_title("Conductivity Real (σ)", fontsize=15)
     
-            ax.set_xlabel("Lenght [m]", fontsize=15)
-            ax.set_ylabel("Lenght [m]", fontsize=15)
+            ax.set_xlabel("Length [m]", fontsize=15)
+            ax.set_ylabel("Length [m]", fontsize=15)
     
             plt.tight_layout()
             plt.ticklabel_format(style='plain')
@@ -1109,8 +1109,8 @@ class inverse_problem:
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('Lenght [m]', fontsize = 15)
-        ax.set_ylabel('Lenght [m]', fontsize = 15)
+        ax.set_xlabel('Length [m]', fontsize = 15)
+        ax.set_ylabel('Length [m]', fontsize = 15)
         ax.grid(False)
         
         #plt.show()
@@ -1375,8 +1375,8 @@ class inverse_problem:
         )
         
         ax.set_aspect('equal', adjustable='box')
-        ax.set_xlabel('Lenght [m]', fontsize = 15)
-        ax.set_ylabel('Lenght [m]', fontsize = 15)
+        ax.set_xlabel('Length [m]', fontsize = 15)
+        ax.set_ylabel('Length [m]', fontsize = 15)
         # ============================================================
         # Ângulo da câmera
         # ============================================================
