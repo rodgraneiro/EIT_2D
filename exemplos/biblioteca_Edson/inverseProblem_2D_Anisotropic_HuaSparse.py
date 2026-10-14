@@ -35,6 +35,7 @@ import pandas as pd
 from scipy.sparse import lil_matrix, csr_matrix, eye, kron
 from scipy.sparse.linalg import factorized, spsolve
 from scipy.spatial import cKDTree
+from scipy.sparse.linalg import eigsh
 
 from datetime import datetime
 
@@ -734,7 +735,7 @@ class inverse_problem:
     ###############################################################################
     # Essa função plota o gráfico convergência das iterações
     ###############################################################################
-
+    '''
     def plotar_iteracoes(self, lista_indice, lista_valor, nome_arquivo="Optimization"):
         
         imgFormat = 'webp'
@@ -770,6 +771,45 @@ class inverse_problem:
         plt.show(block=False)
         plt.pause(0.1)
     
+        plt.close(fig)
+    '''
+    def plotar_iteracoes(self, lista_indice, lista_valor,
+                    nome_arquivo="Optimization",
+                    titulo="Optimization",
+                    ylabel=r"Norm $\Delta\sigma$"):
+
+        imgFormat = 'webp'
+    
+        fig, ax = plt.subplots(figsize=(6, 5))
+    
+        ax.plot(
+            lista_indice,
+            lista_valor,
+            marker='.',
+            linestyle='-',
+            color='b',
+            label=ylabel
+        )
+    
+        ax.set_xlabel("Iteration", fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        ax.set_title(titulo, fontsize=15)
+    
+        ax.legend()
+        ax.grid(True)
+    
+        fig.tight_layout()
+    
+        ax.ticklabel_format(style='plain')
+    
+        fig.savefig(
+            f"{nome_arquivo}.{imgFormat}",
+            format=imgFormat,
+            dpi=200
+        )
+    
+        plt.show(block=False)
+        plt.pause(0.1)
         plt.close(fig)
     ###############################################################################
     ###############################################################################
@@ -2326,7 +2366,8 @@ class inverse_problem:
         ultimaNorma =[99,99,99]
         lastResidue = [99,99,99]
         listXplot = []                                                         # Lista armazenar eixo x das iterações para plotar
-        listaItrPlot = []                                                      # Lista Valores da normaSigma para plotar
+        listaItrPlot = [] 
+        listaNormaDelta = []                                                     # Lista Valores da normaSigma para plotar
         #centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
         
         #self.plotMSH(self.mymesh.sigma_vec, save = False)
@@ -2336,6 +2377,10 @@ class inverse_problem:
         centroids_2D = np.array([elem.Centroid for elem in self.mymesh.Elements])
 
         L2, idx_dom, std_auto = self.calc_L2_gauss_2D_only_domain(centroids_2D, std=0.01)
+        
+        print("Dimensão de L2:", L2.shape)
+        print("Norma L2 @ 1:", np.linalg.norm(L2 @ np.ones(L2.shape[1])))
+        print("Maior soma absoluta de linha:", np.max(np.abs(L2.sum(axis=1))))
 
         #print(f"Filtro gaussiano: std = {std_auto:.6e}")
         #print(f"Número de elementos no domínio físico = {len(idx_dom)}")
@@ -2497,6 +2542,8 @@ class inverse_problem:
             firstTerm = JTJ_sparse + termo_L
             firstTerm = firstTerm.astype(np.float64).tocsc()
             
+            
+            
             JTW_H = self.TempJ.T @ residue
             JTW_H = np.asarray(JTW_H, dtype=np.float64)
             
@@ -2512,8 +2559,32 @@ class inverse_problem:
             #print("secondTerm dtype:", secondTerm.dtype)
             #print("firstTerm shape:", firstTerm.shape)
             #print("secondTerm shape:", secondTerm.shape)
+            print(f"\nIteração {itr}")
+
+            print(f"Norma do resíduo: {np.linalg.norm(residue):.6e}")
+            
+            print(f"Norma de J^T J: {np.linalg.norm(self.JTJ):.6e}")
+            
+            print(f"Norma do termo de regularização: "
+                  f"{np.linalg.norm(termo_L.data):.6e}")
+            
+            print(f"Norma de J^T r: {np.linalg.norm(JTW_H):.6e}")
+            
+            print(f"Norma do gradiente de regularização: "
+                  f"{np.linalg.norm(regularization):.6e}")
             
             deltaSigma = spsolve(firstTerm, secondTerm).reshape(-1, 1)
+            
+            residuo_linear = firstTerm @ deltaSigma.ravel() - secondTerm
+
+            erro_linear = (
+                np.linalg.norm(residuo_linear)
+                / max(np.linalg.norm(secondTerm), np.finfo(float).eps)
+            )
+            
+            print(f"Norma de deltaSigma: {np.linalg.norm(deltaSigma):.6e}")
+            print(f"Resíduo relativo do sistema linear: {erro_linear:.6e}")
+            print(f"Todos os valores finitos: {np.all(np.isfinite(deltaSigma))}")
             
             ######## deltaSigma[1::3] = 0.0 # zerar Δσxy   # tentar usa sigma XY
             
@@ -2526,8 +2597,9 @@ class inverse_problem:
             
             #print('alphaDeltaSigma',alphaDeltaSigma[:1])
             normaDelta = np.linalg.norm(alphaDeltaSigma)                       # Calcula norma  delta sigma
-            plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
+            #plotItr = np.linalg.norm(alphaDeltaSigma)                          # Armazena delta sigma para plot
             #print('normaDelta',normaDelta)
+            listaNormaDelta.append(normaDelta)
             listXplot.append(itr)                                              # Armazena o índice da iteração
                                              # Armazena o valor a ser plotado
             
@@ -2577,14 +2649,15 @@ class inverse_problem:
                 ultimos10.pop(0)
             
             
-            if ultimaNorma[2] > ultimaNorma[1]:
-               print(f'Encontrou norma normaDelta maior  que a anterior.')
-               break
+            #if ultimaNorma[2] > ultimaNorma[1]:
+            #   print(f'Encontrou norma normaDelta maior  que a anterior.')
+            #   break
                 
             
-            if lastResidue[2] > lastResidue[1]:
-               print(f'Encontrou norma lastResidue maior  que a anterior.')
-               break
+            #if lastResidue[2] > lastResidue[1]:
+            #   print(f'Encontrou norma lastResidue maior  que a anterior.')
+            #   break
+           
                #self.plotMSH(sigmaInicial,itr, save = True)
                #alpha = alpha*fatorAlpha
                #break
@@ -2709,9 +2782,38 @@ class inverse_problem:
         
         nome9 = f'{pasta_teste}/{html_name}_iterations_{Lambda:.10f}'
         self.plotar_iteracoes(listXplot, listaItrPlot, nome_arquivo = nome9)
-        lista_imgs.append(nome9)  
+        lista_imgs.append(nome9)
         
+        # Gráfico da norma do resíduo das tensões
         
+        nome_residuo = (
+            f'{pasta_teste}/{html_name}_residuo_{Lambda:.10f}'
+        )
+        
+        self.plotar_iteracoes(
+            listXplot,
+            listaItrPlot,
+            nome_arquivo=nome_residuo,
+            titulo="Voltage residual",
+            ylabel=r"Norm $\|V_{calc}-V_{measured}\|_2$"
+        )
+        lista_imgs.append(nome_residuo)
+        
+        # Gráfico da norma da atualização de condutividade
+        
+        nome_delta = (
+            f'{pasta_teste}/{html_name}_deltaSigma_{Lambda:.10f}'
+        )
+        
+        self.plotar_iteracoes(
+            listXplot,
+            listaNormaDelta,
+            nome_arquivo=nome_delta,
+            titulo="Conductivity update",
+            ylabel=r"Norm $\|\alpha\Delta\sigma\|_2$"
+        )
+        
+        lista_imgs.append(nome_delta)
         '''
         # Gráfico tipo linha (o que você mandou)
         nome10 = f'{pasta_teste}/{html_name}_theta_{Lambda:.6f}'

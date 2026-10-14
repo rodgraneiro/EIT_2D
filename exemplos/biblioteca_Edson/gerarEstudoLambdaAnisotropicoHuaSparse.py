@@ -115,11 +115,32 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
     #V_measured_phaton = fwd.Vmedido_eletrodos
     V_measured_phaton = np.load("V_measured_phaton.npy")
+    
+    
+    rng = np.random.default_rng(42)
+
+    nivel_ruido = 0.01  # 1%
+    
+    V_rms = np.sqrt(np.mean(V_measured_phaton**2))
+    
+    ruido = rng.normal(
+        loc=0.0,
+        scale=nivel_ruido * V_rms,
+        size=V_measured_phaton.shape
+    )
+    
+    V_measured_com_ruido = V_measured_phaton + ruido
+    ruido_rms = np.sqrt(np.mean(ruido**2))
+
+    print(f"RMS das tensões: {V_rms:.6e} V")
+    print(f"RMS do ruído: {ruido_rms:.6e} V")
+    print(f"Ruído relativo efetivo: {100*ruido_rms/V_rms:.4f}%")
     print(f'V_measured_phaton\n {V_measured_phaton.shape}')
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_HuaSparse.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente,  formatImage = 'webp')
-    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 1,Tol=1.0e-9, html_name = htmlName)
+    #invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_com_ruido, initialEstimate=start,alpha =0.01,  Lambda = lambda_val, max_iter= 100,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -128,12 +149,13 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
-#lambdas = np.logspace(-6, -4, 10)
+lambdas = np.logspace(-6, -4, 10)
 
-lambdas =[8.37677649e-06]
+#lambdas =[8.37677649e-06]
+#lambdas =[3.0e-04]
 resultados = {}
 
-nome_html="batataDoceLIXO"
+nome_html="IEEE_ruido_1_e_af001_100itr_20lambdas"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
