@@ -149,10 +149,10 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 #lambdas= [1.424e-02,  2.84803587e-02]
 
 
-lambdas = np.logspace(-6, -4, 10)
+#lambdas = np.logspace(-6, -4, 10)
 
 #lambdas =[8.37677649e-06]
-#lambdas =[3.0e-04]
+lambdas =[5.99484250e-5]
 resultados = {}
 
 nome_html="IEEE_ruido_1_e_af001_100itr_20lambdas"

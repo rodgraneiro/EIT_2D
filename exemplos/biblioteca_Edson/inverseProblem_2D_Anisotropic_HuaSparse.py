@@ -2742,6 +2742,17 @@ class inverse_problem:
         os.makedirs(pasta_teste, exist_ok=True)
         # σxx, σxy, σyy (MSH) f"{Lambda:.6f}"
         
+        # Salvar tensor reconstruído após o término das iterações
+        nome_sigma = os.path.join(
+            pasta_teste,
+            f"sigma_reconstruido_{Lambda:.10e}.npy"
+        )
+        
+        np.save(nome_sigma, sigmaInicial.copy())
+        
+        print("Tensor reconstruído salvo:", nome_sigma)
+        print("Dimensões:", sigmaInicial.shape)
+        
         
         nome1 =  f'{pasta_teste}/{html_name}_sigma_xx_{Lambda:.10f}' 
         self.plotMSH(sigmaInicial[:,0], Lambda, itr, save=True, SigmaXXXYYY='xx', DifAniso = DifAnisotropia_Med, nome_arquivo=nome1)
