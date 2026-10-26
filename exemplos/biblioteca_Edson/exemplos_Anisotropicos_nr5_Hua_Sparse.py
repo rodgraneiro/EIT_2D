@@ -44,6 +44,10 @@ def runFWD_InverseProblemAnisotropicHua():
         1001: [2.5, 0.866025, 1.5], # 0.866025 1.732051
         1002: [2.5, -0.866025, 1.5],
         1003: [3.0, 0.0, 1.0],
+        #1000: [3.0, 0.0, 3.0], # [3.0 1.0]  0°
+        #1001: [1.0, 0.0, 1.0], # 0.866025 1.732051
+        #1002: [1.0, 0.0, 1.0],
+        #1003: [1.0, 0.0, 1.0],
         5001: [1.0, 0.0, 1.0],
         5002: [1.0, 0.0, 1.0],
         5003: [1.0, 0.0, 1.0],
@@ -107,7 +111,8 @@ def runFWD_InverseProblemAnisotropicHua():
     fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
 
     V_measured_phaton = fwd.Vmedido_eletrodos
-    np.save("V_measured_phaton.npy", V_measured_phaton)  # formato binário
+    np.save("V_measured_phatom_anisoIEEE.npy", V_measured_phaton)  # formato binário
+    np.savetxt("V_measured_phatom_anisoIEEE.txt", V_measured_phaton)  # formato binário
     print(f'V_mesured\n {V_measured_phaton}')
     print(f'meus_sigmas\n {meus_sigmas}')
 

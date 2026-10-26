@@ -119,7 +119,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     
     rng = np.random.default_rng(42)
 
-    nivel_ruido = 0.01  # 1%
+    nivel_ruido = 0.05  # 1%
     
     V_rms = np.sqrt(np.mean(V_measured_phaton**2))
     
@@ -140,7 +140,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_HuaSparse.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente,  formatImage = 'webp')
     #invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
-    invProblem_2D.solve(V_measured_com_ruido, initialEstimate=start,alpha =0.01,  Lambda = lambda_val, max_iter= 100,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_com_ruido, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
@@ -151,11 +151,11 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
 
 #lambdas = np.logspace(-6, -4, 10)
 
-#lambdas =[8.37677649e-06]
-lambdas =[5.99484250e-5]
+lambdas =[8.37677649e-06]
+#lambdas =[5.99484250e-5]
 resultados = {}
 
-nome_html="IEEE_ruido_1_e_af001_100itr_20lambdas"
+nome_html="IEEE_ruido_05_e_300itr_8e6lambdas"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
