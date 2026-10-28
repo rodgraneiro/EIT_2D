@@ -99,14 +99,11 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
             MinhaMalha_base.Elements[idx].CalcKgeo()
 
 
-    start = [5.0, 0.0, 5.0]
+    start = [6.0, 0.0, 6.0]
     
     #start = np.loadtxt('sigmaInicial_result.txt')
-
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
-
     fwd = forwardProblem.forward_problem(MinhaMalha_base, Pcorrente=None, SkipPattern=3, VirtualNode = True, I =1.0e-3)   # __init__ roda aqui
-
     mtz_Vmedido = fwd.Solve()
     #print(f'Vmedido \n {fwd.Vmedido[:10]}')
 
@@ -115,20 +112,11 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #fwd.abrir_Gmsh_pos(nome_arquivo, runGmsh=True)
     #V_measured_phaton = fwd.Vmedido_eletrodos
     V_measured_phaton = np.load("V_measured_phaton.npy")
-    
-    
+     
     rng = np.random.default_rng(42)
-
-    nivel_ruido = 0.05  # 1%
-    
-    V_rms = np.sqrt(np.mean(V_measured_phaton**2))
-    
-    ruido = rng.normal(
-        loc=0.0,
-        scale=nivel_ruido * V_rms,
-        size=V_measured_phaton.shape
-    )
-    
+    nivel_ruido = 0.0  # 1%    
+    V_rms = np.sqrt(np.mean(V_measured_phaton**2))  
+    ruido = rng.normal(loc=0.0,scale=nivel_ruido * V_rms, size=V_measured_phaton.shape )    
     V_measured_com_ruido = V_measured_phaton + ruido
     ruido_rms = np.sqrt(np.mean(ruido**2))
 
@@ -139,23 +127,20 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
     #htmlName = 'XXXrectangularHomogeneousAnisotropy30Neg'
     htmlName = nome_html
     invProblem_2D = inverseProblem_2D_Anisotropic_HuaSparse.inverse_problem(MinhaMalha_base, Pcorrente=fwd.corrente,  formatImage = 'webp')
-    #invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
-    invProblem_2D.solve(V_measured_com_ruido, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
+    invProblem_2D.solve(V_measured_phaton, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
+    #invProblem_2D.solve(V_measured_com_ruido, initialEstimate=start,alpha =0.075,  Lambda = lambda_val, max_iter= 300,Tol=1.0e-9, html_name = htmlName)
     #print('Y_jacobian',invProblem.Y_jacobian)
 
 #sigma_inicial_cont = np.loadtxt("sigma_inicial_cont.txt")
 #print(sigma_inicial_cont)
-
 #lambdas= [1.424e-02,  2.84803587e-02]
-
-
 #lambdas = np.logspace(-6, -4, 10)
 
 lambdas =[8.37677649e-06]
 #lambdas =[5.99484250e-5]
 resultados = {}
 
-nome_html="IEEE_ruido_05_e_300itr_8e6lambdas"
+nome_html="IEEE_inicio_606_ruido_0_300itr_8e6lambdas_af075"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
