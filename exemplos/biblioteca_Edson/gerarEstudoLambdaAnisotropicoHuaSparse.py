@@ -99,7 +99,7 @@ def rodar_simulacao(lambda_val, html_name="resultado"):
             MinhaMalha_base.Elements[idx].CalcKgeo()
 
 
-    start = [6.0, 0.0, 6.0]
+    start = [3.0, 0.0, 3.0]
     
     #start = np.loadtxt('sigmaInicial_result.txt')
     MinhaMalha_base.CalcKGlobal() # calculando KGlobal usando Sigmas
@@ -140,7 +140,7 @@ lambdas =[8.37677649e-06]
 #lambdas =[5.99484250e-5]
 resultados = {}
 
-nome_html="IEEE_inicio_606_ruido_0_300itr_8e6lambdas_af075"
+nome_html="IEEE_inicio_303_ruido_0_300itr_8e6lambdas_af075"
 #pasta="../../docs/figureTemp"
 #pasta2="../../docs"
 
