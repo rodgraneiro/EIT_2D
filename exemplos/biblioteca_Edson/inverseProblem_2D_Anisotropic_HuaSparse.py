@@ -2745,7 +2745,7 @@ class inverse_problem:
         # Salvar tensor reconstruído após o término das iterações
         nome_sigma = os.path.join(
             pasta_teste,
-            f"sig_rec_IEEE_ini_606_ruido_0_{Lambda:.10e}.npy"
+            f"sig_rec_IEEE_ini_303_ruido_0_{Lambda:.10e}.npy"
         )
         
         np.save(nome_sigma, sigmaInicial.copy())
